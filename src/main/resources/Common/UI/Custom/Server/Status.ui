@@ -1,0 +1,48 @@
+@BackServer = PatchStyle(TexturePath: "../Common/Background.png");
+
+Group #ServerStatusPanel {
+    LayoutMode: Top;
+    Anchor: (Top: 12, Left: 12, Width: 300, Height: 170);
+    Padding: (Full: 16);
+    Background: @BackServer;
+
+    Label #Title {
+        Text: "Server Status";
+        Style: (FontSize: 16, Alignment: Center);
+        Padding: (Bottom: 5);
+    }
+
+    Group #MetricsContainer {
+        LayoutMode: Top;
+
+        Label #TPSLabel {
+            Text: "TPS: Loading...";
+            Style: (FontSize: 12);
+            Padding: (Top: 3);
+        }
+
+        Label #MemoryLabel {
+            Text: "Memory: Loading...";
+            Style: (FontSize: 12);
+            Padding: (Top: 3);
+        }
+
+        Label #PlayersLabel {
+            Text: "Players: Loading...";
+            Style: (FontSize: 12);
+            Padding: (Top: 3);
+        }
+
+        Label #EntitiesLabel {
+            Text: "Entities: Loading...";
+            Style: (FontSize: 12);
+            Padding: (Top: 3);
+        }
+
+        Label #ChunksLabel {
+            Text: "Chunks: Loading...";
+            Style: (FontSize: 12);
+            Padding: (Top: 3);
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "Group": "Tenzinn",
+  "Name": "Countertale",
+  "Version": "0.1.0",
+  "Description": "Is a plugin for Deathmatch mode.",
+  "Authors": [
+    {
+      "Name": "Tenzinn",
+      "Email": "santynrada+hytl@gmail.com",
+      "Url": "https://santiagorada.com/hytale"
+    }
+  ],
+  "Website": "https://santiagorada.com/hytale/plugins/countertale",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": true,
+  "Main": "Tenzinn.Countertale"
+}
