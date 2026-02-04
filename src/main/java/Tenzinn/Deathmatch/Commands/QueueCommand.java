@@ -5,12 +5,13 @@ import Tenzinn.Deathmatch.GameMatch;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.server.core.Message;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -29,20 +30,21 @@ public class QueueCommand extends AbstractPlayerCommand {
             return;
         }
 
-        GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef);
+        Player player = store.getComponent(ref, Player.getComponentType());
 
+        if (player == null) { commandContext.sendMessage(Message.raw("Error: No se pudo obtener el componente del jugador.")); return; }
+
+        GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef);
         commandContext.sendMessage(Message.raw(String.format("Añadido a la cola! Partida %s (%d/10 jugadores)",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())));
 
-        notifyMatchPlayers(match);
+        plugin.showQueueHud(playerRef, player, match);
+        plugin.notifyMatchPlayersAndUpdateHuds(match);
 
         if (match.isFull()) {
             commandContext.sendMessage(Message.raw("¡Partida completa! Iniciando..."));
+
+            plugin.hideAllQueueHuds(match);
             plugin.startMatch(match);
         }
-    }
-    private void notifyMatchPlayers(GameMatch match) {
-        String message = String.format("[Partida] Jugadores: %d/10", match.getPlayerCount());
-
-        for (PlayerRef player : match.getPlayers()) { player.sendMessage(Message.raw(message)); }
     }
 }

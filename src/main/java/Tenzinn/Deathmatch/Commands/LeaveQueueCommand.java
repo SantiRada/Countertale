@@ -5,12 +5,12 @@ import Tenzinn.Deathmatch.GameMatch;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.server.core.Message;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -25,28 +25,17 @@ public class LeaveQueueCommand extends AbstractPlayerCommand {
 
         GameMatch match = plugin.getMatchManager().getPlayerMatch(playerRef);
 
-        if (match == null) {
-            commandContext.sendMessage(Message.raw("No estás en ninguna partida."));
-            return;
-        }
+        if (match == null) { commandContext.sendMessage(Message.raw("No estás en ninguna partida.")); return; }
 
-        if (match.getState() != GameMatch.MatchState.WAITING) {
-            commandContext.sendMessage(Message.raw("No puedes salir de una partida en curso."));
-            return;
-        }
+        if (match.getState() != GameMatch.MatchState.WAITING) { commandContext.sendMessage(Message.raw("No puedes salir de una partida en curso.")); return; }
 
+        plugin.hideQueueHud(playerRef);
         boolean removed = plugin.getMatchManager().removePlayerFromMatch(playerRef);
 
         if (removed) {
             commandContext.sendMessage(Message.raw("Has salido de la cola."));
 
-            if (!match.isEmpty()) {
-                String message = String.format("[Partida] Un jugador salió. Jugadores: %d/10", match.getPlayerCount());
-
-                for (PlayerRef player : match.getPlayers()) { player.sendMessage(Message.raw(message)); }
-            }
-        } else {
-            commandContext.sendMessage(Message.raw("Error al salir de la partida."));
-        }
+            if (!match.isEmpty()) plugin.notifyMatchPlayersAndUpdateHuds(match);
+        } else { commandContext.sendMessage(Message.raw("Error al salir de la partida.")); }
     }
 }
