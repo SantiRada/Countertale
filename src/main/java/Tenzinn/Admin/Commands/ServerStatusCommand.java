@@ -42,7 +42,7 @@ public class ServerStatusCommand extends AbstractPlayerCommand {
         String playerId = playerRef.getUuid().toString();
 
         // Registrar el HUD en el plugin para actualizaciones periódicas
-        plugin.registerHud(playerId, hud);
+        plugin.registerServerHud(playerId, hud);
 
         // Mostrar el HUD
         player.getHudManager().setCustomHud(playerRef, hud);

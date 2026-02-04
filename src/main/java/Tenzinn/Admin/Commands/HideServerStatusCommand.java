@@ -28,8 +28,8 @@ public class HideServerStatusCommand extends AbstractPlayerCommand {
 
         String playerId = playerRef.getUuid().toString();
 
-        if (!plugin.hasActiveHud(playerId)) return;
+        if (!plugin.hasActiveServerHud(playerId)) return;
 
-        plugin.unregisterHud(playerId);
+        plugin.unregisterServerHud(playerId);
     }
 }
