@@ -1,15 +1,16 @@
 package Tenzinn;
 
+import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
+import Tenzinn.Events.PreventItemDrop;
 import Tenzinn.Admin.UI.ServerStatusHud;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
-import Tenzinn.Admin.Commands.HideServerStatusCommand;
-import Tenzinn.Events.PreventItemDrop;
 import Tenzinn.Interactions.UseActionBookInteraction;
+import Tenzinn.Deathmatch.Commands.Game.GameCommands;
+import Tenzinn.Admin.Commands.HideServerStatusCommand;
 
-import com.google.gson.Gson;
 import com.hypixel.hytale.component.Ref;
 import Tenzinn.Events.DetectPlayerReady;
 import com.hypixel.hytale.component.Store;
@@ -17,7 +18,8 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
+import com.hypixel.hytale.server.core.inventory.Inventory;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -27,15 +29,11 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
 import java.io.*;
-import java.io.File;
 import java.util.Map;
 import java.util.List;
-import java.util.HashMap;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
@@ -56,11 +54,6 @@ public class Countertale extends JavaPlugin {
     // Sistema de HUD de Cola
     private final Map<String, QueueHud> activeQueueHuds = new ConcurrentHashMap<>();
 
-    // Sistema de Starter Kit
-    private File configFile;
-    private Map<String, Boolean> playerData;
-    private Gson gson;
-
     public Countertale(@Nonnull JavaPluginInit init) { super(init); }
 
     @Override
@@ -73,16 +66,16 @@ public class Countertale extends JavaPlugin {
         // Admin Commands
         getCommandRegistry().registerCommand(new ServerStatusCommand("server", "Show server status", this));
         getCommandRegistry().registerCommand(new HideServerStatusCommand("hide", "Hide server status HUD", this));
+        getCommandRegistry().registerCommand(new AdminCommands("admin", "View list of commands for Countertale"));
 
         // Deathmatch Commands
         getCommandRegistry().registerCommand(new QueueCommand("queue", "Join match queue", this));
         getCommandRegistry().registerCommand(new LeaveQueueCommand("leave", "Leave match queue", this));
-        getCommandRegistry().registerCommand(new MatchStatusCommand("matchstatus", "View match status", this));
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
+        getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
+        getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));;
 
         // Starter Kit
-        loadConfig();
-        DetectPlayerReady.setPlugin(this);
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
 
         // Events
@@ -138,12 +131,7 @@ public class Countertale extends JavaPlugin {
         activeQueueHuds.remove(playerId);
     }
     public void hideAllQueueHuds(GameMatch match) {
-        for (PlayerRef playerRef : match.getPlayers()) {
-            String playerId = playerRef.getUuid().toString();
-            QueueHud queueHud = activeQueueHuds.remove(playerId);
-
-            if (queueHud != null) queueHud.hideQueueUI();
-        }
+        for (PlayerRef playerRef : match.getPlayers()) { hideQueueHud(playerRef); }
     }
     public void notifyMatchPlayersAndUpdateHuds(GameMatch match) {
         int playerCount = match.getPlayerCount();
@@ -181,26 +169,27 @@ public class Countertale extends JavaPlugin {
             return;
         }
 
-        notifyMatchPlayers(match, "¡Partida iniciando! Creando arena...");
+        notifyMatchPlayers(match, "¡Partida iniciando! Creando arena...", "yellow");
 
         CompletableFuture.runAsync(() -> {
             try {
-                int matchOffset = match.hashCode() % 10000;
-                Vector3d spawnLocation = new Vector3d(10000 + matchOffset, 100, 10000);
+
+                // Precargar instancia -> Esperar la carga del mundo -> Get spawnLocations
+                Vector3d spawnLocation = new Vector3d(85, 122, 85);
 
                 match.setMatchWorld(mainWorld);
                 match.setState(GameMatch.MatchState.IN_PROGRESS);
 
                 teleportPlayersToMatch(match, spawnLocation, mainWorld);
 
-                notifyMatchPlayers(match, "¡Partida iniciada! ¡Buena suerte!");
+                notifyMatchPlayers(match, "¡Partida iniciada! ¡Buena suerte!", "green");
 
                 getLogger().at(Level.INFO).log("Partida iniciada: " + match.getMatchId().toString());
 
             } catch (Exception e) {
-                getLogger().at(Level.SEVERE).log("Error al iniciar partida: " + e.getMessage());
+                getLogger().at(Level.SEVERE).log("<color:red>Error al iniciar partida:</color> " + e.getMessage());
                 match.setState(GameMatch.MatchState.WAITING);
-                notifyMatchPlayers(match, "Error al iniciar la partida. Reintentando...");
+                notifyMatchPlayers(match, "Error al iniciar la partida. Reintentando...", "red");
             }
         });
     }
@@ -228,53 +217,37 @@ public class Countertale extends JavaPlugin {
             Teleport teleport = Teleport.createForPlayer(world,position,new Vector3f(0, 0, 0));
 
             store.addComponent(ref, Teleport.getComponentType(), teleport);
+
+            getLootGame(playerRef);
         });
     }
-    private void notifyMatchPlayers(GameMatch match, String message) { for (PlayerRef player : match.getPlayers()) { player.sendMessage(Message.raw(message)); } }
+    private void getLootGame(PlayerRef playerRef) {
+        Ref<EntityStore> ref = playerRef.getReference();
+        if (ref == null) return;
 
-    // =================== MÉTODOS DE STARTER KIT ====================
-    private void loadConfig() {
-        File dataFolder = new File("mods/Countertale");
-        if (!dataFolder.exists()) { dataFolder.mkdirs(); }
+        Store<EntityStore> store = ref.getStore();
+        Player player = store.getComponent(ref, Player.getComponentType());
 
-        configFile = new File(dataFolder, "players.json");
+        // Get-Item
+        player.getInventory().clear();
+        Inventory inv = player.getInventory();
 
-        if (!configFile.exists()) {
-            try {
-                configFile.createNewFile();
-                playerData = new HashMap<>();
-                saveConfig();
-            } catch (IOException e) {
-                e.printStackTrace();
-                playerData = new HashMap<>();
-            }
-        } else {
-            try {
-                String content = new String(Files.readAllBytes(configFile.toPath()));
-                if (content.trim().isEmpty()) {
-                    playerData = new HashMap<>();
-                } else {
-                    playerData = gson.fromJson(content, HashMap.class);
-                    if (playerData == null) {
-                        playerData = new HashMap<>();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                playerData = new HashMap<>();
-            }
-        }
+        ItemStack gun = new ItemStack("Weapon_Handgun", 1);
+        ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
+        ItemStack bullet = new ItemStack("Weapon_Arrow_Crude", 3600);
+
+        inv.getHotbar().addItemStack(gun);
+        inv.getHotbar().addItemStack(knife);
+        inv.getStorage().addItemStack(bullet);
+
+        inv.setActiveSlot(0, (byte) 0);
+
+        player.sendMessage(Message.raw("You received Loot!"));
     }
-    public boolean hasReceivedStarterKit(String playerId) { return playerData.getOrDefault(playerId, false); }
-    public void setReceivedStarterKit(String playerId) {
-        playerData.put(playerId, true);
-        saveConfig();
-    }
-    private void saveConfig() {
-        try (FileWriter writer = new FileWriter(configFile)) {
-            gson.toJson(playerData, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void notifyMatchPlayers(GameMatch match, String message, String color) {
+        for (PlayerRef player : match.getPlayers()) {
+            if(color != "") player.sendMessage(Message.raw("<color:" + color + ">" + message + "</color>"));
+            else player.sendMessage(Message.raw(message));
         }
     }
 }

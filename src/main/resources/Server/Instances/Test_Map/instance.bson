@@ -1,0 +1,29 @@
+{
+  "WorldGen": {
+    "Type": "Prefab",
+    "PrefabName": "Test_Map",
+    "GenerateTerrain": false,
+    "GenerateBiomes": false,
+    "GenerateStructures": false
+  },
+  "SpawnProvider": {
+    "Type": "Global",
+    "SpawnPoint": {
+      "Position": [0, 5, 0],
+      "Rotation": [0, 0, 0]
+    }
+  },
+  "ChunkConfig": {
+    "PregenerateRegion": {
+      "Min": [-2, -2],
+      "Max": [2, 2]
+    },
+    "KeepLoadedRegion": {
+      "Min": [-2, -2],
+      "Max": [2, 2]
+    }
+  },
+  "IsTicking": true,
+  "IsSavingChunks": false,
+  "SaveNewChunks": false
+}

@@ -1,4 +1,4 @@
-package Tenzinn.Deathmatch.Commands;
+package Tenzinn.Deathmatch.Commands.Game;
 
 import Tenzinn.Countertale;
 import Tenzinn.Deathmatch.GameMatch;
@@ -16,21 +16,22 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.List;
 
-public class MatchStatusCommand extends AbstractPlayerCommand {
+public class StatusGameCommand extends AbstractPlayerCommand {
 
-    private final Countertale plugin;
+    private final Countertale main;
 
-    public MatchStatusCommand(String name, String description, Countertale plugin) { super(name, description); this.plugin = plugin; }
+    public StatusGameCommand(String name, String description, Countertale main) { super(name, description); this.main = main; }
 
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
 
         commandContext.sendMessage(Message.raw("========== ESTADO DE PARTIDAS =========="));
 
-        commandContext.sendMessage(Message.raw(plugin.getMatchManager().getStats()));
-        commandContext.sendMessage(Message.raw(""));
+        commandContext.sendMessage(Message.raw(main.getMatchManager().getStats()));
+        commandContext.sendMessage(Message.raw(main.getMatchManager().getPlayers()));
+        commandContext.sendMessage(Message.raw("-------------------------------------"));
 
-        List<GameMatch> matches = plugin.getMatchManager().getActiveMatches();
+        List<GameMatch> matches = main.getMatchManager().getActiveMatches();
 
         if (matches.isEmpty()) { commandContext.sendMessage(Message.raw("No hay partidas activas.")); }
         else {

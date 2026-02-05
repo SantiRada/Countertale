@@ -57,13 +57,26 @@ public class MatchManager {
         return playerMatches.containsKey(playerId);
     }
     public List<GameMatch> getActiveMatches() { return new ArrayList<>(activeMatches); }
-    public List<GameMatch> getFullMatches() { return activeMatches.stream().filter(GameMatch::isFull).filter(match -> match.getState() == GameMatch.MatchState.WAITING).toList(); }
+    public List<GameMatch> getFullMatches() {
+        return activeMatches.stream().filter(GameMatch::isFull).filter(match -> match.getState() == GameMatch.MatchState.WAITING).toList();
+    }
     public String getStats() {
         int totalMatches = activeMatches.size();
         int waitingMatches = (int) activeMatches.stream().filter(m -> m.getState() == GameMatch.MatchState.WAITING).count();
         int inProgressMatches = (int) activeMatches.stream().filter(m -> m.getState() == GameMatch.MatchState.IN_PROGRESS).count();
-        int totalPlayers = playerMatches.size();
 
-        return String.format("Partidas totales: %d | Esperando: %d | En curso: %d | Jugadores totales: %d", totalMatches, waitingMatches, inProgressMatches, totalPlayers);
+        return String.format("Partida en espera: %d | En curso: %d | Totales: %d", waitingMatches, inProgressMatches, totalMatches);
+    }
+    public String getPlayers() {
+        int totalPlayers = playerMatches.size();
+        int waitingPlayers = 0;
+        int inGamePlayers = 0;
+
+        for (int i = 0; i < activeMatches.size(); i++) {
+            if(activeMatches.get(i).getState() == GameMatch.MatchState.WAITING) waitingPlayers += activeMatches.get(i).getPlayerCount();
+            if(activeMatches.get(i).getState() == GameMatch.MatchState.IN_PROGRESS) inGamePlayers += activeMatches.get(i).getPlayerCount();
+        }
+
+        return String.format("Jugadores en cola: %d | En partida: %d | Totales: %d", waitingPlayers, inGamePlayers, totalPlayers);
     }
 }
