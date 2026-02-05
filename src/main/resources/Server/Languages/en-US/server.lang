@@ -1,0 +1,3 @@
+# === items ===
+items.action_book.name = Actions Book
+items.action_book.description = Right-click to enter the queue for Deathmatch mode

@@ -1,0 +1,37 @@
+package Tenzinn.Interactions;
+
+import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.protocol.InteractionState;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.InteractionContext;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
+import com.hypixel.hytale.server.core.command.system.CommandManager;
+
+import javax.annotation.Nonnull;
+
+public class UseActionBookInteraction extends SimpleInstantInteraction {
+
+    public boolean inQueue = false;
+
+    public static final BuilderCodec<UseActionBookInteraction> CODEC = BuilderCodec.builder(
+            UseActionBookInteraction.class,
+            UseActionBookInteraction::new,
+            SimpleInstantInteraction.CODEC
+    ).build();
+
+    @Override
+    protected void firstRun(@Nonnull InteractionType interactionType, @Nonnull InteractionContext context, @Nonnull CooldownHandler cooldownHandler) {
+
+        Player player = context.getCommandBuffer().getComponent(context.getEntity(), Player.getComponentType());
+
+        if (player == null) {context.getState().state = InteractionState.Failed; return; }
+
+        if(inQueue) CommandManager.get().handleCommand(player, "leave");
+        else CommandManager.get().handleCommand(player, "queue");
+
+        inQueue = !inQueue;
+        context.getState().state = InteractionState.Finished;
+    }
+}

@@ -1,35 +1,47 @@
 package Tenzinn;
 
-import Tenzinn.Admin.UI.ServerStatusHud;
-import Tenzinn.Admin.Commands.ServerStatusCommand;
-import Tenzinn.Admin.Commands.HideServerStatusCommand;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
+import Tenzinn.Admin.UI.ServerStatusHud;
+import Tenzinn.Admin.Commands.ServerStatusCommand;
+import Tenzinn.Admin.Commands.HideServerStatusCommand;
+import Tenzinn.Events.PreventItemDrop;
+import Tenzinn.Interactions.UseActionBookInteraction;
 
+import com.google.gson.Gson;
+import com.hypixel.hytale.component.Ref;
+import Tenzinn.Events.DetectPlayerReady;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 
+import java.io.*;
+import java.io.File;
 import java.util.Map;
 import java.util.List;
+import java.util.HashMap;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CompletableFuture;
 
 public class Countertale extends JavaPlugin {
 
@@ -44,10 +56,18 @@ public class Countertale extends JavaPlugin {
     // Sistema de HUD de Cola
     private final Map<String, QueueHud> activeQueueHuds = new ConcurrentHashMap<>();
 
+    // Sistema de Starter Kit
+    private File configFile;
+    private Map<String, Boolean> playerData;
+    private Gson gson;
+
     public Countertale(@Nonnull JavaPluginInit init) { super(init); }
 
     @Override
     protected void setup() {
+        // Interactions
+        this.getCodecRegistry(Interaction.CODEC).register( "use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
+
         matchManager = new MatchManager();
 
         // Admin Commands
@@ -59,6 +79,14 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new LeaveQueueCommand("leave", "Leave match queue", this));
         getCommandRegistry().registerCommand(new MatchStatusCommand("matchstatus", "View match status", this));
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
+
+        // Starter Kit
+        loadConfig();
+        DetectPlayerReady.setPlugin(this);
+        this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
+
+        // Events
+        this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
     }
 
     @Override
@@ -79,9 +107,7 @@ public class Countertale extends JavaPlugin {
     }
 
     // ==================== MÉTODOS DE SERVER HUD ====================
-    private void updateAllServerHuds() {
-        activeServerHuds.values().forEach(ServerStatusHud::updateStats);
-    }
+    private void updateAllServerHuds() { activeServerHuds.values().forEach(ServerStatusHud::updateStats); }
     public void registerServerHud(String playerId, ServerStatusHud hud) { activeServerHuds.put(playerId, hud); }
     public void unregisterServerHud(String playerId) {
         activeServerHuds.get(playerId).hideStats();
@@ -121,7 +147,7 @@ public class Countertale extends JavaPlugin {
     }
     public void notifyMatchPlayersAndUpdateHuds(GameMatch match) {
         int playerCount = match.getPlayerCount();
-        String message = String.format("§7[Partida] Jugadores: %d/10", playerCount);
+        String message = String.format("[Partida] Jugadores: %d/10", playerCount);
 
         for (PlayerRef playerRef : match.getPlayers()) {
             playerRef.sendMessage(Message.raw(message));
@@ -133,9 +159,7 @@ public class Countertale extends JavaPlugin {
     }
 
     // ==================== MÉTODOS DE DEATHMATCH ====================
-    public MatchManager getMatchManager() {
-        return matchManager;
-    }
+    public MatchManager getMatchManager() { return matchManager; }
     private void checkAndStartFullMatches() {
         List<GameMatch> fullMatches = matchManager.getFullMatches();
 
@@ -157,7 +181,7 @@ public class Countertale extends JavaPlugin {
             return;
         }
 
-        notifyMatchPlayers(match, "§e¡Partida iniciando! Creando arena...");
+        notifyMatchPlayers(match, "¡Partida iniciando! Creando arena...");
 
         CompletableFuture.runAsync(() -> {
             try {
@@ -169,14 +193,14 @@ public class Countertale extends JavaPlugin {
 
                 teleportPlayersToMatch(match, spawnLocation, mainWorld);
 
-                notifyMatchPlayers(match, "§a¡Partida iniciada! ¡Buena suerte!");
+                notifyMatchPlayers(match, "¡Partida iniciada! ¡Buena suerte!");
 
                 getLogger().at(Level.INFO).log("Partida iniciada: " + match.getMatchId().toString());
 
             } catch (Exception e) {
                 getLogger().at(Level.SEVERE).log("Error al iniciar partida: " + e.getMessage());
                 match.setState(GameMatch.MatchState.WAITING);
-                notifyMatchPlayers(match, "§cError al iniciar la partida. Reintentando...");
+                notifyMatchPlayers(match, "Error al iniciar la partida. Reintentando...");
             }
         });
     }
@@ -207,4 +231,50 @@ public class Countertale extends JavaPlugin {
         });
     }
     private void notifyMatchPlayers(GameMatch match, String message) { for (PlayerRef player : match.getPlayers()) { player.sendMessage(Message.raw(message)); } }
+
+    // =================== MÉTODOS DE STARTER KIT ====================
+    private void loadConfig() {
+        File dataFolder = new File("mods/Countertale");
+        if (!dataFolder.exists()) { dataFolder.mkdirs(); }
+
+        configFile = new File(dataFolder, "players.json");
+
+        if (!configFile.exists()) {
+            try {
+                configFile.createNewFile();
+                playerData = new HashMap<>();
+                saveConfig();
+            } catch (IOException e) {
+                e.printStackTrace();
+                playerData = new HashMap<>();
+            }
+        } else {
+            try {
+                String content = new String(Files.readAllBytes(configFile.toPath()));
+                if (content.trim().isEmpty()) {
+                    playerData = new HashMap<>();
+                } else {
+                    playerData = gson.fromJson(content, HashMap.class);
+                    if (playerData == null) {
+                        playerData = new HashMap<>();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                playerData = new HashMap<>();
+            }
+        }
+    }
+    public boolean hasReceivedStarterKit(String playerId) { return playerData.getOrDefault(playerId, false); }
+    public void setReceivedStarterKit(String playerId) {
+        playerData.put(playerId, true);
+        saveConfig();
+    }
+    private void saveConfig() {
+        try (FileWriter writer = new FileWriter(configFile)) {
+            gson.toJson(playerData, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

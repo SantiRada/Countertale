@@ -35,13 +35,13 @@ public class QueueCommand extends AbstractPlayerCommand {
         if (player == null) { commandContext.sendMessage(Message.raw("Error: No se pudo obtener el componente del jugador.")); return; }
 
         GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef);
-        commandContext.sendMessage(Message.raw(String.format("Añadido a la cola! Partida %s (%d/10 jugadores)",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())));
+        player.sendMessage(Message.raw(String.format("Añadido a la cola! Partida %s (%d/10 jugadores)",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())));
 
         plugin.showQueueHud(playerRef, player, match);
         plugin.notifyMatchPlayersAndUpdateHuds(match);
 
         if (match.isFull()) {
-            commandContext.sendMessage(Message.raw("¡Partida completa! Iniciando..."));
+            player.sendMessage(Message.raw("¡Partida completa! Iniciando..."));
 
             plugin.hideAllQueueHuds(match);
             plugin.startMatch(match);
