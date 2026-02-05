@@ -4,11 +4,11 @@ Group #QueueHUD {
 
   Group #TimerPanel {
     LayoutMode: Top;
-    Anchor: (Width: 300, Height: 200, Top: 120);
+    Anchor: (Width: 450, Height: 200, Top: 120);
 
     Group {
         LayoutMode: Center;
-        Anchor: (Width: 300);
+        Anchor: (Width: 450);
         Label #TimerLabel {
           Text: "88:88";
           Style: (FontSize: 36, RenderBold: true, TextColor: #02090A(0.85), Alignment: Center);
