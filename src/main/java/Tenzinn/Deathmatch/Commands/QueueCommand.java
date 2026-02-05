@@ -26,22 +26,22 @@ public class QueueCommand extends AbstractPlayerCommand {
 
         if (plugin.getMatchManager().isPlayerInMatch(playerRef)) {
             GameMatch currentMatch = plugin.getMatchManager().getPlayerMatch(playerRef);
-            commandContext.sendMessage(Message.raw(String.format("Ya estás en una partida (%d/10 jugadores). Estado: %s",currentMatch.getPlayerCount(),currentMatch.getState())));
+            commandContext.sendMessage(Message.raw(String.format("Ya estás en una partida <color:orange>(%d/10 jugadores)</color>. Estado: <color:orange>%s</color>",currentMatch.getPlayerCount(),currentMatch.getState())));
             return;
         }
 
         Player player = store.getComponent(ref, Player.getComponentType());
 
-        if (player == null) { commandContext.sendMessage(Message.raw("Error: No se pudo obtener el componente del jugador.")); return; }
+        if (player == null) { commandContext.sendMessage(Message.raw("<color:red>Error: No se pudo obtener el componente del jugador.</color>")); return; }
 
         GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef);
-        player.sendMessage(Message.raw(String.format("Añadido a la cola! Partida %s (%d/10 jugadores)",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())));
+        player.sendMessage(Message.raw(String.format("<color:orange>Añadido a la cola!</color> Partida %s <color:orange>(%d/10 jugadores)</color>",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())));
 
         plugin.showQueueHud(playerRef, player, match);
         plugin.notifyMatchPlayersAndUpdateHuds(match);
 
         if (match.isFull()) {
-            player.sendMessage(Message.raw("¡Partida completa! Iniciando..."));
+            player.sendMessage(Message.raw("<color:green>¡Partida completa! Iniciando...</color>"));
 
             plugin.hideAllQueueHuds(match);
             plugin.startMatch(match);
