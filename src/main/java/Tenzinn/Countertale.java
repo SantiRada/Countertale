@@ -1,11 +1,11 @@
 package Tenzinn;
 
-import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
 import Tenzinn.Events.PreventItemDrop;
 import Tenzinn.Admin.UI.ServerStatusHud;
+import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
@@ -15,8 +15,6 @@ import com.hypixel.hytale.component.Ref;
 import Tenzinn.Events.DetectPlayerReady;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -26,12 +24,10 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
-import java.io.*;
 import java.util.Map;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,7 +35,6 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
 
 public class Countertale extends JavaPlugin {
 
@@ -160,68 +155,18 @@ public class Countertale extends JavaPlugin {
         if (match.getState() != GameMatch.MatchState.WAITING) return;
         match.setState(GameMatch.MatchState.STARTING);
 
-        Map<String, World> worldsMap = Universe.get().getWorlds();
-        World mainWorld = worldsMap.isEmpty() ? null : worldsMap.values().iterator().next();
-
-        if (mainWorld == null) {
-            getLogger().at(Level.SEVERE).log("No se pudo obtener el mundo principal");
-            match.setState(GameMatch.MatchState.WAITING);
-            return;
-        }
-
         notifyMatchPlayers(match, "¡Partida iniciando! Creando arena...", "yellow");
 
-        CompletableFuture.runAsync(() -> {
-            try {
-
-                // Precargar instancia -> Esperar la carga del mundo -> Get spawnLocations
-                Vector3d spawnLocation = new Vector3d(85, 122, 85);
-
-                match.setMatchWorld(mainWorld);
-                match.setState(GameMatch.MatchState.IN_PROGRESS);
-
-                teleportPlayersToMatch(match, spawnLocation, mainWorld);
-
-                notifyMatchPlayers(match, "¡Partida iniciada! ¡Buena suerte!", "green");
-
-                getLogger().at(Level.INFO).log("Partida iniciada: " + match.getMatchId().toString());
-
-            } catch (Exception e) {
-                getLogger().at(Level.SEVERE).log("<color:red>Error al iniciar partida:</color> " + e.getMessage());
-                match.setState(GameMatch.MatchState.WAITING);
-                notifyMatchPlayers(match, "Error al iniciar la partida. Reintentando...", "red");
-            }
-        });
-    }
-    private void teleportPlayersToMatch(GameMatch match, Vector3d spawnLocation, World world) {
-        List<PlayerRef> players = match.getPlayers();
-
-        for (int i = 0; i < players.size(); i++) {
-            PlayerRef playerRef = players.get(i);
-
-            double angle = (2 * Math.PI / players.size()) * i;
-            double radius = 10.0;
-
-            Vector3d playerSpawn = new Vector3d(spawnLocation.x + Math.cos(angle) * radius,spawnLocation.y,spawnLocation.z + Math.sin(angle) * radius);
-
-            teleportPlayer(playerRef, playerSpawn, world);
+        try {
+            hideAllQueueHuds(match);
+            match.getInstance().teleportPlayers(match.getPlayers(), this);
+        } catch (Exception e) {
+            getLogger().at(Level.SEVERE).log("=== ERROR CRÍTICO ===", e);
+            match.setState(GameMatch.MatchState.WAITING);
+            notifyMatchPlayers(match, "Error crítico. Contacta a un admin.", "red");
         }
     }
-    private void teleportPlayer(PlayerRef playerRef, Vector3d position, World world) {
-        world.execute(() -> {
-            Ref<EntityStore> ref = playerRef.getReference();
-            if (ref == null) return;
-
-            Store<EntityStore> store = ref.getStore();
-
-            Teleport teleport = Teleport.createForPlayer(world,position,new Vector3f(0, 0, 0));
-
-            store.addComponent(ref, Teleport.getComponentType(), teleport);
-
-            getLootGame(playerRef);
-        });
-    }
-    private void getLootGame(PlayerRef playerRef) {
+    public void getLootGame(PlayerRef playerRef) {
         Ref<EntityStore> ref = playerRef.getReference();
         if (ref == null) return;
 

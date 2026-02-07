@@ -1,5 +1,6 @@
 package Tenzinn.Deathmatch;
 
+import Tenzinn.Deathmatch.Instances.InstanceManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 
@@ -15,6 +16,7 @@ public class GameMatch {
     private final List<PlayerRef> players;
     private World matchWorld;
     private MatchState state;
+    private InstanceManager matchInstance;
 
     public enum MatchState { WAITING, STARTING, IN_PROGRESS, FINISHED }
 
@@ -32,6 +34,9 @@ public class GameMatch {
 
         return true;
     }
+    public void setInstance () { matchInstance = new InstanceManager(); }
+    public InstanceManager getInstance() { return matchInstance; }
+    public void removeInstance() { matchInstance = null; }
     public boolean removePlayer(PlayerRef playerRef) { return players.remove(playerRef); }
     public boolean isFull() { return players.size() >= MAX_PLAYERS; }
     public boolean isEmpty() { return players.isEmpty(); }

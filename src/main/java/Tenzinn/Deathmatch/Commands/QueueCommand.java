@@ -34,7 +34,7 @@ public class QueueCommand extends AbstractPlayerCommand {
 
         if (player == null) { commandContext.sendMessage(Message.raw("<color:red>Error: No se pudo obtener el componente del jugador.</color>")); return; }
 
-        GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef);
+        GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef, plugin);
         player.sendMessage(Message.raw(String.format("<color:orange>Añadido a la cola!</color> Partida %s <color:orange>(%d/10 jugadores)</color>",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())));
 
         plugin.showQueueHud(playerRef, player, match);

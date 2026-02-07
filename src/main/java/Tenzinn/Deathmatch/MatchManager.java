@@ -1,12 +1,13 @@
 package Tenzinn.Deathmatch;
 
+import Tenzinn.Countertale;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
 
 public class MatchManager {
 
@@ -14,7 +15,7 @@ public class MatchManager {
     private final Map<String, GameMatch> playerMatches;
 
     public MatchManager() { this.activeMatches = new ArrayList<>(); this.playerMatches = new ConcurrentHashMap<>(); }
-    public GameMatch addPlayerToQueue(PlayerRef playerRef) {
+    public GameMatch addPlayerToQueue(PlayerRef playerRef, Countertale main) {
         String playerId = playerRef.getUuid().toString();
 
         if (playerMatches.containsKey(playerId)) { return playerMatches.get(playerId); }
@@ -31,6 +32,10 @@ public class MatchManager {
             match = new GameMatch();
             match.addPlayer(playerRef);
             activeMatches.add(match);
+
+            match.setInstance();
+
+            match.getInstance().preloadMap();
         }
 
         playerMatches.put(playerId, match);
@@ -44,7 +49,12 @@ public class MatchManager {
 
         match.removePlayer(playerRef);
 
-        if (match.isEmpty() && match.getState() == GameMatch.MatchState.WAITING) activeMatches.remove(match);
+        if (match.isEmpty() && match.getState() == GameMatch.MatchState.WAITING)
+        {
+            activeMatches.remove(match);
+            match.getInstance().removeInstance();
+            match.removeInstance();
+        }
 
         return true;
     }
@@ -78,5 +88,16 @@ public class MatchManager {
         }
 
         return String.format("Jugadores en cola: %d | En partida: %d | Totales: %d", waitingPlayers, inGamePlayers, totalPlayers);
+    }
+    public String getInstances() {
+        int totalInstances = 0;
+        int inPrePloadInstance = 0;
+
+        for (int i = 0; i < activeMatches.size(); i++) {
+            if (activeMatches.get(i).getInstance().getMapLoaded()) { totalInstances += 1; }
+            else { inPrePloadInstance += 1; }
+        }
+
+        return String.format("Preload Instance: %d | Total Instances: %d", inPrePloadInstance, totalInstances);
     }
 }
