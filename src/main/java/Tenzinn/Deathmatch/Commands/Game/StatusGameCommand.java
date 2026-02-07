@@ -29,6 +29,7 @@ public class StatusGameCommand extends AbstractPlayerCommand {
 
         commandContext.sendMessage(Message.raw(main.getMatchManager().getStats()));
         commandContext.sendMessage(Message.raw(main.getMatchManager().getPlayers()));
+        commandContext.sendMessage(Message.raw(main.getMatchManager().getInstances()));
         commandContext.sendMessage(Message.raw("-------------------------------------"));
 
         List<GameMatch> matches = main.getMatchManager().getActiveMatches();
