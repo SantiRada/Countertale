@@ -29,4 +29,10 @@ public class AdminCommands extends CommandBase {
 
         commandContext.sendMessage(Message.raw("====================================="));
     }
+
+    @Override
+    public String getPermission() { return "countertale.admin"; }
+
+    @Override
+    public String getName() { return "admin"; }
 }

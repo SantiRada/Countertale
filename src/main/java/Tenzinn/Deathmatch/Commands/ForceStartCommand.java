@@ -14,6 +14,8 @@ import com.hypixel.hytale.server.core.Message;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.awt.*;
+
 public class ForceStartCommand extends AbstractPlayerCommand {
 
     private final Countertale plugin;
@@ -25,14 +27,20 @@ public class ForceStartCommand extends AbstractPlayerCommand {
 
         GameMatch match = plugin.getMatchManager().getPlayerMatch(playerRef);
 
-        if (match == null) { commandContext.sendMessage(Message.raw("<color:yellow>No estás en ninguna partida. Usa <color:orange>/queue</color> primero.</color>")); return; }
+        if (match == null) { commandContext.sendMessage(Message.raw("No estás en ninguna partida. Usa /queue primero.").color(Color.YELLOW)); return; }
 
-        if (match.getState() != GameMatch.MatchState.WAITING) { commandContext.sendMessage(Message.raw("La partida ya no está en estado <color:yellow>WAITING</color>.")); return; }
+        if (match.getState() != GameMatch.MatchState.WAITING) { commandContext.sendMessage(Message.raw("La partida ya no está en estado WAITING.")); return; }
 
         int currentPlayers = match.getPlayerCount();
 
-        commandContext.sendMessage(Message.raw("<color:yellow>" + String.format("[DEBUG] Forzando inicio de partida con %d jugador(es)...", currentPlayers) + "</color>"));
+        commandContext.sendMessage(Message.raw(String.format("[DEBUG] Forzando inicio de partida con %d jugador(es)...", currentPlayers)).color(Color.ORANGE));
 
         plugin.startMatch(match);
     }
+
+    @Override
+    public String getPermission() { return "countertale.forcestart"; }
+
+    @Override
+    public String getName() { return "forcestart"; }
 }

@@ -49,4 +49,10 @@ public class ServerStatusCommand extends AbstractPlayerCommand {
 
         commandContext.sendMessage(Message.raw("HUD de estado del servidor activado."));
     }
+
+    @Override
+    public String getPermission() { return "countertale.server"; }
+
+    @Override
+    public String getName() { return "server"; }
 }

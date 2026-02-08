@@ -16,16 +16,15 @@ import Tenzinn.Events.DetectPlayerReady;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.inventory.Inventory;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
 import java.util.Map;
@@ -54,9 +53,9 @@ public class Countertale extends JavaPlugin {
     @Override
     protected void setup() {
         // Interactions
-        this.getCodecRegistry(Interaction.CODEC).register( "use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
+        this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
 
-        matchManager = new MatchManager();
+        matchManager = new MatchManager(this);
 
         // Admin Commands
         getCommandRegistry().registerCommand(new ServerStatusCommand("server", "Show server status", this));
@@ -68,7 +67,7 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new LeaveQueueCommand("leave", "Leave match queue", this));
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
-        getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));;
+        getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
 
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
@@ -79,13 +78,13 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void start() {
-        serverHudUpdateTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::updateAllServerHuds,1,1,TimeUnit.SECONDS);
+        serverHudUpdateTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::updateAllServerHuds, 1, 1, TimeUnit.SECONDS);
 
         @SuppressWarnings("unchecked")
         ScheduledFuture<Void> serverHudTask = (ScheduledFuture<Void>) serverHudUpdateTask;
         getTaskRegistry().registerTask(serverHudTask);
 
-        matchCheckTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::checkAndStartFullMatches,5,5,TimeUnit.SECONDS);
+        matchCheckTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::checkAndStartFullMatches, 5, 5, TimeUnit.SECONDS);
 
         @SuppressWarnings("unchecked")
         ScheduledFuture<Void> matchTask = (ScheduledFuture<Void>) matchCheckTask;
@@ -98,8 +97,8 @@ public class Countertale extends JavaPlugin {
     private void updateAllServerHuds() { activeServerHuds.values().forEach(ServerStatusHud::updateStats); }
     public void registerServerHud(String playerId, ServerStatusHud hud) { activeServerHuds.put(playerId, hud); }
     public void unregisterServerHud(String playerId) {
-        activeServerHuds.get(playerId).hideStats();
-
+        ServerStatusHud hud = activeServerHuds.get(playerId);
+        if (hud != null) { hud.hideStats(); }
         activeServerHuds.remove(playerId);
     }
     public boolean hasActiveServerHud(String playerId) { return activeServerHuds.containsKey(playerId); }
@@ -116,13 +115,13 @@ public class Countertale extends JavaPlugin {
         player.getHudManager().setCustomHud(playerRef, queueHud);
 
         queueHud.updatePlayerCount(match.getPlayerCount());
-
         activeQueueHuds.put(playerId, queueHud);
     }
     public void hideQueueHud(PlayerRef playerRef) {
         String playerId = playerRef.getUuid().toString();
 
-        activeQueueHuds.get(playerId).hideQueueUI();
+        QueueHud hud = activeQueueHuds.get(playerId);
+        if (hud != null) { hud.hideQueueUI(); }
         activeQueueHuds.remove(playerId);
     }
     public void hideAllQueueHuds(GameMatch match) {
@@ -191,8 +190,8 @@ public class Countertale extends JavaPlugin {
     }
     private void notifyMatchPlayers(GameMatch match, String message, String color) {
         for (PlayerRef player : match.getPlayers()) {
-            if(color != "") player.sendMessage(Message.raw("<color:" + color + ">" + message + "</color>"));
-            else player.sendMessage(Message.raw(message));
+            if (color != null && !color.isEmpty()) { player.sendMessage(Message.raw(message).color(color)); }
+            else { player.sendMessage(Message.raw(message)); }
         }
     }
 }

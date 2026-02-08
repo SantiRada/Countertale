@@ -19,4 +19,10 @@ public class DeleteGameCommand extends CommandBase {
 
         player.sendMessage(Message.raw("Eliminando instancia..."));
     }
+
+    @Override
+    public String getPermission() { return "countertale.game.delete"; }
+
+    @Override
+    public String getName() { return "delete"; }
 }
