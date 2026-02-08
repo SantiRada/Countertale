@@ -1,0 +1,30 @@
+{
+  "groups": {
+    "Default": [
+      "countertale.queue",
+      "countertale.leave",
+      "countertale.lobby"
+    ],
+    "Adventure": [
+      "countertale.queue",
+      "countertale.leave",
+      "countertale.lobby"
+    ],
+    "Creative": [
+      "countertale.queue",
+      "countertale.leave",
+      "countertale.forcestart",
+      "countertale.lobby",
+      "countertale.game",
+      "countertale.game.status",
+      "countertale.game.redir"
+    ],
+    "Moderator": [
+      "*"
+    ],
+    "OP": [
+      "*"
+    ]
+  },
+  "players": {}
+}

@@ -14,6 +14,8 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.awt.*;
+
 public class LeaveQueueCommand extends AbstractPlayerCommand {
 
     private final Countertale plugin;
@@ -25,17 +27,26 @@ public class LeaveQueueCommand extends AbstractPlayerCommand {
 
         GameMatch match = plugin.getMatchManager().getPlayerMatch(playerRef);
 
-        if (match == null) { commandContext.sendMessage(Message.raw("<color:red>No estás en ninguna partida.</color>")); return; }
+        if (match == null) { commandContext.sendMessage(Message.raw("No estás en ninguna partida.").color(Color.red)); }
+        else {
+            if (match.getState() != GameMatch.MatchState.WAITING) {
+                commandContext.sendMessage(Message.raw("Para salir de una partida en curso usa /lobby").color(Color.PINK)); return;
+            }
 
-        if (match.getState() != GameMatch.MatchState.WAITING) { commandContext.sendMessage(Message.raw("Para salir de una partida en curso usa <color:red>/lobby</color>")); return; }
+            plugin.hideQueueHud(playerRef);
+            boolean removed = plugin.getMatchManager().removePlayerFromMatch(playerRef);
 
-        plugin.hideQueueHud(playerRef);
-        boolean removed = plugin.getMatchManager().removePlayerFromMatch(playerRef);
+            if (removed) {
+                commandContext.sendMessage(Message.raw("Has salido de la cola.").color(Color.ORANGE));
 
-        if (removed) {
-            commandContext.sendMessage(Message.raw("<color:orange>Has salido de la cola.</color>"));
-
-            if (!match.isEmpty()) plugin.notifyMatchPlayersAndUpdateHuds(match);
-        } else { commandContext.sendMessage(Message.raw("<color:red>Error al salir de la partida.</color>")); }
+                if (!match.isEmpty()) plugin.notifyMatchPlayersAndUpdateHuds(match);
+            } else { commandContext.sendMessage(Message.raw("Error al salir de la partida.").color(Color.RED)); }
+        }
     }
+
+    @Override
+    public String getPermission() { return "countertale.leave"; }
+
+    @Override
+    public String getName() { return "leave"; }
 }

@@ -1,8 +1,8 @@
 package Tenzinn.Deathmatch;
 
+import Tenzinn.Countertale;
 import Tenzinn.Deathmatch.Instances.InstanceManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,6 @@ public class GameMatch {
 
     private final UUID matchId;
     private final List<PlayerRef> players;
-    private World matchWorld;
     private MatchState state;
     private InstanceManager matchInstance;
 
@@ -25,7 +24,6 @@ public class GameMatch {
         this.players = new ArrayList<>();
         this.state = MatchState.WAITING;
     }
-
     public boolean addPlayer(PlayerRef playerRef) {
         if (players.size() >= MAX_PLAYERS) return false;
         if (state != MatchState.WAITING) return false;
@@ -34,10 +32,10 @@ public class GameMatch {
 
         return true;
     }
-    public void setInstance () { matchInstance = new InstanceManager(); }
+    public void setInstance(Countertale main) { matchInstance = new InstanceManager(main); }
     public InstanceManager getInstance() { return matchInstance; }
-    public void removeInstance() { matchInstance = null; }
     public boolean removePlayer(PlayerRef playerRef) { return players.remove(playerRef); }
+    public void removeInstance() { if (matchInstance != null) { matchInstance.removeInstance(); } }
     public boolean isFull() { return players.size() >= MAX_PLAYERS; }
     public boolean isEmpty() { return players.isEmpty(); }
     public int getPlayerCount() { return players.size(); }
@@ -45,5 +43,4 @@ public class GameMatch {
     public UUID getMatchId() { return matchId; }
     public MatchState getState() { return state; }
     public void setState(MatchState state) { this.state = state; }
-    public void setMatchWorld(World world) { this.matchWorld = world; }
 }

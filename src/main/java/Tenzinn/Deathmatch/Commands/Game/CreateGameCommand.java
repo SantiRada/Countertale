@@ -19,4 +19,10 @@ public class CreateGameCommand extends CommandBase {
 
         player.sendMessage(Message.raw("Creando instancia..."));
     }
+
+    @Override
+    public String getPermission() { return "countertale.game.create"; }
+
+    @Override
+    public String getName() { return "create"; }
 }

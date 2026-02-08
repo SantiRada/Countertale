@@ -32,4 +32,10 @@ public class HideServerStatusCommand extends AbstractPlayerCommand {
 
         plugin.unregisterServerHud(playerId);
     }
+
+    @Override
+    public String getPermission() { return "countertale.hide"; }
+
+    @Override
+    public String getName() { return "hide"; }
 }

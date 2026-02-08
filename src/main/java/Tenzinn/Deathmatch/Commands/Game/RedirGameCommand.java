@@ -18,4 +18,10 @@ public class RedirGameCommand extends CommandBase {
 
         player.sendMessage(Message.raw("Redirigiendo a instancia..."));
     }
+
+    @Override
+    public String getPermission() { return "countertale.game.redir"; }
+
+    @Override
+    public String getName() { return "redir"; }
 }

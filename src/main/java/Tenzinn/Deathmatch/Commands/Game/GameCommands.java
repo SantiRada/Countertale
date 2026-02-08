@@ -14,4 +14,10 @@ public class GameCommands extends AbstractCommandCollection {
         addSubCommand(new RedirGameCommand("redir", "Redir a exist instance", main));
         addSubCommand(new DeleteGameCommand("delete", "Delete a exist instace", main));
     }
+
+    @Override
+    public String getPermission() { return "countertale.game"; }
+
+    @Override
+    public String getName() { return "game"; }
 }

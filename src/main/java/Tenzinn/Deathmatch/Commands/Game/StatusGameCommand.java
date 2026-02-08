@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.awt.*;
 import java.util.List;
 
 public class StatusGameCommand extends AbstractPlayerCommand {
@@ -27,14 +28,14 @@ public class StatusGameCommand extends AbstractPlayerCommand {
 
         commandContext.sendMessage(Message.raw("========== ESTADO DE PARTIDAS =========="));
 
-        commandContext.sendMessage(Message.raw(main.getMatchManager().getStats()));
-        commandContext.sendMessage(Message.raw(main.getMatchManager().getPlayers()));
-        commandContext.sendMessage(Message.raw(main.getMatchManager().getInstances()));
+        commandContext.sendMessage(Message.raw(main.getMatchManager().getStats()).color(Color.ORANGE));
+        commandContext.sendMessage(Message.raw(main.getMatchManager().getPlayers()).color(Color.ORANGE));
+        commandContext.sendMessage(Message.raw(main.getMatchManager().getInstances()).color(Color.ORANGE));
         commandContext.sendMessage(Message.raw("-------------------------------------"));
 
         List<GameMatch> matches = main.getMatchManager().getActiveMatches();
 
-        if (matches.isEmpty()) { commandContext.sendMessage(Message.raw("No hay partidas activas.")); }
+        if (matches.isEmpty()) { commandContext.sendMessage(Message.raw("No hay partidas activas.").color(Color.MAGENTA)); }
         else {
             commandContext.sendMessage(Message.raw("Partidas activas:"));
 
@@ -58,4 +59,10 @@ public class StatusGameCommand extends AbstractPlayerCommand {
             case FINISHED -> "F-";
         };
     }
+
+    @Override
+    public String getPermission() { return "countertale.game.status"; }
+
+    @Override
+    public String getName() { return "status"; }
 }

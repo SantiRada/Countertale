@@ -20,23 +20,33 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.UUID;
 import java.util.List;
+import java.util.logging.Level;
 
 public class InstanceManager {
 
     private boolean isMapLoaded = false;
     private World newWorld;
+    private final Countertale main;
+
+    // ✅ CORRECCIÓN: Constructor que recibe Countertale
+    public InstanceManager(Countertale main) {
+        this.main = main;
+    }
 
     public void preloadMap() {
         Universe universe = Universe.get();
 
         universe.addWorld("Test_Map_Instance", "Flat", null).thenAccept(instanceWorld -> {
-            System.out.println("Arena vacía creada: " + instanceWorld.getName());
+            main.getLogger().at(Level.INFO).log("Arena vacía creada: " + instanceWorld.getName());
 
             WorldConfig config = instanceWorld.getWorldConfig();
             config.setGameTimePaused(true);
 
-            try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
-            catch (Exception e) { System.err.println("Error al establecer GameTime: " + e.getMessage()); }
+            try {
+                config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z"));
+            } catch (Exception e) {
+                main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage());
+            }
 
             config.setBlockTicking(true);
             config.setTicking(true);
@@ -45,13 +55,13 @@ public class InstanceManager {
             config.setPvpEnabled(true);
             config.setCanUnloadChunks(false);
 
-            System.out.println("✓ WorldConfig configurado para arena PvP");
+            main.getLogger().at(Level.INFO).log("✓ WorldConfig configurado para arena PvP");
 
             instanceWorld.execute(() -> {
                 placePrefabInInstance(instanceWorld);
                 isMapLoaded = true;
                 newWorld = instanceWorld;
-                System.out.println("✓ Arena completamente lista");
+                main.getLogger().at(Level.INFO).log("✓ Arena completamente lista");
             });
         });
     }
@@ -69,9 +79,9 @@ public class InstanceManager {
 
             BlockSelection previousState = prefab.place(sender, instanceWorld, pos, null, null);
 
-            System.out.println("✓ Prefab colocado exitosamente en " + pos);
+            main.getLogger().at(Level.INFO).log("✓ Prefab colocado exitosamente en " + pos);
         } catch (Exception e) {
-            System.err.println("Error al colocar prefab: " + e.getMessage());
+            main.getLogger().at(Level.SEVERE).log("Error al colocar prefab: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -106,14 +116,85 @@ public class InstanceManager {
 
                         main.getLootGame(playerRef);
 
-                    } catch (Exception e) { e.printStackTrace(); }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 });
 
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void removeInstance() {  }
+    public void removeInstance() {
+        main.getLogger().at(Level.INFO).log("🗑️ removeInstance() llamado");
 
-    public boolean getMapLoaded () { return isMapLoaded; }
+        Universe universe = Universe.get();
+        World instanceWorld = universe.getWorld("Test_Map_Instance");
+
+        if (instanceWorld != null) {
+            main.getLogger().at(Level.INFO).log("✅ Instancia encontrada, removiendo del universo...");
+            universe.removeWorld("Test_Map_Instance");
+            main.getLogger().at(Level.INFO).log("✅ Instancia removida de la memoria");
+
+            // ✅ Eliminar archivos del disco - LA RUTA CORRECTA ES universe/
+            boolean deleted = false;
+            String[] possiblePaths = {
+                    "universe/Test_Map_Instance",      // ✅ RUTA CORRECTA
+                    "universe/worlds/Test_Map_Instance",
+                    "./universe/Test_Map_Instance",
+                    "Worlds/Test_Map_Instance",
+                    "worlds/Test_Map_Instance"
+            };
+
+            for (String pathString : possiblePaths) {
+                try {
+                    java.nio.file.Path worldPath = java.nio.file.Paths.get(pathString);
+                    main.getLogger().at(Level.INFO).log("🔍 Buscando en: " + worldPath.toAbsolutePath());
+
+                    if (java.nio.file.Files.exists(worldPath)) {
+                        main.getLogger().at(Level.INFO).log("✅ ¡Carpeta encontrada! Eliminando archivos...");
+                        deleteDirectory(worldPath);
+                        main.getLogger().at(Level.INFO).log("✅ Archivos del disco eliminados correctamente!");
+                        deleted = true;
+                        break;
+                    }
+                } catch (Exception e) {
+                    main.getLogger().at(Level.WARNING).log("Error al intentar eliminar " + pathString + ": " + e.getMessage());
+                }
+            }
+
+            if (!deleted) {
+                main.getLogger().at(Level.WARNING).log("⚠️ Carpeta del mundo no encontrada");
+            }
+
+            // Resetear estado
+            isMapLoaded = false;
+            newWorld = null;
+            main.getLogger().at(Level.INFO).log("✅ Proceso de eliminación completado!");
+        } else {
+            main.getLogger().at(Level.WARNING).log("⚠️ Instancia 'Test_Map_Instance' NO encontrada en el universo!");
+        }
+    }
+
+    // ✅ NUEVO: Método helper para eliminar directorios recursivamente
+    private void deleteDirectory(java.nio.file.Path path) throws java.io.IOException {
+        if (java.nio.file.Files.isDirectory(path)) {
+            try (java.util.stream.Stream<java.nio.file.Path> entries = java.nio.file.Files.list(path)) {
+                entries.forEach(entry -> {
+                    try {
+                        deleteDirectory(entry);
+                    } catch (java.io.IOException e) {
+                        main.getLogger().at(Level.WARNING).log("Error eliminando: " + entry + " - " + e.getMessage());
+                    }
+                });
+            }
+        }
+        java.nio.file.Files.delete(path);
+    }
+
+    public boolean getMapLoaded() {
+        return isMapLoaded;
+    }
 }
