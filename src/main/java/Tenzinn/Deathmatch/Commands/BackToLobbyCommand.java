@@ -36,7 +36,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
 
-        if (!world.getName().equals("Test_Map_Instance")) { commandContext.sendMessage(Message.raw("No estás en una partida.")); return; }
+        if (world.getName().equals("default")) { commandContext.sendMessage(Message.raw("No estás en una partida.")); return; }
 
         playerRef.sendMessage(Message.raw("Retornando al lobby..."));
         World mainWorld = Universe.get().getDefaultWorld();

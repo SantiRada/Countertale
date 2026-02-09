@@ -1,11 +1,16 @@
 package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
+import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.Inventory;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.prefab.PrefabStore;
@@ -18,9 +23,13 @@ import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.world.WorldConfig;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import java.awt.*;
 import java.util.UUID;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class InstanceManager {
 
@@ -28,25 +37,24 @@ public class InstanceManager {
     private World newWorld;
     private final Countertale main;
 
-    // ✅ CORRECCIÓN: Constructor que recibe Countertale
-    public InstanceManager(Countertale main) {
-        this.main = main;
-    }
+    private int instanceNumber = 0;
+
+    public InstanceManager(Countertale main) { this.main = main; }
 
     public void preloadMap() {
         Universe universe = Universe.get();
 
-        universe.addWorld("Test_Map_Instance", "Flat", null).thenAccept(instanceWorld -> {
+        instanceNumber = ++instanceNumber;
+        String worldName = "Test_Map_Instance_" + instanceNumber;
+
+        universe.addWorld(worldName, "Flat", null).thenAccept(instanceWorld -> {
             main.getLogger().at(Level.INFO).log("Arena vacía creada: " + instanceWorld.getName());
 
             WorldConfig config = instanceWorld.getWorldConfig();
             config.setGameTimePaused(true);
 
-            try {
-                config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z"));
-            } catch (Exception e) {
-                main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage());
-            }
+            try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
+            catch (Exception e) { main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage()); }
 
             config.setBlockTicking(true);
             config.setTicking(true);
@@ -55,13 +63,10 @@ public class InstanceManager {
             config.setPvpEnabled(true);
             config.setCanUnloadChunks(false);
 
-            main.getLogger().at(Level.INFO).log("✓ WorldConfig configurado para arena PvP");
-
             instanceWorld.execute(() -> {
                 placePrefabInInstance(instanceWorld);
-                isMapLoaded = true;
                 newWorld = instanceWorld;
-                main.getLogger().at(Level.INFO).log("✓ Arena completamente lista");
+                isMapLoaded = true;
             });
         });
     }
@@ -78,15 +83,13 @@ public class InstanceManager {
             Vector3i pos = new Vector3i(17, 50, 0);
 
             BlockSelection previousState = prefab.place(sender, instanceWorld, pos, null, null);
-
-            main.getLogger().at(Level.INFO).log("✓ Prefab colocado exitosamente en " + pos);
         } catch (Exception e) {
             main.getLogger().at(Level.SEVERE).log("Error al colocar prefab: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public void teleportPlayers(List<PlayerRef> playerRefs, Countertale main) {
+    public void teleportPlayers(List<PlayerRef> playerRefs) {
         if (newWorld == null || !isMapLoaded) return;
 
         Transform spawnPoint = new Transform(36, 56, 0, 0, 90, 0);
@@ -113,51 +116,51 @@ public class InstanceManager {
 
                         Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
-
-                        main.getLootGame(playerRef);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    } catch (Exception e) { e.printStackTrace(); }
                 });
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
+                    newWorld.execute(() -> {
+                        try {
+                            PlayerRef updatedRef = Universe.get().getPlayer(playerRef.getUuid());
+                            if (updatedRef != null && updatedRef.getReference() != null) {
+                                Store<EntityStore> newStore = updatedRef.getReference().getStore();
+                                Player player = newStore.getComponent(updatedRef.getReference(), Player.getComponentType());
+
+                                if (player != null) { getLootInGame(updatedRef, player); }
+                            }
+                        } catch (Exception e) { e.printStackTrace(); }
+                    });
+                });
+
+            } catch (Exception e) { e.printStackTrace(); }
         }
     }
 
     public void removeInstance() {
-        main.getLogger().at(Level.INFO).log("🗑️ removeInstance() llamado");
-
         Universe universe = Universe.get();
-        World instanceWorld = universe.getWorld("Test_Map_Instance");
+        String worldName = "Test_Map_Instance_" + instanceNumber;
+        World instanceWorld = universe.getWorld(worldName);
 
         if (instanceWorld != null) {
-            main.getLogger().at(Level.INFO).log("✅ Instancia encontrada, removiendo del universo...");
-            universe.removeWorld("Test_Map_Instance");
-            main.getLogger().at(Level.INFO).log("✅ Instancia removida de la memoria");
+            universe.removeWorld(worldName);
 
-            // ✅ Eliminar archivos del disco - LA RUTA CORRECTA ES universe/
-            boolean deleted = false;
+            instanceNumber = --instanceNumber;
+
             String[] possiblePaths = {
-                    "universe/Test_Map_Instance",      // ✅ RUTA CORRECTA
-                    "universe/worlds/Test_Map_Instance",
-                    "./universe/Test_Map_Instance",
-                    "Worlds/Test_Map_Instance",
-                    "worlds/Test_Map_Instance"
+                    "universe/" + worldName,
+                    "universe/worlds/" + worldName,
+                    "./universe/" + worldName,
+                    "Worlds/" + worldName,
+                    "worlds/" + worldName
             };
 
             for (String pathString : possiblePaths) {
                 try {
                     java.nio.file.Path worldPath = java.nio.file.Paths.get(pathString);
-                    main.getLogger().at(Level.INFO).log("🔍 Buscando en: " + worldPath.toAbsolutePath());
 
                     if (java.nio.file.Files.exists(worldPath)) {
-                        main.getLogger().at(Level.INFO).log("✅ ¡Carpeta encontrada! Eliminando archivos...");
                         deleteDirectory(worldPath);
-                        main.getLogger().at(Level.INFO).log("✅ Archivos del disco eliminados correctamente!");
-                        deleted = true;
                         break;
                     }
                 } catch (Exception e) {
@@ -165,36 +168,47 @@ public class InstanceManager {
                 }
             }
 
-            if (!deleted) {
-                main.getLogger().at(Level.WARNING).log("⚠️ Carpeta del mundo no encontrada");
-            }
-
-            // Resetear estado
             isMapLoaded = false;
             newWorld = null;
-            main.getLogger().at(Level.INFO).log("✅ Proceso de eliminación completado!");
-        } else {
-            main.getLogger().at(Level.WARNING).log("⚠️ Instancia 'Test_Map_Instance' NO encontrada en el universo!");
         }
     }
 
-    // ✅ NUEVO: Método helper para eliminar directorios recursivamente
     private void deleteDirectory(java.nio.file.Path path) throws java.io.IOException {
         if (java.nio.file.Files.isDirectory(path)) {
             try (java.util.stream.Stream<java.nio.file.Path> entries = java.nio.file.Files.list(path)) {
                 entries.forEach(entry -> {
-                    try {
-                        deleteDirectory(entry);
-                    } catch (java.io.IOException e) {
-                        main.getLogger().at(Level.WARNING).log("Error eliminando: " + entry + " - " + e.getMessage());
-                    }
+                    try { deleteDirectory(entry); }
+                    catch (java.io.IOException e) { main.getLogger().at(Level.WARNING).log("Error eliminando: " + entry + " - " + e.getMessage()); }
                 });
             }
         }
         java.nio.file.Files.delete(path);
     }
 
-    public boolean getMapLoaded() {
-        return isMapLoaded;
+    public boolean getMapLoaded() { return isMapLoaded; }
+
+    public void getLootInGame(PlayerRef playerRef, Player player) {
+        World playerWorld = player.getWorld();
+        if (playerWorld == null || !playerWorld.equals(newWorld)) { return; }
+
+        // Get-Item
+        player.getInventory().clear();
+        Inventory inv = player.getInventory();
+
+        ItemStack gun = new ItemStack("Weapon_Handgun", 1);
+        ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
+        ItemStack bullet = new ItemStack("Weapon_Arrow_Crude", 3600);
+
+        inv.getHotbar().addItemStack(gun);
+        inv.getHotbar().addItemStack(knife);
+        inv.getStorage().addItemStack(bullet);
+
+        inv.setActiveSlot(0, (byte) 0);
+
+        player.sendMessage(Message.raw("You received Loot!"));
+
+        // Crear nuevo HUD
+        DeathmatchHUD deathmatchHUD = new DeathmatchHUD(playerRef);
+        player.getHudManager().setCustomHud(playerRef, deathmatchHUD);
     }
 }
