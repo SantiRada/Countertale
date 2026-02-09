@@ -13,8 +13,8 @@
     "Creative": [
       "countertale.queue",
       "countertale.leave",
-      "countertale.forcestart",
       "countertale.lobby",
+      "countertale.forcestart",
       "countertale.game",
       "countertale.game.status",
       "countertale.game.redir"

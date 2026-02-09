@@ -1,0 +1,11 @@
+
+Group #Test {
+    LayoutMode: Left;
+    Anchor: (Width:300, Height: 300);
+    Background: (Color: #ff0000);
+
+    Label #Example {
+        Text: "Example Text";
+        Style: (FontSize: 24, RenderBold: true, TextColor: #ffffff);
+    }
+}

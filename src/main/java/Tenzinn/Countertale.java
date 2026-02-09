@@ -158,35 +158,12 @@ public class Countertale extends JavaPlugin {
 
         try {
             hideAllQueueHuds(match);
-            match.getInstance().teleportPlayers(match.getPlayers(), this);
+            match.getInstance().teleportPlayers(match.getPlayers());
         } catch (Exception e) {
             getLogger().at(Level.SEVERE).log("=== ERROR CRÍTICO ===", e);
             match.setState(GameMatch.MatchState.WAITING);
             notifyMatchPlayers(match, "Error crítico. Contacta a un admin.", "red");
         }
-    }
-    public void getLootGame(PlayerRef playerRef) {
-        Ref<EntityStore> ref = playerRef.getReference();
-        if (ref == null) return;
-
-        Store<EntityStore> store = ref.getStore();
-        Player player = store.getComponent(ref, Player.getComponentType());
-
-        // Get-Item
-        player.getInventory().clear();
-        Inventory inv = player.getInventory();
-
-        ItemStack gun = new ItemStack("Weapon_Handgun", 1);
-        ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
-        ItemStack bullet = new ItemStack("Weapon_Arrow_Crude", 3600);
-
-        inv.getHotbar().addItemStack(gun);
-        inv.getHotbar().addItemStack(knife);
-        inv.getStorage().addItemStack(bullet);
-
-        inv.setActiveSlot(0, (byte) 0);
-
-        player.sendMessage(Message.raw("You received Loot!"));
     }
     private void notifyMatchPlayers(GameMatch match, String message, String color) {
         for (PlayerRef player : match.getPlayers()) {
