@@ -51,9 +51,6 @@ public class QueueHud extends CustomUIHud {
 
         update(true, uiBuilder);
     }
-    public long getElapsedSeconds() {
-        return (System.currentTimeMillis() - startTime) / 1000;
-    }
     public void hideQueueUI() {
         stopUpdating();
 

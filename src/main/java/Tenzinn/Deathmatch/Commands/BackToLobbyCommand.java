@@ -38,6 +38,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
 
         if (world.getName().equals("default")) { commandContext.sendMessage(Message.raw("No estás en una partida.")); return; }
 
+        // clearHUD();
         playerRef.sendMessage(Message.raw("Retornando al lobby..."));
         World mainWorld = Universe.get().getDefaultWorld();
 

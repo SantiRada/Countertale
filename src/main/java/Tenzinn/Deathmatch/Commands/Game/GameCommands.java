@@ -9,10 +9,7 @@ public class GameCommands extends AbstractCommandCollection {
     public GameCommands(@NonNullDecl String name, @NonNullDecl String description, Countertale main) {
         super(name, description);
 
-        addSubCommand(new CreateGameCommand("create", "Create a new instance to game", main));
         addSubCommand(new StatusGameCommand("status", "Review status of the instances", main));
-        addSubCommand(new RedirGameCommand("redir", "Redir a exist instance", main));
-        addSubCommand(new DeleteGameCommand("delete", "Delete a exist instace", main));
     }
 
     @Override

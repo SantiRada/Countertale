@@ -21,11 +21,9 @@ public class AdminCommands extends CommandBase {
         commandContext.sendMessage(Message.raw("/leave: Leave match queue"));
         commandContext.sendMessage(Message.raw("/forcestart: Force start current match (DEBUG)"));
         commandContext.sendMessage(Message.raw("/lobby: Back to lobby in game"));
+        commandContext.sendMessage(Message.raw("/testhud: Open HUD of Game"));
         commandContext.sendMessage(Message.raw("-------------------------------------"));
-        commandContext.sendMessage(Message.raw("/game create: Create a new instance to game"));
         commandContext.sendMessage(Message.raw("/game status: Review status of the instances"));
-        commandContext.sendMessage(Message.raw("/game redir: Redirection a exist instance with --code"));
-        commandContext.sendMessage(Message.raw("/game delete: Delete a exist instance with --code"));
 
         commandContext.sendMessage(Message.raw("====================================="));
     }

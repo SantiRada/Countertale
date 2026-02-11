@@ -3,28 +3,22 @@ package Tenzinn;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
-import Tenzinn.Events.PreventItemDrop;
+import Tenzinn.Events.*;
 import Tenzinn.Admin.UI.ServerStatusHud;
 import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
 import Tenzinn.Admin.Commands.HideServerStatusCommand;
+import Tenzinn.Deathmatch.Commands.Game.TestHudCommand;
 
-import com.hypixel.hytale.component.Ref;
-import Tenzinn.Events.DetectPlayerReady;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
-import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
 import java.util.Map;
@@ -68,12 +62,15 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
+        getCommandRegistry().registerCommand(new TestHudCommand("testhud", "Test HUD of game", this));
 
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
 
         // Events
         this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
+        this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
+        this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
     }
 
     @Override
@@ -125,7 +122,7 @@ public class Countertale extends JavaPlugin {
         activeQueueHuds.remove(playerId);
     }
     public void hideAllQueueHuds(GameMatch match) {
-        for (PlayerRef playerRef : match.getPlayers()) { hideQueueHud(playerRef); }
+            for (PlayerRef playerRef : match.getPlayers()) { hideQueueHud(playerRef); }
     }
     public void notifyMatchPlayersAndUpdateHuds(GameMatch match) {
         int playerCount = match.getPlayerCount();

@@ -1,11 +1,198 @@
 
-Group #Test {
-    LayoutMode: Left;
-    Anchor: (Width:300, Height: 300);
-    Background: (Color: #ff0000);
+@Timer = PatchStyle(TexturePath: "images/timer.png");
+@Crosshair = PatchStyle(TexturePath: "images/crosshair.png");
 
-    Label #Example {
-        Text: "Example Text";
-        Style: (FontSize: 24, RenderBold: true, TextColor: #ffffff);
+Group #DeathmatchUI {
+    LayoutMode: Top;
+    Anchor: (Width: 1920, Height: 1080);
+
+    Group #TopSector {
+        LayoutMode: Top;
+        Anchor: (Width: 1920, Top: 4);
+        FlexWeight: 4;
+
+        Group #Timer {
+            LayoutMode: Center;
+            Anchor: (Width: 82, Height: 35, Bottom: 4);
+            Background: @Timer;
+
+            Label #TextTimer {
+                Text: "00:00";
+                Style: (FontSize: 24, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+            }
+        }
+
+        Group #Users {
+            LayoutMode: Center;
+            Anchor: (Width: 540, Height: 85);
+
+            Group #User01 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name01 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User01 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User02 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name02 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #836425);
+
+                    Label #User02 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User03 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name03 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User03 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User04 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name04 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User04 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User05 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name05 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User05 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User06 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name06 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User06 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User07 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name07 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User07 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User08 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name08 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User08 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User09 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85, Right: 4);
+
+                Group #Name09 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User09 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+            Group #User10 {
+                LayoutMode: Top;
+                Anchor: (Width: 50, Height: 85);
+
+                Group #Name10 {
+                    LayoutMode: Center;
+                    Anchor: (Width: 50, Height: 30);
+                    Background: (Color: #000000(0.25));
+
+                    Label #User10 {
+                        Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                        Text: "00";
+                    }
+                }
+            }
+        }
+    }
+
+    Group #BottomSector {
+        LayoutMode: Top;
+        Anchor: (Width: 1920);
+        FlexWeight: 10;
+
+        Group {
+            LayoutMode: Center;
+            Anchor: (Width: 1920, Top: 208);
+
+            Group #Crosshair {
+                LayoutMode: Top;
+                Background: @Crosshair;
+                Anchor: (Width: 50, Height: 50);
+            }
+        }
     }
 }
