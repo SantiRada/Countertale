@@ -1,41 +1,38 @@
 package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
-import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.server.core.NameMatching;
-import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.inventory.Inventory;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.prefab.PrefabStore;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 
 import com.hypixel.hytale.server.core.console.ConsoleSender;
-import com.hypixel.hytale.server.core.command.system.CommandSender;
-import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.world.WorldConfig;
+import com.hypixel.hytale.server.core.command.system.CommandSender;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
 import java.awt.*;
 import java.util.UUID;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class InstanceManager {
 
     private boolean isMapLoaded = false;
-    private World newWorld;
     private final Countertale main;
+    private World newWorld;
 
     private int instanceNumber = 0;
 
@@ -92,9 +89,23 @@ public class InstanceManager {
     public void teleportPlayers(List<PlayerRef> playerRefs) {
         if (newWorld == null || !isMapLoaded) return;
 
-        Transform spawnPoint = new Transform(36, 56, 0, 0, 90, 0);
+        Transform[] spawns = {
+                new Transform(36, 56, 0),
+                new Transform(14, 52, -9),
+                new Transform(5, 52, -4),
+                new Transform(4, 52, 2),
+                new Transform(8, 52, 9),
+                new Transform(16, 52, 10),
+                new Transform(8, 52, 4),
+                new Transform(1, 56, 1),
+                new Transform(21, 56, -11),
+                new Transform(-2, 59, 2)
+        };
+
 
         for (int i = 0; i < playerRefs.size(); i++) {
+            Transform spawnPoint = spawns[i];
+
             PlayerRef playerRef = playerRefs.get(i);
 
             try {
@@ -126,8 +137,6 @@ public class InstanceManager {
                             if (updatedRef != null && updatedRef.getReference() != null) {
                                 Store<EntityStore> newStore = updatedRef.getReference().getStore();
                                 Player player = newStore.getComponent(updatedRef.getReference(), Player.getComponentType());
-
-                                if (player != null) { getLootInGame(updatedRef, player); }
                             }
                         } catch (Exception e) { e.printStackTrace(); }
                     });
@@ -186,29 +195,4 @@ public class InstanceManager {
     }
 
     public boolean getMapLoaded() { return isMapLoaded; }
-
-    public void getLootInGame(PlayerRef playerRef, Player player) {
-        World playerWorld = player.getWorld();
-        if (playerWorld == null || !playerWorld.equals(newWorld)) { return; }
-
-        // Get-Item
-        player.getInventory().clear();
-        Inventory inv = player.getInventory();
-
-        ItemStack gun = new ItemStack("Weapon_Handgun", 1);
-        ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
-        ItemStack bullet = new ItemStack("Weapon_Arrow_Crude", 3600);
-
-        inv.getHotbar().addItemStack(gun);
-        inv.getHotbar().addItemStack(knife);
-        inv.getStorage().addItemStack(bullet);
-
-        inv.setActiveSlot(0, (byte) 0);
-
-        player.sendMessage(Message.raw("You received Loot!"));
-
-        // Crear nuevo HUD
-        DeathmatchHUD deathmatchHUD = new DeathmatchHUD(playerRef);
-        player.getHudManager().setCustomHud(playerRef, deathmatchHUD);
-    }
 }

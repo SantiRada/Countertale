@@ -15,9 +15,9 @@
       "countertale.leave",
       "countertale.lobby",
       "countertale.forcestart",
+      "countertale.testhud",
       "countertale.game",
-      "countertale.game.status",
-      "countertale.game.redir"
+      "countertale.game.status"
     ],
     "Moderator": [
       "*"
