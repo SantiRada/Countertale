@@ -16,12 +16,10 @@ public class QueueHud extends CustomUIHud {
     private UICommandBuilder uiBuilder;
     private ScheduledFuture<?> updateTask;
     private long startTime;
-    private int currentPlayerCount;
 
     public QueueHud(@NonNullDecl PlayerRef playerRef) {
         super(playerRef);
         this.startTime = System.currentTimeMillis();
-        this.currentPlayerCount = 0;
     }
 
     @Override
@@ -44,8 +42,6 @@ public class QueueHud extends CustomUIHud {
         update(true, uiBuilder);
     }
     public void updatePlayerCount(int playerCount) {
-        this.currentPlayerCount = playerCount;
-
         String playerText = String.format("%d/10 Players", playerCount);
         uiBuilder.set("#PlayerCountLabel.TextSpans", Message.raw(playerText));
 

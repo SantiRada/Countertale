@@ -1,6 +1,7 @@
 package Tenzinn.Interactions;
 
 import Tenzinn.Deathmatch.MatchManager;
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -23,7 +24,7 @@ public class UseActionBookInteraction extends SimpleInstantInteraction {
         Player player = context.getCommandBuffer().getComponent(context.getEntity(), Player.getComponentType());
 
         PlayerRef playerRef = context.getCommandBuffer().getComponent(context.getEntity(), PlayerRef.getComponentType());
-        boolean inQueue = MatchManager.verifyPlayerInMatch(playerRef);
+        boolean inQueue = RefactorTool.getPlayerStats(playerRef) != null;
 
         if (player == null) {context.getState().state = InteractionState.Failed; return; }
 

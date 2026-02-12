@@ -28,6 +28,8 @@ public class CancelHandler implements PlayerPacketFilter {
                 Store<EntityStore> store = entityRef.getStore();
                 World world = store.getExternalData().getWorld();
 
+                if(world.getName().equals("default")) { return false; }
+
                 world.execute(() -> {
                     try {
                         Player player = store.getComponent(entityRef, Player.getComponentType());
@@ -36,12 +38,12 @@ public class CancelHandler implements PlayerPacketFilter {
                             playerRef.sendMessage(Message.raw("¡Inventario bloqueado!"));
 
                             if (!isOpen) {
+                                DeathmatchHUD hud = (DeathmatchHUD)player.getHudManager().getCustomHud();
+                                hud.clearHUD();
+
                                 player.getHudManager().setCustomHud(playerRef, new ScoreboardPage(playerRef));
-                                playerRef.sendMessage(Message.raw("¡Scoreboard abierto!").color(Color.yellow));
-                            } else {
-                                player.getHudManager().setCustomHud(playerRef, new DeathmatchHUD(playerRef));
-                                playerRef.sendMessage(Message.raw("¡HUD abierto!").color(Color.yellow));
                             }
+                            else { player.getHudManager().setCustomHud(playerRef, new DeathmatchHUD(playerRef)); }
 
                             isOpen = !isOpen;
                         }

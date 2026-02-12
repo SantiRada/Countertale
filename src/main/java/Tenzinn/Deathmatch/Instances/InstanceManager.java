@@ -2,8 +2,11 @@ package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
 
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.math.vector.Transform;
@@ -11,47 +14,46 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.prefab.PrefabStore;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
-
 import com.hypixel.hytale.server.core.console.ConsoleSender;
 import com.hypixel.hytale.server.core.universe.world.WorldConfig;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
-import java.awt.*;
-import java.util.UUID;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.concurrent.CompletableFuture;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class InstanceManager {
 
     private boolean isMapLoaded = false;
     private final Countertale main;
     private World newWorld;
-
     private int instanceNumber = 0;
 
-    public InstanceManager(Countertale main) { this.main = main; }
+    public InstanceManager(Countertale main) {
+        this.main = main;
+    }
 
     public void preloadMap() {
         Universe universe = Universe.get();
 
-        instanceNumber = ++instanceNumber;
+        instanceNumber++;
         String worldName = "Test_Map_Instance_" + instanceNumber;
 
         universe.addWorld(worldName, "Flat", null).thenAccept(instanceWorld -> {
             main.getLogger().at(Level.INFO).log("Arena vacía creada: " + instanceWorld.getName());
 
             WorldConfig config = instanceWorld.getWorldConfig();
+            config.setDeleteOnRemove(true);
             config.setGameTimePaused(true);
 
-            try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
-            catch (Exception e) { main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage()); }
+            try {
+                config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z"));
+            } catch (Exception e) {
+                main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage());
+            }
 
             config.setBlockTicking(true);
             config.setTicking(true);
@@ -75,11 +77,13 @@ public class InstanceManager {
 
             BlockSelection prefab = store.getAssetPrefabFromAnyPack("Test_Map.prefab.json");
 
-            if (prefab == null) throw new RuntimeException("Prefab 'Test_Map.prefab.json' no encontrado");
+            if (prefab == null) {
+                throw new RuntimeException("Prefab 'Test_Map.prefab.json' no encontrado");
+            }
 
             Vector3i pos = new Vector3i(17, 50, 0);
+            prefab.place(sender, instanceWorld, pos, null, null);
 
-            BlockSelection previousState = prefab.place(sender, instanceWorld, pos, null, null);
         } catch (Exception e) {
             main.getLogger().at(Level.SEVERE).log("Error al colocar prefab: " + e.getMessage());
             e.printStackTrace();
@@ -89,60 +93,33 @@ public class InstanceManager {
     public void teleportPlayers(List<PlayerRef> playerRefs) {
         if (newWorld == null || !isMapLoaded) return;
 
-        Transform[] spawns = {
-                new Transform(36, 56, 0),
-                new Transform(14, 52, -9),
-                new Transform(5, 52, -4),
-                new Transform(4, 52, 2),
-                new Transform(8, 52, 9),
-                new Transform(16, 52, 10),
-                new Transform(8, 52, 4),
-                new Transform(1, 56, 1),
-                new Transform(21, 56, -11),
-                new Transform(-2, 59, 2)
-        };
+        for (PlayerRef playerRef : playerRefs) {
+            if (playerRef == null || playerRef.getReference() == null) continue;
 
+            Ref<EntityStore> ref = playerRef.getReference();
+            World currentWorld = Universe.get().getWorld(playerRef.getWorldUuid());
 
-        for (int i = 0; i < playerRefs.size(); i++) {
-            Transform spawnPoint = spawns[i];
+            if (currentWorld == null) continue;
 
-            PlayerRef playerRef = playerRefs.get(i);
+            playerRef.sendMessage(Message.raw("Teleportando a la arena..."));
 
-            try {
-                UUID playerUUID = playerRef.getUuid();
-                PlayerRef updatedPlayerRef = Universe.get().getPlayer(playerUUID);
+            currentWorld.execute(() -> {
+                try {
+                    Store<EntityStore> store = ref.getStore();
+                    Transform tempSpawn = new Transform(36, 56, 0);
+                    Teleport teleport = Teleport.createForPlayer(newWorld, tempSpawn);
+                    store.addComponent(ref, Teleport.getComponentType(), teleport);
+                } catch (Exception e) { e.printStackTrace(); }
+            });
 
-                if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) continue;
-
-                Ref<EntityStore> ref = updatedPlayerRef.getReference();
-                World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
-
-                if (currentWorld == null) continue;
-
-                updatedPlayerRef.sendMessage(Message.raw("Teleportando a la arena..."));
-
+            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
                 currentWorld.execute(() -> {
                     try {
-                        Store<EntityStore> store = ref.getStore();
-
-                        Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
-                        store.addComponent(ref, Teleport.getComponentType(), teleport);
-                    } catch (Exception e) { e.printStackTrace(); }
+                        PlayerRef updatedRef = Universe.get().getPlayer(playerRef.getUuid());
+                        if (updatedRef != null) { RefactorTool.Respawn(updatedRef); }
+                    }  catch (Exception e) { e.printStackTrace(); }
                 });
-
-                CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-                    newWorld.execute(() -> {
-                        try {
-                            PlayerRef updatedRef = Universe.get().getPlayer(playerRef.getUuid());
-                            if (updatedRef != null && updatedRef.getReference() != null) {
-                                Store<EntityStore> newStore = updatedRef.getReference().getStore();
-                                Player player = newStore.getComponent(updatedRef.getReference(), Player.getComponentType());
-                            }
-                        } catch (Exception e) { e.printStackTrace(); }
-                    });
-                });
-
-            } catch (Exception e) { e.printStackTrace(); }
+            }, 500, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -153,46 +130,15 @@ public class InstanceManager {
 
         if (instanceWorld != null) {
             universe.removeWorld(worldName);
+            main.getLogger().at(Level.INFO).log("Mundo " + worldName + " removido");
 
-            instanceNumber = --instanceNumber;
-
-            String[] possiblePaths = {
-                    "universe/" + worldName,
-                    "universe/worlds/" + worldName,
-                    "./universe/" + worldName,
-                    "Worlds/" + worldName,
-                    "worlds/" + worldName
-            };
-
-            for (String pathString : possiblePaths) {
-                try {
-                    java.nio.file.Path worldPath = java.nio.file.Paths.get(pathString);
-
-                    if (java.nio.file.Files.exists(worldPath)) {
-                        deleteDirectory(worldPath);
-                        break;
-                    }
-                } catch (Exception e) {
-                    main.getLogger().at(Level.WARNING).log("Error al intentar eliminar " + pathString + ": " + e.getMessage());
-                }
-            }
-
+            instanceNumber--;
             isMapLoaded = false;
             newWorld = null;
         }
     }
 
-    private void deleteDirectory(java.nio.file.Path path) throws java.io.IOException {
-        if (java.nio.file.Files.isDirectory(path)) {
-            try (java.util.stream.Stream<java.nio.file.Path> entries = java.nio.file.Files.list(path)) {
-                entries.forEach(entry -> {
-                    try { deleteDirectory(entry); }
-                    catch (java.io.IOException e) { main.getLogger().at(Level.WARNING).log("Error eliminando: " + entry + " - " + e.getMessage()); }
-                });
-            }
-        }
-        java.nio.file.Files.delete(path);
+    public boolean getMapLoaded() {
+        return isMapLoaded;
     }
-
-    public boolean getMapLoaded() { return isMapLoaded; }
 }

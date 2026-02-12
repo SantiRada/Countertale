@@ -33,4 +33,7 @@ public class PlayerStats {
     // ================================================= //
     public PlayerRef getPlayerRef() { return playerRef; }
     public Player getPlayer() { return player; }
+    public String getId() { return String.valueOf(playerRef.getUuid()); }
+    public String getName() { return player.getDisplayName(); }
+    public GameMatch getCurrentMatch () { return currentMatch; }
 }
