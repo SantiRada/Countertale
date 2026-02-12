@@ -2,11 +2,20 @@ package Tenzinn.Deathmatch;
 
 import Tenzinn.Countertale;
 import Tenzinn.Deathmatch.Instances.InstanceManager;
+import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Tools.RefactorTool;
+import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class GameMatch {
 
@@ -18,6 +27,11 @@ public class GameMatch {
     private InstanceManager matchInstance;
 
     public enum MatchState { WAITING, STARTING, IN_PROGRESS, FINISHED }
+
+    // In-Game Content
+    private ScheduledFuture<?> timerTask;
+    private int remainingSeconds = 600; // 10:00
+    private String timerText = "";
 
     public GameMatch() {
         this.matchId = UUID.randomUUID();
@@ -32,15 +46,40 @@ public class GameMatch {
 
         return true;
     }
+    // ================================================ //
+    public void startTimer() {
+        remainingSeconds = 600;
+
+        timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+            if (remainingSeconds <= 0) {
+                stopTimer();
+                return;
+            }
+
+            remainingSeconds--;
+
+            int minutes = remainingSeconds / 60;
+            int seconds = remainingSeconds % 60;
+            timerText = String.format("%02d:%02d", minutes, seconds);
+        }, 1, 1, TimeUnit.SECONDS);
+    }
+    public int getTimer () { return remainingSeconds; }
+
+    public void stopTimer() { if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false); }
+
+    // ================================================ //
     public void setInstance(Countertale main) { matchInstance = new InstanceManager(main); }
+    public void setState(MatchState state) { this.state = state; }
+    // ================================================ //
+    public List<PlayerRef> getPlayers() { return new ArrayList<>(players); }
     public InstanceManager getInstance() { return matchInstance; }
-    public boolean removePlayer(PlayerRef playerRef) { return players.remove(playerRef); }
+    public int getPlayerCount() { return players.size(); }
+    public MatchState getState() { return state; }
+    public UUID getMatchId() { return matchId; }
+    // ================================================ //
     public void removeInstance() { if (matchInstance != null) { matchInstance.removeInstance(); } }
+    public void removePlayer(PlayerRef playerRef) { players.remove(playerRef); }
+    // ================================================ //
     public boolean isFull() { return players.size() >= MAX_PLAYERS; }
     public boolean isEmpty() { return players.isEmpty(); }
-    public int getPlayerCount() { return players.size(); }
-    public List<PlayerRef> getPlayers() { return new ArrayList<>(players); }
-    public UUID getMatchId() { return matchId; }
-    public MatchState getState() { return state; }
-    public void setState(MatchState state) { this.state = state; }
 }

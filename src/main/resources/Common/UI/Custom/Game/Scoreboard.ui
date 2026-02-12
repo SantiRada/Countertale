@@ -4,6 +4,6 @@
 Group #Scoreboard {
     LayoutMode: Top;
     Padding: (Full: 30);
-    Anchor: (Width: 960, Height: 740);
+    Anchor: (Width: 850, Height: 655);
     Background: @Background;
 }

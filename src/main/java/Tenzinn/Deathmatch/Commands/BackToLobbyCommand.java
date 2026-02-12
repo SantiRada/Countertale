@@ -47,7 +47,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
         Player player = commandContext.senderAs(Player.class);
         if (player != null) player.getInventory().clear();
 
-        Transform spawnPoint = new Transform(0, 244, 0);
+        Transform spawnPoint = new Transform(0, 80, 0);
 
         world.execute(() -> {
             try {

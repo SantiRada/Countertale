@@ -3,6 +3,7 @@ package Tenzinn.Deathmatch.Commands;
 import Tenzinn.Countertale;
 import Tenzinn.Deathmatch.GameMatch;
 
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -25,9 +26,10 @@ public class ForceStartCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
 
-        GameMatch match = plugin.getMatchManager().getPlayerMatch(playerRef);
+        GameMatch match = RefactorTool.getPlayerStats(playerRef).getCurrentMatch();
 
         if (match == null) { commandContext.sendMessage(Message.raw("No estás en ninguna partida. Usa /queue primero.").color(Color.YELLOW)); return; }
+        else { commandContext.sendMessage(Message.raw("Se detectó tu partida...")); }
 
         if (match.getState() != GameMatch.MatchState.WAITING) { commandContext.sendMessage(Message.raw("La partida ya no está en estado WAITING.")); return; }
 
