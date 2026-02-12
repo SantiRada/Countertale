@@ -41,6 +41,8 @@ public class DetectPlayerReady {
         Player player = event.getPlayer();
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
+        player.sendMessage(Message.raw("Name World: " + player.getWorld().getName()));
+
         if(player.getWorld().getName().equals("default")) {
             if(deathmatchHUD != null) { deathmatchHUD.clearHUD(); }
 

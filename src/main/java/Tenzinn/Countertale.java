@@ -1,9 +1,10 @@
 package Tenzinn;
 
+import Tenzinn.Events.*;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
-import Tenzinn.Events.*;
+import Tenzinn.Handle.CancelHandler;
 import Tenzinn.Admin.UI.ServerStatusHud;
 import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
@@ -18,6 +19,8 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
+import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
@@ -38,6 +41,9 @@ public class Countertale extends JavaPlugin {
     // Sistema de Deathmatch
     private MatchManager matchManager;
     private ScheduledFuture<?> matchCheckTask;
+    // private List<PlayerStats> playersInGame;
+
+    private PacketFilter detectFilter;
 
     // Sistema de HUD de Cola
     private final Map<String, QueueHud> activeQueueHuds = new ConcurrentHashMap<>();
@@ -71,6 +77,15 @@ public class Countertale extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
         this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
+
+        // Handlers
+        CancelHandler handler = new CancelHandler();
+        detectFilter = PacketAdapters.registerInbound(handler);
+    }
+
+    @Override
+    protected void shutdown() {
+        if (detectFilter != null) { PacketAdapters.deregisterInbound(detectFilter); }
     }
 
     @Override
@@ -150,6 +165,15 @@ public class Countertale extends JavaPlugin {
     public void startMatch(GameMatch match) {
         if (match.getState() != GameMatch.MatchState.WAITING) return;
         match.setState(GameMatch.MatchState.STARTING);
+
+        /*for (PlayerRef playerRef : match.getPlayers()) {
+            Ref<EntityStore> ref = playerRef.getReference();
+            Store<EntityStore> store = ref.getStore();
+            // Player player = store.getComponent(ref, Player.getComponentType());
+
+            // PlayerStats playerStats = new PlayerStats(playerRef, player, match);
+            // playersInGame.add(playerStats);
+        }*/
 
         notifyMatchPlayers(match, "¡Partida iniciando! Creando arena...", "yellow");
 
