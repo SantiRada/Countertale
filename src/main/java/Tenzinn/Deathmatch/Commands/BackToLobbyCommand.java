@@ -3,6 +3,7 @@ package Tenzinn.Deathmatch.Commands;
 import Tenzinn.Countertale;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.Inventory;
@@ -26,6 +27,8 @@ import java.util.logging.Level;
 
 public class BackToLobbyCommand extends AbstractPlayerCommand {
 
+    public Vector3d spawnLobby = new Vector3d(0, 256, 0);
+
     protected Countertale main;
 
     public BackToLobbyCommand(@NonNullDecl String name, @NonNullDecl String description, Countertale main) {
@@ -38,7 +41,6 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
 
         if (world.getName().equals("default")) { commandContext.sendMessage(Message.raw("No estás en una partida.")); return; }
 
-        // clearHUD();
         playerRef.sendMessage(Message.raw("Retornando al lobby..."));
         World mainWorld = Universe.get().getDefaultWorld();
 
@@ -47,7 +49,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
         Player player = commandContext.senderAs(Player.class);
         if (player != null) player.getInventory().clear();
 
-        Transform spawnPoint = new Transform(0, 80, 0);
+        Transform spawnPoint = new Transform(spawnLobby.x, spawnLobby.y, spawnLobby.z);
 
         world.execute(() -> {
             try {

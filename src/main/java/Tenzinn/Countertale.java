@@ -3,23 +3,23 @@ package Tenzinn;
 import Tenzinn.Events.*;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Handle.CancelHandler;
+import Tenzinn.Handle.DeathDetector;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
 import Tenzinn.Admin.UI.ServerStatusHud;
 import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
-import Tenzinn.Handle.DeathDetector;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
 import Tenzinn.Admin.Commands.HideServerStatusCommand;
 import Tenzinn.Deathmatch.Commands.Game.TestHudCommand;
 
-import com.hypixel.hytale.assetstore.event.LoadedAssetsEvent;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
@@ -87,6 +87,16 @@ public class Countertale extends JavaPlugin {
 
         DeathDetector deathHandler = new DeathDetector();
         deathFilter = PacketAdapters.registerInbound(deathHandler);
+
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+            World world = Universe.get().getDefaultWorld();
+            world.execute(() -> {
+                try {
+                    getEntityStoreRegistry().registerSystem(new PlayerKillTracker());
+                    getLogger().atInfo().log("PlayerKillTracker registered");
+                }  catch (Exception e) { e.printStackTrace(); }
+            });
+        }, 150, TimeUnit.MILLISECONDS);
     }
 
     @Override

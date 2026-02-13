@@ -2,11 +2,15 @@ package Tenzinn.Tools;
 
 import Tenzinn.Deathmatch.PlayerStats;
 
+import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -51,7 +55,21 @@ public class RefactorTool {
 
         return null;
     }
+    public static PlayerStats getPlayerStats(Player player) {
+
+        if (playerStatsList.size() == 0) return null;
+
+        PlayerRef playerRef = getPlayerRef(player);
+
+        for(PlayerStats playerStats : playerStatsList) {
+            if(playerStats.getPlayerRef().equals(playerRef)) { return playerStats; }
+        }
+
+        return null;
+    }
+    public static List<PlayerStats> getPlayerList() { return playerStatsList; }
     // ============================================ //
+    public static PlayerRef getPlayerRef(Player player) { return Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT); }
     public static Player getPlayer(PlayerRef playerRef) {
         Ref<EntityStore> ref = playerRef.getReference();
         Store<EntityStore> store = ref.getStore();
@@ -85,9 +103,28 @@ public class RefactorTool {
                     Vector3f targetPosition = new Vector3f((float) spawnPos.getX(), (float) spawnPos.getY(), (float) spawnPos.getZ());
 
                     Teleport teleport = new Teleport(targetPosition.toVector3d(), rotation);
-                    store.addComponent(ref, Teleport.getComponentType(), teleport);
+                    store.putComponent(ref, Teleport.getComponentType(), teleport);
                 }  catch (Exception e) { e.printStackTrace(); }
             });
         }, 150, TimeUnit.MILLISECONDS);
+    }
+    public static void setChangesInUI() {
+        for (PlayerStats playerStats : playerStatsList) {
+            if(playerStats.getPlayer().getHudManager().getCustomHud() == null) continue;
+
+            Object testHud = playerStats.getPlayer().getHudManager().getCustomHud();
+            if(testHud instanceof DeathmatchHUD) {
+
+                DeathmatchHUD deathmatchHUD = (DeathmatchHUD)testHud;
+                deathmatchHUD.setData();
+
+            } else if(testHud instanceof ScoreboardPage) {
+
+                ScoreboardPage scoreboard = (ScoreboardPage)testHud;
+                scoreboard.setData();
+
+            }
+            else { playerStats.getPlayer().sendMessage(Message.raw("No se encuentra la UI del Player").color(Color.yellow)); }
+        }
     }
 }

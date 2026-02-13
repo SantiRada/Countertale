@@ -26,7 +26,7 @@ Group #DeathmatchUI {
             LayoutMode: Center;
             Anchor: (Width: 540, Height: 85);
 
-            Group #User01 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -41,7 +41,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User02 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -56,7 +56,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User03 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -71,7 +71,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User04 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -86,7 +86,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User05 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -101,7 +101,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User06 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -116,7 +116,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User07 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -131,7 +131,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User08 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -146,7 +146,7 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User09 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85, Right: 4);
 
@@ -161,16 +161,16 @@ Group #DeathmatchUI {
                     }
                 }
             }
-            Group #User10 {
+            Group {
                 LayoutMode: Top;
                 Anchor: (Width: 50, Height: 85);
 
-                Group #Name10 {
+                Group #Name010 {
                     LayoutMode: Center;
                     Anchor: (Width: 50, Height: 30);
                     Background: (Color: #000000(0.25));
 
-                    Label #User10 {
+                    Label #User010 {
                         Style: (FontSize:20, RenderBold: true, TextColor: #ffffff, Alignment: Center);
                         Text: "00";
                     }
