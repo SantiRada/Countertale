@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.prefab.PrefabStore;
@@ -22,8 +23,12 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class InstanceManager {
 
@@ -49,11 +54,8 @@ public class InstanceManager {
             config.setDeleteOnRemove(true);
             config.setGameTimePaused(true);
 
-            try {
-                config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z"));
-            } catch (Exception e) {
-                main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage());
-            }
+            try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
+            catch (Exception e) { main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage()); }
 
             config.setBlockTicking(true);
             config.setTicking(true);
@@ -81,7 +83,7 @@ public class InstanceManager {
                 throw new RuntimeException("Prefab 'Test_Map.prefab.json' no encontrado");
             }
 
-            Vector3i pos = new Vector3i(17, 50, 0);
+            Vector3i pos = new Vector3i(36, 52, 2);
             prefab.place(sender, instanceWorld, pos, null, null);
 
         } catch (Exception e) {
@@ -93,33 +95,47 @@ public class InstanceManager {
     public void teleportPlayers(List<PlayerRef> playerRefs) {
         if (newWorld == null || !isMapLoaded) return;
 
-        for (PlayerRef playerRef : playerRefs) {
-            if (playerRef == null || playerRef.getReference() == null) continue;
+        Transform[] spawns = {
+                new Transform(36, 52, 2),
+                new Transform(14, 52, -9),
+                new Transform(5, 52, -4),
+                new Transform(4, 52, 2),
+                new Transform(8, 52, 9),
+                new Transform(16, 52, 10),
+                new Transform(8, 52, 4),
+                new Transform(1, 56, 1),
+                new Transform(21, 56, -11),
+                new Transform(-2, 59, 2)
+        };
 
-            Ref<EntityStore> ref = playerRef.getReference();
-            World currentWorld = Universe.get().getWorld(playerRef.getWorldUuid());
 
-            if (currentWorld == null) continue;
+        for (int i = 0; i < playerRefs.size(); i++) {
+            Transform spawnPoint = spawns[i];
 
-            playerRef.sendMessage(Message.raw("Teleportando a la arena..."));
+            PlayerRef playerRef = playerRefs.get(i);
 
-            currentWorld.execute(() -> {
-                try {
-                    Store<EntityStore> store = ref.getStore();
-                    Transform tempSpawn = new Transform(36, 56, 0);
-                    Teleport teleport = Teleport.createForPlayer(newWorld, tempSpawn);
-                    store.addComponent(ref, Teleport.getComponentType(), teleport);
-                } catch (Exception e) { e.printStackTrace(); }
-            });
+            try {
+                UUID playerUUID = playerRef.getUuid();
+                PlayerRef updatedPlayerRef = Universe.get().getPlayer(playerUUID);
 
-            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) continue;
+
+                Ref<EntityStore> ref = updatedPlayerRef.getReference();
+                World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
+
+                if (currentWorld == null) continue;
+
+                updatedPlayerRef.sendMessage(Message.raw("Teleportando a la arena..."));
+
                 currentWorld.execute(() -> {
                     try {
-                        PlayerRef updatedRef = Universe.get().getPlayer(playerRef.getUuid());
-                        if (updatedRef != null) { RefactorTool.Respawn(updatedRef); }
-                    }  catch (Exception e) { e.printStackTrace(); }
+                        Store<EntityStore> store = ref.getStore();
+
+                        Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
+                        store.addComponent(ref, Teleport.getComponentType(), teleport);
+                    } catch (Exception e) { e.printStackTrace(); }
                 });
-            }, 500, TimeUnit.MILLISECONDS);
+            } catch (Exception e) { e.printStackTrace(); }
         }
     }
 

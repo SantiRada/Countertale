@@ -35,15 +35,20 @@ public class CancelHandler implements PlayerPacketFilter {
                         Player player = store.getComponent(entityRef, Player.getComponentType());
                         if (player != null) {
                             player.getPageManager().setPage(entityRef, store, Page.None);
-                            playerRef.sendMessage(Message.raw("¡Inventario bloqueado!"));
-
                             if (!isOpen) {
                                 DeathmatchHUD hud = (DeathmatchHUD)player.getHudManager().getCustomHud();
                                 hud.clearHUD();
 
                                 player.getHudManager().setCustomHud(playerRef, new ScoreboardPage(playerRef));
                             }
-                            else { player.getHudManager().setCustomHud(playerRef, new DeathmatchHUD(playerRef)); }
+                            else {
+                                if(player.getHudManager().getCustomHud() != null){
+                                    ScoreboardPage hud = (ScoreboardPage)player.getHudManager().getCustomHud();
+                                    hud.clearHUD();
+                                }
+
+                                player.getHudManager().setCustomHud(playerRef, new DeathmatchHUD(playerRef));
+                            }
 
                             isOpen = !isOpen;
                         }

@@ -12,7 +12,9 @@
   ],
   "Website": "https://santiagorada.com/hytale/plugins/countertale",
   "ServerVersion": "2026.02.11-255364b8e",
-  "Dependencies": {},
+  "Dependencies": {
+    "Hytale:DamageModule": "*"
+  },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,
