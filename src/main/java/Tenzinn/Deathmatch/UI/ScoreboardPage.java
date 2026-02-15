@@ -1,15 +1,14 @@
 package Tenzinn.Deathmatch.UI;
 
 import Tenzinn.Tools.RefactorTool;
-import Tenzinn.Deathmatch.PlayerStats;
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
-import java.awt.*;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;

@@ -3,6 +3,7 @@ package Tenzinn.Deathmatch;
 import Tenzinn.Countertale;
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.Message;
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.awt.*;

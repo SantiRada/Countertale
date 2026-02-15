@@ -9,17 +9,15 @@ import Tenzinn.Deathmatch.UI.QueueHud;
 import Tenzinn.Admin.UI.ServerStatusHud;
 import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
+import Tenzinn.Handle.HotbarSlotHandler;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
 import Tenzinn.Admin.Commands.HideServerStatusCommand;
-import Tenzinn.Deathmatch.Commands.Game.TestHudCommand;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
@@ -45,6 +43,7 @@ public class Countertale extends JavaPlugin {
     private MatchManager matchManager;
     private ScheduledFuture<?> matchCheckTask;
 
+    private PacketFilter hotbarFilter;
     private PacketFilter detectFilter;
     private PacketFilter deathFilter;
 
@@ -71,7 +70,6 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
-        getCommandRegistry().registerCommand(new TestHudCommand("testhud", "Test HUD of game", this));
 
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
@@ -85,23 +83,17 @@ public class Countertale extends JavaPlugin {
         CancelHandler handler = new CancelHandler();
         detectFilter = PacketAdapters.registerInbound(handler);
 
+        HotbarSlotHandler hotbar = new HotbarSlotHandler();
+        hotbarFilter = PacketAdapters.registerInbound(hotbar);
+
         DeathDetector deathHandler = new DeathDetector();
         deathFilter = PacketAdapters.registerInbound(deathHandler);
-
-        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-            World world = Universe.get().getDefaultWorld();
-            world.execute(() -> {
-                try {
-                    getEntityStoreRegistry().registerSystem(new PlayerKillTracker());
-                    getLogger().atInfo().log("PlayerKillTracker registered");
-                }  catch (Exception e) { e.printStackTrace(); }
-            });
-        }, 150, TimeUnit.MILLISECONDS);
     }
 
     @Override
     protected void shutdown() {
         if (detectFilter != null) { PacketAdapters.deregisterInbound(detectFilter); }
+        if (hotbarFilter != null) { PacketAdapters.deregisterInbound(hotbarFilter); }
         if (deathFilter != null) { PacketAdapters.deregisterInbound(deathFilter); }
     }
 
@@ -118,8 +110,6 @@ public class Countertale extends JavaPlugin {
         @SuppressWarnings("unchecked")
         ScheduledFuture<Void> matchTask = (ScheduledFuture<Void>) matchCheckTask;
         getTaskRegistry().registerTask(matchTask);
-
-        getLogger().at(Level.INFO).log("Countertale plugin iniciado correctamente");
     }
 
     // ==================== MÉTODOS DE SERVER HUD ====================

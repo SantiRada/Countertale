@@ -2,7 +2,6 @@ package Tenzinn.Handle;
 
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.protocol.Packet;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter;
 

@@ -1,0 +1,14 @@
+
+@Automatic = PatchStyle(TexturePath: "fmodes/automatic.png");
+@Burst = PatchStyle(TexturePath: "fmodes/burst.png");
+@Melee = PatchStyle(TexturePath: "fmodes/melee.png");
+@Single = PatchStyle(TexturePath: "fmodes/single.png");
+
+@Weapon01 = PatchStyle(TexturePath: "weapon-1-on.png");
+@Weapon01Off = PatchStyle(TexturePath: "weapon-1-off.png");
+
+@Weapon02 = PatchStyle(TexturePath: "weapon-2-on.png");
+@Weapon02Off = PatchStyle(TexturePath: "weapon-2-off.png");
+
+@Weapon03 = PatchStyle(TexturePath: "weapon-3-on.png");
+@Weapon03Off = PatchStyle(TexturePath: "weapon-3-off.png");

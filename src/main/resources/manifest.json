@@ -1,7 +1,7 @@
 {
   "Group": "Tenzinn",
   "Name": "Countertale",
-  "Version": "0.2.0",
+  "Version": "0.3.2",
   "Description": "Is a plugin for Deathmatch mode.",
   "Authors": [
     {
@@ -12,9 +12,6 @@
   ],
   "Website": "https://santiagorada.com/hytale/plugins/countertale",
   "ServerVersion": "2026.02.11-255364b8e",
-  "Dependencies": {
-    "Hytale:DamageModule": "*"
-  },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,

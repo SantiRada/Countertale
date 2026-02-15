@@ -1,16 +1,16 @@
 package Tenzinn.Tools;
 
-import Tenzinn.Deathmatch.PlayerStats;
-
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
+import Tenzinn.Deathmatch.Objects.PlayerStats;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -125,6 +125,22 @@ public class RefactorTool {
 
             }
             else { playerStats.getPlayer().sendMessage(Message.raw("No se encuentra la UI del Player").color(Color.yellow)); }
+        }
+    }
+    public static void setChangesInSlots (int value, PlayerRef playerRef) {
+        Player player = getPlayer(playerRef);
+        if(player == null) return;
+
+        Object testHud = player.getHudManager().getCustomHud();
+
+        if(testHud == null) return;
+
+        if(testHud instanceof DeathmatchHUD) {
+            DeathmatchHUD currentHUD = (DeathmatchHUD) testHud;
+
+            if(value > 3) return;
+
+            currentHUD.setWeapons(value);
         }
     }
 }

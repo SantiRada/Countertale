@@ -1,5 +1,6 @@
-package Tenzinn.Deathmatch;
+package Tenzinn.Deathmatch.Objects;
 
+import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;

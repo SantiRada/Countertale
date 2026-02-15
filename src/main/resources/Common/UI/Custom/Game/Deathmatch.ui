@@ -1,6 +1,9 @@
 
-@Timer = PatchStyle(TexturePath: "images/timer.png");
-@Crosshair = PatchStyle(TexturePath: "images/crosshair.png");
+@LineCenter         = PatchStyle(TexturePath: "images/line.png");
+@Timer              = PatchStyle(TexturePath: "images/timer.png");
+@IconShield         = PatchStyle(TexturePath: "images/shield/Kevlar.png");
+@BulletTotal        = PatchStyle(TexturePath: "images/icons/Reserve.png");
+@Crosshair          = PatchStyle(TexturePath: "images/weapons/crosshair/weapon.png");
 
 Group #DeathmatchUI {
     LayoutMode: Top;
@@ -179,7 +182,7 @@ Group #DeathmatchUI {
         }
     }
 
-    Group #BottomSector {
+    Group #MiddleSector {
         LayoutMode: Top;
         Anchor: (Width: 1920);
         FlexWeight: 10;
@@ -194,5 +197,149 @@ Group #DeathmatchUI {
                 Anchor: (Width: 50, Height: 50);
             }
         }
+    }
+
+    Group #BottomSector{
+        Anchor: (Width: 1920);
+        LayoutMode: Left;
+        FlexWeight: 2;
+
+        Group #LeftSector {
+            LayoutMode: Left;
+            FlexWeight: 2;
+            Anchor: (Height: 170, Left: 20);
+
+            Group #VerticalSector {
+                LayoutMode: Top;
+                Anchor: (Bottom: 20);
+
+                Group #Lateral01 {
+                    LayoutMode: Left;
+                    Anchor: (Width: 130, Height: 42, Bottom: 8);
+
+                    Label #Number01 {
+                        Style: (FontSize: 20, TextColor: #ffffff, RenderBold: true);
+                        Text: "1";
+                    }
+
+                    Group #Weapon01 {
+                        Anchor: (Width: 90, Height: 42, Left: 20);
+                        Background: (Color: #ffffff(0.25));
+                    }
+                }
+
+                Group #Lateral02 {
+                    LayoutMode: Left;
+                    Anchor: (Width: 130, Height: 42, Bottom: 8);
+
+                    Label #Number02 {
+                        Style: (FontSize: 20, TextColor: #ffffff, RenderBold: true);
+                        Text: "2";
+                    }
+
+                    Group #Weapon02 {
+                        Anchor: (Width: 90, Height: 42, Left: 20);
+                        Background: (Color: #ffffff(0.25));
+                    }
+                }
+
+                Group #Lateral03 {
+                    LayoutMode: Left;
+                    Anchor: (Width: 130, Height: 42, Bottom: 8);
+
+                    Label #Number03 {
+                        Style: (FontSize: 20, TextColor: #ffffff, RenderBold: true);
+                        Text: "3";
+                    }
+
+                    Group #Weapon03 {
+                        Anchor: (Width: 90, Height: 42, Left: 20);
+                        Background: (Color: #ffffff(0.25));
+                    }
+                }
+            }
+        }
+
+        Group #CenterSector {
+            LayoutMode: Center;
+            FlexWeight: 6;
+
+            Group #HeathSector {
+                LayoutMode: Left;
+
+                Group #IconShield {
+                    LayoutMode: Center;
+                    Background: @IconShield;
+                    Anchor: (Width: 42, Height: 43);
+                }
+
+                Group #HealthData {
+                    LayoutMode: Top;
+                    Anchor: (Width: 75, Height: 60);
+
+                    Label #HealthNumber {
+                        Style: (FontSize: 36, TextColor: #ffffff, RenderBold: true, Alignment: Center);
+                        Text: "100";
+                    }
+
+                    Group #HealthSlider {
+                        LayoutMode: Top;
+                        Anchor: (Width: 61, Height: 7, Top: 2);
+                        Background: (Color: #000000(0.25));
+
+                        Group #Slider {
+                            Anchor: (Width: 61, Height: 7);
+                            Background: (Color: #ffffff);
+                        }
+                    }
+                }
+            }
+
+            Group #LineCenter {
+                Anchor: (Width: 620, Height: 80, Right: 4);
+                LayoutMode: Center;
+                Background: @LineCenter;
+            }
+
+            Group #BulletSector {
+                LayoutMode: Left;
+
+                Group #CurrentBullets {
+                    LayoutMode: Middle;
+                    Anchor: (Right: 12);
+
+                    Label #CurrentBullet {
+                        Style: (FontSize: 36, RenderBold: true, Alignment: Center);
+                        Text: "25";
+                    }
+
+                    Group #IconBullet {
+                        Anchor: (Width: 65, Height: 15);
+                    }
+                }
+
+                Group #DivisorVertical {
+                    Anchor: (Width: 3, Height: 40);
+                    Background: (Color: #ffffff);
+                }
+
+                Group #TotalBullets {
+                    LayoutMode: Left;
+                    Anchor: (Left: 8);
+
+                    Label #TotalBullet {
+                        Style: (FontSize: 28, RenderBold: true, Alignment: Center, TextColor: #ffffff);
+                        Text: "90";
+                    }
+
+                    Group #IconBulletTotal {
+                        Anchor: (Width: 18, Height: 36, Left: 2);
+                        Background: @BulletTotal;
+                    }
+                }
+            }
+        }
+
+        Group #RightSector { FlexWeight: 2; }
     }
 }
