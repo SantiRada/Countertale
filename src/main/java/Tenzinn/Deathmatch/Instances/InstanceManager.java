@@ -2,33 +2,26 @@ package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
 
-import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.prefab.PrefabStore;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
 import com.hypixel.hytale.server.core.universe.world.WorldConfig;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class InstanceManager {
 
@@ -83,7 +76,7 @@ public class InstanceManager {
                 throw new RuntimeException("Prefab 'Test_Map.prefab.json' no encontrado");
             }
 
-            Vector3i pos = new Vector3i(36, 52, 2);
+            Vector3i pos = new Vector3i(0, 52, 0);
             prefab.place(sender, instanceWorld, pos, null, null);
 
         } catch (Exception e) {
@@ -95,22 +88,21 @@ public class InstanceManager {
     public void teleportPlayers(List<PlayerRef> playerRefs) {
         if (newWorld == null || !isMapLoaded) return;
 
-        Transform[] spawns = {
-                new Transform(36, 52, 2),
-                new Transform(14, 52, -9),
-                new Transform(5, 52, -4),
-                new Transform(4, 52, 2),
-                new Transform(8, 52, 9),
-                new Transform(16, 52, 10),
-                new Transform(8, 52, 4),
-                new Transform(1, 56, 1),
-                new Transform(21, 56, -11),
-                new Transform(-2, 59, 2)
+        Vector3d[] spawns = {
+                new Vector3d(19, 54, 1),
+                new Vector3d(-2, 54, -10),
+                new Vector3d(-15, 54, 1),
+                new Vector3d(-3, 54, 11),
+                new Vector3d(5, 58, 10),
+                new Vector3d(-12, 58, 9),
+                new Vector3d(12, 52, -10),
+                new Vector3d(1, 52, 1),
+                new Vector3d(12, 52, 11),
+                new Vector3d(14, 56, 10)
         };
 
-
         for (int i = 0; i < playerRefs.size(); i++) {
-            Transform spawnPoint = spawns[i];
+            Transform spawnPoint = new Transform(spawns[i].x, spawns[i].y, spawns[i].z);
 
             PlayerRef playerRef = playerRefs.get(i);
 

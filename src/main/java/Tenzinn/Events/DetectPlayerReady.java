@@ -24,12 +24,14 @@ public class DetectPlayerReady {
         Player player = event.getPlayer();
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
+        assert player.getWorld() != null;
         player.sendMessage(Message.raw("Name World: " + player.getWorld().getName()));
 
         if(player.getWorld().getName().equals("default")) {
+            player.getHudManager().resetHud(playerRef);
             Object hud = RefactorTool.getCustomHud(playerRef);
-            if(hud != null){
-                if(hud instanceof DeathmatchHUD){
+            if (hud != null) {
+                if (hud instanceof DeathmatchHUD) {
                     DeathmatchHUD newHud = (DeathmatchHUD) hud;
                     newHud.clearHUD();
                 }
@@ -41,6 +43,7 @@ public class DetectPlayerReady {
             openGameHud(playerRef, player);
             getGameLoot(player);
 
+            assert playerRef != null;
             RefactorTool.Respawn(playerRef);
         }
     }
@@ -62,6 +65,10 @@ public class DetectPlayerReady {
         player.getHudManager().hideHudComponents(playerRef, HudComponent.UtilitySlotSelector);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BlockVariantSelector);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BuilderToolsMaterialSlotSelector);
+
+        player.getHudManager().hideHudComponents(playerRef, HudComponent.Health);
+        player.getHudManager().hideHudComponents(playerRef, HudComponent.Stamina);
+        player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
 
         GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
         if (match != null) match.startTimer();

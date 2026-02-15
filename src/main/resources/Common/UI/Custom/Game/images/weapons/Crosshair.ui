@@ -1,0 +1,4 @@
+
+@Weapon = PatchStyle(TexturePath: "crosshair/weapon.png");
+@Shotgun = PatchStyle(TexturePath: "crosshair/shotgun.png");
+@Knife = PatchStyle(TexturePath: "crosshair/knife.png");
