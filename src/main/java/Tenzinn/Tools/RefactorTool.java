@@ -23,6 +23,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class RefactorTool {
@@ -47,13 +48,11 @@ public class RefactorTool {
     public static void setQuitPlayerStats (PlayerStats playerStats) { playerStatsList.remove(playerStats); }
     // ============================================ //
     public static PlayerStats getPlayerStats(PlayerRef playerRef) {
+        if (playerStatsList.isEmpty()) return null;
 
-        if (playerStatsList.size() == 0) return null;
-
-        for(PlayerStats playerStats : playerStatsList) {
-            if(playerStats.getPlayerRef().equals(playerRef)) { return playerStats; }
+        for (PlayerStats playerStats : playerStatsList) {
+            if (playerStats.getPlayerRef().equals(playerRef)) { return playerStats; }
         }
-
         return null;
     }
     public static List<PlayerStats> getPlayerList() { return playerStatsList; }

@@ -189,7 +189,7 @@ Group #DeathmatchUI {
 
         Group {
             LayoutMode: Center;
-            Anchor: (Width: 1920, Top: 208);
+            Anchor: (Width: 1920, Top: 220);
 
             Group #Crosshair {
                 LayoutMode: Top;
