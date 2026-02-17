@@ -63,6 +63,7 @@ public class GameMatch {
 
     // ================================================ //
     public void setInstance(Countertale main) { matchInstance = new InstanceManager(main); }
+    public void setInstance(InstanceManager instance) { matchInstance = instance; }
     public void setState(MatchState state) { this.state = state; }
     // ================================================ //
     public List<PlayerRef> getPlayers() { return new ArrayList<>(players); }

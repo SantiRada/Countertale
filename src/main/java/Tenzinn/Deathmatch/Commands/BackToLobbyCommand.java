@@ -1,18 +1,15 @@
 package Tenzinn.Deathmatch.Commands;
 
 import Tenzinn.Countertale;
-import Tenzinn.Deathmatch.UI.DeathmatchHUD;
-import Tenzinn.Deathmatch.UI.ScoreboardPage;
-import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -60,31 +57,18 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
             return;
         }
 
-        Object hud = RefactorTool.getCustomHud(playerRef);
-        if (hud instanceof DeathmatchHUD deathmatchHUD) { deathmatchHUD.stopTimer(); }
+        CommandManager.get().handleCommand(playerRef, "clearhud");
 
         world.execute(() -> {
             System.out.println("[LOBBY] world.execute() thread: " + Thread.currentThread().getName());
             try {
-                Player player = store.getComponent(ref, Player.getComponentType());
-
-                if (player != null) {
-                    player.getInventory().clear();
-
-                    Object h = RefactorTool.getCustomHud(playerRef);
-                    if (h instanceof DeathmatchHUD deathmatchHUD) { deathmatchHUD.stopTimer(); }
-
-                    player.getHudManager().setCustomHud(playerRef, null);
-
-                    player.getHudManager().resetHud(playerRef);
-                }
-
                 main.getMatchManager().removePlayerFromMatch(playerRef);
 
                 Transform spawnPoint = new Transform(spawnLobby.x, spawnLobby.y, spawnLobby.z);
                 Teleport teleport = Teleport.createForPlayer(mainWorld, spawnPoint);
                 store.addComponent(ref, Teleport.getComponentType(), teleport);
 
+                // El delayed executor solo para el loot del lobby
                 CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS).execute(() -> {
                     mainWorld.execute(() -> {
                         try {

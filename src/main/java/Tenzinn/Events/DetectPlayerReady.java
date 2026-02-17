@@ -27,16 +27,9 @@ public class DetectPlayerReady {
         assert player.getWorld() != null;
         player.sendMessage(Message.raw("Name World: " + player.getWorld().getName()));
 
-        if (player.getWorld().getName().equals("default")) {
-            Object hud = RefactorTool.getCustomHud(playerRef);
-            if (hud instanceof DeathmatchHUD oldHud) {
-                oldHud.stopTimer();
-                player.getHudManager().setCustomHud(playerRef, null);
-            }
+        System.out.println("[[[[[[[[[ El usuario " + player.getDisplayName() + " ingresó al mundo " + player.getWorld().getName() + " ]]]]]]]]]");
 
-            player.getHudManager().resetHud(playerRef);
-            getLobbyLoot(player);
-        }
+        if (Universe.get().getDefaultWorld().equals(Universe.get().getWorld(player.getWorld().getName()))) { getLobbyLoot(player, playerRef); }
         else {
             openGameHud(playerRef, player);
             getGameLoot(player);
@@ -71,8 +64,16 @@ public class DetectPlayerReady {
         GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
         if (match != null) match.startTimer();
     }
-    public static void getLobbyLoot(Player player) {
+    public static void getLobbyLoot(Player player, PlayerRef playerRef) {
         player.getInventory().clear();
+
+        player.getHudManager().showHudComponents(playerRef, HudComponent.Chat);
+        player.getHudManager().showHudComponents(playerRef, HudComponent.Hotbar);
+        player.getHudManager().showHudComponents(playerRef, HudComponent.Health);
+        player.getHudManager().showHudComponents(playerRef, HudComponent.Compass);
+        player.getHudManager().showHudComponents(playerRef, HudComponent.Stamina);
+        player.getHudManager().showHudComponents(playerRef, HudComponent.Reticle);
+        player.getHudManager().showHudComponents(playerRef, HudComponent.InputBindings);
 
         Inventory inv = player.getInventory();
         ItemStack actionBook = new ItemStack("actions_book", 1);

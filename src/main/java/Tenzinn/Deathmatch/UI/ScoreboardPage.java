@@ -89,6 +89,8 @@ public class ScoreboardPage extends CustomUIHud {
     public void clearHUD() {
         if (timerTask != null && !timerTask.isDone()) timerTask.cancel(true);
 
+        if (uiBuilder == null) return;
+
         try {
             uiBuilder.remove("#Scoreboard");
             update(true, uiBuilder);

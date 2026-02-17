@@ -59,7 +59,7 @@ public class Countertale extends JavaPlugin {
         // Interactions
         this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
 
-        matchManager = new MatchManager();
+        matchManager = new MatchManager(this);
 
         getEventRegistry().register(PlayerConnectEvent.class, event -> {
             PlayerRef playerRef = event.getPlayerRef();
@@ -121,6 +121,7 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
         getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
+        getCommandRegistry().registerCommand(new ClearHUDCommand("clearhud", "Clear HUD to change instance"));
 
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
@@ -158,6 +159,8 @@ public class Countertale extends JavaPlugin {
         @SuppressWarnings("unchecked")
         ScheduledFuture<Void> matchTask = (ScheduledFuture<Void>) matchCheckTask;
         getTaskRegistry().registerTask(matchTask);
+
+        matchManager.initPool();
     }
 
     // ==================== MÉTODOS DE SERVER HUD ====================

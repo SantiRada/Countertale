@@ -2,7 +2,6 @@ package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
 
-import Tenzinn.Handle.DeathDetector;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -29,7 +28,9 @@ public class InstanceManager {
     private boolean isMapLoaded = false;
     private final Countertale main;
     private World newWorld;
-    private int instanceNumber = 0;
+
+    private static final java.util.concurrent.atomic.AtomicInteger instanceCounter = new java.util.concurrent.atomic.AtomicInteger(0);
+    private int instanceNumber;
 
     public InstanceManager(Countertale main) {
         this.main = main;
@@ -38,7 +39,7 @@ public class InstanceManager {
     public void preloadMap(Runnable onMapReady) {
         Universe universe = Universe.get();
 
-        instanceNumber++;
+        instanceNumber = instanceCounter.incrementAndGet();
         String worldName = "Dust2_Instance_" + instanceNumber;
 
         universe.addWorld(worldName, "Flat", null).thenAccept(instanceWorld -> {
@@ -65,10 +66,7 @@ public class InstanceManager {
 
                 main.getLogger().at(Level.INFO).log("✓ Instancia lista para jugar");
 
-                // ✅ Ejecutar callback cuando esté listo
-                if (onMapReady != null) {
-                    onMapReady.run();
-                }
+                if (onMapReady != null) onMapReady.run();
             });
         });
     }
@@ -205,7 +203,6 @@ public class InstanceManager {
             universe.removeWorld(worldName);
             main.getLogger().at(Level.INFO).log("Mundo " + worldName + " removido");
 
-            instanceNumber--;
             isMapLoaded = false;
             newWorld = null;
         }
