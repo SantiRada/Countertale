@@ -2,8 +2,10 @@ package Tenzinn.Handle;
 
 import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter;
+import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter;
+
 import javax.annotation.Nonnull;
 
 public class FindPacket implements PlayerPacketFilter {
@@ -13,16 +15,10 @@ public class FindPacket implements PlayerPacketFilter {
         int id = packet.getId();
         String name = packet.getClass().getSimpleName();
 
-        if (name.toLowerCase().contains("window") ||
-                name.toLowerCase().contains("inventory") ||
-                name.toLowerCase().contains("page") ||
-                name.toLowerCase().contains("open") ||
-                name.toLowerCase().contains("request")) {
+        if (id != 3 && id != 108) { playerRef.sendMessage(Message.raw("[C→S] " + name + " (ID: " + id + ")")); }
 
-            playerRef.sendMessage(Message.raw(
-                    "§b[C→S] " + name + " (ID: " + id + ")"
-            ));
-        }
+        if (name.toLowerCase().contains("window") || name.toLowerCase().contains("inventory") || name.toLowerCase().contains("page") ||
+                name.toLowerCase().contains("open") || name.toLowerCase().contains("request")) { }
 
         return false;
     }

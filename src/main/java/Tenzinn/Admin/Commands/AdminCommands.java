@@ -3,6 +3,7 @@ package Tenzinn.Admin.Commands;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 public class AdminCommands extends CommandBase {
@@ -21,7 +22,6 @@ public class AdminCommands extends CommandBase {
         commandContext.sendMessage(Message.raw("/leave: Leave match queue"));
         commandContext.sendMessage(Message.raw("/forcestart: Force start current match (DEBUG)"));
         commandContext.sendMessage(Message.raw("/lobby: Back to lobby in game"));
-        commandContext.sendMessage(Message.raw("/testhud: Open HUD of Game"));
         commandContext.sendMessage(Message.raw("-------------------------------------"));
         commandContext.sendMessage(Message.raw("/game status: Review status of the instances"));
 

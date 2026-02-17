@@ -1,21 +1,24 @@
 package Tenzinn.Deathmatch.Commands;
 
 import Tenzinn.Countertale;
+import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Deathmatch.UI.ScoreboardPage;
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.inventory.Inventory;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.math.vector.Transform;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -37,70 +40,74 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+    protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store,
+                           @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef,
+                           @NonNullDecl World world) {
 
-        if (world.getName().equals("default")) { commandContext.sendMessage(Message.raw("No estás en una partida.")); return; }
+        System.out.println("[LOBBY] execute() thread: " + Thread.currentThread().getName());
+        System.out.println("[LOBBY] world: " + world.getName());
+
+        if (world.getName().equals("default")) {
+            commandContext.sendMessage(Message.raw("No estás en una partida."));
+            return;
+        }
 
         playerRef.sendMessage(Message.raw("Retornando al lobby..."));
         World mainWorld = Universe.get().getDefaultWorld();
 
-        if (mainWorld == null) { playerRef.sendMessage(Message.raw("Error: No se pudo encontrar el mundo principal.").color(Color.red)); return; }
+        if (mainWorld == null) {
+            playerRef.sendMessage(Message.raw("Error: No se pudo encontrar el mundo principal.").color(Color.red));
+            return;
+        }
 
-        Player player = commandContext.senderAs(Player.class);
-        if (player != null) player.getInventory().clear();
-
-        Transform spawnPoint = new Transform(spawnLobby.x, spawnLobby.y, spawnLobby.z);
+        Object hud = RefactorTool.getCustomHud(playerRef);
+        if (hud instanceof DeathmatchHUD deathmatchHUD) { deathmatchHUD.stopTimer(); }
 
         world.execute(() -> {
+            System.out.println("[LOBBY] world.execute() thread: " + Thread.currentThread().getName());
             try {
-                main.getLogger().at(Level.INFO).log("Agregando componente Teleport...");
+                Player player = store.getComponent(ref, Player.getComponentType());
 
+                if (player != null) {
+                    player.getInventory().clear();
+
+                    Object h = RefactorTool.getCustomHud(playerRef);
+                    if (h instanceof DeathmatchHUD deathmatchHUD) { deathmatchHUD.stopTimer(); }
+
+                    player.getHudManager().setCustomHud(playerRef, null);
+
+                    player.getHudManager().resetHud(playerRef);
+                }
+
+                main.getMatchManager().removePlayerFromMatch(playerRef);
+
+                Transform spawnPoint = new Transform(spawnLobby.x, spawnLobby.y, spawnLobby.z);
                 Teleport teleport = Teleport.createForPlayer(mainWorld, spawnPoint);
                 store.addComponent(ref, Teleport.getComponentType(), teleport);
 
-                main.getLogger().at(Level.INFO).log("Teletransporte iniciado, esperando llegada al lobby...");
-
-                CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+                CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS).execute(() -> {
                     mainWorld.execute(() -> {
                         try {
-                            main.getLogger().at(Level.INFO).log("Jugador en lobby, configurando...");
+                            PlayerRef updatedPlayerRef = Universe.get().getPlayer(playerRef.getUuid());
+                            if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) return;
 
-                            UUID playerUUID = playerRef.getUuid();
-                            PlayerRef updatedPlayerRef = Universe.get().getPlayer(playerUUID);
+                            Store<EntityStore> lobbyStore = mainWorld.getEntityStore().getStore();
+                            Player lobbyPlayer = lobbyStore.getComponent(updatedPlayerRef.getReference(), Player.getComponentType());
 
-                            if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) {
-                                main.getLogger().at(Level.WARNING).log("No se pudo obtener referencia actualizada del jugador");
-                                playerRef.sendMessage(Message.raw("Error: No se pudo actualizar tu estado").color(Color.RED));
-                                return;
-                            }
-
-                            Ref<EntityStore> newRef = updatedPlayerRef.getReference();
-                            Store<EntityStore> newStore = newRef.getStore();
-
-                            Player teleportedPlayer = newStore.getComponent(newRef, Player.getComponentType());
-                            if (teleportedPlayer != null) {
-                                Inventory inv = teleportedPlayer.getInventory();
-                                ItemStack actionBook = new ItemStack("actions_book", 1);
-                                inv.getHotbar().addItemStack(actionBook);
-
-                                playerRef.sendMessage(Message.raw("¡Has vuelto al lobby!"));
-
-                                main.getLogger().at(Level.INFO).log("⚠️ A punto de llamar removePlayerFromMatch para: " + playerRef.getUuid().toString());
-                                boolean removed = main.getMatchManager().removePlayerFromMatch(playerRef);
-                                main.getLogger().at(Level.INFO).log("⚠️ Resultado de removePlayerFromMatch: " + removed);
-                            } else {
-                                main.getLogger().at(Level.WARNING).log("Player component es null");
+                            if (lobbyPlayer != null) {
+                                lobbyPlayer.getInventory().clear();
+                                lobbyPlayer.getInventory().getHotbar().addItemStack(new ItemStack("actions_book", 1));
+                                updatedPlayerRef.sendMessage(Message.raw("¡Has vuelto al lobby!"));
                             }
                         } catch (Exception e) {
-                            main.getLogger().at(java.util.logging.Level.SEVERE).log("Error en callback del lobby: " + e.getMessage(), e);
-                            e.printStackTrace();
+                            main.getLogger().at(Level.SEVERE).log("Error en callback lobby: " + e.getMessage());
                         }
                     });
                 });
 
             } catch (Exception e) {
-                playerRef.sendMessage(Message.raw("Error al retornar al lobby").color(Color.RED));
-                main.getLogger().at(java.util.logging.Level.SEVERE).log("Error en /lobby: " + e.getMessage(), e);
+                playerRef.sendMessage(Message.raw("Error al salir").color(Color.RED));
+                main.getLogger().at(Level.SEVERE).log("Error en /lobby: " + e.getMessage());
                 e.printStackTrace();
             }
         });

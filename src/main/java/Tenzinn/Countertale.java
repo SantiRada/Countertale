@@ -2,14 +2,14 @@ package Tenzinn;
 
 import Tenzinn.Events.*;
 import Tenzinn.Deathmatch.*;
-import Tenzinn.Handle.CancelHandler;
-import Tenzinn.Handle.DeathDetector;
+import Tenzinn.Handle.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
 import Tenzinn.Admin.UI.ServerStatusHud;
+import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
-import Tenzinn.Handle.HotbarSlotHandler;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
 import Tenzinn.Admin.Commands.HideServerStatusCommand;
@@ -18,11 +18,14 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
+import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
 import java.util.Map;
@@ -45,7 +48,6 @@ public class Countertale extends JavaPlugin {
 
     private PacketFilter hotbarFilter;
     private PacketFilter detectFilter;
-    private PacketFilter deathFilter;
 
     // Sistema de HUD de Cola
     private final Map<String, QueueHud> activeQueueHuds = new ConcurrentHashMap<>();
@@ -59,6 +61,54 @@ public class Countertale extends JavaPlugin {
 
         matchManager = new MatchManager();
 
+        getEventRegistry().register(PlayerConnectEvent.class, event -> {
+            PlayerRef playerRef = event.getPlayerRef();
+            World world = event.getWorld();
+
+            if (world.getName().equals("default")) {
+                world.execute(() -> {
+                    try {
+                        Player player = event.getPlayer();
+
+                        // Cancelar timers primero
+                        Object currentHud = player.getHudManager().getCustomHud();
+
+                        if (currentHud != null) {
+                            if (currentHud instanceof DeathmatchHUD) {
+                                DeathmatchHUD hud = (DeathmatchHUD) currentHud;
+                                if (hud.timerTask != null) {
+                                    hud.timerTask.cancel(true);
+                                    hud.timerTask = null;
+                                }
+                            } else if (currentHud instanceof ScoreboardPage) {
+                                ScoreboardPage scoreboard = (ScoreboardPage) currentHud;
+                                if (scoreboard.timerTask != null) {
+                                    scoreboard.timerTask.cancel(true);
+                                    scoreboard.timerTask = null;
+                                }
+                            }
+                        }
+
+                        // Reset HUD
+                        player.getHudManager().resetHud(playerRef);
+                        player.getHudManager().setCustomHud(playerRef, null);
+
+                        // Restaurar componentes normales del HUD
+                        player.getHudManager().showHudComponents(playerRef, HudComponent.Health);
+                        player.getHudManager().showHudComponents(playerRef, HudComponent.Stamina);
+                        player.getHudManager().showHudComponents(playerRef, HudComponent.Hotbar);
+                        player.getHudManager().showHudComponents(playerRef, HudComponent.Reticle);
+
+                        getLogger().at(Level.INFO).log("✓ HUD limpiado en PlayerConnectEvent");
+
+                    } catch (Exception e) {
+                        getLogger().at(Level.SEVERE).log("Error limpiando HUD: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+
         // Admin Commands
         getCommandRegistry().registerCommand(new ServerStatusCommand("server", "Show server status", this));
         getCommandRegistry().registerCommand(new HideServerStatusCommand("hide", "Hide server status HUD", this));
@@ -70,6 +120,7 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
+        getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
 
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
@@ -78,6 +129,7 @@ public class Countertale extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
         this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
+        this.getEntityStoreRegistry().registerSystem(new DeathDetector());
 
         // Handlers
         CancelHandler handler = new CancelHandler();
@@ -85,16 +137,12 @@ public class Countertale extends JavaPlugin {
 
         HotbarSlotHandler hotbar = new HotbarSlotHandler();
         hotbarFilter = PacketAdapters.registerInbound(hotbar);
-
-        DeathDetector deathHandler = new DeathDetector();
-        deathFilter = PacketAdapters.registerInbound(deathHandler);
     }
 
     @Override
     protected void shutdown() {
         if (detectFilter != null) { PacketAdapters.deregisterInbound(detectFilter); }
         if (hotbarFilter != null) { PacketAdapters.deregisterInbound(hotbarFilter); }
-        if (deathFilter != null) { PacketAdapters.deregisterInbound(deathFilter); }
     }
 
     @Override

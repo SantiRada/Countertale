@@ -20,7 +20,7 @@ public class ScoreboardPage extends CustomUIHud {
     private UICommandBuilder uiBuilder;
     private PlayerRef playerRef;
 
-    private ScheduledFuture<?> timerTask;
+    public ScheduledFuture<?> timerTask;
     private int remainingSeconds = 600;
 
     public ScoreboardPage(PlayerRef playerRef) { super(playerRef); this.playerRef = playerRef; }
@@ -87,9 +87,13 @@ public class ScoreboardPage extends CustomUIHud {
     }
 
     public void clearHUD() {
-        if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false);
+        if (timerTask != null && !timerTask.isDone()) timerTask.cancel(true);
 
-        uiBuilder.remove("#Scoreboard");
-        update(true, uiBuilder);
+        try {
+            uiBuilder.remove("#Scoreboard");
+            update(true, uiBuilder);
+        } catch (Exception e) { }
+
+        uiBuilder = null;
     }
 }
