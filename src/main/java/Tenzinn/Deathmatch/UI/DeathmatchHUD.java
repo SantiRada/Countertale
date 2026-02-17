@@ -1,8 +1,8 @@
 package Tenzinn.Deathmatch.UI;
 
 import Tenzinn.Tools.RefactorTool;
-import Tenzinn.Deathmatch.Objects.WeaponStats;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
+import Tenzinn.Deathmatch.Objects.WeaponStats;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.Value;
@@ -22,7 +22,7 @@ public class DeathmatchHUD extends CustomUIHud {
     private UICommandBuilder uiBuilder;
     private PlayerRef playerRef;
 
-    private ScheduledFuture<?> timerTask;
+    public ScheduledFuture<?> timerTask;
     private int remainingSeconds = 600;
 
     public WeaponStats[] weapons = new WeaponStats[3];
@@ -120,10 +120,25 @@ public class DeathmatchHUD extends CustomUIHud {
         update(true, uiBuilder);
     }
 
-    public void clearHUD() {
-        if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false);
+    public void stopTimer() {
+        if (timerTask != null && !timerTask.isDone()) {
+            timerTask.cancel(false);
+            timerTask = null;
+        }
+    }
 
-        uiBuilder.remove("#DeathmatchUI");
-        update(true, uiBuilder);
+    public void clearHUDVisuals() {
+        if (uiBuilder == null) return;
+
+        try {
+            uiBuilder.remove("#DeathmatchUI");
+            update(true, uiBuilder);
+        } catch (Exception e) { }
+        uiBuilder = null;
+    }
+
+    public void clearHUD() {
+        stopTimer();
+        clearHUDVisuals();
     }
 }

@@ -30,7 +30,7 @@ public class QueueHud extends CustomUIHud {
         startUpdating();
     }
     private void startUpdating() { updateTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::updateTimer,0,1,TimeUnit.SECONDS); }
-    public void stopUpdating() { if (updateTask != null && !updateTask.isDone()) updateTask.cancel(false); }
+    public void stopUpdating() { if (updateTask != null && !updateTask.isDone()) updateTask.cancel(true); }
     private void updateTimer() {
         long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
         int minutes = (int) (elapsedSeconds / 60);
@@ -50,7 +50,11 @@ public class QueueHud extends CustomUIHud {
     public void hideQueueUI() {
         stopUpdating();
 
-        uiBuilder.remove("#QueueHUD");
-        update(true, uiBuilder);
+        try {
+            uiBuilder.remove("#QueueHUD");
+            update(true, uiBuilder);
+        } catch (Exception e) { }
+
+        uiBuilder = null;
     }
 }

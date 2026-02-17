@@ -58,7 +58,9 @@ public class MatchManager {
 
             match.setInstance(main);
 
-            match.getInstance().preloadMap();
+            match.getInstance().preloadMap(() -> {
+                match.getInstance().teleportPlayers(match.getPlayers());
+            });
         }
 
         PlayerStats playerStats = new PlayerStats(playerRef, RefactorTool.getPlayer(playerRef), match);
@@ -76,12 +78,11 @@ public class MatchManager {
 
         match.removePlayer(playerRef);
         playerMatches.remove(playerStats);
-        RefactorTool.setQuitPlayerStats(playerStats);
 
         if (match.getPlayers().isEmpty()) {
             CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS).execute(() -> {
+                match.stopTimer();
                 match.removeInstance();
-                RefactorTool.getPlayerStats(playerRef).getCurrentMatch().stopTimer();
                 activeMatches.remove(match);
             });
         }

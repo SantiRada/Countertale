@@ -5,7 +5,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.Packet;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
-import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -22,6 +22,7 @@ public class CancelHandler implements PlayerPacketFilter {
 
     @Override
     public boolean test(@Nonnull PlayerRef playerRef, @Nonnull Packet packet) {
+
         if (packet.getId() == 204) {
             Ref<EntityStore> entityRef = playerRef.getReference();
             if (entityRef != null && entityRef.isValid()) {

@@ -1,4 +1,6 @@
 
+@ComingSoon = PatchStyle(TexturePath: "../shop/coming-soon.png");
+
 @Automatic = PatchStyle(TexturePath: "fmodes/automatic.png");
 @Burst = PatchStyle(TexturePath: "fmodes/burst.png");
 @Melee = PatchStyle(TexturePath: "fmodes/melee.png");
@@ -12,3 +14,21 @@
 
 @Weapon03 = PatchStyle(TexturePath: "weapon-3-on.png");
 @Weapon03Off = PatchStyle(TexturePath: "weapon-3-off.png");
+
+@Kevlar = PatchStyle(TexturePath: "kevlar.png");
+@KevlarHelmet = PatchStyle(TexturePath: "kevlar-helmet.png");
+
+@Usp = PatchStyle(TexturePath: "usp.png");
+@DualBerettas = PatchStyle(TexturePath: "dual-berettas.png");
+@P250 = PatchStyle(TexturePath: "p250.png");
+@FiveSeven = PatchStyle(TexturePath: "five-seven.png");
+@DesertEagle = PatchStyle(TexturePath: "desert-eagle.png");
+
+@Mac10 = PatchStyle(TexturePath: "../shop/coming-soon.png");
+@Mp9 = PatchStyle(TexturePath: "../shop/coming-soon.png");
+@Mag7 = PatchStyle(TexturePath: "../shop/coming-soon.png");
+@SawedOff = PatchStyle(TexturePath: "../shop/coming-soon.png");
+
+@Ak47 = PatchStyle(TexturePath: "../shop/coming-soon.png");
+@M4a1s = PatchStyle(TexturePath: "../shop/coming-soon.png");
+@Awp = PatchStyle(TexturePath: "../shop/coming-soon.png");

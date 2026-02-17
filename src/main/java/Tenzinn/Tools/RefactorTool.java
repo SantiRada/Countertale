@@ -9,8 +9,8 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -27,19 +27,20 @@ import java.util.concurrent.TimeUnit;
 
 public class RefactorTool {
 
+    public enum TypeData { SCORE, DEATH, KILL }
     public static List<PlayerStats> playerStatsList = new ArrayList<>();
 
     private static Vector3d[] spawns = {
-            new Vector3d(36, 56, 0),
-            new Vector3d(16, 52, 5),
-            new Vector3d(8, 52, 1),
-            new Vector3d(4, 56, -3),
-            new Vector3d(14, 56, -9),
-            new Vector3d(30, 51, -9),
-            new Vector3d(12, 52, -10),
-            new Vector3d(1, 52, 1),
-            new Vector3d(12, 52, 11),
-            new Vector3d(14, 56, 10)
+            new Vector3d(-27, 107, -10),
+            new Vector3d(-28, 107, 10),
+            new Vector3d(-10, 110, -13),
+            new Vector3d(-31, 112, -23),
+            new Vector3d(-20, 110, -43),
+            new Vector3d(18, 106, -36),
+            new Vector3d(14, 110, -15),
+            new Vector3d(40, 110, -13),
+            new Vector3d(0, 111, 32),
+            new Vector3d(-33, 110, 28)
     };
 
     public static void setPlayerStats (PlayerStats playerStats) { playerStatsList.add(playerStats); }
@@ -55,21 +56,8 @@ public class RefactorTool {
 
         return null;
     }
-    public static PlayerStats getPlayerStats(Player player) {
-
-        if (playerStatsList.size() == 0) return null;
-
-        PlayerRef playerRef = getPlayerRef(player);
-
-        for(PlayerStats playerStats : playerStatsList) {
-            if(playerStats.getPlayerRef().equals(playerRef)) { return playerStats; }
-        }
-
-        return null;
-    }
     public static List<PlayerStats> getPlayerList() { return playerStatsList; }
     // ============================================ //
-    public static PlayerRef getPlayerRef(Player player) { return Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT); }
     public static Player getPlayer(PlayerRef playerRef) {
         Ref<EntityStore> ref = playerRef.getReference();
         Store<EntityStore> store = ref.getStore();
@@ -141,6 +129,25 @@ public class RefactorTool {
             if(value > 3) return;
 
             currentHUD.setWeapons(value);
+        }
+    }
+    public static void setDataScore(Player player, TypeData typeData, float value) {
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+
+        PlayerStats playerStats = getPlayerStats(playerRef);
+
+        switch (typeData) {
+            case TypeData.SCORE:
+                assert playerStats != null;
+                int finalValue = (int)value;
+                playerStats.setScore(finalValue);
+                break;
+            case TypeData.DEATH:
+                playerStats.setDeaths();
+                break;
+            case TypeData.KILL:
+                playerStats.setKills();
+                break;
         }
     }
 }

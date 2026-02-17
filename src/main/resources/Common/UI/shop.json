@@ -1,0 +1,154 @@
+{
+  "categories": [
+    {
+      "name": "Equipment",
+      "content": [
+        {
+          "number": "1",
+          "name": "Kevlar",
+          "image": "Kevlar"
+        },
+        {
+          "number": "2",
+          "name": "Kevlar & Helmet",
+          "image": "KevlarHelmet"
+        },
+        {
+          "number": "3",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        },
+        {
+          "number": "4",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        },
+        {
+          "number": "5",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        }
+      ]
+    },
+    {
+      "name": "Pistols",
+      "content": [
+        {
+          "number": "1",
+          "name": "USP-S",
+          "image": "Usp"
+        },
+        {
+          "number": "2",
+          "name": "Dual Berettas",
+          "image": "DualBerettas"
+        },
+        {
+          "number": "3",
+          "name": "P250",
+          "image": "P250"
+        },
+        {
+          "number": "4",
+          "name": "Five-SeveN",
+          "image": "FiveSeven"
+        },
+        {
+          "number": "5",
+          "name": "Desert Eagle",
+          "image": "DesertEagle"
+        }
+      ]
+    },
+    {
+      "name": "Mid-Tier",
+      "content": [
+        {
+          "number": "1",
+          "name": "Mac-10",
+          "image": "Mac10"
+        },
+        {
+          "number": "2",
+          "name": "MP9",
+          "image": "Mp9"
+        },
+        {
+          "number": "3",
+          "name": "Mag-7",
+          "image": "Mag7"
+        },
+        {
+          "number": "4",
+          "name": "Sawed-Off",
+          "image": "SawedOff"
+        },
+        {
+          "number": "5",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        }
+      ]
+    },
+    {
+      "name": "Rifles",
+      "content": [
+        {
+          "number": "1",
+          "name": "Ak-47",
+          "image": "Ak47"
+        },
+        {
+          "number": "2",
+          "name": "M4A1-S",
+          "image": "M4a1s"
+        },
+        {
+          "number": "3",
+          "name": "AWP",
+          "image": "Awp"
+        },
+        {
+          "number": "4",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        },
+        {
+          "number": "5",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        }
+      ]
+    },
+    {
+      "name": "Grenades",
+      "content": [
+        {
+          "number": "1",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        },
+        {
+          "number": "2",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        },
+        {
+          "number": "3",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        },
+        {
+          "number": "4",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        },
+        {
+          "number": "5",
+          "name": "Coming Soon",
+          "image": "ComingSoon"
+        }
+      ]
+    }
+  ]
+}

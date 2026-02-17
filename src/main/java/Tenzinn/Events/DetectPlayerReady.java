@@ -27,16 +27,14 @@ public class DetectPlayerReady {
         assert player.getWorld() != null;
         player.sendMessage(Message.raw("Name World: " + player.getWorld().getName()));
 
-        if(player.getWorld().getName().equals("default")) {
-            player.getHudManager().resetHud(playerRef);
+        if (player.getWorld().getName().equals("default")) {
             Object hud = RefactorTool.getCustomHud(playerRef);
-            if (hud != null) {
-                if (hud instanceof DeathmatchHUD) {
-                    DeathmatchHUD newHud = (DeathmatchHUD) hud;
-                    newHud.clearHUD();
-                }
+            if (hud instanceof DeathmatchHUD oldHud) {
+                oldHud.stopTimer();
+                player.getHudManager().setCustomHud(playerRef, null);
             }
 
+            player.getHudManager().resetHud(playerRef);
             getLobbyLoot(player);
         }
         else {
@@ -85,18 +83,17 @@ public class DetectPlayerReady {
         World playerWorld = player.getWorld();
         if (playerWorld == null) { return; }
 
-        // Get-Item
         player.getInventory().clear();
         Inventory inv = player.getInventory();
 
+        ItemStack rifle = new ItemStack("Weapon_Assault_Rifle", 1);
         ItemStack gun = new ItemStack("Weapon_Handgun", 1);
         ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
         ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
 
+        inv.getHotbar().addItemStack(rifle);
         inv.getHotbar().addItemStack(gun);
         inv.getHotbar().addItemStack(knife);
         inv.getStorage().addItemStack(bullets);
-
-        inv.setActiveSlot(0, (byte) 0);
     }
 }

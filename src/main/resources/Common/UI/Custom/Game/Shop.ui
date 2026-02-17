@@ -1,0 +1,898 @@
+
+@Background = PatchStyle(TexturePath: "images/shop/background.png");
+@Fullsize = PatchStyle(TexturePath: "images/shop/fullsize.png");
+@Guides = PatchStyle(TexturePath: "images/shop/guides.png");
+
+@Icon01 = PatchStyle(TexturePath: "images/shop/icon-1.png");
+@Icon02 = PatchStyle(TexturePath: "images/shop/icon-2.png");
+
+@SlotDefault = PatchStyle(TexturePath: "images/shop/slot-default.png");
+@SlotHover = PatchStyle(TexturePath: "images/shop/slot-hover.png");
+@SlotActive = PatchStyle(TexturePath: "images/shop/slot-active.png");
+
+@ButtonSlot = (
+  Default: (Background: @SlotDefault),
+  Hovered: (Background: @SlotHover),
+  Pressed: (Background: @SlotActive)
+);
+
+
+Group {
+    FlexWeight: 1;
+    Background: @Fullsize;
+    LayoutMode: Top;
+
+    Group #Top {
+        FlexWeight: 12;
+        LayoutMode: Middle;
+
+        Group #Shop {
+            LayoutMode: Top;
+            Anchor: (Width: 1156, Height: 714, Top: 100);
+            Background: @Background;
+
+            Group #Top {
+                FlexWeight: 1;
+                LayoutMode: Center;
+                Anchor: (Height: 45, Top: 11, Bottom: 35);
+
+                Label {
+                    Anchor: (Right: 8);
+                    Text: "Buy Time Remaining";
+                    Style: (FontSize: 18, RenderBold: true, TextColor: #575D68);
+                }
+
+                Label #Timer {
+                    Text: "00:14";
+                    Style: (FontSize: 18, RenderBold: true, TextColor: #FFFFFF);
+                }
+            }
+
+            Group #Bottom {
+                LayoutMode: Left;
+                Anchor: (Width: 1132, Height: 639, Left: 12, Right: 12, Bottom: 12);
+
+                Group #B01 {
+                    Anchor: (Width: 226, Height: 639, Top: 6);
+                    LayoutMode: Top;
+
+                    Label #Title01 {
+                        Text: "Lorem ipsum";
+                        Style: (FontSize: 18, RenderBold: true, Alignment: Center);
+                    }
+                    Button #Slot1 {
+                        Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot1Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot1Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot1Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot2 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot2Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot2Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot2Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot3 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot3Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot3Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot3Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot4 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot4Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot4Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot4Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot5 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot5Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot5Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot5Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                }
+                Group #B02 {
+                    Anchor: (Width: 226, Height: 639, Top: 6);
+                    LayoutMode: Top;
+
+                    Label #Title02 {
+                        Text: "Lorem ipsum";
+                        Style: (FontSize: 18, RenderBold: true, Alignment: Center);
+                    }
+                    Button #Slot6 {
+                        Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot6Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot6Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot6Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot7 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot7Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot7Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot7Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot8 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot8Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot8Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot8Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot9 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot9Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot9Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot9Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot10 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot10Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot10Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot10Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                }
+                Group #B03 {
+                    Anchor: (Width: 226, Height: 639, Top: 6);
+                    LayoutMode: Top;
+
+                    Label #Title03 {
+                        Text: "Lorem ipsum";
+                        Style: (FontSize: 18, RenderBold: true, Alignment: Center);
+                    }
+                    Button #Slot11 {
+                        Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot11Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot11Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot11Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot12 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot12Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot12Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot12Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot13 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot13Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot13Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot13Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot14 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot14Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot14Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot14Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot15 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot15Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot15Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot15Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                }
+                Group #B04 {
+                    Anchor: (Width: 226, Height: 639, Top: 6);
+                    LayoutMode: Top;
+
+                    Label #Title04 {
+                        Text: "Lorem ipsum";
+                        Style: (FontSize: 18, RenderBold: true, Alignment: Center);
+                    }
+                    Button #Slot16 {
+                        Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot16Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot16Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot16Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot17 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot17Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot17Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot17Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot18 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot18Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot18Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot18Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot19 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot19Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot19Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot19Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot20 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot20Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot20Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot20Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                }
+                Group #B05 {
+                    Anchor: (Width: 226, Height: 639, Top: 6);
+                    LayoutMode: Top;
+
+                    Label #Title05 {
+                        Text: "Lorem ipsum";
+                        Style: (FontSize: 18, RenderBold: true, Alignment: Center);
+                    }
+                    Button #Slot21 {
+                        Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot21Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot21Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot21Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot22 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot22Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot22Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot22Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot23 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot23Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot23Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot23Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot24 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot24Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot24Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot24Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                    Button #Slot25 {
+                        Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Style: @ButtonSlot;
+                        LayoutMode: Top;
+
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Width: 196, Height: 16, Left: 8, Right: 8, Top: 8  );
+
+                            Label #Slot25Text {
+                                Text: "1";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5));
+                            }
+                            Label #Slot25Name {
+                                Text: "Kevlar";
+                                Anchor: (Width: 90);
+                                Style: (FontSize: 12, RenderBold: true, TextColor: #FFFFFF(0.5), Alignment: End);
+                            }
+                        }
+
+                        Group {
+                            LayoutMode: Center;
+
+                            Group #Slot25Icon {
+                                Anchor: (Width: 115, Height: 65);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Group #Guides {
+        FlexWeight: 1;
+        LayoutMode: Bottom;
+        Anchor: (Height: 22, Bottom: 16);
+
+        Group {
+            FlexWeight: 1;
+            LayoutMode: Center;
+
+            Group #GuidesIMG {
+                LayoutMode: Left;
+                Anchor: (Width: 313, Height: 22);
+
+                Group #FirstData {
+                    LayoutMode: Left;
+                    Anchor: (Right: 36);
+
+                    Group {
+                        Anchor: (Width: 22, Height: 22, Right: 12);
+                        Background: @Icon01;
+                    }
+
+                    Label {
+                        Text: "Select Loot";
+                        Style: (FontSize: 14, RenderBold: true);
+                    }
+                }
+
+                Group #SecondData {
+                    LayoutMode: Left;
+
+                    Group {
+                        Anchor: (Width: 50, Height: 17, Right: 12);
+                        Background: @Icon02;
+                    }
+
+                    Label {
+                        Text: "Close Shop";
+                        Style: (FontSize: 14, RenderBold: true);
+                    }
+                }
+            }
+        }
+    }
+}

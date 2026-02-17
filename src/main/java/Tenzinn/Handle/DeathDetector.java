@@ -1,32 +1,74 @@
 package Tenzinn.Handle;
 
 import Tenzinn.Tools.RefactorTool;
-import com.hypixel.hytale.protocol.Packet;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
+import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 
-public class DeathDetector implements PlayerPacketFilter {
+public class DeathDetector extends DeathSystems.OnDeathSystem {
 
-    private long lastDeathTime = 0;
-    private static final long COOLDOWN_MS = 2000;
-    private int countCalls = 0;
+    @Nonnull @Override
+    public Query<EntityStore> getQuery() { return Query.and(Player.getComponentType()); }
 
     @Override
-    public boolean test(@Nonnull PlayerRef playerRef, @Nonnull Packet packet) {
-        if (packet.getId() == 219) {
-            long currentTime = System.currentTimeMillis();
-            if (countCalls == 1) {
-                if (currentTime - lastDeathTime > COOLDOWN_MS) {
-                    RefactorTool.Respawn(playerRef);
-                    lastDeathTime = currentTime;
-                    countCalls = 0;
-                }
-            } else { if (currentTime - lastDeathTime > COOLDOWN_MS) { countCalls = 1; } }
-        }
+    public void onComponentAdded(@Nonnull Ref ref, @Nonnull DeathComponent component, @Nonnull Store store, @Nonnull CommandBuffer commandBuffer) {
 
-        return false;
+        Damage deathInfo = component.getDeathInfo();
+        Player victim = (Player) store.getComponent(ref, Player.getComponentType());
+        if (victim == null) return;
+
+        String causeId = component.getDeathCause() != null ? component.getDeathCause().getId() : "unknown";
+
+        System.out.println("[DeathDetector] Causa de muerte: " + causeId);
+
+        if (deathInfo != null && deathInfo.getSource() instanceof Damage.EntitySource entitySource) {
+            Ref<EntityStore> killerRef = entitySource.getRef();
+            Player killer = (Player) store.getComponent(killerRef, Player.getComponentType());
+
+            if (killer != null) {
+                RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
+                RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+            }
+            RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+        }
+        else if (deathInfo != null && deathInfo.getSource() instanceof Damage.ProjectileSource projectileSource) {
+            Ref<EntityStore> shooterRef = projectileSource.getRef();
+            Player killer = (Player) store.getComponent(shooterRef, Player.getComponentType());
+
+            if (killer != null) {
+                RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
+                RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+            }
+            RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+        }
+        else {
+            // Caída, void, /kill, comando, o cualquier source anónimo
+            System.out.println("[DeathDetector] Muerte por entorno/comando, causa: " + causeId);
+            RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+        }
+    }
+
+    @Override
+    public void onComponentRemoved(@Nonnull Ref ref, @Nonnull DeathComponent component, @Nonnull Store store, @Nonnull CommandBuffer commandBuffer) {
+        Player playerComponent = (Player) store.getComponent(ref, Player.getComponentType());
+        if (playerComponent == null) return;
+
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(playerComponent.getDisplayName(), NameMatching.EXACT);
+        if (playerRef == null) return;
+
+        System.out.println("El jugador " + playerComponent.getDisplayName() + " revivió");
+
+        RefactorTool.Respawn(playerRef);
     }
 }

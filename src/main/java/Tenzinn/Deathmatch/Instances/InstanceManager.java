@@ -2,11 +2,12 @@ package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
 
+import Tenzinn.Handle.DeathDetector;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -34,11 +35,11 @@ public class InstanceManager {
         this.main = main;
     }
 
-    public void preloadMap() {
+    public void preloadMap(Runnable onMapReady) {
         Universe universe = Universe.get();
 
         instanceNumber++;
-        String worldName = "Test_Map_Instance_" + instanceNumber;
+        String worldName = "Dust2_Instance_" + instanceNumber;
 
         universe.addWorld(worldName, "Flat", null).thenAccept(instanceWorld -> {
             main.getLogger().at(Level.INFO).log("Arena vacía creada: " + instanceWorld.getName());
@@ -61,6 +62,13 @@ public class InstanceManager {
                 placePrefabInInstance(instanceWorld);
                 newWorld = instanceWorld;
                 isMapLoaded = true;
+
+                main.getLogger().at(Level.INFO).log("✓ Instancia lista para jugar");
+
+                // ✅ Ejecutar callback cuando esté listo
+                if (onMapReady != null) {
+                    onMapReady.run();
+                }
             });
         });
     }
@@ -70,14 +78,39 @@ public class InstanceManager {
             CommandSender sender = ConsoleSender.INSTANCE;
             PrefabStore store = PrefabStore.get();
 
-            BlockSelection prefab = store.getAssetPrefabFromAnyPack("Test_Map.prefab.json");
+            BlockSelection prefab = store.getAssetPrefabFromAnyPack("Dust2.prefab.json");
 
             if (prefab == null) {
-                throw new RuntimeException("Prefab 'Test_Map.prefab.json' no encontrado");
+                throw new RuntimeException("Prefab 'Dust2.prefab.json' no encontrado");
             }
 
+            BlockSelection cleanPrefab = new BlockSelection();
+            cleanPrefab.setPosition(0, 52, 0);
+
+            prefab.forEachBlock((x, y, z, block) -> {
+                cleanPrefab.addBlockAtLocalPos(x, y, z, block.blockId(),
+                        block.rotation(), block.filler(), block.supportValue());
+            });
+
+            prefab.forEachFluid((x, y, z, fluidId, level) -> {
+                cleanPrefab.addFluidAtLocalPos(x, y, z, fluidId, level);
+            });
+
             Vector3i pos = new Vector3i(0, 52, 0);
-            prefab.place(sender, instanceWorld, pos, null, null);
+
+            // ✅ Solo desactivar ticking (esto debería ayudar bastante)
+            WorldConfig config = instanceWorld.getWorldConfig();
+            config.setBlockTicking(false);
+            config.setTicking(false);
+
+            long startTime = System.currentTimeMillis();
+            cleanPrefab.placeNoReturn(instanceWorld, pos, null);
+            long elapsed = System.currentTimeMillis() - startTime;
+
+            config.setBlockTicking(true);
+            config.setTicking(true);
+
+            main.getLogger().at(Level.INFO).log("✓ Prefab colocado en " + elapsed + "ms");
 
         } catch (Exception e) {
             main.getLogger().at(Level.SEVERE).log("Error al colocar prefab: " + e.getMessage());
@@ -86,23 +119,32 @@ public class InstanceManager {
     }
 
     public void teleportPlayers(List<PlayerRef> playerRefs) {
-        if (newWorld == null || !isMapLoaded) return;
+        main.getLogger().at(Level.INFO).log("=== INICIO TELEPORT ===");
+        main.getLogger().at(Level.INFO).log("Jugadores a TP: " + playerRefs.size());
+        main.getLogger().at(Level.INFO).log("Mundo destino: " + (newWorld != null ? newWorld.getName() : "NULL"));
+        main.getLogger().at(Level.INFO).log("Mapa cargado: " + isMapLoaded);
+
+        if (newWorld == null || !isMapLoaded) {
+            main.getLogger().at(Level.WARNING).log("No se puede teletransportar: mapa no cargado");
+            return;
+        }
 
         Vector3d[] spawns = {
-                new Vector3d(19, 54, 1),
-                new Vector3d(-2, 54, -10),
-                new Vector3d(-15, 54, 1),
-                new Vector3d(-3, 54, 11),
-                new Vector3d(5, 58, 10),
-                new Vector3d(-12, 58, 9),
-                new Vector3d(12, 52, -10),
-                new Vector3d(1, 52, 1),
-                new Vector3d(12, 52, 11),
-                new Vector3d(14, 56, 10)
+                new Vector3d(-27, 107, -10),
+                new Vector3d(-28, 107, 10),
+                new Vector3d(-10, 110, -13),
+                new Vector3d(-31, 112, -23),
+                new Vector3d(-20, 110, -43),
+                new Vector3d(18, 106, -36),
+                new Vector3d(14, 110, -15),
+                new Vector3d(40, 110, -13),
+                new Vector3d(0, 111, 32),
+                new Vector3d(-33, 110, 28)
         };
 
         for (int i = 0; i < playerRefs.size(); i++) {
-            Transform spawnPoint = new Transform(spawns[i].x, spawns[i].y, spawns[i].z);
+            Vector3d spawnPos = spawns[i % spawns.length];
+            Transform spawnPoint = new Transform(spawnPos.x, spawnPos.y, spawnPos.z);
 
             PlayerRef playerRef = playerRefs.get(i);
 
@@ -110,30 +152,53 @@ public class InstanceManager {
                 UUID playerUUID = playerRef.getUuid();
                 PlayerRef updatedPlayerRef = Universe.get().getPlayer(playerUUID);
 
-                if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) continue;
+                if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) {
+                    main.getLogger().at(Level.WARNING).log("PlayerRef inválido para: " + playerUUID);
+                    continue;
+                }
 
                 Ref<EntityStore> ref = updatedPlayerRef.getReference();
+
+                // ✅ Obtener el mundo ACTUAL del jugador
                 World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
 
-                if (currentWorld == null) continue;
+                if (currentWorld == null) {
+                    main.getLogger().at(Level.WARNING).log("Mundo actual del jugador es null");
+                    continue;
+                }
 
                 updatedPlayerRef.sendMessage(Message.raw("Teleportando a la arena..."));
 
+                // ✅ CRÍTICO: Ejecutar en el mundo ACTUAL del jugador
                 currentWorld.execute(() -> {
                     try {
-                        Store<EntityStore> store = ref.getStore();
+                        // ✅ Obtener el Store del mundo ACTUAL (donde está el jugador)
+                        Store<EntityStore> store = currentWorld.getEntityStore().getStore();
 
+                        // ✅ Crear teleport hacia el mundo de DESTINO
                         Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
+
+                        // ✅ Agregar el componente usando el store correcto
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
-                    } catch (Exception e) { e.printStackTrace(); }
+
+                        main.getLogger().at(Level.INFO).log("✓ Jugador teletransportado: " + playerUUID);
+
+                    } catch (Exception e) {
+                        main.getLogger().at(Level.SEVERE).log("Error al teletransportar: " + e.getMessage());
+                        e.printStackTrace();
+                    }
                 });
-            } catch (Exception e) { e.printStackTrace(); }
+
+            } catch (Exception e) {
+                main.getLogger().at(Level.SEVERE).log("Error en teleportPlayers: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
     public void removeInstance() {
         Universe universe = Universe.get();
-        String worldName = "Test_Map_Instance_" + instanceNumber;
+        String worldName = "Dust2_Instance_" + instanceNumber;
         World instanceWorld = universe.getWorld(worldName);
 
         if (instanceWorld != null) {
