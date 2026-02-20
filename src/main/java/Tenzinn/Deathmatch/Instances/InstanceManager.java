@@ -12,15 +12,13 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.prefab.PrefabStore;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.console.ConsoleSender;
 import com.hypixel.hytale.server.core.universe.world.WorldConfig;
-import com.hypixel.hytale.server.core.command.system.CommandSender;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.List;
 import java.util.logging.Level;
 
 public class InstanceManager {
@@ -73,14 +71,11 @@ public class InstanceManager {
 
     private void placePrefabInInstance(World instanceWorld) {
         try {
-            CommandSender sender = ConsoleSender.INSTANCE;
             PrefabStore store = PrefabStore.get();
 
             BlockSelection prefab = store.getAssetPrefabFromAnyPack("Dust2.prefab.json");
 
-            if (prefab == null) {
-                throw new RuntimeException("Prefab 'Dust2.prefab.json' no encontrado");
-            }
+            if (prefab == null) { throw new RuntimeException("Prefab 'Dust2.prefab.json' no encontrado"); }
 
             BlockSelection cleanPrefab = new BlockSelection();
             cleanPrefab.setPosition(0, 52, 0);
@@ -96,7 +91,6 @@ public class InstanceManager {
 
             Vector3i pos = new Vector3i(0, 52, 0);
 
-            // ✅ Solo desactivar ticking (esto debería ayudar bastante)
             WorldConfig config = instanceWorld.getWorldConfig();
             config.setBlockTicking(false);
             config.setTicking(false);
@@ -156,8 +150,6 @@ public class InstanceManager {
                 }
 
                 Ref<EntityStore> ref = updatedPlayerRef.getReference();
-
-                // ✅ Obtener el mundo ACTUAL del jugador
                 World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
 
                 if (currentWorld == null) {
@@ -167,20 +159,12 @@ public class InstanceManager {
 
                 updatedPlayerRef.sendMessage(Message.raw("Teleportando a la arena..."));
 
-                // ✅ CRÍTICO: Ejecutar en el mundo ACTUAL del jugador
                 currentWorld.execute(() -> {
                     try {
-                        // ✅ Obtener el Store del mundo ACTUAL (donde está el jugador)
                         Store<EntityStore> store = currentWorld.getEntityStore().getStore();
-
-                        // ✅ Crear teleport hacia el mundo de DESTINO
                         Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
-
-                        // ✅ Agregar el componente usando el store correcto
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
-
                         main.getLogger().at(Level.INFO).log("✓ Jugador teletransportado: " + playerUUID);
-
                     } catch (Exception e) {
                         main.getLogger().at(Level.SEVERE).log("Error al teletransportar: " + e.getMessage());
                         e.printStackTrace();
@@ -208,7 +192,5 @@ public class InstanceManager {
         }
     }
 
-    public boolean getMapLoaded() {
-        return isMapLoaded;
-    }
+    public boolean getMapLoaded() { return isMapLoaded; }
 }

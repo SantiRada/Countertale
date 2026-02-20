@@ -1,22 +1,23 @@
 package Tenzinn.Events;
 
+import Tenzinn.Deathmatch.LootManager;
+import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Deathmatch.Objects.WeaponStats;
 
-import Tenzinn.Tools.RefactorTool;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.Inventory;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.ArrayList;
 
 public class DetectPlayerReady {
 
@@ -25,22 +26,41 @@ public class DetectPlayerReady {
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
         assert player.getWorld() != null;
-        player.sendMessage(Message.raw("Name World: " + player.getWorld().getName()));
 
-        System.out.println("[[[[[[[[[ El usuario " + player.getDisplayName() + " ingresó al mundo " + player.getWorld().getName() + " ]]]]]]]]]");
+        if (Objects.equals(Universe.get().getDefaultWorld(), Universe.get().getWorld(player.getWorld().getName()))) {
+            assert playerRef != null;
+            player.getHudManager().showHudComponents(playerRef, HudComponent.Chat);
+            player.getHudManager().showHudComponents(playerRef, HudComponent.Hotbar);
+            player.getHudManager().showHudComponents(playerRef, HudComponent.Health);
+            player.getHudManager().showHudComponents(playerRef, HudComponent.Compass);
+            player.getHudManager().showHudComponents(playerRef, HudComponent.Stamina);
+            player.getHudManager().showHudComponents(playerRef, HudComponent.Reticle);
+            player.getHudManager().showHudComponents(playerRef, HudComponent.InputBindings);
 
-        if (Universe.get().getDefaultWorld().equals(Universe.get().getWorld(player.getWorld().getName()))) { getLobbyLoot(player, playerRef); }
+            getLobbyLoot(player);
+        }
         else {
             openGameHud(playerRef, player);
-            getGameLoot(player);
 
             assert playerRef != null;
             RefactorTool.Respawn(playerRef);
         }
     }
     public static void openGameHud(PlayerRef playerRef, Player player) {
+        ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
+
+        if (thisLoot != null) {
+            RefactorTool.setAllLoot(playerRef, thisLoot);
+            LootManager.giveLoot(player, thisLoot);
+        }
+
         DeathmatchHUD newHud = new DeathmatchHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
+
+        if (thisLoot != null) {
+            newHud.setShield(playerRef);
+            newHud.setWeapons(2);
+        }
 
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Mana);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Sleep);
@@ -57,44 +77,19 @@ public class DetectPlayerReady {
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BlockVariantSelector);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BuilderToolsMaterialSlotSelector);
 
+        player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Health);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Stamina);
-        player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
 
         GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
         if (match != null) match.startTimer();
     }
-    public static void getLobbyLoot(Player player, PlayerRef playerRef) {
+    public static void getLobbyLoot(Player player) {
         player.getInventory().clear();
-
-        player.getHudManager().showHudComponents(playerRef, HudComponent.Chat);
-        player.getHudManager().showHudComponents(playerRef, HudComponent.Hotbar);
-        player.getHudManager().showHudComponents(playerRef, HudComponent.Health);
-        player.getHudManager().showHudComponents(playerRef, HudComponent.Compass);
-        player.getHudManager().showHudComponents(playerRef, HudComponent.Stamina);
-        player.getHudManager().showHudComponents(playerRef, HudComponent.Reticle);
-        player.getHudManager().showHudComponents(playerRef, HudComponent.InputBindings);
 
         Inventory inv = player.getInventory();
         ItemStack actionBook = new ItemStack("actions_book", 1);
 
         inv.getHotbar().addItemStack(actionBook);
-    }
-    public static void getGameLoot(Player player) {
-        World playerWorld = player.getWorld();
-        if (playerWorld == null) { return; }
-
-        player.getInventory().clear();
-        Inventory inv = player.getInventory();
-
-        ItemStack rifle = new ItemStack("Weapon_Assault_Rifle", 1);
-        ItemStack gun = new ItemStack("Weapon_Handgun", 1);
-        ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
-        ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
-
-        inv.getHotbar().addItemStack(rifle);
-        inv.getHotbar().addItemStack(gun);
-        inv.getHotbar().addItemStack(knife);
-        inv.getStorage().addItemStack(bullets);
     }
 }

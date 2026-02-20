@@ -21,8 +21,9 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
     public void handle(int index,@Nonnull ArchetypeChunk<EntityStore> archetypeChunk,@Nonnull Store<EntityStore> store,@Nonnull CommandBuffer<EntityStore> commandBuffer,@Nonnull DropItemEvent.PlayerRequest dropEvent) {
         dropEvent.setCancelled(true);
 
-        Player player = store.getComponent(archetypeChunk.getReferenceTo(index), Player.getComponentType());
-        PlayerRef playerRef = Universe.get().getPlayer(player.getDisplayName(), NameMatching.EXACT);
+        Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
+        Player player = store.getComponent(ref, Player.getComponentType());
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
         CommandManager.get().handleCommand(playerRef, "shop");
     }

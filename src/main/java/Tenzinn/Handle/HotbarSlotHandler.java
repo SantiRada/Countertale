@@ -7,12 +7,14 @@ import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 
 public class HotbarSlotHandler implements PlayerPacketFilter {
 
@@ -24,7 +26,14 @@ public class HotbarSlotHandler implements PlayerPacketFilter {
             if (chain.interactionType == InteractionType.SwapFrom && chain.data != null && chain.initial) {
                 int toSlot = chain.data.targetSlot;
 
+                if(toSlot > 2) {
+                    toSlot = 2;
+                    Player player = RefactorTool.getPlayer(playerRef);
+                    player.getInventory().setActiveSlot(-1, (byte)2);
+                }
+
                 handleSlotSwap(playerRef, toSlot);
+
                 return false;
             }
         }
