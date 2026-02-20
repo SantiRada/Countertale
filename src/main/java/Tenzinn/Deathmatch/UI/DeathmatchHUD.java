@@ -1,11 +1,13 @@
 package Tenzinn.Deathmatch.UI;
 
+import Tenzinn.Events.PlayerHealthTracker;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.Value;
+import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -14,26 +16,27 @@ import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.Objects;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 
 public class DeathmatchHUD extends CustomUIHud {
 
     private UICommandBuilder uiBuilder;
-    private PlayerRef playerRef;
+
+    private final PlayerRef playerRef;
+    private final PlayerStats playerStats;
 
     public ScheduledFuture<?> timerTask;
     private int remainingSeconds = 600;
-
-    public WeaponStats[] weapons = new WeaponStats[3];
 
     public DeathmatchHUD(@NonNullDecl PlayerRef playerRef) {
         super(playerRef);
         this.playerRef = playerRef;
 
-        weapons[0] = new WeaponStats("Weapon01", WeaponStats.TypeWeapon.Weapon, WeaponStats.Firemode.Automatic);
-        weapons[1] = new WeaponStats("Weapon02", WeaponStats.TypeWeapon.Shotgun, WeaponStats.Firemode.Burst);
-        weapons[2] = new WeaponStats("Weapon03", WeaponStats.TypeWeapon.Knife, WeaponStats.Firemode.Melee);
+        playerStats = RefactorTool.getPlayerStats(playerRef);
     }
 
     @Override
@@ -41,14 +44,63 @@ public class DeathmatchHUD extends CustomUIHud {
         uiCommandBuilder.append("Game/Deathmatch.ui");
         uiBuilder = uiCommandBuilder;
 
-        update(true, uiBuilder);
-
-        setWeapons(1);
         setTimer();
         setData();
+
+        updateHealth();
+    }
+
+    public void setShield(PlayerRef playerRef) {
+        if (uiBuilder == null) return;
+
+        ArrayList<WeaponStats> loot = RefactorTool.getLoot(playerRef);
+        if(loot == null) return;
+        if(loot.isEmpty()) return;
+        if(loot.size() < 2) return;
+        if(loot.get(2) == null) return;
+
+        WeaponStats currentShield = loot.get(2);
+        if (currentShield == null) return;
+
+        if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(1)).pos) { uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "KevlarHelmet")); }
+        else if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(0)).pos) { uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "Kevlar")); }
+    }
+
+    public void setHealth(int value, int max) {
+        if (uiBuilder == null) return;
+
+        int newHealth = value * 61 / max;
+
+        int lifeValue = Math.min(value, 100);
+
+        Anchor anchor = new Anchor();
+        anchor.setWidth(Value.of(newHealth));
+        anchor.setHeight(Value.of(7));
+
+        if (value > 100) { uiBuilder.set("#NumberShield.TextSpans", Message.raw(String.valueOf(value - 100))); }
+        else {
+            uiBuilder.set("#NumberShield.TextSpans", Message.raw(""));
+            uiBuilder.set("#IconShield.Background", "#ffffff00");
+        }
+
+        uiBuilder.set("#HealthNumber.TextSpans", Message.raw(String.valueOf(lifeValue)));
+        uiBuilder.setObject("#Slider.Anchor", anchor);
+
+        update(true, uiBuilder);
+    }
+
+    public void updateHealth() {
+        UUID uuid = playerRef.getUuid();
+
+        float current = PlayerHealthTracker.getCurrentHealth(uuid);
+        float max = PlayerHealthTracker.getCurrentHealth(uuid);
+
+        setHealth((int)current, (int)max);
     }
 
     public void setData() {
+        if (uiBuilder == null) return;
+
         List<PlayerStats> playersList = RefactorTool.getPlayerList();
         playersList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
 
@@ -74,6 +126,8 @@ public class DeathmatchHUD extends CustomUIHud {
     }
 
     public void setTimer() {
+        if (uiBuilder == null) return;
+
         timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
             try {
                 PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
@@ -95,27 +149,36 @@ public class DeathmatchHUD extends CustomUIHud {
     }
 
     public void setWeapons(int value) {
-        if(weapons.length <= 0) return;
+        if (uiBuilder == null || value < 1) return;
 
-        if (value < 1 || value > 3) return;
+        ArrayList<WeaponStats> loot = playerStats.getLoot();
+        if (loot.isEmpty()) return;
 
-        for(int i = 1; i <= weapons.length; i++){
-            if(i != value){
-                uiBuilder.set("#Number0" + i +".Style.TextColor", "#ffffff80");
-                uiBuilder.set("#Weapon0" + i + ".Background", Value.ref("Game/images/weapons/Weapons.ui", weapons[i - 1].nameWeapon + "Off"));
-            } else {
-                uiBuilder.set("#Number0" + value + ".Style.TextColor", "#ffffff");
-                uiBuilder.set("#Weapon0" + value + ".Background", Value.ref("Game/images/weapons/Weapons.ui", weapons[value - 1].nameWeapon));
+        WeaponStats first = loot.getFirst();
+        if (first != null) {
+            boolean isPrimary = first.typeWeapon.equalsIgnoreCase("primary");
+            String color01 = isPrimary ? (value == 1 ? "#ffffff" : "#ffffff80") : "#ffffff00";
+            uiBuilder.set("#Number01.Style.TextColor", color01);
+            uiBuilder.set("#Weapon01.Background", (isPrimary ? Value.ref("Game/images/weapons/Weapons.ui", first.image) : "#ffffff00").toString());
+
+            if (isPrimary) {
+                uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(value - 1).firemode));
+                uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.get(value - 1).crossType));
             }
         }
 
-        uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", weapons[value - 1].firemode));
-        uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", weapons[value - 1].typeWeapon));
-
-        if (weapons.length < 3) {
-            uiBuilder.set("#Number03.Style.TextColor", "#ffffff00");
-            uiBuilder.set("#Weapon03.Background", "#ffffff00");
+        WeaponStats second = loot.get(1);
+        if (second != null && second.typeWeapon.equalsIgnoreCase("secondary")) {
+            uiBuilder.set("#Number02.Style.TextColor", value == 2 ? "#ffffff" : "#ffffff80");
+            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", second.image));
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", second.firemode));
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", second.crossType));
         }
+
+        uiBuilder.set("#Number03.Style.TextColor", value >= 3 ? "#ffffff" : "#ffffff80");
+        uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", value >= 3 ? "Weapon03" : "Weapon03Off"));
+        uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", "Melee"));
+        uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", "Knife"));
 
         update(true, uiBuilder);
     }

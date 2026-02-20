@@ -1,10 +1,14 @@
 package Tenzinn.Handle;
 
+import Tenzinn.Deathmatch.Objects.WeaponStats;
 import Tenzinn.Tools.RefactorTool;
+import Tenzinn.Deathmatch.LootManager;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -15,6 +19,9 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class DeathDetector extends DeathSystems.OnDeathSystem {
 
@@ -67,7 +74,8 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
         PlayerRef playerRef = Universe.get().getPlayerByUsername(playerComponent.getDisplayName(), NameMatching.EXACT);
         if (playerRef == null) return;
 
-        System.out.println("El jugador " + playerComponent.getDisplayName() + " revivió");
+        ArrayList<WeaponStats> loot = LootManager.getGameLoot(playerComponent);
+        if (loot != null) LootManager.giveLoot(playerComponent, loot);
 
         RefactorTool.Respawn(playerRef);
     }

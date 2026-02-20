@@ -1,5 +1,6 @@
 package Tenzinn;
 
+import Tenzinn.Deathmatch.Commands.Loot.LootCommands;
 import Tenzinn.Events.*;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Handle.*;
@@ -58,56 +59,7 @@ public class Countertale extends JavaPlugin {
     protected void setup() {
         // Interactions
         this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
-
         matchManager = new MatchManager(this);
-
-        getEventRegistry().register(PlayerConnectEvent.class, event -> {
-            PlayerRef playerRef = event.getPlayerRef();
-            World world = event.getWorld();
-
-            if (world.getName().equals("default")) {
-                world.execute(() -> {
-                    try {
-                        Player player = event.getPlayer();
-
-                        // Cancelar timers primero
-                        Object currentHud = player.getHudManager().getCustomHud();
-
-                        if (currentHud != null) {
-                            if (currentHud instanceof DeathmatchHUD) {
-                                DeathmatchHUD hud = (DeathmatchHUD) currentHud;
-                                if (hud.timerTask != null) {
-                                    hud.timerTask.cancel(true);
-                                    hud.timerTask = null;
-                                }
-                            } else if (currentHud instanceof ScoreboardPage) {
-                                ScoreboardPage scoreboard = (ScoreboardPage) currentHud;
-                                if (scoreboard.timerTask != null) {
-                                    scoreboard.timerTask.cancel(true);
-                                    scoreboard.timerTask = null;
-                                }
-                            }
-                        }
-
-                        // Reset HUD
-                        player.getHudManager().resetHud(playerRef);
-                        player.getHudManager().setCustomHud(playerRef, null);
-
-                        // Restaurar componentes normales del HUD
-                        player.getHudManager().showHudComponents(playerRef, HudComponent.Health);
-                        player.getHudManager().showHudComponents(playerRef, HudComponent.Stamina);
-                        player.getHudManager().showHudComponents(playerRef, HudComponent.Hotbar);
-                        player.getHudManager().showHudComponents(playerRef, HudComponent.Reticle);
-
-                        getLogger().at(Level.INFO).log("✓ HUD limpiado en PlayerConnectEvent");
-
-                    } catch (Exception e) {
-                        getLogger().at(Level.SEVERE).log("Error limpiando HUD: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                });
-            }
-        });
 
         // Admin Commands
         getCommandRegistry().registerCommand(new ServerStatusCommand("server", "Show server status", this));
@@ -120,8 +72,10 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
-        getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
         getCommandRegistry().registerCommand(new ClearHUDCommand("clearhud", "Clear HUD to change instance"));
+        getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
+
+        getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
 
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
@@ -131,6 +85,7 @@ public class Countertale extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
         this.getEntityStoreRegistry().registerSystem(new DeathDetector());
+        this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
 
         // Handlers
         CancelHandler handler = new CancelHandler();

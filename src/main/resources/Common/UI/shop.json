@@ -4,29 +4,59 @@
       "name": "Equipment",
       "content": [
         {
+          "id": [
+            "Armor_Iron_Chest",
+            "Armor_Iron_Head",
+            "Armor_Iron_Hands",
+            "Armor_Iron_Legs"
+          ],
           "number": "1",
           "name": "Kevlar",
-          "image": "Kevlar"
+          "image": "Kevlar",
+          "typeWeapon": "shield",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [
+            "Armor_Cobalt_Chest",
+            "Armor_Cobalt_Head",
+            "Armor_Cobalt_Hands",
+            "Armor_Cobalt_Legs"
+          ],
           "number": "2",
           "name": "Kevlar & Helmet",
-          "image": "KevlarHelmet"
+          "image": "KevlarHelmet",
+          "typeWeapon": "shield",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "3",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "4",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "5",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         }
       ]
     },
@@ -34,29 +64,49 @@
       "name": "Pistols",
       "content": [
         {
+          "id": [ "Weapon_Sword_Mithril" ],
           "number": "1",
           "name": "USP-S",
-          "image": "Usp"
+          "image": "Usp",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single"
         },
         {
+          "id": [ "Weapon_Sword_Adamantite" ],
           "number": "2",
           "name": "Dual Berettas",
-          "image": "DualBerettas"
+          "image": "DualBerettas",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single"
         },
         {
+          "id": [ "Weapon_Sword_Cobalt" ],
           "number": "3",
           "name": "P250",
-          "image": "P250"
+          "image": "P250",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single"
         },
         {
+          "id": [ "Weapon_Sword_Thorium" ],
           "number": "4",
           "name": "Five-SeveN",
-          "image": "FiveSeven"
+          "image": "FiveSeven",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single"
         },
         {
+          "id": [ "Weapon_Sword_Iron" ],
           "number": "5",
           "name": "Desert Eagle",
-          "image": "DesertEagle"
+          "image": "DesertEagle",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single"
         }
       ]
     },
@@ -64,29 +114,49 @@
       "name": "Mid-Tier",
       "content": [
         {
+          "id": [ "Weapon_Sword_Copper" ],
           "number": "1",
           "name": "Mac-10",
-          "image": "Mac10"
+          "image": "Mac10",
+          "typeWeapon": "primary",
+          "typeCross": "Weapon",
+          "firemode": "Automatic"
         },
         {
+          "id": [ "Weapon_Sword_Bone" ],
           "number": "2",
           "name": "MP9",
-          "image": "Mp9"
+          "image": "Mp9",
+          "typeWeapon": "primary",
+          "typeCross": "Weapon",
+          "firemode": "Automatic"
         },
         {
+          "id": [ "Weapon_Battleaxe_Mithril" ],
           "number": "3",
           "name": "Mag-7",
-          "image": "Mag7"
+          "image": "Mag7",
+          "typeWeapon": "primary",
+          "typeCross": "Weapon",
+          "firemode": "Automatic"
         },
         {
+          "id": [ "Weapon_Battleaxe_Adamantite" ],
           "number": "4",
           "name": "Sawed-Off",
-          "image": "SawedOff"
+          "image": "SawedOff",
+          "typeWeapon": "primary",
+          "typeCross": "Weapon",
+          "firemode": "Automatic"
         },
         {
+          "id": [ "Weapon_Battleaxe_Cobalt" ],
           "number": "5",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         }
       ]
     },
@@ -94,29 +164,49 @@
       "name": "Rifles",
       "content": [
         {
+          "id": [ "Weapon_Battleaxe_Thorium" ],
           "number": "1",
           "name": "Ak-47",
-          "image": "Ak47"
+          "image": "Ak47",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "burst"
         },
         {
+          "id": [ "Weapon_Battleaxe_Iron" ],
           "number": "2",
           "name": "M4A1-S",
-          "image": "M4a1s"
+          "image": "M4a1s",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "burst"
         },
         {
+          "id": [ "Weapon_Battleaxe_Copper" ],
           "number": "3",
           "name": "AWP",
-          "image": "Awp"
+          "image": "Awp",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "burst"
         },
         {
+          "id": [],
           "number": "4",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "5",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         }
       ]
     },
@@ -124,29 +214,49 @@
       "name": "Grenades",
       "content": [
         {
+          "id": [],
           "number": "1",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "2",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "3",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "4",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         },
         {
+          "id": [],
           "number": "5",
           "name": "Coming Soon",
-          "image": "ComingSoon"
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee"
         }
       ]
     }

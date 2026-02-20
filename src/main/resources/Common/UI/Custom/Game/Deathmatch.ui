@@ -189,12 +189,12 @@ Group #DeathmatchUI {
 
         Group {
             LayoutMode: Center;
-            Anchor: (Width: 1920, Top: 220);
+            Anchor: (Width: 1920, Top: 249);
 
             Group #Crosshair {
                 LayoutMode: Top;
                 Background: @Crosshair;
-                Anchor: (Width: 50, Height: 50);
+                Anchor: (Width: 50, Height: 50, Left: 1);
             }
         }
     }
@@ -268,9 +268,14 @@ Group #DeathmatchUI {
                 LayoutMode: Left;
 
                 Group #IconShield {
-                    LayoutMode: Center;
+                    LayoutMode: Middle;
                     Background: @IconShield;
                     Anchor: (Width: 42, Height: 43);
+
+                    Label #NumberShield {
+                        Text: "888";
+                        Style: (FontSize: 16, Alignment: Center);
+                    }
                 }
 
                 Group #HealthData {
@@ -283,12 +288,12 @@ Group #DeathmatchUI {
                     }
 
                     Group #HealthSlider {
-                        LayoutMode: Top;
+                        LayoutMode: Left;
                         Anchor: (Width: 61, Height: 7, Top: 2);
-                        Background: (Color: #000000(0.25));
+                        Background: (Color: #000000(0.4));
 
                         Group #Slider {
-                            Anchor: (Width: 61, Height: 7);
+                            Anchor: (Width: 0, Height: 7);
                             Background: (Color: #ffffff);
                         }
                     }

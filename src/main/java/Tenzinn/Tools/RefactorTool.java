@@ -3,10 +3,10 @@ package Tenzinn.Tools;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
+import Tenzinn.Deathmatch.Objects.WeaponStats;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -17,19 +17,18 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class RefactorTool {
 
     public enum TypeData { SCORE, DEATH, KILL }
     public static List<PlayerStats> playerStatsList = new ArrayList<>();
+    public static ArrayList<WeaponStats> slots = new ArrayList<>();
 
     private static Vector3d[] spawns = {
             new Vector3d(-27, 107, -10),
@@ -46,7 +45,68 @@ public class RefactorTool {
 
     public static void setPlayerStats (PlayerStats playerStats) { playerStatsList.add(playerStats); }
     public static void setQuitPlayerStats (PlayerStats playerStats) { playerStatsList.remove(playerStats); }
+    public static void setSlots (ArrayList<WeaponStats> newSlots){
+        slots.clear();
+        slots.addAll(newSlots);
+    }
+    public static void setLoot(PlayerRef playerRef, int index) {
+        WeaponStats newWeapon = slots.get(index - 1);
+
+        if (newWeapon.nameWeapon.equalsIgnoreCase("comingsoon")) return;
+
+        for (PlayerStats stats : playerStatsList) {
+            if(stats.getPlayerRef() == playerRef) {
+                switch (newWeapon.typeWeapon.toLowerCase()) {
+                    case "primary":
+                        stats.primaryWeapon = newWeapon;
+                        break;
+                    case "secondary":
+                        stats.secondaryWeapon = newWeapon;
+                        break;
+                    case "shield":
+                        stats.shield = newWeapon;
+                        break;
+                }
+                break;
+            }
+        }
+    }
+    public static void setAllLoot(PlayerRef playerRef, ArrayList<WeaponStats> list) {
+        for(PlayerStats stats : playerStatsList) {
+            if(stats.getPlayerRef().equals(playerRef)) {
+                if (list.size() > 2) {
+                    if(list.get(0).typeWeapon.equalsIgnoreCase("primary")) stats.primaryWeapon = list.get(0);
+                    if(list.get(1).typeWeapon.equalsIgnoreCase("secondary")) stats.secondaryWeapon = list.get(1);
+                    if(list.get(2).typeWeapon.equalsIgnoreCase("shield")) stats.shield = list.get(2);
+                } else {
+                    stats.primaryWeapon = null;
+                    if(list.get(0).typeWeapon.equalsIgnoreCase("secondary")) stats.secondaryWeapon = list.get(0);
+                    if(list.get(1).typeWeapon.equalsIgnoreCase("shield")) stats.shield = list.get(1);
+                }
+            }
+        }
+    }
     // ============================================ //
+    public static ArrayList<WeaponStats> getLoot(PlayerRef playerRef) {
+        ArrayList<WeaponStats> list = new ArrayList<>();
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if(playerStats == null) return null;
+
+        if(playerStats.primaryWeapon != null) list.add(playerStats.primaryWeapon);
+        else list.add(null);
+
+        if(playerStats.secondaryWeapon != null) list.add(playerStats.secondaryWeapon);
+        else list.add(null);
+
+        if(playerStats.shield != null) list.add(playerStats.shield);
+        else list.add(null);
+
+        return list;
+    }
+    public static WeaponStats getSlot(int id) {
+        if(slots.size() <= id) return null;
+        return slots.get(id);
+    }
     public static PlayerStats getPlayerStats(PlayerRef playerRef) {
         if (playerStatsList.isEmpty()) return null;
 
@@ -65,11 +125,6 @@ public class RefactorTool {
 
         return player;
     }
-    public static CustomUIHud getCustomHud (PlayerRef playerRef) {
-        Player player = getPlayer(playerRef);
-
-        return player.getHudManager().getCustomHud();
-    }
     // ============================================ //
     public static void Respawn(PlayerRef playerRef) {
         World currentWorld = Universe.get().getWorld(playerRef.getWorldUuid());
@@ -86,7 +141,7 @@ public class RefactorTool {
                     Ref<EntityStore> ref = playerRef.getReference();
                     Store<EntityStore> store = ref.getStore();
 
-                    Vector3f rotation = new Vector3f();
+                    Vector3f rotation = new Vector3f(0f, 0f, 0f);
                     Vector3f targetPosition = new Vector3f((float) spawnPos.getX(), (float) spawnPos.getY(), (float) spawnPos.getZ());
 
                     Teleport teleport = new Teleport(targetPosition.toVector3d(), rotation);
@@ -101,17 +156,12 @@ public class RefactorTool {
 
             Object testHud = playerStats.getPlayer().getHudManager().getCustomHud();
             if(testHud instanceof DeathmatchHUD) {
-
                 DeathmatchHUD deathmatchHUD = (DeathmatchHUD)testHud;
                 deathmatchHUD.setData();
-
             } else if(testHud instanceof ScoreboardPage) {
-
                 ScoreboardPage scoreboard = (ScoreboardPage)testHud;
                 scoreboard.setData();
-
             }
-            else { playerStats.getPlayer().sendMessage(Message.raw("No se encuentra la UI del Player").color(Color.yellow)); }
         }
     }
     public static void setChangesInSlots (int value, PlayerRef playerRef) {
@@ -134,19 +184,12 @@ public class RefactorTool {
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
         PlayerStats playerStats = getPlayerStats(playerRef);
+        assert playerStats != null;
 
         switch (typeData) {
-            case TypeData.SCORE:
-                assert playerStats != null;
-                int finalValue = (int)value;
-                playerStats.setScore(finalValue);
-                break;
-            case TypeData.DEATH:
-                playerStats.setDeaths();
-                break;
-            case TypeData.KILL:
-                playerStats.setKills();
-                break;
+            case TypeData.SCORE: int finalValue = (int)value; playerStats.setScore(finalValue); break;
+            case TypeData.DEATH: playerStats.setDeaths(); break;
+            case TypeData.KILL: playerStats.setKills(); break;
         }
     }
 }

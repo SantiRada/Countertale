@@ -3,12 +3,20 @@
     "Default": [
       "countertale.queue",
       "countertale.leave",
-      "countertale.lobby"
+      "countertale.lobby",
+      "countertale.loot",
+      "countertale.loot.give",
+      "countertale.loot.reset",
+      "countertale.shop"
     ],
     "Adventure": [
       "countertale.queue",
       "countertale.leave",
-      "countertale.lobby"
+      "countertale.lobby",
+      "countertale.loot",
+      "countertale.loot.give",
+      "countertale.loot.reset",
+      "countertale.shop"
     ],
     "Creative": [
       "countertale.queue",
@@ -16,7 +24,11 @@
       "countertale.lobby",
       "countertale.forcestart",
       "countertale.game",
-      "countertale.game.status"
+      "countertale.game.status",
+      "countertale.loot",
+      "countertale.loot.give",
+      "countertale.loot.reset",
+      "countertale.shop"
     ],
     "Moderator": [
       "*"

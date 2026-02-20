@@ -5,11 +5,17 @@ import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
+import java.util.ArrayList;
+
 public class PlayerStats {
 
     public int deaths = 0;
     public int kills = 0;
     public int score = 0;
+
+    public WeaponStats primaryWeapon = null;
+    public WeaponStats secondaryWeapon = null;
+    public WeaponStats shield = null;
 
     public GameMatch currentMatch;
 
@@ -39,6 +45,15 @@ public class PlayerStats {
     public int getKills() { return kills; }
     public int getDeaths() { return deaths; }
     public int getScore() { return score; }
+    public ArrayList<WeaponStats> getLoot() {
+        ArrayList<WeaponStats> list = new ArrayList<>();
+
+        if(primaryWeapon != null) list.add(primaryWeapon);
+        if(secondaryWeapon != null) list.add(secondaryWeapon);
+        if(shield != null) list.add(shield);
+
+        return list;
+    }
     // ================================================= //
     public GameMatch getCurrentMatch () { return currentMatch; }
     public PlayerRef getPlayerRef() { return playerRef; }
