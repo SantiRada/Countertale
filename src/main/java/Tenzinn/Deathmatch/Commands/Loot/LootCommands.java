@@ -9,6 +9,7 @@ public class LootCommands extends AbstractCommandCollection {
     public LootCommands(@NonNullDecl String name, @NonNullDecl String description) {
         super(name, description);
 
+        addSubCommand(new GetLootCommand("get", "Get messages with loot for this player"));
         addSubCommand(new GiveLootCommand("give", "Give selected loot for this player"));
         addSubCommand(new ResetLootCommand("reset", "Give starter kit for this player"));
     }

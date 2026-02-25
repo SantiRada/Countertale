@@ -72,9 +72,6 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
                 main.getLogger().at(java.util.logging.Level.WARNING).log("[MatchManager] Pool vacío, creando instancia on-demand.");
 
                 match.setInstance(main);
-                match.getInstance().preloadMap(() -> {
-                    // El preload terminó: el match puede teleportar cuando se llene
-                });
             }
         }
 

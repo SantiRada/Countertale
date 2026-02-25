@@ -1,16 +1,16 @@
 package Tenzinn.Events;
 
-import Tenzinn.Deathmatch.LootManager;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.GameMatch;
+import Tenzinn.Deathmatch.LootManager;
+import Tenzinn.Deathmatch.Shop.ShopData;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
@@ -25,6 +25,8 @@ public class DetectPlayerReady {
         Player player = event.getPlayer();
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
+        ShopData.loadContent();
+
         assert player.getWorld() != null;
 
         if (Objects.equals(Universe.get().getDefaultWorld(), Universe.get().getWorld(player.getWorld().getName()))) {
@@ -37,7 +39,7 @@ public class DetectPlayerReady {
             player.getHudManager().showHudComponents(playerRef, HudComponent.Reticle);
             player.getHudManager().showHudComponents(playerRef, HudComponent.InputBindings);
 
-            getLobbyLoot(player);
+            LootManager.getLobbyLoot(player);
         }
         else {
             openGameHud(playerRef, player);
@@ -49,6 +51,23 @@ public class DetectPlayerReady {
     public static void openGameHud(PlayerRef playerRef, Player player) {
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
 
+        // TENGO QUE SEGUIR VIENDO PORQUE EL LOOT NO CARGA CUANDO LO ELEGIS DESDE EL LOBBY
+        if(thisLoot != null) {
+            player.sendMessage(Message.raw("Se encontró el loot").color(Color.red));
+            if(!thisLoot.isEmpty()) {
+                player.sendMessage(Message.raw("Kit (" + thisLoot.size() + ")"));
+                int i = 1;
+                for(WeaponStats item : thisLoot) {
+                    player.sendMessage(Message.raw("Slot " + i + ": " + item.nameWeapon));
+                    i += 1;
+                }
+            } else {
+                player.sendMessage(Message.raw("El Loot está vacío").color(Color.red));
+            }
+        } else {
+            player.sendMessage(Message.raw("No se encuentra el Loot").color(Color.red));
+        }
+
         if (thisLoot != null) {
             RefactorTool.setAllLoot(playerRef, thisLoot);
             LootManager.giveLoot(player, thisLoot);
@@ -57,10 +76,9 @@ public class DetectPlayerReady {
         DeathmatchHUD newHud = new DeathmatchHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
 
-        if (thisLoot != null) {
-            newHud.setShield(playerRef);
-            newHud.setWeapons(2);
-        }
+        player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
+        player.getHudManager().hideHudComponents(playerRef, HudComponent.Health);
+        player.getHudManager().hideHudComponents(playerRef, HudComponent.Stamina);
 
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Mana);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Sleep);
@@ -77,19 +95,14 @@ public class DetectPlayerReady {
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BlockVariantSelector);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BuilderToolsMaterialSlotSelector);
 
-        player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
-        player.getHudManager().hideHudComponents(playerRef, HudComponent.Health);
-        player.getHudManager().hideHudComponents(playerRef, HudComponent.Stamina);
+        if (RefactorTool.getPlayer(playerRef) != null) {
+            GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
+            if (match != null) match.startTimer();
+        }
 
-        GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
-        if (match != null) match.startTimer();
-    }
-    public static void getLobbyLoot(Player player) {
-        player.getInventory().clear();
-
-        Inventory inv = player.getInventory();
-        ItemStack actionBook = new ItemStack("actions_book", 1);
-
-        inv.getHotbar().addItemStack(actionBook);
+        if (thisLoot != null) {
+            newHud.setShield(playerRef);
+            newHud.setWeapons(0);
+        }
     }
 }

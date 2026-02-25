@@ -1,10 +1,13 @@
 package Tenzinn.Deathmatch.UI;
 
-import Tenzinn.Deathmatch.Objects.WeaponStats;
-
+import Tenzinn.Deathmatch.GameMatch;
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Tools.RefactorTool;
+import Tenzinn.Deathmatch.Shop.ShopData;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -18,21 +21,16 @@ import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCu
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonElement;
-
 import java.awt.*;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
     private UICommandBuilder uiBuilder;
-    private JsonObject shopData;
+
+    public ScheduledFuture<?> timerTask;
+    private int remainingSeconds = 15;
 
     public ShopPage(PlayerRef playerRef) { super(playerRef, CustomPageLifetime.CanDismiss, Tenzinn.Deathmatch.UI.ShopEventData.CODEC); }
 
@@ -43,6 +41,7 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
         setListeners(uiEventBuilder);
         loadContent();
+        setTimer();
 
         sendUpdate();
     }
@@ -63,64 +62,70 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         sendUpdate();
     }
 
-    private void loadContent() {
-        try {
-            InputStream inputStream = getClass().getResourceAsStream("/Common/UI/shop.json");
+    private void setTimer() {
+        if (uiBuilder == null) return;
 
-            if (inputStream == null) return;
+        uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("You're not in the buying phase."));
+        uiBuilder.set("#Timer.TextSpans", Message.raw("Loot on revive."));
 
-            Gson gson = new Gson();
-            InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            shopData = gson.fromJson(reader, JsonObject.class);
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if(playerStats == null) return;
 
-            reader.close();
+        if (playerStats.getCurrentMatch().getState() == GameMatch.MatchState.WAITING) {
+            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("The loot will be added at the start of the game."));
+            uiBuilder.set("#Timer.TextSpans", Message.raw(""));
+            return;
+        }
 
-            JsonArray categories = shopData.getAsJsonArray("categories");
+        if (playerStats.getCurrentMatch().getState() != GameMatch.MatchState.STARTING && !playerStats.canReceivedLoot) return;
 
-            int numberCategory = 1;
-            int numberSlot = 1;
+        uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("Time remaining to buy"));
 
-            ArrayList<WeaponStats> slots = new ArrayList<>();
+        remainingSeconds = playerStats.getCurrentMatch().getTimer();
 
-            for (JsonElement categoryElement : categories) {
-                JsonObject category = categoryElement.getAsJsonObject();
-                String categoryName = category.get("name").getAsString();
-                JsonArray content = category.getAsJsonArray("content");
-
-                uiBuilder.set("#Title0" + numberCategory + ".TextSpans", Message.raw(categoryName));
-
-                for (JsonElement itemElement : content) {
-                    JsonObject item = itemElement.getAsJsonObject();
-                    String number = item.get("number").getAsString();
-                    String image = item.get("image").getAsString();
-
-                    String name = item.get("name").getAsString();
-                    String typeWeapon = item.get("typeWeapon").getAsString();
-                    String typeCross = item.get("typeCross").getAsString();
-                    String firemode = item.get("firemode").getAsString();
-
-                    ArrayList<String> giveContent = new ArrayList<>();
-                    JsonArray giveItems = item.getAsJsonArray("id");
-                    for(JsonElement itemSlot : giveItems) { giveContent.add(itemSlot.getAsString()); }
-
-                    WeaponStats weapon = new WeaponStats(name, typeWeapon, typeCross, firemode, giveContent, image, numberSlot);
-                    slots.add(weapon);
-
-                    uiBuilder.set("#Slot" + numberSlot + "Text.TextSpans", Message.raw(number));
-                    uiBuilder.set("#Slot" + numberSlot + "Name.TextSpans", Message.raw(name));
-
-                    uiBuilder.set("#Slot" + numberSlot + "Icon.Background", Value.ref("Game/images/weapons/Weapons.ui", image));
-
-                    numberSlot += 1;
+        timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+            try {
+                PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
+                if (stats == null || stats.getCurrentMatch() == null) {
+                    if (timerTask != null) timerTask.cancel(false);
+                    return;
                 }
 
-                numberCategory += 1;
-            }
+                remainingSeconds = stats.getCurrentMatch().getTimer();
+                int minutes = remainingSeconds / 60;
+                int seconds = remainingSeconds % 60;
+                String timerText = String.format("%02d:%02d", minutes, seconds);
 
-            RefactorTool.setSlots(slots);
-        } catch (Exception e) {
-            System.err.println("Error al cargar shop.json: " + e.getMessage());
-            e.printStackTrace();
+                uiBuilder.set("#Timer.TextSpans", Message.raw(timerText));
+
+                if (remainingSeconds <= 0) { stopTimer(); }
+
+            } catch (Exception e) { if (timerTask != null) timerTask.cancel(false); }
+        }, 1, 1, TimeUnit.SECONDS);
+    }
+
+    public void stopTimer () { if (timerTask != null && !timerTask.isDone()) { timerTask.cancel(false); timerTask = null; } }
+
+    private void loadContent() {
+        int numberCategory = 1;
+        for (String categoryName : ShopData.getArrayTitle()) {
+            uiBuilder.set("#Title0" + numberCategory + ".TextSpans", Message.raw(categoryName));
+
+            numberCategory += 1;
+        }
+
+        for (int numberSlot = 0; numberSlot < (ShopData.getSizeNames() - 1); numberSlot++) {
+            String number = ShopData.getNumbers(numberSlot);
+            String image = ShopData.getImages(numberSlot);
+
+            String name = ShopData.getNames(numberSlot);
+
+            uiBuilder.set("#Slot" + (numberSlot + 1) + "Text.TextSpans", Message.raw(number));
+            uiBuilder.set("#Slot" + (numberSlot + 1) + "Name.TextSpans", Message.raw(name));
+            uiBuilder.set("#Slot" + (numberSlot + 1) + "Icon.Background", Value.ref("Game/images/weapons/Weapons.ui", image));
         }
     }
+
+    @Override
+    public void onDismiss(Ref<EntityStore> ref, Store<EntityStore> store) { stopTimer(); }
 }

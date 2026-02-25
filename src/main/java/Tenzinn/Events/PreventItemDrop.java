@@ -1,7 +1,9 @@
 package Tenzinn.Events;
 
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -12,6 +14,7 @@ import com.hypixel.hytale.server.core.event.events.ecs.DropItemEvent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 
 public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEvent.PlayerRequest> {
 
@@ -25,7 +28,8 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
         Player player = store.getComponent(ref, Player.getComponentType());
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
-        CommandManager.get().handleCommand(playerRef, "shop");
+        if (RefactorTool.getPlayerStats(playerRef) != null) { CommandManager.get().handleCommand(playerRef, "shop"); }
+        else { playerRef.sendMessage(Message.raw("You must be in a match or in the queue to open the shop.").color(Color.cyan)); }
     }
 
     @Override

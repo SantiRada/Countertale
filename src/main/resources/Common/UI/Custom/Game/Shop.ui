@@ -36,7 +36,7 @@ Group {
                 LayoutMode: Center;
                 Anchor: (Height: 45, Top: 11, Bottom: 35);
 
-                Label {
+                Label #DescriptionTimer {
                     Anchor: (Right: 8);
                     Text: "Buy Time Remaining";
                     Style: (FontSize: 18, RenderBold: true, TextColor: #575D68);
@@ -62,6 +62,7 @@ Group {
                     }
                     Button #Slot1 {
                         Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -92,6 +93,7 @@ Group {
                     }
                     Button #Slot2 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -122,6 +124,7 @@ Group {
                     }
                     Button #Slot3 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -152,6 +155,7 @@ Group {
                     }
                     Button #Slot4 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -182,6 +186,7 @@ Group {
                     }
                     Button #Slot5 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -251,6 +256,7 @@ Group {
                     }
                     Button #Slot7 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -281,6 +287,7 @@ Group {
                     }
                     Button #Slot8 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -311,6 +318,7 @@ Group {
                     }
                     Button #Slot9 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -341,6 +349,7 @@ Group {
                     }
                     Button #Slot10 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -380,6 +389,7 @@ Group {
                     }
                     Button #Slot11 {
                         Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -410,6 +420,7 @@ Group {
                     }
                     Button #Slot12 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -440,6 +451,7 @@ Group {
                     }
                     Button #Slot13 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -470,6 +482,7 @@ Group {
                     }
                     Button #Slot14 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -500,6 +513,7 @@ Group {
                     }
                     Button #Slot15 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -539,6 +553,7 @@ Group {
                     }
                     Button #Slot16 {
                         Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -569,6 +584,7 @@ Group {
                     }
                     Button #Slot17 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -599,6 +615,7 @@ Group {
                     }
                     Button #Slot18 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -629,6 +646,7 @@ Group {
                     }
                     Button #Slot19 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -659,6 +677,7 @@ Group {
                     }
                     Button #Slot20 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -698,6 +717,7 @@ Group {
                     }
                     Button #Slot21 {
                         Anchor: (Width: 196, Height: 108, Top: 10, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -728,6 +748,7 @@ Group {
                     }
                     Button #Slot22 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -758,6 +779,7 @@ Group {
                     }
                     Button #Slot23 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -788,6 +810,7 @@ Group {
                     }
                     Button #Slot24 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 
@@ -818,6 +841,7 @@ Group {
                     }
                     Button #Slot25 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
+                        Background: @SlotDefault;
                         Style: @ButtonSlot;
                         LayoutMode: Top;
 

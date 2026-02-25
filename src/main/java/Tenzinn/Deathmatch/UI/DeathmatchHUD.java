@@ -1,9 +1,9 @@
 package Tenzinn.Deathmatch.UI;
 
-import Tenzinn.Events.PlayerHealthTracker;
 import Tenzinn.Tools.RefactorTool;
-import Tenzinn.Deathmatch.Objects.PlayerStats;
+import Tenzinn.Events.PlayerHealthTracker;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.Value;
@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
@@ -52,6 +53,7 @@ public class DeathmatchHUD extends CustomUIHud {
 
     public void setShield(PlayerRef playerRef) {
         if (uiBuilder == null) return;
+        if(RefactorTool.getSizeSlots() <= 0) return;
 
         ArrayList<WeaponStats> loot = RefactorTool.getLoot(playerRef);
         if(loot == null) return;
@@ -62,8 +64,8 @@ public class DeathmatchHUD extends CustomUIHud {
         WeaponStats currentShield = loot.get(2);
         if (currentShield == null) return;
 
-        if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(1)).pos) { uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "KevlarHelmet")); }
-        else if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(0)).pos) { uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "Kevlar")); }
+        if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(1)).pos) uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "KevlarHelmet"));
+        else if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(0)).pos) uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "Kevlar"));
     }
 
     public void setHealth(int value, int max) {
@@ -150,6 +152,7 @@ public class DeathmatchHUD extends CustomUIHud {
 
     public void setWeapons(int value) {
         if (uiBuilder == null || value < 1) return;
+        if(RefactorTool.getSizeSlots() <= 0) return;
 
         ArrayList<WeaponStats> loot = playerStats.getLoot();
         if (loot.isEmpty()) return;
