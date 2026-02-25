@@ -24,13 +24,11 @@ public class ClearHUDCommand extends CommandBase {
         if (customHUD != null) {
             if (customHUD instanceof DeathmatchHUD deathmatchHUD) {
                 deathmatchHUD.clearHUD();
-                player.sendMessage(Message.raw("Deathmatch HUD limpio.").color(Color.cyan));
                 System.out.println("Deathmatch HUD limpio.");
             }
 
             if (customHUD instanceof ScoreboardPage scoreboardHUD) {
                 scoreboardHUD.clearHUD();
-                player.sendMessage(Message.raw("Scoreboard HUD limpio.").color(Color.cyan));
                 System.out.println("Scoreboard HUD limpio.");
             }
         }

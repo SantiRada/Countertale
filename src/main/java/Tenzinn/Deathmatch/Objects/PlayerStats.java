@@ -13,6 +13,8 @@ public class PlayerStats {
     public int kills = 0;
     public int score = 0;
 
+    public boolean canReceivedLoot = false;
+
     public WeaponStats primaryWeapon = null;
     public WeaponStats secondaryWeapon = null;
     public WeaponStats shield = null;

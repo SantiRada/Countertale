@@ -25,7 +25,6 @@ public class GameMatch {
     // In-Game Content
     private ScheduledFuture<?> timerTask;
     private int remainingSeconds = 600; // 10:00
-    private String timerText = "";
 
     public GameMatch() {
         this.matchId = UUID.randomUUID();
@@ -42,29 +41,41 @@ public class GameMatch {
     }
     // ================================================ //
     public void startTimer() {
-        remainingSeconds = 600;
+        if (state == MatchState.STARTING) {
+            remainingSeconds = 15;
+            timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+                if (remainingSeconds <= 0) {
+                    stopTimer();
 
-        timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            if (remainingSeconds <= 0) {
-                stopTimer();
-                return;
-            }
+                    setState(MatchState.IN_PROGRESS);
+                    startTimer();
 
-            remainingSeconds--;
+                    return;
+                }
 
-            int minutes = remainingSeconds / 60;
-            int seconds = remainingSeconds % 60;
-            timerText = String.format("%02d:%02d", minutes, seconds);
-        }, 1, 1, TimeUnit.SECONDS);
+                remainingSeconds--;
+            }, 1, 1, TimeUnit.SECONDS);
+        } else {
+            remainingSeconds = 600;
+
+            timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+                if (remainingSeconds <= 0) {
+                    stopTimer();
+                    return;
+                }
+
+                remainingSeconds--;
+            }, 1, 1, TimeUnit.SECONDS);
+        }
     }
     public int getTimer () { return remainingSeconds; }
-
     public void stopTimer() { if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false); }
-
     // ================================================ //
     public void setInstance(Countertale main) { matchInstance = new InstanceManager(main); }
     public void setInstance(InstanceManager instance) { matchInstance = instance; }
     public void setState(MatchState state) { this.state = state; }
+    // ================================================ //
+    public boolean isBuyPhase () { return state == MatchState.STARTING; }
     // ================================================ //
     public List<PlayerRef> getPlayers() { return new ArrayList<>(players); }
     public InstanceManager getInstance() { return matchInstance; }

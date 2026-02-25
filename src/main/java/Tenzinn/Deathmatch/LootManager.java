@@ -3,12 +3,12 @@ package Tenzinn.Deathmatch;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.Inventory;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 
 import java.awt.*;
@@ -17,19 +17,19 @@ import java.util.ArrayList;
 public class LootManager {
 
     public static ArrayList<WeaponStats> getGameLoot(Player player) {
-        World playerWorld = player.getWorld();
-        if (playerWorld == null) return null;
-
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
         if (playerRef == null) return null;
 
         ArrayList<WeaponStats> loot = RefactorTool.getLoot(playerRef);
         if (loot == null) return getStarterKit();
 
-        boolean hasWeapon = loot.stream().anyMatch(w -> w != null &&
-                (w.typeWeapon.equalsIgnoreCase("primary") || w.typeWeapon.equalsIgnoreCase("secondary")));
+        Message newMessage = Message.raw("Kit (" + loot.size() + "): [ ");
+        for (WeaponStats item : loot) { Message.join(newMessage, Message.raw(item.nameWeapon + " | ")); }
+        Message.join(newMessage, Message.raw("]"));
 
-        return hasWeapon ? loot : getStarterKit();
+        player.sendMessage(newMessage.color(Color.MAGENTA));
+
+        return loot;
     }
 
     public static ArrayList<WeaponStats> getStarterKit() {
@@ -75,5 +75,14 @@ public class LootManager {
 
         ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
         inv.getHotbar().addItemStack(knife);
+    }
+
+    public static void getLobbyLoot(Player player) {
+        player.getInventory().clear();
+
+        Inventory inv = player.getInventory();
+        ItemStack actionBook = new ItemStack("actions_book", 1);
+
+        inv.getHotbar().addItemStack(actionBook);
     }
 }

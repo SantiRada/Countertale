@@ -1,5 +1,6 @@
 package Tenzinn.Tools;
 
+import Tenzinn.Deathmatch.LootManager;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
@@ -7,10 +8,11 @@ import Tenzinn.Deathmatch.Objects.WeaponStats;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -50,6 +52,12 @@ public class RefactorTool {
         slots.addAll(newSlots);
     }
     public static void setLoot(PlayerRef playerRef, int index) {
+        if (getSizeSlots() <= 0) {
+            playerRef.sendMessage(Message.raw("Aun no cargan los slots: " + slots.size()).color(Color.orange));
+            return;
+        }
+
+
         WeaponStats newWeapon = slots.get(index - 1);
 
         if (newWeapon.nameWeapon.equalsIgnoreCase("comingsoon")) return;
@@ -67,9 +75,14 @@ public class RefactorTool {
                         stats.shield = newWeapon;
                         break;
                 }
+
+                if(stats.getCurrentMatch().isBuyPhase()) { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
+                if(stats.canReceivedLoot) { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
                 break;
             }
         }
+
+        playerRef.sendMessage(Message.raw("You have purchased " + newWeapon.nameWeapon).color(Color.cyan));
     }
     public static void setAllLoot(PlayerRef playerRef, ArrayList<WeaponStats> list) {
         for(PlayerStats stats : playerStatsList) {
@@ -107,6 +120,7 @@ public class RefactorTool {
         if(slots.size() <= id) return null;
         return slots.get(id);
     }
+    public static int getSizeSlots () { return slots.size(); }
     public static PlayerStats getPlayerStats(PlayerRef playerRef) {
         if (playerStatsList.isEmpty()) return null;
 
@@ -135,6 +149,7 @@ public class RefactorTool {
         int randomPosition = random.nextInt(10);
         Vector3d spawnPos = spawns[randomPosition];
 
+
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
             currentWorld.execute(() -> {
                 try {
@@ -149,6 +164,12 @@ public class RefactorTool {
                 }  catch (Exception e) { e.printStackTrace(); }
             });
         }, 150, TimeUnit.MILLISECONDS);
+
+        PlayerStats playerStats = getPlayerStats(playerRef);
+        if(playerStats == null) return;
+
+        playerStats.canReceivedLoot = true;
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> { playerStats.canReceivedLoot = false; }, 15, TimeUnit.SECONDS);
     }
     public static void setChangesInUI() {
         for (PlayerStats playerStats : playerStatsList) {
