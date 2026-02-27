@@ -1,13 +1,12 @@
 package Tenzinn.Deathmatch.UI;
 
-import Tenzinn.Deathmatch.GameMatch;
-import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Tools.RefactorTool;
+import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.Shop.ShopData;
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -22,15 +21,10 @@ import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCu
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
     private UICommandBuilder uiBuilder;
-
-    public ScheduledFuture<?> timerTask;
-    private int remainingSeconds = 15;
 
     public ShopPage(PlayerRef playerRef) { super(playerRef, CustomPageLifetime.CanDismiss, Tenzinn.Deathmatch.UI.ShopEventData.CODEC); }
 
@@ -40,8 +34,8 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         uiBuilder = uiCommandBuilder;
 
         setListeners(uiEventBuilder);
+        setTitleShop();
         loadContent();
-        setTimer();
 
         sendUpdate();
     }
@@ -62,49 +56,27 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         sendUpdate();
     }
 
-    private void setTimer() {
+    private void setTitleShop() {
         if (uiBuilder == null) return;
 
         uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("You're not in the buying phase."));
         uiBuilder.set("#Timer.TextSpans", Message.raw("Loot on revive."));
 
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
-        if(playerStats == null) return;
+        if (playerStats == null) return;
 
         if (playerStats.getCurrentMatch().getState() == GameMatch.MatchState.WAITING) {
             uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("The loot will be added at the start of the game."));
             uiBuilder.set("#Timer.TextSpans", Message.raw(""));
-            return;
         }
 
-        if (playerStats.getCurrentMatch().getState() != GameMatch.MatchState.STARTING && !playerStats.canReceivedLoot) return;
+        if (playerStats.getCurrentMatch().isBuyPhase() || playerStats.canReceivedLoot) {
+            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("Purchase phase."));
+            uiBuilder.set("#Timer.TextSpans", Message.raw("You will receive the loot immediately."));
+        }
 
-        uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("Time remaining to buy"));
-
-        remainingSeconds = playerStats.getCurrentMatch().getTimer();
-
-        timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            try {
-                PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
-                if (stats == null || stats.getCurrentMatch() == null) {
-                    if (timerTask != null) timerTask.cancel(false);
-                    return;
-                }
-
-                remainingSeconds = stats.getCurrentMatch().getTimer();
-                int minutes = remainingSeconds / 60;
-                int seconds = remainingSeconds % 60;
-                String timerText = String.format("%02d:%02d", minutes, seconds);
-
-                uiBuilder.set("#Timer.TextSpans", Message.raw(timerText));
-
-                if (remainingSeconds <= 0) { stopTimer(); }
-
-            } catch (Exception e) { if (timerTask != null) timerTask.cancel(false); }
-        }, 1, 1, TimeUnit.SECONDS);
+        sendUpdate();
     }
-
-    public void stopTimer () { if (timerTask != null && !timerTask.isDone()) { timerTask.cancel(false); timerTask = null; } }
 
     private void loadContent() {
         int numberCategory = 1;
@@ -125,7 +97,4 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
             uiBuilder.set("#Slot" + (numberSlot + 1) + "Icon.Background", Value.ref("Game/images/weapons/Weapons.ui", image));
         }
     }
-
-    @Override
-    public void onDismiss(Ref<EntityStore> ref, Store<EntityStore> store) { stopTimer(); }
 }

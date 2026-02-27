@@ -1,13 +1,16 @@
 
 @LineCenter         = PatchStyle(TexturePath: "images/line.png");
 @Timer              = PatchStyle(TexturePath: "images/timer.png");
-@IconShield         = PatchStyle(TexturePath: "images/shield/Kevlar.png");
+@IconShield         = PatchStyle(TexturePath: "images/weapons/kevlar.png");
 @BulletTotal        = PatchStyle(TexturePath: "images/icons/Reserve.png");
 @Crosshair          = PatchStyle(TexturePath: "images/weapons/crosshair/weapon.png");
+
+@Invulnerability    = PatchStyle(TexturePath: "screen-effects/inv-effect.png");
 
 Group #DeathmatchUI {
     LayoutMode: Top;
     Anchor: (Width: 1920, Height: 1080);
+    Background: (Color: #FFFFFF(0.0));
 
     Group #TopSector {
         LayoutMode: Top;
@@ -269,11 +272,12 @@ Group #DeathmatchUI {
 
                 Group #IconShield {
                     LayoutMode: Middle;
-                    Background: @IconShield;
+                    Background: (Color: #ffffff(0.25));
                     Anchor: (Width: 42, Height: 43);
+                    Visible: true;
 
                     Label #NumberShield {
-                        Text: "888";
+                        Text: "88";
                         Style: (FontSize: 16, Alignment: Center);
                     }
                 }
@@ -284,7 +288,7 @@ Group #DeathmatchUI {
 
                     Label #HealthNumber {
                         Style: (FontSize: 36, TextColor: #ffffff, RenderBold: true, Alignment: Center);
-                        Text: "100";
+                        Text: "888";
                     }
 
                     Group #HealthSlider {

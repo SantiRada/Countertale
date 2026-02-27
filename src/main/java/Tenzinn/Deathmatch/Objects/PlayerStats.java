@@ -14,6 +14,8 @@ public class PlayerStats {
     public int score = 0;
 
     public boolean canReceivedLoot = false;
+    public int timerCanReceivedLoot = 15;
+    public boolean isInvulnerable = false;
 
     public WeaponStats primaryWeapon = null;
     public WeaponStats secondaryWeapon = null;
@@ -23,6 +25,8 @@ public class PlayerStats {
 
     public PlayerRef playerRef;
     public Player player;
+
+    public enum Effects { INVULNERABILITY, NULL }
 
     public PlayerStats (PlayerRef playerRef, Player player, GameMatch match) { this.playerRef = playerRef; this.player = player; this.currentMatch = match; }
     // ================================================= //
