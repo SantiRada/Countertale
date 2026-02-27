@@ -13,6 +13,7 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -57,32 +58,26 @@ public class RefactorTool {
             return;
         }
 
-
         WeaponStats newWeapon = slots.get(index - 1);
 
         if (newWeapon.nameWeapon.equalsIgnoreCase("comingsoon")) return;
 
+        playerRef.sendMessage(Message.raw("You have purchased " + newWeapon.nameWeapon).color(Color.cyan));
+
         for (PlayerStats stats : playerStatsList) {
             if(stats.getPlayerRef() == playerRef) {
                 switch (newWeapon.typeWeapon.toLowerCase()) {
-                    case "primary":
-                        stats.primaryWeapon = newWeapon;
-                        break;
-                    case "secondary":
-                        stats.secondaryWeapon = newWeapon;
-                        break;
-                    case "shield":
-                        stats.shield = newWeapon;
-                        break;
+                    case "primary":     stats.primaryWeapon = newWeapon;    break;
+                    case "secondary":   stats.secondaryWeapon = newWeapon;  break;
+                    case "shield":      stats.shield = newWeapon;           break;
                 }
 
-                if(stats.getCurrentMatch().isBuyPhase()) { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
-                if(stats.canReceivedLoot) { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
+                if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) { playerRef.sendMessage(Message.raw("Loot on revive.").color(Color.yellow)); }
+                else { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
+
                 break;
             }
         }
-
-        playerRef.sendMessage(Message.raw("You have purchased " + newWeapon.nameWeapon).color(Color.cyan));
     }
     public static void setAllLoot(PlayerRef playerRef, ArrayList<WeaponStats> list) {
         for(PlayerStats stats : playerStatsList) {
@@ -101,20 +96,18 @@ public class RefactorTool {
     }
     // ============================================ //
     public static ArrayList<WeaponStats> getLoot(PlayerRef playerRef) {
-        ArrayList<WeaponStats> list = new ArrayList<>();
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
         if(playerStats == null) return null;
 
+        ArrayList<WeaponStats> list = new ArrayList<>();
+
         if(playerStats.primaryWeapon != null) list.add(playerStats.primaryWeapon);
-        else list.add(null);
 
         if(playerStats.secondaryWeapon != null) list.add(playerStats.secondaryWeapon);
-        else list.add(null);
 
         if(playerStats.shield != null) list.add(playerStats.shield);
-        else list.add(null);
 
-        return list;
+        return !list.isEmpty() ? list : null;
     }
     public static WeaponStats getSlot(int id) {
         if(slots.size() <= id) return null;
@@ -149,7 +142,6 @@ public class RefactorTool {
         int randomPosition = random.nextInt(10);
         Vector3d spawnPos = spawns[randomPosition];
 
-
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
             currentWorld.execute(() -> {
                 try {
@@ -168,9 +160,45 @@ public class RefactorTool {
         PlayerStats playerStats = getPlayerStats(playerRef);
         if(playerStats == null) return;
 
+        CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
+        boolean isInGame = false;
+        if(customHUD instanceof DeathmatchHUD) { isInGame = true; }
+        DeathmatchHUD newHud = isInGame ? (DeathmatchHUD) customHUD : null;
+        if (newHud == null) {
+            playerRef.sendMessage(Message.raw("No se encuentra DeathmatchHUD").color(Color.orange));
+            return;
+        }
+        playerStats.isInvulnerable = true;
+        newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
+        playerRef.sendMessage(Message.raw("Invulnerabilidad aplicada."));
+
+        if(!playerStats.getCurrentMatch().isBuyPhase()) {
+            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                playerStats.isInvulnerable = false;
+                newHud.setEffect(PlayerStats.Effects.NULL);
+                playerRef.sendMessage(Message.raw("Quitando invulnerabilidad..."));
+            }, 3, TimeUnit.SECONDS);
+        }
+
         playerStats.canReceivedLoot = true;
-        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> { playerStats.canReceivedLoot = false; }, 15, TimeUnit.SECONDS);
+        playerStats.timerCanReceivedLoot = 15;
+
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+            playerStats.canReceivedLoot = false;
+
+            newHud.setEffect(PlayerStats.Effects.NULL);
+            playerStats.isInvulnerable = false;
+            playerRef.sendMessage(Message.raw("Quitando invulnerabilidad..."));
+            }, 15, TimeUnit.SECONDS);
+
+        setShield(playerRef);
     }
+    public static void setShield(PlayerRef playerRef) {
+        CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
+
+        if(customHUD instanceof DeathmatchHUD newHUD) { newHUD.setShield(playerRef); }
+    }
+
     public static void setChangesInUI() {
         for (PlayerStats playerStats : playerStatsList) {
             if(playerStats.getPlayer().getHudManager().getCustomHud() == null) continue;

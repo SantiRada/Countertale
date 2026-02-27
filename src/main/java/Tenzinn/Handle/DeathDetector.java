@@ -35,34 +35,38 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
         Player victim = (Player) store.getComponent(ref, Player.getComponentType());
         if (victim == null) return;
 
-        String causeId = component.getDeathCause() != null ? component.getDeathCause().getId() : "unknown";
+        if (victim.getWorld() != Universe.get().getDefaultWorld()) {
+            String causeId = component.getDeathCause() != null ? component.getDeathCause().getId() : "unknown";
 
-        System.out.println("[DeathDetector] Causa de muerte: " + causeId);
+            victim.sendMessage(Message.raw("Causa de muerte: " + causeId).color(Color.yellow));
 
-        if (deathInfo != null && deathInfo.getSource() instanceof Damage.EntitySource entitySource) {
-            Ref<EntityStore> killerRef = entitySource.getRef();
-            Player killer = (Player) store.getComponent(killerRef, Player.getComponentType());
+            System.out.println("[DeathDetector] Causa de muerte: " + causeId);
 
-            if (killer != null) {
-                RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
-                RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+            if (deathInfo != null && deathInfo.getSource() instanceof Damage.EntitySource entitySource) {
+                Ref<EntityStore> killerRef = entitySource.getRef();
+                Player killer = (Player) store.getComponent(killerRef, Player.getComponentType());
+
+                if (killer != null) {
+                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
+                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+                }
+                RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
-            RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
-        }
-        else if (deathInfo != null && deathInfo.getSource() instanceof Damage.ProjectileSource projectileSource) {
-            Ref<EntityStore> shooterRef = projectileSource.getRef();
-            Player killer = (Player) store.getComponent(shooterRef, Player.getComponentType());
+            else if (deathInfo != null && deathInfo.getSource() instanceof Damage.ProjectileSource projectileSource) {
+                Ref<EntityStore> shooterRef = projectileSource.getRef();
+                Player killer = (Player) store.getComponent(shooterRef, Player.getComponentType());
 
-            if (killer != null) {
-                RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
-                RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+                if (killer != null) {
+                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
+                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+                }
+                RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
-            RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
-        }
-        else {
-            // Caída, void, /kill, comando, o cualquier source anónimo
-            System.out.println("[DeathDetector] Muerte por entorno/comando, causa: " + causeId);
-            RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+            else {
+                // Caída, void, /kill, comando, o cualquier source anónimo
+                System.out.println("[DeathDetector] Muerte por entorno/comando, causa: " + causeId);
+                RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+            }
         }
     }
 
@@ -77,6 +81,6 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
         ArrayList<WeaponStats> loot = LootManager.getGameLoot(playerComponent);
         if (loot != null) LootManager.giveLoot(playerComponent, loot);
 
-        RefactorTool.Respawn(playerRef);
+        if (playerComponent.getWorld() != Universe.get().getDefaultWorld()) { RefactorTool.Respawn(playerRef); }
     }
 }

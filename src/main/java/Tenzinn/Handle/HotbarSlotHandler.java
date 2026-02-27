@@ -25,13 +25,6 @@ public class HotbarSlotHandler implements PlayerPacketFilter {
         for (SyncInteractionChain chain : syncPacket.updates) {
             if (chain.interactionType == InteractionType.SwapFrom && chain.data != null && chain.initial) {
                 int toSlot = chain.data.targetSlot;
-
-                if(toSlot > 2) {
-                    toSlot = 2;
-                    Player player = RefactorTool.getPlayer(playerRef);
-                    player.getInventory().setActiveSlot(-1, (byte)2);
-                }
-
                 handleSlotSwap(playerRef, toSlot);
 
                 return false;

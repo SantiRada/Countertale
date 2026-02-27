@@ -3,7 +3,6 @@ package Tenzinn.Deathmatch;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -22,12 +21,7 @@ public class LootManager {
 
         ArrayList<WeaponStats> loot = RefactorTool.getLoot(playerRef);
         if (loot == null) return getStarterKit();
-
-        Message newMessage = Message.raw("Kit (" + loot.size() + "): [ ");
-        for (WeaponStats item : loot) { Message.join(newMessage, Message.raw(item.nameWeapon + " | ")); }
-        Message.join(newMessage, Message.raw("]"));
-
-        player.sendMessage(newMessage.color(Color.MAGENTA));
+        if (loot.isEmpty()) return getStarterKit();
 
         return loot;
     }

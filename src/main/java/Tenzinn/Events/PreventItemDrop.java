@@ -1,5 +1,6 @@
 package Tenzinn.Events;
 
+import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
@@ -25,8 +26,12 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
         dropEvent.setCancelled(true);
 
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
+
         Player player = store.getComponent(ref, Player.getComponentType());
+        assert player != null;
+
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+        assert playerRef != null;
 
         if (RefactorTool.getPlayerStats(playerRef) != null) { CommandManager.get().handleCommand(playerRef, "shop"); }
         else { playerRef.sendMessage(Message.raw("You must be in a match or in the queue to open the shop.").color(Color.cyan)); }

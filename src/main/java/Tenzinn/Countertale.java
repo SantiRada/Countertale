@@ -74,6 +74,7 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
         getCommandRegistry().registerCommand(new ClearHUDCommand("clearhud", "Clear HUD to change instance"));
         getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
+        getCommandRegistry().registerCommand(new MvpCommand("mvp", "Open Custom page of MVP"));
 
         getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
 
@@ -86,6 +87,7 @@ public class Countertale extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
         this.getEntityStoreRegistry().registerSystem(new DeathDetector());
         this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
+        this.getEntityStoreRegistry().registerSystem(new InvulnerabilitySystem());
 
         // Handlers
         CancelHandler handler = new CancelHandler();

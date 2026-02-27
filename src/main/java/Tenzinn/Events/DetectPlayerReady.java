@@ -1,5 +1,6 @@
 package Tenzinn.Events;
 
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.LootManager;
@@ -51,7 +52,6 @@ public class DetectPlayerReady {
     public static void openGameHud(PlayerRef playerRef, Player player) {
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
 
-        // TENGO QUE SEGUIR VIENDO PORQUE EL LOOT NO CARGA CUANDO LO ELEGIS DESDE EL LOBBY
         if(thisLoot != null) {
             player.sendMessage(Message.raw("Se encontró el loot").color(Color.red));
             if(!thisLoot.isEmpty()) {
@@ -75,6 +75,7 @@ public class DetectPlayerReady {
 
         DeathmatchHUD newHud = new DeathmatchHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
+        newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
 
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Health);
@@ -98,11 +99,6 @@ public class DetectPlayerReady {
         if (RefactorTool.getPlayer(playerRef) != null) {
             GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
             if (match != null) match.startTimer();
-        }
-
-        if (thisLoot != null) {
-            newHud.setShield(playerRef);
-            newHud.setWeapons(0);
         }
     }
 }

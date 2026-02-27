@@ -18,7 +18,6 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import java.awt.*;
 import java.util.List;
 import java.util.UUID;
-import java.util.Objects;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
@@ -51,21 +50,63 @@ public class DeathmatchHUD extends CustomUIHud {
         updateHealth();
     }
 
+    public void setEffect(PlayerStats.Effects effect) {
+        switch (effect) {
+            case PlayerStats.Effects.INVULNERABILITY: uiBuilder.set("#DeathmatchUI.Background", Value.ref("Game/Deathmatch.ui", "Invulnerability")); break;
+            case PlayerStats.Effects.NULL: uiBuilder.set("#DeathmatchUI.Background", "#ffffff00"); break;
+        }
+
+        update(true, uiBuilder);
+    }
+
     public void setShield(PlayerRef playerRef) {
         if (uiBuilder == null) return;
+
+        playerRef.sendMessage(Message.raw("Paso 1. Cargando el escudo..."));
+
+        ArrayList<WeaponStats> loot = new ArrayList<>(playerStats.getLoot());
+        if (loot.isEmpty()) return;
+
+        String imageShield = loot.size() > 2 ? loot.get(2).image : loot.get(1).image;
+
+        uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", imageShield));
+        update(true, uiBuilder);
+    }
+
+    public void setWeapons(int value) {
+        if (uiBuilder == null || value < 1) return;
         if(RefactorTool.getSizeSlots() <= 0) return;
 
-        ArrayList<WeaponStats> loot = RefactorTool.getLoot(playerRef);
-        if(loot == null) return;
-        if(loot.isEmpty()) return;
-        if(loot.size() < 2) return;
-        if(loot.get(2) == null) return;
+        ArrayList<WeaponStats> loot = playerStats.getLoot();
+        if (loot.isEmpty()) return;
 
-        WeaponStats currentShield = loot.get(2);
-        if (currentShield == null) return;
+        WeaponStats first = loot.getFirst();
+        if (first != null) {
+            boolean isPrimary = first.typeWeapon.equalsIgnoreCase("primary");
+            String color01 = isPrimary ? (value == 1 ? "#ffffff" : "#ffffff80") : "#ffffff00";
+            uiBuilder.set("#Number01.Style.TextColor", color01);
+            uiBuilder.set("#Weapon01.Background", (isPrimary ? Value.ref("Game/images/weapons/Weapons.ui", first.image) : "#ffffff00").toString());
 
-        if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(1)).pos) uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "KevlarHelmet"));
-        else if (currentShield.pos == Objects.requireNonNull(RefactorTool.getSlot(0)).pos) uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", "Kevlar"));
+            if (isPrimary) {
+                uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(value - 1).firemode));
+                uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.get(value - 1).crossType));
+            }
+        }
+
+        WeaponStats second = loot.get(1);
+        if (second != null && second.typeWeapon.equalsIgnoreCase("secondary")) {
+            uiBuilder.set("#Number02.Style.TextColor", value == 2 ? "#ffffff" : "#ffffff80");
+            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", second.image));
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", second.firemode));
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", second.crossType));
+        }
+
+        uiBuilder.set("#Number03.Style.TextColor", value >= 3 ? "#ffffff" : "#ffffff80");
+        uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", value >= 3 ? "Weapon03" : "Weapon03Off"));
+        uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", "Melee"));
+        uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", "Knife"));
+
+        update(true, uiBuilder);
     }
 
     public void setHealth(int value, int max) {
@@ -147,43 +188,7 @@ public class DeathmatchHUD extends CustomUIHud {
                 update(true, uiBuilder);
 
             } catch (Exception e) { if (timerTask != null) timerTask.cancel(false); }
-        }, 1, 1, TimeUnit.SECONDS);
-    }
-
-    public void setWeapons(int value) {
-        if (uiBuilder == null || value < 1) return;
-        if(RefactorTool.getSizeSlots() <= 0) return;
-
-        ArrayList<WeaponStats> loot = playerStats.getLoot();
-        if (loot.isEmpty()) return;
-
-        WeaponStats first = loot.getFirst();
-        if (first != null) {
-            boolean isPrimary = first.typeWeapon.equalsIgnoreCase("primary");
-            String color01 = isPrimary ? (value == 1 ? "#ffffff" : "#ffffff80") : "#ffffff00";
-            uiBuilder.set("#Number01.Style.TextColor", color01);
-            uiBuilder.set("#Weapon01.Background", (isPrimary ? Value.ref("Game/images/weapons/Weapons.ui", first.image) : "#ffffff00").toString());
-
-            if (isPrimary) {
-                uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(value - 1).firemode));
-                uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.get(value - 1).crossType));
-            }
-        }
-
-        WeaponStats second = loot.get(1);
-        if (second != null && second.typeWeapon.equalsIgnoreCase("secondary")) {
-            uiBuilder.set("#Number02.Style.TextColor", value == 2 ? "#ffffff" : "#ffffff80");
-            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", second.image));
-            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", second.firemode));
-            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", second.crossType));
-        }
-
-        uiBuilder.set("#Number03.Style.TextColor", value >= 3 ? "#ffffff" : "#ffffff80");
-        uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", value >= 3 ? "Weapon03" : "Weapon03Off"));
-        uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", "Melee"));
-        uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", "Knife"));
-
-        update(true, uiBuilder);
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     public void stopTimer() {
@@ -193,18 +198,15 @@ public class DeathmatchHUD extends CustomUIHud {
         }
     }
 
-    public void clearHUDVisuals() {
+    public void clearHUD() {
         if (uiBuilder == null) return;
+
+        stopTimer();
 
         try {
             uiBuilder.remove("#DeathmatchUI");
             update(true, uiBuilder);
         } catch (Exception e) { }
         uiBuilder = null;
-    }
-
-    public void clearHUD() {
-        stopTimer();
-        clearHUDVisuals();
     }
 }
