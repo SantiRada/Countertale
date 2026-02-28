@@ -1,6 +1,7 @@
 package Tenzinn.Deathmatch;
 
 import Tenzinn.Countertale;
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.HytaleServer;
 import Tenzinn.Deathmatch.Instances.InstanceManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -60,6 +61,8 @@ public class GameMatch {
 
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
                 if (remainingSeconds <= 0) {
+                    RefactorTool.finishGame(players);
+
                     stopTimer();
                     return;
                 }

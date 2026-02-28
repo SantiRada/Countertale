@@ -1,10 +1,8 @@
 package Tenzinn.Deathmatch.Commands.Loot;
 
-import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.LootManager;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;

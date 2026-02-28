@@ -52,22 +52,6 @@ public class DetectPlayerReady {
     public static void openGameHud(PlayerRef playerRef, Player player) {
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
 
-        if(thisLoot != null) {
-            player.sendMessage(Message.raw("Se encontró el loot").color(Color.red));
-            if(!thisLoot.isEmpty()) {
-                player.sendMessage(Message.raw("Kit (" + thisLoot.size() + ")"));
-                int i = 1;
-                for(WeaponStats item : thisLoot) {
-                    player.sendMessage(Message.raw("Slot " + i + ": " + item.nameWeapon));
-                    i += 1;
-                }
-            } else {
-                player.sendMessage(Message.raw("El Loot está vacío").color(Color.red));
-            }
-        } else {
-            player.sendMessage(Message.raw("No se encuentra el Loot").color(Color.red));
-        }
-
         if (thisLoot != null) {
             RefactorTool.setAllLoot(playerRef, thisLoot);
             LootManager.giveLoot(player, thisLoot);

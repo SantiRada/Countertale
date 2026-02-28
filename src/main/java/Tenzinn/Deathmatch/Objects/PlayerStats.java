@@ -13,6 +13,10 @@ public class PlayerStats {
     public int kills = 0;
     public int score = 0;
 
+    public int damageCaused = 0;
+    public int damageReceived = 0;
+    public int meleeDamage = 0;
+
     public boolean canReceivedLoot = false;
     public int timerCanReceivedLoot = 15;
     public boolean isInvulnerable = false;

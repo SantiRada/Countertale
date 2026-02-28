@@ -1,5 +1,6 @@
 package Tenzinn.Deathmatch.UI;
 
+import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -26,6 +27,8 @@ public class QueueHud extends CustomUIHud {
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {
         uiCommandBuilder.append("Lobby/QueueHud.ui");
         uiBuilder = uiCommandBuilder;
+
+        uiBuilder.set("#LeaveMessage.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_MESSAGE_COMMAND_LEAVE)));
 
         startUpdating();
     }

@@ -26,7 +26,7 @@ public class StatusGameCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
 
-        commandContext.sendMessage(Message.raw("========== ESTADO DE PARTIDAS =========="));
+        commandContext.sendMessage(Message.raw("========== STATEMENT OF GAMES =========="));
 
         commandContext.sendMessage(Message.raw(main.getMatchManager().getStats()).color(Color.ORANGE));
         commandContext.sendMessage(Message.raw(main.getMatchManager().getPlayers()).color(Color.ORANGE));
@@ -35,9 +35,9 @@ public class StatusGameCommand extends AbstractPlayerCommand {
 
         List<GameMatch> matches = main.getMatchManager().getActiveMatches();
 
-        if (matches.isEmpty()) { commandContext.sendMessage(Message.raw("No hay partidas activas.").color(Color.MAGENTA)); }
+        if (matches.isEmpty()) { commandContext.sendMessage(Message.raw("There are no active games.").color(Color.MAGENTA)); }
         else {
-            commandContext.sendMessage(Message.raw("Partidas activas:"));
+            commandContext.sendMessage(Message.raw("Active games:"));
 
             for (int i = 0; i < matches.size(); i++) {
                 GameMatch match = matches.get(i);
@@ -45,7 +45,7 @@ public class StatusGameCommand extends AbstractPlayerCommand {
                 String state = getStateColor(match.getState()) + match.getState();
                 String players = String.format("%d/10", match.getPlayerCount());
 
-                commandContext.sendMessage(Message.raw(String.format("%d. [%s] %s - %s jugadores", i + 1, matchId, state, players)));
+                commandContext.sendMessage(Message.raw(String.format("%d. [%s] %s - %s players", i + 1, matchId, state, players)));
             }
         }
 

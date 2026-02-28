@@ -8,8 +8,8 @@
 @Invulnerability    = PatchStyle(TexturePath: "screen-effects/inv-effect.png");
 
 Group #DeathmatchUI {
+    FlexWeight: 1;
     LayoutMode: Top;
-    Anchor: (Width: 1920, Height: 1080);
     Background: (Color: #FFFFFF(0.0));
 
     Group #TopSector {

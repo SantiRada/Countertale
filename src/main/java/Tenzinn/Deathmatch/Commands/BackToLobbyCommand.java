@@ -1,6 +1,7 @@
 package Tenzinn.Deathmatch.Commands;
 
 import Tenzinn.Countertale;
+import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -45,17 +46,14 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
         System.out.println("[LOBBY] world: " + world.getName());
 
         if (world.getName().equals("default")) {
-            commandContext.sendMessage(Message.raw("No estás en una partida."));
+            commandContext.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_COMMAND_LOBBY_INLOBBY)));
             return;
         }
 
-        playerRef.sendMessage(Message.raw("Retornando al lobby..."));
+        playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BACK_TO_LOBBY)));
         World mainWorld = Universe.get().getDefaultWorld();
 
-        if (mainWorld == null) {
-            playerRef.sendMessage(Message.raw("Error: No se pudo encontrar el mundo principal.").color(Color.red));
-            return;
-        }
+        if (mainWorld == null) return;
 
         CommandManager.get().handleCommand(playerRef, "clearhud");
 
@@ -81,7 +79,6 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
                             if (lobbyPlayer != null) {
                                 lobbyPlayer.getInventory().clear();
                                 lobbyPlayer.getInventory().getHotbar().addItemStack(new ItemStack("actions_book", 1));
-                                updatedPlayerRef.sendMessage(Message.raw("¡Has vuelto al lobby!"));
                             }
                         } catch (Exception e) {
                             main.getLogger().at(Level.SEVERE).log("Error en callback lobby: " + e.getMessage());
@@ -90,7 +87,6 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
                 });
 
             } catch (Exception e) {
-                playerRef.sendMessage(Message.raw("Error al salir").color(Color.RED));
                 main.getLogger().at(Level.SEVERE).log("Error en /lobby: " + e.getMessage());
                 e.printStackTrace();
             }

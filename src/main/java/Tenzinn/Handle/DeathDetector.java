@@ -37,18 +37,20 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
 
         if (victim.getWorld() != Universe.get().getDefaultWorld()) {
             String causeId = component.getDeathCause() != null ? component.getDeathCause().getId() : "unknown";
+            float damage = deathInfo.getInitialAmount();
 
-            victim.sendMessage(Message.raw("Causa de muerte: " + causeId).color(Color.yellow));
-
-            System.out.println("[DeathDetector] Causa de muerte: " + causeId);
+            RefactorTool.setDamageReceived(victim, damage);
 
             if (deathInfo != null && deathInfo.getSource() instanceof Damage.EntitySource entitySource) {
                 Ref<EntityStore> killerRef = entitySource.getRef();
                 Player killer = (Player) store.getComponent(killerRef, Player.getComponentType());
 
+
                 if (killer != null) {
+                    trackAttackerDamage(killer, damage);
+
                     RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
-                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, damage);
                 }
                 RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
@@ -57,8 +59,9 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                 Player killer = (Player) store.getComponent(shooterRef, Player.getComponentType());
 
                 if (killer != null) {
+                    trackAttackerDamage(killer, damage);
                     RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
-                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, deathInfo.getInitialAmount());
+                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, damage);
                 }
                 RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
@@ -68,6 +71,14 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                 RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
         }
+    }
+
+    private void trackAttackerDamage(Player attacker, float damage) {
+        String itemId = attacker.getInventory().getActiveHotbarItem().getItemId().toLowerCase();
+        boolean isMelee = itemId.contains("weapon") || itemId.contains("daggers") || itemId.contains("sword");
+
+        RefactorTool.setDamageCaused(attacker, damage);
+        if (isMelee) RefactorTool.setMeleeDamage(attacker, damage);
     }
 
     @Override

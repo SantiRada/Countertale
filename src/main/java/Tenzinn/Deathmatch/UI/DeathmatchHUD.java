@@ -62,8 +62,6 @@ public class DeathmatchHUD extends CustomUIHud {
     public void setShield(PlayerRef playerRef) {
         if (uiBuilder == null) return;
 
-        playerRef.sendMessage(Message.raw("Paso 1. Cargando el escudo..."));
-
         ArrayList<WeaponStats> loot = new ArrayList<>(playerStats.getLoot());
         if (loot.isEmpty()) return;
 

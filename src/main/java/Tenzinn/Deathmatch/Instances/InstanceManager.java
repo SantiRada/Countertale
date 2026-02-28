@@ -2,6 +2,7 @@ package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
 
+import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -144,20 +145,14 @@ public class InstanceManager {
                 UUID playerUUID = playerRef.getUuid();
                 PlayerRef updatedPlayerRef = Universe.get().getPlayer(playerUUID);
 
-                if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) {
-                    main.getLogger().at(Level.WARNING).log("PlayerRef inválido para: " + playerUUID);
-                    continue;
-                }
+                if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) continue;
 
                 Ref<EntityStore> ref = updatedPlayerRef.getReference();
                 World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
 
-                if (currentWorld == null) {
-                    main.getLogger().at(Level.WARNING).log("Mundo actual del jugador es null");
-                    continue;
-                }
+                if (currentWorld == null) continue;
 
-                updatedPlayerRef.sendMessage(Message.raw("Teleportando a la arena..."));
+                updatedPlayerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME)));
 
                 currentWorld.execute(() -> {
                     try {
@@ -185,7 +180,6 @@ public class InstanceManager {
 
         if (instanceWorld != null) {
             universe.removeWorld(worldName);
-            main.getLogger().at(Level.INFO).log("Mundo " + worldName + " removido");
 
             isMapLoaded = false;
             newWorld = null;
