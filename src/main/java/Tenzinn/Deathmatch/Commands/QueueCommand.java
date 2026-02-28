@@ -5,6 +5,7 @@ import Tenzinn.Deathmatch.GameMatch;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -28,22 +29,21 @@ public class QueueCommand extends AbstractPlayerCommand {
 
         if (plugin.getMatchManager().isPlayerInMatch(playerRef)) {
             GameMatch currentMatch = plugin.getMatchManager().getPlayerMatch(playerRef);
-            commandContext.sendMessage(Message.raw(String.format("Ya estás en una partida (%d/10 jugadores). Estado: %s",currentMatch.getPlayerCount(),currentMatch.getState())).color(Color.ORANGE));
+            commandContext.sendMessage(Message.raw(String.format(MessageListeners.get(MessageListeners.MessageKey.CHAT_ALREADY_IN_GAME) + " (%d/10 players). State: %s",currentMatch.getPlayerCount(),currentMatch.getState())).color(Color.ORANGE));
             return;
         }
 
         Player player = store.getComponent(ref, Player.getComponentType());
-
-        if (player == null) { commandContext.sendMessage(Message.raw("Error: No se pudo obtener el componente del jugador.").color(Color.RED)); return; }
+        if (player == null) return;
 
         GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef);
-        player.sendMessage(Message.raw(String.format("Añadido a la cola! Partida %s (%d/10 jugadores)",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())).color(Color.orange));
+        player.sendMessage(Message.raw(String.format(MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE) + " [%s] (%d/10 players)",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())).color(Color.orange));
 
         plugin.showQueueHud(playerRef, player, match);
         plugin.notifyMatchPlayersAndUpdateHuds(match);
 
         if (match.isFull()) {
-            player.sendMessage(Message.raw("¡Partida completa! Iniciando...").color(Color.green));
+            player.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_STARTING_GAME)).color(Color.green));
 
             plugin.hideAllQueueHuds(match);
             plugin.startMatch(match);

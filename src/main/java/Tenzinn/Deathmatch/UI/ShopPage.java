@@ -3,6 +3,7 @@ package Tenzinn.Deathmatch.UI;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.Shop.ShopData;
+import Tenzinn.Listeners.MessageListeners;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 
 import com.hypixel.hytale.component.Ref;
@@ -33,6 +34,9 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         uiCommandBuilder.append("Game/Shop.ui");
         uiBuilder = uiCommandBuilder;
 
+        uiBuilder.set("#SelectLoot.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_SELECT_LOOT)));
+        uiBuilder.set("#CloseShop.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_CLOSE_SHOP)));
+
         setListeners(uiEventBuilder);
         setTitleShop();
         loadContent();
@@ -59,20 +63,20 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
     private void setTitleShop() {
         if (uiBuilder == null) return;
 
-        uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("You're not in the buying phase."));
-        uiBuilder.set("#Timer.TextSpans", Message.raw("Loot on revive."));
+        uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_NOT_BUYING_PHASE)));
+        uiBuilder.set("#Timer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)));
 
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
         if (playerStats == null) return;
 
         if (playerStats.getCurrentMatch().getState() == GameMatch.MatchState.WAITING) {
-            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("The loot will be added at the start of the game."));
+            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_LOOT_START_GAME)));
             uiBuilder.set("#Timer.TextSpans", Message.raw(""));
         }
 
         if (playerStats.getCurrentMatch().isBuyPhase() || playerStats.canReceivedLoot) {
-            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw("Purchase phase."));
-            uiBuilder.set("#Timer.TextSpans", Message.raw("You will receive the loot immediately."));
+            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_IN_BUYING_PHASE)));
+            uiBuilder.set("#Timer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_WHEN_RECEIVES_LOOT)));
         }
 
         sendUpdate();

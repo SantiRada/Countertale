@@ -897,7 +897,7 @@ Group {
                         Background: @Icon01;
                     }
 
-                    Label {
+                    Label #SelectLoot {
                         Text: "Select Loot";
                         Style: (FontSize: 14, RenderBold: true);
                     }
@@ -911,7 +911,7 @@ Group {
                         Background: @Icon02;
                     }
 
-                    Label {
+                    Label #CloseShop {
                         Text: "Close Shop";
                         Style: (FontSize: 14, RenderBold: true);
                     }

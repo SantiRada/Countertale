@@ -1,37 +1,32 @@
 package Tenzinn;
 
-import Tenzinn.Deathmatch.Commands.Loot.LootCommands;
 import Tenzinn.Events.*;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Handle.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
 import Tenzinn.Admin.UI.ServerStatusHud;
-import Tenzinn.Deathmatch.UI.DeathmatchHUD;
-import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Admin.Commands.AdminCommands;
 import Tenzinn.Admin.Commands.ServerStatusCommand;
+import Tenzinn.Deathmatch.Commands.Loot.LootCommands;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
 import Tenzinn.Admin.Commands.HideServerStatusCommand;
 
+import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
-import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
-import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
 import java.util.Map;
 import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
@@ -57,6 +52,8 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void setup() {
+        MessageListeners.load();
+
         // Interactions
         this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
         matchManager = new MatchManager(this);
@@ -156,7 +153,7 @@ public class Countertale extends JavaPlugin {
     }
     public void notifyMatchPlayersAndUpdateHuds(GameMatch match) {
         int playerCount = match.getPlayerCount();
-        String message = String.format("[Partida] Jugadores: %d/10", playerCount);
+        String message = String.format("Players: %d/10", playerCount);
 
         for (PlayerRef playerRef : match.getPlayers()) {
             playerRef.sendMessage(Message.raw(message));
@@ -178,27 +175,13 @@ public class Countertale extends JavaPlugin {
         }
     }
     public void startMatch(GameMatch match) {
-        if (match.getState() != GameMatch.MatchState.WAITING) {
-            getLogger().at(Level.WARNING).log("La partida no está marcada como WAITING");
-            return;
-        }
-        match.setState(GameMatch.MatchState.STARTING);
+        if (match.getState() != GameMatch.MatchState.WAITING) return;
 
-        notifyMatchPlayers(match, "¡Partida iniciando! Creando arena...", "yellow");
+        match.setState(GameMatch.MatchState.STARTING);
 
         try {
             hideAllQueueHuds(match);
             match.getInstance().teleportPlayers(match.getPlayers());
-        } catch (Exception e) {
-            getLogger().at(Level.SEVERE).log("=== ERROR CRÍTICO ===", e);
-            match.setState(GameMatch.MatchState.WAITING);
-            notifyMatchPlayers(match, "Error crítico en <GameMatch>. Contacta a un admin.", "red");
-        }
-    }
-    private void notifyMatchPlayers(GameMatch match, String message, String color) {
-        for (PlayerRef player : match.getPlayers()) {
-            if (color != null && !color.isEmpty()) { player.sendMessage(Message.raw(message).color(color)); }
-            else { player.sendMessage(Message.raw(message)); }
-        }
+        } catch (Exception e) { match.setState(GameMatch.MatchState.WAITING); }
     }
 }

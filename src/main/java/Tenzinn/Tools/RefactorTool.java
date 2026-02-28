@@ -1,11 +1,14 @@
 package Tenzinn.Tools;
 
+import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.LootManager;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Deathmatch.UI.MvpPage;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
+import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -53,16 +56,14 @@ public class RefactorTool {
         slots.addAll(newSlots);
     }
     public static void setLoot(PlayerRef playerRef, int index) {
-        if (getSizeSlots() <= 0) {
-            playerRef.sendMessage(Message.raw("Aun no cargan los slots: " + slots.size()).color(Color.orange));
-            return;
-        }
+        if (getSizeSlots() <= 0) return;
 
         WeaponStats newWeapon = slots.get(index - 1);
 
         if (newWeapon.nameWeapon.equalsIgnoreCase("comingsoon")) return;
 
-        playerRef.sendMessage(Message.raw("You have purchased " + newWeapon.nameWeapon).color(Color.cyan));
+        String message = MessageListeners.get(MessageListeners.MessageKey.CHAT_WHEN_BUYING);
+        playerRef.sendMessage(Message.raw(message + newWeapon.nameWeapon).color(Color.cyan));
 
         for (PlayerStats stats : playerStatsList) {
             if(stats.getPlayerRef() == playerRef) {
@@ -72,7 +73,9 @@ public class RefactorTool {
                     case "shield":      stats.shield = newWeapon;           break;
                 }
 
-                if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) { playerRef.sendMessage(Message.raw("Loot on revive.").color(Color.yellow)); }
+                if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) {
+                    playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)).color(Color.yellow));
+                }
                 else { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
 
                 break;
@@ -164,19 +167,15 @@ public class RefactorTool {
         boolean isInGame = false;
         if(customHUD instanceof DeathmatchHUD) { isInGame = true; }
         DeathmatchHUD newHud = isInGame ? (DeathmatchHUD) customHUD : null;
-        if (newHud == null) {
-            playerRef.sendMessage(Message.raw("No se encuentra DeathmatchHUD").color(Color.orange));
-            return;
-        }
+        if (newHud == null) return;
+
         playerStats.isInvulnerable = true;
         newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
-        playerRef.sendMessage(Message.raw("Invulnerabilidad aplicada."));
 
         if(!playerStats.getCurrentMatch().isBuyPhase()) {
             HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
                 playerStats.isInvulnerable = false;
                 newHud.setEffect(PlayerStats.Effects.NULL);
-                playerRef.sendMessage(Message.raw("Quitando invulnerabilidad..."));
             }, 3, TimeUnit.SECONDS);
         }
 
@@ -188,17 +187,17 @@ public class RefactorTool {
 
             newHud.setEffect(PlayerStats.Effects.NULL);
             playerStats.isInvulnerable = false;
-            playerRef.sendMessage(Message.raw("Quitando invulnerabilidad..."));
             }, 15, TimeUnit.SECONDS);
 
         setShield(playerRef);
     }
+    // ============================================ //
     public static void setShield(PlayerRef playerRef) {
         CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
 
         if(customHUD instanceof DeathmatchHUD newHUD) { newHUD.setShield(playerRef); }
     }
-
+    // ============================================ //
     public static void setChangesInUI() {
         for (PlayerStats playerStats : playerStatsList) {
             if(playerStats.getPlayer().getHudManager().getCustomHud() == null) continue;
@@ -240,5 +239,32 @@ public class RefactorTool {
             case TypeData.DEATH: playerStats.setDeaths(); break;
             case TypeData.KILL: playerStats.setKills(); break;
         }
+    }
+    // ============================================ //
+    public static void finishGame(List<PlayerRef> players) {
+        for (PlayerRef playerRef : players) {
+            Ref<EntityStore> ref = playerRef.getReference();
+            Store<EntityStore> store = ref.getStore();
+
+            playerRef.sendMessage(Message.raw("Se terminó la partida").color(Color.cyan));
+
+            Player player = getPlayer(playerRef);
+            player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef));
+        }
+    }
+    public static void setMeleeDamage (Player player, float value) {
+        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+
+        playerStats.meleeDamage += value;
+    }
+    public static void setDamageReceived (Player player, float value) {
+        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+
+        playerStats.damageReceived += value;
+    }
+    public static void setDamageCaused (Player player, float value) {
+        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+
+        playerStats.damageCaused += value;
     }
 }

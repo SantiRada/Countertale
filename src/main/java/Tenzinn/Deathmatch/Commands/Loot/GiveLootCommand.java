@@ -1,15 +1,17 @@
 package Tenzinn.Deathmatch.Commands.Loot;
 
+import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.LootManager;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
-import Tenzinn.Tools.RefactorTool;
+
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
-import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
+
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;

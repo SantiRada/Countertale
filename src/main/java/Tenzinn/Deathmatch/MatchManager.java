@@ -1,6 +1,7 @@
 package Tenzinn.Deathmatch;
 
 import Tenzinn.Countertale;
+import Tenzinn.Listeners.MessageListeners;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 import com.hypixel.hytale.server.core.Message;
@@ -43,7 +44,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
 
         boolean isInList = playerMatches.keySet().stream().anyMatch(s -> s.getPlayerRef().equals(playerRef));
 
-        if (isInList) { playerRef.sendMessage(Message.raw("Ya estás en la cola, no puedes unirte a otra partida ahora.").color(Color.pink)); return null; }
+        if (isInList) { playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_IN_QUEUE_X2)).color(Color.pink)); return null; }
 
         // Buscar partida disponible o crear una nueva
         Optional<GameMatch> availableMatch = activeMatches.stream()

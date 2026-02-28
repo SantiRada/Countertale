@@ -5,6 +5,7 @@ import Tenzinn.Deathmatch.GameMatch;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -27,20 +28,20 @@ public class LeaveQueueCommand extends AbstractPlayerCommand {
 
         GameMatch match = plugin.getMatchManager().getPlayerMatch(playerRef);
 
-        if (match == null) { commandContext.sendMessage(Message.raw("No estás en ninguna partida.").color(Color.red)); }
+        if (match == null) { commandContext.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_COMMAND_LEAVE_NO_QUEUE)).color(Color.red)); }
         else {
             if (match.getState() != GameMatch.MatchState.WAITING) {
-                commandContext.sendMessage(Message.raw("Para salir de una partida en curso usa /lobby").color(Color.PINK)); return;
+                commandContext.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_COMMAND_LEAVE_IN_GAME)).color(Color.PINK)); return;
             }
 
             plugin.hideQueueHud(playerRef);
             boolean removed = plugin.getMatchManager().removePlayerFromMatch(playerRef);
 
             if (removed) {
-                commandContext.sendMessage(Message.raw("Has salido de la cola.").color(Color.ORANGE));
+                commandContext.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_LEAVE_QUEUE)).color(Color.ORANGE));
 
                 if (!match.isEmpty()) plugin.notifyMatchPlayersAndUpdateHuds(match);
-            } else { commandContext.sendMessage(Message.raw("Error al salir de la partida.").color(Color.RED)); }
+            }
         }
     }
 
