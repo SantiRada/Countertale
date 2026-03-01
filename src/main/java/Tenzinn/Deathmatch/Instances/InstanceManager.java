@@ -3,6 +3,7 @@ package Tenzinn.Deathmatch.Instances;
 import Tenzinn.Countertale;
 
 import Tenzinn.Listeners.MessageListeners;
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -18,6 +19,7 @@ import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.List;
 import java.util.logging.Level;
@@ -122,21 +124,10 @@ public class InstanceManager {
             return;
         }
 
-        Vector3d[] spawns = {
-                new Vector3d(-27, 107, -10),
-                new Vector3d(-28, 107, 10),
-                new Vector3d(-10, 110, -13),
-                new Vector3d(-31, 112, -23),
-                new Vector3d(-20, 110, -43),
-                new Vector3d(18, 106, -36),
-                new Vector3d(14, 110, -15),
-                new Vector3d(40, 110, -13),
-                new Vector3d(0, 111, 32),
-                new Vector3d(-33, 110, 28)
-        };
+        ArrayList<Vector3d> spawns = RefactorTool.getSpawns();
 
         for (int i = 0; i < playerRefs.size(); i++) {
-            Vector3d spawnPos = spawns[i % spawns.length];
+            Vector3d spawnPos = spawns.get(i % spawns.size());
             Transform spawnPoint = new Transform(spawnPos.x, spawnPos.y, spawnPos.z);
 
             PlayerRef playerRef = playerRefs.get(i);

@@ -45,7 +45,11 @@ public final class MessageListeners {
         UI_DAMAGE_CAUSED            ("ui.damage-caused"),
         UI_DAMAGE_RECEIVED          ("ui.damage-received"),
         UI_MELEE_DAMAGE             ("ui.melee-damage"),
-        UI_MESSAGE_COMMAND_LEAVE    ("ui.message-command-leave");
+        UI_MESSAGE_COMMAND_LEAVE    ("ui.message-command-leave"),
+        UI_TITLE_QUEUE    ("ui.title-queue"),
+        UI_DESC_QUEUE    ("ui.desc-queue"),
+        UI_TITLE_SHOP    ("ui.title-shop"),
+        UI_DESC_SHOP    ("ui.desc-shop");
         // ────────────────────────────────────────────────────────────────────────
 
         private final String key;

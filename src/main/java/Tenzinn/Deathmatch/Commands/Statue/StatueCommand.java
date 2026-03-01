@@ -1,0 +1,18 @@
+package Tenzinn.Deathmatch.Commands.Statue;
+
+import com.hypixel.hytale.server.core.command.system.basecommands.AbstractCommandCollection;
+
+public class StatueCommand extends AbstractCommandCollection {
+
+    public StatueCommand(String name, String description) {
+        super(name, description);
+
+        addSubCommand(new SetStatueCollectionCommand("set", "Set the statue's configuration according to the model you are looking at."));
+    }
+
+    @Override
+    public String getPermission() { return "countertale.statue"; }
+
+    @Override
+    public String getName() { return "statue"; }
+}

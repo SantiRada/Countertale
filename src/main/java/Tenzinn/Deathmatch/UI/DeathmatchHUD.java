@@ -59,50 +59,75 @@ public class DeathmatchHUD extends CustomUIHud {
         update(true, uiBuilder);
     }
 
-    public void setShield(PlayerRef playerRef) {
+    public void setShield() {
         if (uiBuilder == null) return;
 
         ArrayList<WeaponStats> loot = new ArrayList<>(playerStats.getLoot());
         if (loot.isEmpty()) return;
 
-        String imageShield = loot.size() > 2 ? loot.get(2).image : loot.get(1).image;
+        WeaponStats shield = loot.stream().filter(ps -> ps.typeWeapon.equalsIgnoreCase("shield")).findFirst().orElse(null);
+        if (shield == null) {
+            playerRef.sendMessage(Message.raw("No se encuentra escudo en este jugador."));
+            return;
+        }
 
-        uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", imageShield));
+        uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", shield.image));
         update(true, uiBuilder);
     }
 
     public void setWeapons(int value) {
-        if (uiBuilder == null || value < 1) return;
-        if(RefactorTool.getSizeSlots() <= 0) return;
+        if (uiBuilder == null) return;
+        if (RefactorTool.getSizeSlots() <= 0) {
+            playerRef.sendMessage(Message.raw("No cargaron los slots.").color(Color.red));
+            return;
+        }
 
         ArrayList<WeaponStats> loot = playerStats.getLoot();
-        if (loot.isEmpty()) return;
-
-        WeaponStats first = loot.getFirst();
-        if (first != null) {
-            boolean isPrimary = first.typeWeapon.equalsIgnoreCase("primary");
-            String color01 = isPrimary ? (value == 1 ? "#ffffff" : "#ffffff80") : "#ffffff00";
-            uiBuilder.set("#Number01.Style.TextColor", color01);
-            uiBuilder.set("#Weapon01.Background", (isPrimary ? Value.ref("Game/images/weapons/Weapons.ui", first.image) : "#ffffff00").toString());
-
-            if (isPrimary) {
-                uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(value - 1).firemode));
-                uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.get(value - 1).crossType));
-            }
+        if (loot.isEmpty()) {
+            playerRef.sendMessage(Message.raw("No cargó el loot.").color(Color.red));
+            return;
         }
 
-        WeaponStats second = loot.get(1);
-        if (second != null && second.typeWeapon.equalsIgnoreCase("secondary")) {
-            uiBuilder.set("#Number02.Style.TextColor", value == 2 ? "#ffffff" : "#ffffff80");
-            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", second.image));
-            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", second.firemode));
-            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", second.crossType));
+        if (!loot.get(0).typeWeapon.equalsIgnoreCase("primary")) {
+            uiBuilder.set("#Number01.Style.TextColor", "#ffffff00");
+            uiBuilder.set("#Weapon01.Background", "#ffffff00");
+
+            String colorText = value == 2 ? "#ffffff" : "#ffffff80";
+            uiBuilder.set("#Number02.Style.TextColor", colorText);
+
+            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().image));
+
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.getFirst().crossType));
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().firemode));
+        }
+        else {
+            String colorText = value == 1 ? "#ffffff" : "#ffffff80";
+            uiBuilder.set("#Number01.Style.TextColor", colorText);
+
+            uiBuilder.set("#Weapon01.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().image));
+
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.getFirst().crossType));
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().firemode));
         }
 
+        if(loot.get(1).typeWeapon.equalsIgnoreCase("secondary")) {
+            String colorText = value == 2 ? "#ffffff" : "#ffffff80";
+            uiBuilder.set("#Number02.Style.TextColor", colorText);
+
+            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(1).image));
+
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.get(1).crossType));
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(1).firemode));
+        }
+
+        // Knife
         uiBuilder.set("#Number03.Style.TextColor", value >= 3 ? "#ffffff" : "#ffffff80");
         uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", value >= 3 ? "Weapon03" : "Weapon03Off"));
-        uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", "Melee"));
-        uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", "Knife"));
+
+        if (value >= 3) {
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", "Melee"));
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", "Knife"));
+        }
 
         update(true, uiBuilder);
     }

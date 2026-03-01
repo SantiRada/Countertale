@@ -1,17 +1,29 @@
 package Tenzinn.Deathmatch;
 
+import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
+import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class LootManager {
 
@@ -62,13 +74,40 @@ public class LootManager {
         if (primary != null) { for (String itemId : primary.giveItems) { inv.getHotbar().addItemStack(new ItemStack(itemId, 1)); } }
 
         // Slot 1 - Secondary
-        if (secondary != null) { for (String itemId : secondary.giveItems) { inv.getHotbar().addItemStack(new ItemStack(itemId, 1)); } }
+        if (secondary != null) { for (String itemId : secondary.giveItems) { inv.getHotbar().addItemStackToSlot((short)1, new ItemStack(itemId, 1)); } }
 
         // Slot 2 - Shield
         if (shield != null) { for (String itemId : shield.giveItems) { inv.getArmor().addItemStack(new ItemStack(itemId, 1)); } }
 
         ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
-        inv.getHotbar().addItemStack(knife);
+        inv.getHotbar().addItemStackToSlot((short)2, knife);
+
+
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+            // Aplicar vida al máximo para evitar falta de escudo
+            PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+            assert playerRef != null;
+            assert playerRef.getWorldUuid() != null;
+            World world = Universe.get().getWorld(playerRef.getWorldUuid());
+
+            world.execute(() -> {
+                Ref<EntityStore> ref = playerRef.getReference();
+                Store<EntityStore> store = ref.getStore();
+
+                ComponentType<EntityStore, EntityStatMap> statMapType = EntityStatsModule.get().getEntityStatMapComponentType();
+                EntityStatMap statMap = store.getComponent(ref, statMapType);
+
+                if (statMap != null) statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth());
+
+                // Actualizar iconos del HUD según tu nuevo LOOT
+                CustomUIHud customHUD = player.getHudManager().getCustomHud();
+                if (customHUD instanceof DeathmatchHUD newHud) {
+                    newHud.setWeapons(player.getInventory().getActiveHotbarSlot() + 1);
+                    newHud.setShield();
+                }
+            });
+        }, 250, TimeUnit.MILLISECONDS);
+
     }
 
     public static void getLobbyLoot(Player player) {
