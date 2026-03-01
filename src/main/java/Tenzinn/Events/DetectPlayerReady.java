@@ -1,14 +1,13 @@
 package Tenzinn.Events;
 
-import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.LootManager;
 import Tenzinn.Deathmatch.Shop.ShopData;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -51,11 +50,8 @@ public class DetectPlayerReady {
     }
     public static void openGameHud(PlayerRef playerRef, Player player) {
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
-
-        if (thisLoot != null) {
-            RefactorTool.setAllLoot(playerRef, thisLoot);
-            LootManager.giveLoot(player, thisLoot);
-        }
+        assert thisLoot != null;
+        RefactorTool.setAllLoot(playerRef, thisLoot);
 
         DeathmatchHUD newHud = new DeathmatchHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
@@ -84,5 +80,7 @@ public class DetectPlayerReady {
             GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
             if (match != null) match.startTimer();
         }
+
+        LootManager.giveLoot(player, thisLoot);
     }
 }

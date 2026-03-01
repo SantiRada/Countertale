@@ -12,8 +12,12 @@ import Tenzinn.Deathmatch.Commands.Loot.LootCommands;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
 import Tenzinn.Admin.Commands.HideServerStatusCommand;
+import Tenzinn.Deathmatch.Commands.Statue.StatueCommand;
 
+import Tenzinn.Listeners.MapListeners;
 import Tenzinn.Listeners.MessageListeners;
+import Tenzinn.Listeners.StatueBlockListener;
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -53,6 +57,10 @@ public class Countertale extends JavaPlugin {
     @Override
     protected void setup() {
         MessageListeners.load();
+        MapListeners.load();
+
+        RefactorTool.setMap();
+
 
         // Interactions
         this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
@@ -62,6 +70,7 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new ServerStatusCommand("server", "Show server status", this));
         getCommandRegistry().registerCommand(new HideServerStatusCommand("hide", "Hide server status HUD", this));
         getCommandRegistry().registerCommand(new AdminCommands("admin", "View list of commands for Countertale"));
+        getCommandRegistry().registerCommand(new StatueCommand("statue", "Manage statue configurations."));
 
         // Deathmatch Commands
         getCommandRegistry().registerCommand(new QueueCommand("queue", "Join match queue", this));
@@ -79,12 +88,14 @@ public class Countertale extends JavaPlugin {
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
 
         // Events
+        this.getEntityStoreRegistry().registerSystem(StatueBlockListener.getInstance());
         this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
         this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
         this.getEntityStoreRegistry().registerSystem(new DeathDetector());
         this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
         this.getEntityStoreRegistry().registerSystem(new InvulnerabilitySystem());
+
 
         // Handlers
         CancelHandler handler = new CancelHandler();

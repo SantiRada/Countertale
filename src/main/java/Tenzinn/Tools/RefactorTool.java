@@ -8,6 +8,7 @@ import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
+import Tenzinn.Listeners.MapListeners;
 import Tenzinn.Listeners.MessageListeners;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -36,18 +37,7 @@ public class RefactorTool {
     public static List<PlayerStats> playerStatsList = new ArrayList<>();
     public static ArrayList<WeaponStats> slots = new ArrayList<>();
 
-    private static Vector3d[] spawns = {
-            new Vector3d(-27, 107, -10),
-            new Vector3d(-28, 107, 10),
-            new Vector3d(-10, 110, -13),
-            new Vector3d(-31, 112, -23),
-            new Vector3d(-20, 110, -43),
-            new Vector3d(18, 106, -36),
-            new Vector3d(14, 110, -15),
-            new Vector3d(40, 110, -13),
-            new Vector3d(0, 111, 32),
-            new Vector3d(-33, 110, 28)
-    };
+    private static ArrayList<Vector3d> spawns = new ArrayList<>();
 
     public static void setPlayerStats (PlayerStats playerStats) { playerStatsList.add(playerStats); }
     public static void setQuitPlayerStats (PlayerStats playerStats) { playerStatsList.remove(playerStats); }
@@ -83,19 +73,20 @@ public class RefactorTool {
         }
     }
     public static void setAllLoot(PlayerRef playerRef, ArrayList<WeaponStats> list) {
-        for(PlayerStats stats : playerStatsList) {
-            if(stats.getPlayerRef().equals(playerRef)) {
-                if (list.size() > 2) {
-                    if(list.get(0).typeWeapon.equalsIgnoreCase("primary")) stats.primaryWeapon = list.get(0);
-                    if(list.get(1).typeWeapon.equalsIgnoreCase("secondary")) stats.secondaryWeapon = list.get(1);
-                    if(list.get(2).typeWeapon.equalsIgnoreCase("shield")) stats.shield = list.get(2);
-                } else {
-                    stats.primaryWeapon = null;
-                    if(list.get(0).typeWeapon.equalsIgnoreCase("secondary")) stats.secondaryWeapon = list.get(0);
-                    if(list.get(1).typeWeapon.equalsIgnoreCase("shield")) stats.shield = list.get(1);
-                }
-            }
+
+        PlayerStats playerStats = playerStatsList.stream().filter(ps -> ps.getPlayerRef().equals(playerRef)).findFirst().orElse(null);
+        if (playerStats == null) return;
+
+        for (WeaponStats item : list) {
+            if(item.typeWeapon.equalsIgnoreCase("primary")) playerStats.primaryWeapon = item;
+            if(item.typeWeapon.equalsIgnoreCase("secondary")) { playerStats.secondaryWeapon = item; }
+            if(item.typeWeapon.equalsIgnoreCase("shield")) playerStats.shield = item;
         }
+    }
+    public static void setMap() {
+        List<MapListeners.SpawnPoint> allSpawns = MapListeners.get("dust2");
+
+        for(MapListeners.SpawnPoint spawn : allSpawns) { spawns.add(new Vector3d(spawn.x, spawn.y, spawn.z)); }
     }
     // ============================================ //
     public static ArrayList<WeaponStats> getLoot(PlayerRef playerRef) {
@@ -112,10 +103,6 @@ public class RefactorTool {
 
         return !list.isEmpty() ? list : null;
     }
-    public static WeaponStats getSlot(int id) {
-        if(slots.size() <= id) return null;
-        return slots.get(id);
-    }
     public static int getSizeSlots () { return slots.size(); }
     public static PlayerStats getPlayerStats(PlayerRef playerRef) {
         if (playerStatsList.isEmpty()) return null;
@@ -126,6 +113,7 @@ public class RefactorTool {
         return null;
     }
     public static List<PlayerStats> getPlayerList() { return playerStatsList; }
+    public static ArrayList<Vector3d> getSpawns () { return spawns; }
     // ============================================ //
     public static Player getPlayer(PlayerRef playerRef) {
         Ref<EntityStore> ref = playerRef.getReference();
@@ -143,7 +131,7 @@ public class RefactorTool {
 
         Random random = new Random();
         int randomPosition = random.nextInt(10);
-        Vector3d spawnPos = spawns[randomPosition];
+        Vector3d spawnPos = spawns.get(randomPosition);
 
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
             currentWorld.execute(() -> {
@@ -188,14 +176,6 @@ public class RefactorTool {
             newHud.setEffect(PlayerStats.Effects.NULL);
             playerStats.isInvulnerable = false;
             }, 15, TimeUnit.SECONDS);
-
-        setShield(playerRef);
-    }
-    // ============================================ //
-    public static void setShield(PlayerRef playerRef) {
-        CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
-
-        if(customHUD instanceof DeathmatchHUD newHUD) { newHUD.setShield(playerRef); }
     }
     // ============================================ //
     public static void setChangesInUI() {
