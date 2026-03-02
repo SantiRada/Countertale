@@ -1,8 +1,8 @@
 package Tenzinn;
 
 import Tenzinn.Events.*;
-import Tenzinn.Deathmatch.*;
 import Tenzinn.Handle.*;
+import Tenzinn.Deathmatch.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
 import Tenzinn.Admin.UI.ServerStatusHud;
@@ -14,9 +14,7 @@ import Tenzinn.Deathmatch.Commands.Game.GameCommands;
 import Tenzinn.Admin.Commands.HideServerStatusCommand;
 import Tenzinn.Deathmatch.Commands.Statue.StatueCommand;
 
-import Tenzinn.Listeners.MapListeners;
-import Tenzinn.Listeners.MessageListeners;
-import Tenzinn.Listeners.StatueBlockListener;
+import Tenzinn.Listeners.*;
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -87,15 +85,18 @@ public class Countertale extends JavaPlugin {
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
 
-        // Events
+        // Listeners
+        this.getEntityStoreRegistry().registerSystem(new ShopStatueListener());
+        this.getEntityStoreRegistry().registerSystem(new QueueStatueListener());
         this.getEntityStoreRegistry().registerSystem(StatueBlockListener.getInstance());
+
+        // Events
         this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
         this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
         this.getEntityStoreRegistry().registerSystem(new DeathDetector());
         this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
         this.getEntityStoreRegistry().registerSystem(new InvulnerabilitySystem());
-
 
         // Handlers
         CancelHandler handler = new CancelHandler();

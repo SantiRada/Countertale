@@ -48,6 +48,9 @@ public class DeathmatchHUD extends CustomUIHud {
         setData();
 
         updateHealth();
+
+        setShield();
+        setWeapons(2);
     }
 
     public void setEffect(PlayerStats.Effects effect) {

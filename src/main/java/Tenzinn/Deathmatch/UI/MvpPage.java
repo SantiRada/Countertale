@@ -32,13 +32,13 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         uiCommandBuilder.append("Game/MVP.ui");
         uiBuilder = uiCommandBuilder;
 
-        uiBuilder.set("#Summary", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_SUMMARY)));
-        uiBuilder.set("#DamageCaused", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_DAMAGE_CAUSED)));
-        uiBuilder.set("#DamageReceived", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_DAMAGE_RECEIVED)));
-        uiBuilder.set("#MeleeDamage", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_MELEE_DAMAGE)));
+        uiBuilder.set("#Summary.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_SUMMARY)));
+        uiBuilder.set("#DamageCaused.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_DAMAGE_CAUSED)));
+        uiBuilder.set("#DamageReceived.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_DAMAGE_RECEIVED)));
+        uiBuilder.set("#MeleeDamage.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_MELEE_DAMAGE)));
 
-        uiBuilder.set("#PlayGame", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_BTN_PLAY)));
-        uiBuilder.set("#BackLobby", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_BTN_LOBBY)));
+        uiBuilder.set("#PlayGame.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_BTN_PLAY)));
+        uiBuilder.set("#BackLobby.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_BTN_LOBBY)));
 
         setListeners(uiEventBuilder);
 
@@ -64,7 +64,7 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
 
         uiBuilder.set("#DamageReceivedText.TextSpans", Message.raw(String.valueOf(playerStats.damageReceived)));
         uiBuilder.set("#DamageCausedText.TextSpans", Message.raw(String.valueOf(playerStats.damageCaused)));
-        uiBuilder.set("#MeleeDamage.TextSpans", Message.raw(String.valueOf(playerStats.meleeDamage)));
+        uiBuilder.set("#MeleeDamageValue.TextSpans", Message.raw(String.valueOf(playerStats.meleeDamage)));
 
         sendUpdate();
     }

@@ -88,6 +88,11 @@ public class RefactorTool {
 
         for(MapListeners.SpawnPoint spawn : allSpawns) { spawns.add(new Vector3d(spawn.x, spawn.y, spawn.z)); }
     }
+    public static void setHealthPlayer (Player player, float value) {
+        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+
+        playerStats.setHealth((int)value);
+    }
     // ============================================ //
     public static ArrayList<WeaponStats> getLoot(PlayerRef playerRef) {
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
@@ -122,6 +127,11 @@ public class RefactorTool {
         Player player = store.getComponent(ref, Player.getComponentType());
 
         return player;
+    }
+    public static float getMaxHealth(Player player) {
+        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+
+        return playerStats.maxHealth;
     }
     // ============================================ //
     public static void Respawn(PlayerRef playerRef) {
@@ -239,8 +249,10 @@ public class RefactorTool {
     }
     public static void setDamageReceived (Player player, float value) {
         PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+        assert playerStats != null;
 
-        playerStats.damageReceived += value;
+        if(value != -1) playerStats.damageReceived += (int) value;
+        else playerStats.damageReceived = 0;
     }
     public static void setDamageCaused (Player player, float value) {
         PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));

@@ -7,17 +7,26 @@ import Tenzinn.Deathmatch.Shop.ShopData;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
-
+import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
-import java.awt.*;
 import java.util.Objects;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class DetectPlayerReady {
 
@@ -31,6 +40,7 @@ public class DetectPlayerReady {
 
         if (Objects.equals(Universe.get().getDefaultWorld(), Universe.get().getWorld(player.getWorld().getName()))) {
             assert playerRef != null;
+
             player.getHudManager().showHudComponents(playerRef, HudComponent.Chat);
             player.getHudManager().showHudComponents(playerRef, HudComponent.Hotbar);
             player.getHudManager().showHudComponents(playerRef, HudComponent.Health);
@@ -82,5 +92,15 @@ public class DetectPlayerReady {
         }
 
         LootManager.giveLoot(player, thisLoot);
+
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+            PlayerStats playerStats = RefactorTool.getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+            assert playerStats != null;
+
+            if (playerStats.damageReceived <= 0) {
+                playerStats.setHealth((int)RefactorTool.getMaxHealth(player));
+                RefactorTool.setDamageReceived(player, -1);
+            }
+        }, 1, TimeUnit.SECONDS);
     }
 }

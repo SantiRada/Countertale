@@ -1,50 +1,46 @@
 package Tenzinn.Listeners;
 
 import com.hypixel.hytale.component.*;
-import com.hypixel.hytale.component.query.Query;
-import com.hypixel.hytale.component.system.EntityEventSystem;
-import com.hypixel.hytale.math.vector.Transform;
+import Tenzinn.Storage.HologramStorage;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
-import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.entity.entities.ProjectileComponent;
-import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
-import com.hypixel.hytale.server.core.event.events.ecs.DamageBlockEvent;
-import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.component.system.EntityEventSystem;
+import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
+import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
+import com.hypixel.hytale.server.core.event.events.ecs.DamageBlockEvent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.component.RemoveReason;
+import com.hypixel.hytale.server.core.entity.entities.ProjectileComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
-import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBlockEvent> {
 
     private static final StatueBlockListener INSTANCE = new StatueBlockListener();
 
-    // jugadores esperando asignar un bloque
     private final Map<UUID, PendingStatue> pending = new ConcurrentHashMap<>();
-
-    // hologramas activos por tipo: "queue" -> List<Ref>, "shop" -> List<Ref>
     private final Map<String, List<Ref<EntityStore>>> activeHolograms = new ConcurrentHashMap<>();
-    private World activeWorld; // mundo donde están los hologramas
 
     private StatueBlockListener() { super(DamageBlockEvent.class); }
 
     public static StatueBlockListener getInstance() { return INSTANCE; }
 
-    public void activateFor(UUID playerId, PlayerRef playerRef, World world, String statueType) {
-        pending.put(playerId, new PendingStatue(playerRef, world, statueType));
-    }
+    public void activateFor(UUID playerId, PlayerRef playerRef, World world, String statueType) { pending.put(playerId, new PendingStatue(playerRef, world, statueType)); }
 
     @Override
     public void handle(int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store,
@@ -65,10 +61,9 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
 
         // Eliminar hologramas anteriores del mismo tipo si existen
         removeOldHolograms(pendingStatue.statueType, pendingStatue.world);
+        HologramStorage.getInstance().savePosition(pendingStatue.statueType, position.x, position.y, position.z);
 
         // Crear los dos hologramas apilados
-        // Línea superior: título (ej. "QUEUE") — más arriba
-        // Línea inferior: subtítulo (ej. "Tap to enter /queue") — justo debajo
         String titleLine;
         String subtitleLine;
 
@@ -80,10 +75,8 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
             subtitleLine = MessageListeners.get(MessageListeners.MessageKey.UI_DESC_SHOP);
         }
 
-        createHologramLine(position, pendingStatue.world, pendingStatue.playerRef,
-                pendingStatue.statueType, titleLine, 2.6);    // línea superior
-        createHologramLine(position, pendingStatue.world, pendingStatue.playerRef,
-                pendingStatue.statueType, subtitleLine, 2.25); // línea inferior
+        createHologramLine(position, pendingStatue.world, pendingStatue.playerRef, pendingStatue.statueType, titleLine, 1.25);
+        createHologramLine(position, pendingStatue.world, pendingStatue.playerRef, pendingStatue.statueType, subtitleLine, 0.90);
 
         pendingStatue.playerRef.sendMessage(
                 Message.raw("[" + pendingStatue.statueType.toUpperCase() + "] asignado en ("
@@ -105,8 +98,45 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
         });
     }
 
-    private void createHologramLine(Vector3d position, World world, PlayerRef playerRef,
-                                    String statueType, String label, double yOffset) {
+    public void deleteAllHolograms(World world, PlayerRef playerRef) {
+        world.execute(() -> {
+            Store<EntityStore> store = world.getEntityStore().getStore();
+            List<Ref<EntityStore>> toRemove = new ArrayList<>();
+
+            Query<EntityStore> query = new Query<EntityStore>() {
+                @Override
+                public boolean test(Archetype<EntityStore> archetype) {
+                    return archetype.contains(Nameplate.getComponentType())
+                            && !archetype.contains(PlayerRef.getComponentType());
+                }
+
+                @Override
+                public boolean requiresComponentType(ComponentType<EntityStore, ?> componentType) { return false; }
+
+                @Override
+                public void validateRegistry(ComponentRegistry<EntityStore> registry) {}
+
+                @Override
+                public void validate() {}
+            };
+
+            store.forEachChunk(query, (ArchetypeChunk<EntityStore> chunk, CommandBuffer<EntityStore> commandBuffer) -> {
+                for (int i = 0; i < chunk.size(); i++) { toRemove.add(chunk.getReferenceTo(i)); }
+            });
+
+            int count = toRemove.size();
+            for (Ref<EntityStore> ref : toRemove) {
+                if (ref.isValid()) { store.removeEntity(ref, RemoveReason.REMOVE); }
+            }
+
+            activeHolograms.clear();
+            HologramStorage.getInstance().clearAll();
+
+            playerRef.sendMessage(Message.raw("Se eliminaron " + count + " hologramas.").color(Color.green));
+        });
+    }
+
+    public void createHologramLine(Vector3d position, World world, PlayerRef playerRef, String statueType, String label, double yOffset) {
         Transform playerTransform = playerRef.getTransform();
         world.execute(() -> {
             Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
@@ -136,8 +166,7 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
         });
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public Query<EntityStore> getQuery() { return PlayerRef.getComponentType(); }
 
     private static class PendingStatue {

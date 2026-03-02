@@ -223,7 +223,7 @@ Group {
                                     Text: "Melee damage";
                                 }
 
-                                Label #MeleeDamage {
+                                Label #MeleeDamageValue {
                                     Style: (FontSize: 48, TextColor: #FFFFFF, RenderBold: true);
                                     Text: "8888";
                                 }
