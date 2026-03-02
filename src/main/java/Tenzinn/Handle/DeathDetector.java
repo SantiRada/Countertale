@@ -39,8 +39,6 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
             String causeId = component.getDeathCause() != null ? component.getDeathCause().getId() : "unknown";
             float damage = deathInfo.getInitialAmount();
 
-            RefactorTool.setDamageReceived(victim, damage);
-
             if (deathInfo != null && deathInfo.getSource() instanceof Damage.EntitySource entitySource) {
                 Ref<EntityStore> killerRef = entitySource.getRef();
                 Player killer = (Player) store.getComponent(killerRef, Player.getComponentType());

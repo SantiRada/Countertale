@@ -170,7 +170,7 @@
           "image": "Ak47",
           "typeWeapon": "Primary",
           "typeCross": "Weapon",
-          "firemode": "burst"
+          "firemode": "Burst"
         },
         {
           "id": [ "Weapon_Battleaxe_Iron" ],
@@ -179,7 +179,7 @@
           "image": "M4a1s",
           "typeWeapon": "Primary",
           "typeCross": "Weapon",
-          "firemode": "burst"
+          "firemode": "Burst"
         },
         {
           "id": [ "Weapon_Battleaxe_Copper" ],
@@ -188,7 +188,7 @@
           "image": "Awp",
           "typeWeapon": "Primary",
           "typeCross": "Weapon",
-          "firemode": "burst"
+          "firemode": "Burst"
         },
         {
           "id": [],

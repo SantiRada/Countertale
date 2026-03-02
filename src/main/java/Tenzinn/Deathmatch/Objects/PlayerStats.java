@@ -17,6 +17,8 @@ public class PlayerStats {
     public int damageReceived = 0;
     public int meleeDamage = 0;
 
+    public float maxHealth = -1;
+
     public boolean canReceivedLoot = false;
     public int timerCanReceivedLoot = 15;
     public boolean isInvulnerable = false;
@@ -51,6 +53,7 @@ public class PlayerStats {
 
         RefactorTool.setChangesInUI();
     }
+    public void setHealth(int value) { maxHealth = value; }
     // ================================================= //
     public int getKills() { return kills; }
     public int getDeaths() { return deaths; }

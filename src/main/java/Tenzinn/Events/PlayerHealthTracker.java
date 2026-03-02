@@ -1,6 +1,7 @@
 package Tenzinn.Events;
 
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -16,6 +17,8 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
@@ -59,12 +62,21 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
 
+
         CustomUIHud customHUD = player.getHudManager().getCustomHud();
 
         if (customHUD != null) {
             if (customHUD instanceof DeathmatchHUD newHud) {
                 newHud.setHealth((int)current, (int)max);
                 lastUpdatedHealthMap.put(uuid, current);
+
+                assert player.getWorld() != null;
+                World world = Universe.get().getWorld(player.getWorld().getWorldConfig().getUuid());
+                if (world != Universe.get().getDefaultWorld()) {
+                    float newAmount = RefactorTool.getMaxHealth(player) - current;
+                    RefactorTool.setDamageReceived(player, newAmount);
+                    RefactorTool.setHealthPlayer(player, current);
+                }
             }
         }
     }

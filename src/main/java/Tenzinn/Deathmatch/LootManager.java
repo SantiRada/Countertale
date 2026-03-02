@@ -1,5 +1,6 @@
 package Tenzinn.Deathmatch;
 
+import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
@@ -96,8 +97,7 @@ public class LootManager {
 
                 ComponentType<EntityStore, EntityStatMap> statMapType = EntityStatsModule.get().getEntityStatMapComponentType();
                 EntityStatMap statMap = store.getComponent(ref, statMapType);
-
-                if (statMap != null) statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth());
+                if (statMap != null) { statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth()); }
 
                 // Actualizar iconos del HUD según tu nuevo LOOT
                 CustomUIHud customHUD = player.getHudManager().getCustomHud();
