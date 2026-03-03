@@ -3,6 +3,7 @@ package Tenzinn.Deathmatch.Commands;
 import Tenzinn.Countertale;
 import Tenzinn.Deathmatch.GameMatch;
 
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import Tenzinn.Listeners.MessageListeners;
@@ -26,6 +27,8 @@ public class QueueCommand extends AbstractPlayerCommand {
 
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+
+        RefactorTool.launchSound(playerRef, "clic");
 
         if (plugin.getMatchManager().isPlayerInMatch(playerRef)) {
             GameMatch currentMatch = plugin.getMatchManager().getPlayerMatch(playerRef);

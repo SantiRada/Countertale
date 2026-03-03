@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +36,7 @@ public class ScoreboardPage extends CustomUIHud {
         setData();
     }
     public void setData() {
-        List<PlayerStats> playersList = RefactorTool.getPlayerList();
+        List<PlayerStats> playersList = RefactorTool.getPlayerList(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
         int index = 1;
 
         playersList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));

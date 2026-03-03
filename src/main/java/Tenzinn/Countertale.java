@@ -57,9 +57,6 @@ public class Countertale extends JavaPlugin {
         MessageListeners.load();
         MapListeners.load();
 
-        RefactorTool.setMap();
-
-
         // Interactions
         this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
         matchManager = new MatchManager(this);

@@ -88,7 +88,10 @@ public class DetectPlayerReady {
 
         if (RefactorTool.getPlayer(playerRef) != null) {
             GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
-            if (match != null) match.startTimer();
+            if (match != null) {
+                match.startTimer();
+                match.activateEffects();
+            }
         }
 
         LootManager.giveLoot(player, thisLoot);
@@ -102,5 +105,7 @@ public class DetectPlayerReady {
                 RefactorTool.setDamageReceived(player, -1);
             }
         }, 1, TimeUnit.SECONDS);
+
+        RefactorTool.launchSound(playerRef, "clic");
     }
 }

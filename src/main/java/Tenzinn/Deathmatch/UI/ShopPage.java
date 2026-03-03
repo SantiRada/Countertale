@@ -1,5 +1,6 @@
 package Tenzinn.Deathmatch.UI;
 
+import Tenzinn.Deathmatch.Objects.WeaponStats;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.Shop.ShopData;
@@ -34,6 +35,8 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         uiCommandBuilder.append("Game/Shop.ui");
         uiBuilder = uiCommandBuilder;
 
+        RefactorTool.launchSound(playerRef, "clic");
+
         uiBuilder.set("#SelectLoot.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_SELECT_LOOT)));
         uiBuilder.set("#CloseShop.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_CLOSE_SHOP)));
 
@@ -54,6 +57,10 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, ShopEventData data) {
         String action = data.getAction();
         int index = Integer.parseInt(action);
+
+        WeaponStats newWeapon = RefactorTool.slots.get(index - 1);
+        if (newWeapon.nameWeapon.equalsIgnoreCase("coming soon")) { RefactorTool.launchSound(playerRef, "fail"); }
+        else { RefactorTool.launchSound(playerRef, "clic"); }
 
         RefactorTool.setLoot(playerRef, index);
 

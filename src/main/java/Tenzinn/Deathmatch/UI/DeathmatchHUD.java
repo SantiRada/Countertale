@@ -17,6 +17,7 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -170,7 +171,7 @@ public class DeathmatchHUD extends CustomUIHud {
     public void setData() {
         if (uiBuilder == null) return;
 
-        List<PlayerStats> playersList = RefactorTool.getPlayerList();
+        List<PlayerStats> playersList = RefactorTool.getPlayerList(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
         playersList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
 
         int maxPlayers = Math.min(playersList.size(), 10);

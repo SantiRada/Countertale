@@ -2,6 +2,7 @@ package Tenzinn.Deathmatch.Commands;
 
 import Tenzinn.Countertale;
 import Tenzinn.Listeners.MessageListeners;
+import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -41,6 +42,8 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store,
                            @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef,
                            @NonNullDecl World world) {
+
+        RefactorTool.launchSound(playerRef, "fail");
 
         System.out.println("[LOBBY] execute() thread: " + Thread.currentThread().getName());
         System.out.println("[LOBBY] world: " + world.getName());
