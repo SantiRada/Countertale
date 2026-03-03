@@ -1,5 +1,6 @@
 package Tenzinn.Deathmatch.UI;
 
+import Tenzinn.Deathmatch.GameMatch;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Listeners.MessageListeners;
 import Tenzinn.Tools.RefactorTool;
@@ -8,6 +9,8 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -20,6 +23,7 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
 
@@ -69,7 +73,7 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         sendUpdate();
     }
     public void setScoreboard() {
-        List<PlayerStats> playersList = RefactorTool.getPlayerList();
+        List<PlayerStats> playersList = RefactorTool.getPlayerList(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
         int index = 1;
 
         playersList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
@@ -110,7 +114,12 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         String action = data.getAction();
 
         switch (action) {
-            case "play", "lobby": CommandManager.get().handleCommand(playerRef, "lobby"); break;
+            case "play", "lobby":
+                GameMatch gameMatch = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
+                gameMatch.stopTimer();
+
+                CommandManager.get().handleCommand(playerRef, "lobby");
+            break;
         }
 
         sendUpdate();

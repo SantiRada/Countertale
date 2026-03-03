@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PlayerStats {
 
@@ -40,18 +41,18 @@ public class PlayerStats {
         kills += 1;
         score += 15;
 
-        RefactorTool.setChangesInUI();
+        RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
     public void setDeaths () {
         deaths += 1;
         score = score > 10 ? score - 10 : 0;
 
-        RefactorTool.setChangesInUI();
+        RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
     public void setScore(int value) {
         score += value;
 
-        RefactorTool.setChangesInUI();
+        RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
     public void setHealth(int value) { maxHealth = value; }
     // ================================================= //

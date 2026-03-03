@@ -1,43 +1,47 @@
 package Tenzinn.Tools;
 
 import Tenzinn.Deathmatch.GameMatch;
+import Tenzinn.Deathmatch.UI.MvpPage;
 import Tenzinn.Deathmatch.LootManager;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
-import Tenzinn.Deathmatch.UI.MvpPage;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
 import Tenzinn.Listeners.MapListeners;
-import Tenzinn.Listeners.MessageListeners;
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import Tenzinn.Listeners.MessageListeners;
+import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class RefactorTool {
 
     public enum TypeData { SCORE, DEATH, KILL }
     public static List<PlayerStats> playerStatsList = new ArrayList<>();
     public static ArrayList<WeaponStats> slots = new ArrayList<>();
-
-    private static ArrayList<Vector3d> spawns = new ArrayList<>();
 
     public static void setPlayerStats (PlayerStats playerStats) { playerStatsList.add(playerStats); }
     public static void setQuitPlayerStats (PlayerStats playerStats) { playerStatsList.remove(playerStats); }
@@ -83,11 +87,6 @@ public class RefactorTool {
             if(item.typeWeapon.equalsIgnoreCase("shield")) playerStats.shield = item;
         }
     }
-    public static void setMap() {
-        List<MapListeners.SpawnPoint> allSpawns = MapListeners.get("dust2");
-
-        for(MapListeners.SpawnPoint spawn : allSpawns) { spawns.add(new Vector3d(spawn.x, spawn.y, spawn.z)); }
-    }
     public static void setHealthPlayer (Player player, float value) {
         PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
 
@@ -117,8 +116,30 @@ public class RefactorTool {
         }
         return null;
     }
-    public static List<PlayerStats> getPlayerList() { return playerStatsList; }
-    public static ArrayList<Vector3d> getSpawns () { return spawns; }
+    public static List<PlayerStats> getPlayerList(GameMatch match) {
+        return playerStatsList.stream()
+                .filter(playerStats -> match.equals(playerStats.getCurrentMatch()))
+                .collect(Collectors.toList());
+    }
+    public static ArrayList<Vector3d> getSpawns (String nameMap) {
+        try {
+            List<MapListeners.SpawnPoint> allSpawns = MapListeners.get(nameMap);
+
+            ArrayList<Vector3d> spawns = new ArrayList<>();
+
+            for(MapListeners.SpawnPoint spawn : allSpawns) { spawns.add(new Vector3d(spawn.x, spawn.y, spawn.z)); }
+
+            return spawns;
+        } catch (Exception e) { throw new RuntimeException(e); }
+    }
+    public static Vector3d getRandomSpawn(String nameMap) {
+        ArrayList<Vector3d> spawns = new ArrayList<>(getSpawns(nameMap));
+
+        Random random = new Random();
+        int randomPosition = random.nextInt(10);
+
+        return spawns.get(randomPosition);
+    }
     // ============================================ //
     public static Player getPlayer(PlayerRef playerRef) {
         Ref<EntityStore> ref = playerRef.getReference();
@@ -139,9 +160,7 @@ public class RefactorTool {
 
         if (currentWorld == null) { return; }
 
-        Random random = new Random();
-        int randomPosition = random.nextInt(10);
-        Vector3d spawnPos = spawns.get(randomPosition);
+        Vector3d spawnPos = getRandomSpawn("dust2");
 
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
             currentWorld.execute(() -> {
@@ -188,18 +207,16 @@ public class RefactorTool {
             }, 15, TimeUnit.SECONDS);
     }
     // ============================================ //
-    public static void setChangesInUI() {
-        for (PlayerStats playerStats : playerStatsList) {
+    public static void setChangesInUI(GameMatch match) {
+        ArrayList<PlayerStats> playersList = new ArrayList<>(getPlayerList(match));
+
+        for (PlayerStats playerStats : playersList) {
             if(playerStats.getPlayer().getHudManager().getCustomHud() == null) continue;
 
             Object testHud = playerStats.getPlayer().getHudManager().getCustomHud();
-            if(testHud instanceof DeathmatchHUD) {
-                DeathmatchHUD deathmatchHUD = (DeathmatchHUD)testHud;
-                deathmatchHUD.setData();
-            } else if(testHud instanceof ScoreboardPage) {
-                ScoreboardPage scoreboard = (ScoreboardPage)testHud;
-                scoreboard.setData();
-            }
+
+            if(testHud instanceof DeathmatchHUD deathmatchHUD) { deathmatchHUD.setData(); }
+            else if(testHud instanceof ScoreboardPage scoreboard) { scoreboard.setData(); }
         }
     }
     public static void setChangesInSlots (int value, PlayerRef playerRef) {
@@ -258,5 +275,24 @@ public class RefactorTool {
         PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
 
         playerStats.damageCaused += value;
+    }
+    // ============================================ //
+    public static void launchSound(PlayerRef playerRef, String sound) {
+        assert playerRef.getWorldUuid() != null;
+
+        World world = Universe.get().getWorld(playerRef.getWorldUuid());
+        assert world != null;
+
+        launchSound(world, sound);
+    }
+    public static void launchSound(World world, String sound) {
+        world.execute(() -> {
+            world.getEntityStore().getStore().forEachChunk((archetypeChunk, buffer) -> {
+                switch (sound) {
+                    case "clic": SoundUtil.playSoundEvent2d(SoundEvent.getAssetMap().getIndex("SFX_Clic"), SoundCategory.SFX, buffer); break;
+                    case "fail": SoundUtil.playSoundEvent2d(SoundEvent.getAssetMap().getIndex("SFX_Fail"), SoundCategory.SFX, buffer); break;
+                }
+            });
+        });
     }
 }

@@ -1,11 +1,15 @@
 package Tenzinn.Deathmatch;
 
 import Tenzinn.Countertale;
+import Tenzinn.Deathmatch.Effects.StaminaInfinite;
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.HytaleServer;
 import Tenzinn.Deathmatch.Instances.InstanceManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.World;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
@@ -32,13 +36,16 @@ public class GameMatch {
         this.players = new ArrayList<>();
         this.state = MatchState.WAITING;
     }
-    public boolean addPlayer(PlayerRef playerRef) {
-        if (players.size() >= MAX_PLAYERS) return false;
-        if (state != MatchState.WAITING) return false;
+    public void addPlayer(PlayerRef playerRef) {
+        if (players.size() >= MAX_PLAYERS) return;
+        if (state != MatchState.WAITING) return;
 
         players.add(playerRef);
-
-        return true;
+    }
+    // ================================================ //
+    public void activateEffects() {
+        ArrayList<PlayerRef> playersList = new ArrayList<>(players);
+        StaminaInfinite.apply(playersList);
     }
     // ================================================ //
     public void startTimer() {
@@ -61,10 +68,9 @@ public class GameMatch {
 
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
                 if (remainingSeconds <= 0) {
-                    RefactorTool.finishGame(players);
-
-                    stopTimer();
-                    return;
+                    World world = Universe.get().getWorld(Objects.requireNonNull(players.getFirst().getWorldUuid()));
+                    assert world != null;
+                    world.execute(() -> { RefactorTool.finishGame(players); });
                 }
 
                 remainingSeconds--;
@@ -87,7 +93,10 @@ public class GameMatch {
     public UUID getMatchId() { return matchId; }
     // ================================================ //
     public void removeInstance() { if (matchInstance != null) { matchInstance.removeInstance(); } }
-    public void removePlayer(PlayerRef playerRef) { players.remove(playerRef); }
+    public void removePlayer(PlayerRef playerRef) {
+        StaminaInfinite.remove(playerRef);
+        players.remove(playerRef);
+    }
     // ================================================ //
     public boolean isFull() { return players.size() >= MAX_PLAYERS; }
     public boolean isEmpty() { return players.isEmpty(); }

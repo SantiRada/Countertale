@@ -2,6 +2,7 @@ package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
 
+import Tenzinn.Listeners.MapListeners;
 import Tenzinn.Listeners.MessageListeners;
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
@@ -124,7 +125,7 @@ public class InstanceManager {
             return;
         }
 
-        ArrayList<Vector3d> spawns = RefactorTool.getSpawns();
+        ArrayList<Vector3d> spawns = RefactorTool.getSpawns("dust2");
 
         for (int i = 0; i < playerRefs.size(); i++) {
             Vector3d spawnPos = spawns.get(i % spawns.size());
@@ -139,6 +140,8 @@ public class InstanceManager {
                 if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) continue;
 
                 Ref<EntityStore> ref = updatedPlayerRef.getReference();
+                assert updatedPlayerRef.getWorldUuid() != null;
+
                 World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
 
                 if (currentWorld == null) continue;
