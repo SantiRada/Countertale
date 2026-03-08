@@ -5,17 +5,13 @@ import Tenzinn.Handle.*;
 import Tenzinn.Deathmatch.*;
 import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Deathmatch.UI.QueueHud;
-import Tenzinn.Admin.UI.ServerStatusHud;
 import Tenzinn.Admin.Commands.AdminCommands;
-import Tenzinn.Admin.Commands.ServerStatusCommand;
 import Tenzinn.Deathmatch.Commands.Loot.LootCommands;
 import Tenzinn.Interactions.UseActionBookInteraction;
 import Tenzinn.Deathmatch.Commands.Game.GameCommands;
-import Tenzinn.Admin.Commands.HideServerStatusCommand;
 import Tenzinn.Deathmatch.Commands.Statue.StatueCommand;
 
 import Tenzinn.Listeners.*;
-import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -26,6 +22,7 @@ import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
+import com.hypixel.hytale.server.core.universe.world.events.AllWorldsLoadedEvent;
 
 import java.util.Map;
 import java.util.List;
@@ -33,12 +30,9 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 public class Countertale extends JavaPlugin {
-
-    // Sistema de HUD de Admin
-    private final Map<String, ServerStatusHud> activeServerHuds = new ConcurrentHashMap<>();
-    private ScheduledFuture<?> serverHudUpdateTask;
 
     // Sistema de Deathmatch
     private MatchManager matchManager;
@@ -62,8 +56,6 @@ public class Countertale extends JavaPlugin {
         matchManager = new MatchManager(this);
 
         // Admin Commands
-        getCommandRegistry().registerCommand(new ServerStatusCommand("server", "Show server status", this));
-        getCommandRegistry().registerCommand(new HideServerStatusCommand("hide", "Hide server status HUD", this));
         getCommandRegistry().registerCommand(new AdminCommands("admin", "View list of commands for Countertale"));
         getCommandRegistry().registerCommand(new StatueCommand("statue", "Manage statue configurations."));
 
@@ -101,6 +93,11 @@ public class Countertale extends JavaPlugin {
 
         HotbarSlotHandler hotbar = new HotbarSlotHandler();
         hotbarFilter = PacketAdapters.registerInbound(hotbar);
+
+        this.getEventRegistry().registerGlobal(AllWorldsLoadedEvent.class, event -> {
+            matchManager.getInstancePool().markReady();
+            getLogger().at(Level.INFO).log("[Countertale] Universe listo, pool inicializado.");
+        });
     }
 
     @Override
@@ -111,30 +108,12 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void start() {
-        serverHudUpdateTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::updateAllServerHuds, 1, 1, TimeUnit.SECONDS);
-
-        @SuppressWarnings("unchecked")
-        ScheduledFuture<Void> serverHudTask = (ScheduledFuture<Void>) serverHudUpdateTask;
-        getTaskRegistry().registerTask(serverHudTask);
-
         matchCheckTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::checkAndStartFullMatches, 5, 5, TimeUnit.SECONDS);
 
         @SuppressWarnings("unchecked")
         ScheduledFuture<Void> matchTask = (ScheduledFuture<Void>) matchCheckTask;
         getTaskRegistry().registerTask(matchTask);
-
-        matchManager.initPool();
     }
-
-    // ==================== MÉTODOS DE SERVER HUD ====================
-    private void updateAllServerHuds() { activeServerHuds.values().forEach(ServerStatusHud::updateStats); }
-    public void registerServerHud(String playerId, ServerStatusHud hud) { activeServerHuds.put(playerId, hud); }
-    public void unregisterServerHud(String playerId) {
-        ServerStatusHud hud = activeServerHuds.get(playerId);
-        if (hud != null) { hud.hideStats(); }
-        activeServerHuds.remove(playerId);
-    }
-    public boolean hasActiveServerHud(String playerId) { return activeServerHuds.containsKey(playerId); }
 
     // ==================== MÉTODOS DE QUEUE HUD ====================
     public void showQueueHud(PlayerRef playerRef, Player player, GameMatch match) {

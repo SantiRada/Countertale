@@ -1,6 +1,9 @@
 package Tenzinn.Deathmatch.Instances;
 
 import Tenzinn.Countertale;
+import com.hypixel.hytale.server.core.universe.Universe;
+
+import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.logging.Level;
@@ -16,7 +19,15 @@ public class InstancePool {
     private int instancesBeingCreated = 0;
     private MatchManagerInstanceCounter counter;
 
+    private boolean universeReady = false;
+
     public InstancePool(Countertale main) { this.main = main; }
+
+    public void markReady() {
+        cleanOrphanedWorlds();
+        universeReady = true;
+        refill();
+    }
 
     public void setCounter(MatchManagerInstanceCounter counter) { this.counter = counter; }
 
@@ -31,16 +42,35 @@ public class InstancePool {
         return instance;
     }
 
-    public synchronized void clear() {
-        for (InstanceManager inst : pool) inst.removeInstance();
-        pool.clear();
-        main.getLogger().at(Level.INFO).log("[Pool] Pool limpiado.");
+    private void cleanOrphanedWorlds() {
+        try {
+            Universe universe = Universe.get();
+            Path worldsPath = java.nio.file.Paths.get("universe/worlds"); // ajustar al path real
+
+            if (!java.nio.file.Files.isDirectory(worldsPath)) return;
+
+            try (java.nio.file.DirectoryStream<java.nio.file.Path> stream =
+                         java.nio.file.Files.newDirectoryStream(worldsPath, "dm_*")) {
+                for (java.nio.file.Path dir : stream) {
+                    String name = dir.getFileName().toString();
+                    // Solo borrar si NO está cargado en memoria
+                    if (universe.getWorld(name) == null) {
+                        com.hypixel.hytale.server.core.util.io.FileUtil.deleteDirectory(dir);
+                        main.getLogger().at(Level.INFO).log("[Pool] 🧹 Mundo huérfano eliminado: " + name);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            main.getLogger().at(Level.WARNING).log("[Pool] Error limpiando mundos huérfanos: " + e.getMessage());
+        }
     }
 
     public synchronized int size()               { return pool.size(); }
     public synchronized int getBeingCreated()    { return instancesBeingCreated; }
 
     public synchronized void refill() {
+        if (!universeReady) return;
+
         int needed = BACKGROUND_BUFFER - pool.size() - instancesBeingCreated;
         if (needed <= 0) return;
 

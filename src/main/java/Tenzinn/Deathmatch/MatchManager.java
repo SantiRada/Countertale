@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.Message;
 import Tenzinn.Deathmatch.Instances.InstancePool;
 import Tenzinn.Deathmatch.Instances.InstanceManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
 
 import java.awt.*;
 import java.util.Map;
@@ -18,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+
+import static com.hypixel.hytale.logger.HytaleLogger.getLogger;
 
 public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
 
@@ -34,9 +37,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
         this.instancePool = new InstancePool(main);
         this.instancePool.setCounter(this);
     }
-
-    public void initPool() { instancePool.refill(); }
-
+    public InstancePool getInstancePool() { return instancePool; }
     @Override
     public int getActiveInstanceCount() { return (int) activeMatches.stream().filter(m -> m.getInstance() != null).count(); }
 

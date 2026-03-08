@@ -1,4 +1,9 @@
 {
+  "users": {
+    "39aaf27a-a82f-42bd-ac20-db2e2662192b": { "groups": [ "OP", "Adventure", "Creative" ] },
+    "d315d0fd-c606-4bbd-a224-b503a787bdc9": { "groups": [ "OP", "Adventure", "Creative" ] },
+    "7cc2663b-932a-4129-ad0e-92f75308ca4": { "groups": [ "OP", "Adventure", "Creative" ] }
+  },
   "groups": {
     "Default": [
       "countertale.queue",
@@ -18,24 +23,11 @@
       "countertale.loot.reset",
       "countertale.shop"
     ],
-    "Creative": [
-      "countertale.queue",
-      "countertale.leave",
-      "countertale.lobby",
-      "countertale.forcestart",
-      "countertale.game",
-      "countertale.game.status",
-      "countertale.loot",
-      "countertale.loot.give",
-      "countertale.loot.reset",
-      "countertale.shop"
-    ],
     "Moderator": [
       "*"
     ],
     "OP": [
       "*"
     ]
-  },
-  "players": {}
+  }
 }
