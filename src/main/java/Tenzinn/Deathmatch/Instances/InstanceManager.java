@@ -31,8 +31,7 @@ public class InstanceManager {
     private final Countertale main;
     private World newWorld;
 
-    private static final java.util.concurrent.atomic.AtomicInteger instanceCounter = new java.util.concurrent.atomic.AtomicInteger(0);
-    private int instanceNumber;
+    private String worldName;
 
     public InstanceManager(Countertale main) {
         this.main = main;
@@ -41,14 +40,15 @@ public class InstanceManager {
     public void preloadMap(Runnable onMapReady) {
         Universe universe = Universe.get();
 
-        instanceNumber = instanceCounter.incrementAndGet();
-        String worldName = "Dust2_Instance_" + instanceNumber;
+        this.worldName = "dm_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
 
-        universe.addWorld(worldName, "Flat", null).thenAccept(instanceWorld -> {
+        universe.addWorld(this.worldName, "Flat", null).thenAccept(instanceWorld -> {
             main.getLogger().at(Level.INFO).log("Arena vacía creada: " + instanceWorld.getName());
 
             WorldConfig config = instanceWorld.getWorldConfig();
             config.setDeleteOnRemove(true);
+            config.markChanged();
+
             config.setGameTimePaused(true);
 
             try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
@@ -168,17 +168,23 @@ public class InstanceManager {
     }
 
     public void removeInstance() {
+        if (worldName == null) return;
+
         Universe universe = Universe.get();
-        String worldName = "Dust2_Instance_" + instanceNumber;
         World instanceWorld = universe.getWorld(worldName);
 
         if (instanceWorld != null) {
-            universe.removeWorld(worldName);
-
-            isMapLoaded = false;
-            newWorld = null;
+            try {
+                universe.removeWorld(worldName);
+                main.getLogger().at(Level.INFO).log("[Instance] ✓ Mundo eliminado: " + worldName);
+            } catch (Exception e) {
+                main.getLogger().at(Level.WARNING).log("[Instance] Error eliminando mundo: " + e.getMessage());
+            }
         }
-    }
 
+        isMapLoaded = false;
+        newWorld = null;
+        worldName = null;
+    }
     public boolean getMapLoaded() { return isMapLoaded; }
 }
