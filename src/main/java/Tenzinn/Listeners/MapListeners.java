@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
+import com.hypixel.hytale.math.vector.Vector3f;
 
 import java.io.File;
 import java.util.Map;
@@ -32,6 +33,7 @@ public final class MapListeners {
 
     // Clave: nombre del mapa en minúsculas → lista de spawns
     private static final Map<String, List<SpawnPoint>> MAPS = new HashMap<>();
+    private static Vector3f lobbyPosition = null;
     private static boolean loaded = false;
 
     private MapListeners() { }
@@ -46,7 +48,9 @@ public final class MapListeners {
         }
     }
     public static boolean load(File jsonFile) {
+        lobbyPosition = null;
         MAPS.clear();
+
         loaded = false;
 
         if (!jsonFile.exists()) {
@@ -77,6 +81,14 @@ public final class MapListeners {
                 MAPS.put(name, Collections.unmodifiableList(spawns));
             }
 
+            if (root.has("Lobby")) {
+                JsonArray lobby = root.getAsJsonArray("Lobby");
+                float lx = lobby.get(0).getAsFloat();
+                float ly = lobby.get(1).getAsFloat();
+                float lz = lobby.get(2).getAsFloat();
+                lobbyPosition = new Vector3f(lx, ly, lz);
+            }
+
             loaded = true;
             LOGGER.info("[Countertale] Loaded " + MAPS.size() + " maps from maps.json");
 
@@ -87,6 +99,11 @@ public final class MapListeners {
         }
 
         return loaded;
+    }
+    public static Vector3f getLobby() {
+        if (lobbyPosition == null) { return new Vector3f(0f, 80f, 0f); }
+
+        return lobbyPosition;
     }
     public static List<SpawnPoint> get(String mapName) {
         List<SpawnPoint> spawns = MAPS.get(mapName.toLowerCase());

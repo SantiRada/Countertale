@@ -1,6 +1,5 @@
 package Tenzinn.Deathmatch;
 
-import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.UI.DeathmatchHUD;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
@@ -8,7 +7,6 @@ import Tenzinn.Deathmatch.Objects.WeaponStats;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
@@ -24,7 +22,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class LootManager {
 
@@ -60,54 +57,56 @@ public class LootManager {
     }
 
     public static void giveLoot(Player player, ArrayList<WeaponStats> loot) {
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(
+                player.getDisplayName(), NameMatching.EXACT
+        );
+        if (playerRef == null) return;
+        if (playerRef.getWorldUuid() == null) return;
 
-        player.getInventory().clear();
-        Inventory inv = player.getInventory();
+        World world = Universe.get().getWorld(playerRef.getWorldUuid());
+        if (world == null) return;
 
-        ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
-        inv.getStorage().addItemStack(bullets);
+        world.execute(() -> {
+            player.getInventory().clear();
+            Inventory inv = player.getInventory();
 
-        WeaponStats primary   = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("primary")).findFirst().orElse(null);
-        WeaponStats secondary = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("secondary")).findFirst().orElse(null);
-        WeaponStats shield    = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("shield")).findFirst().orElse(null);
+            ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
+            inv.getStorage().addItemStack(bullets);
 
-        // Slot 0 - Primary
-        if (primary != null) { for (String itemId : primary.giveItems) { inv.getHotbar().addItemStack(new ItemStack(itemId, 1)); } }
+            WeaponStats primary   = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("primary")).findFirst().orElse(null);
+            WeaponStats secondary = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("secondary")).findFirst().orElse(null);
+            WeaponStats shield    = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("shield")).findFirst().orElse(null);
 
-        // Slot 1 - Secondary
-        if (secondary != null) { for (String itemId : secondary.giveItems) { inv.getHotbar().addItemStackToSlot((short)1, new ItemStack(itemId, 1)); } }
+            if (primary != null)
+                for (String itemId : primary.giveItems)
+                    inv.getHotbar().addItemStack(new ItemStack(itemId, 1));
 
-        // Slot 2 - Shield
-        if (shield != null) { for (String itemId : shield.giveItems) { inv.getArmor().addItemStack(new ItemStack(itemId, 1)); } }
+            if (secondary != null)
+                for (String itemId : secondary.giveItems)
+                    inv.getHotbar().setItemStackForSlot((short) 1, new ItemStack(itemId, 1));
 
-        ItemStack knife = new ItemStack("Weapon_Daggers_Cobalt", 1);
-        inv.getHotbar().addItemStackToSlot((short)2, knife);
+            if (shield != null)
+                for (String itemId : shield.giveItems)
+                    inv.getArmor().addItemStack(new ItemStack(itemId, 1));
 
+            inv.getHotbar().setItemStackForSlot((short) 2, new ItemStack("Weapon_Daggers_Cobalt", 1));
 
-        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-            // Aplicar vida al máximo para evitar falta de escudo
-            PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
-            assert playerRef != null;
-            assert playerRef.getWorldUuid() != null;
-            World world = Universe.get().getWorld(playerRef.getWorldUuid());
+            // Stats y HUD en el mismo execute, sin schedule separado
+            Ref<EntityStore> ref = playerRef.getReference();
+            Store<EntityStore> store = ref.getStore();
 
-            world.execute(() -> {
-                Ref<EntityStore> ref = playerRef.getReference();
-                Store<EntityStore> store = ref.getStore();
+            ComponentType<EntityStore, EntityStatMap> statMapType =
+                    EntityStatsModule.get().getEntityStatMapComponentType();
+            EntityStatMap statMap = store.getComponent(ref, statMapType);
+            if (statMap != null)
+                statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth());
 
-                ComponentType<EntityStore, EntityStatMap> statMapType = EntityStatsModule.get().getEntityStatMapComponentType();
-                EntityStatMap statMap = store.getComponent(ref, statMapType);
-                if (statMap != null) { statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth()); }
-
-                // Actualizar iconos del HUD según tu nuevo LOOT
-                CustomUIHud customHUD = player.getHudManager().getCustomHud();
-                if (customHUD instanceof DeathmatchHUD newHud) {
-                    newHud.setWeapons(player.getInventory().getActiveHotbarSlot() + 1);
-                    newHud.setShield();
-                }
-            });
-        }, 250, TimeUnit.MILLISECONDS);
-
+            CustomUIHud customHUD = player.getHudManager().getCustomHud();
+            if (customHUD instanceof DeathmatchHUD newHud) {
+                newHud.setWeapons(player.getInventory().getActiveHotbarSlot() + 1);
+                newHud.setShield();
+            }
+        });
     }
 
     public static void getLobbyLoot(Player player) {

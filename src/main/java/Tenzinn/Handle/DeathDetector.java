@@ -1,14 +1,13 @@
 package Tenzinn.Handle;
 
-import Tenzinn.Deathmatch.Objects.WeaponStats;
 import Tenzinn.Tools.RefactorTool;
 import Tenzinn.Deathmatch.LootManager;
+import Tenzinn.Deathmatch.Objects.WeaponStats;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -18,10 +17,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class DeathDetector extends DeathSystems.OnDeathSystem {
 
@@ -72,9 +70,14 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
     }
 
     private void trackAttackerDamage(Player attacker, float damage) {
-        String itemId = attacker.getInventory().getActiveHotbarItem().getItemId().toLowerCase();
-        boolean isMelee = itemId.contains("weapon") || itemId.contains("daggers") || itemId.contains("sword");
-
+        var item = attacker.getInventory().getActiveHotbarItem();
+        boolean isMelee = false;
+        if (item != null && item.getItemId() != null) {
+            String itemId = item.getItemId();
+            isMelee = itemId.contains("knife")
+                    || itemId.contains("daggers")
+                    || itemId.contains("sword");
+        }
         RefactorTool.setDamageCaused(attacker, damage);
         if (isMelee) RefactorTool.setMeleeDamage(attacker, damage);
     }

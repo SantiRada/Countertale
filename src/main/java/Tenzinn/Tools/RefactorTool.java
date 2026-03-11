@@ -9,33 +9,32 @@ import Tenzinn.Deathmatch.Objects.PlayerStats;
 import Tenzinn.Deathmatch.Objects.WeaponStats;
 
 import Tenzinn.Listeners.MapListeners;
-import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import Tenzinn.Listeners.MessageListeners;
-import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
+import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 public class RefactorTool {
 
@@ -182,17 +181,25 @@ public class RefactorTool {
 
         CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
         boolean isInGame = false;
-        if(customHUD instanceof DeathmatchHUD) { isInGame = true; }
+        if(customHUD instanceof DeathmatchHUD hud) {
+            isInGame = true;
+            if(playerStats.getCurrentMatch().getState() == GameMatch.MatchState.IN_PROGRESS) {
+                hud.setShopTimer();
+                hud.setInvulnerability();
+            }
+        }
         DeathmatchHUD newHud = isInGame ? (DeathmatchHUD) customHUD : null;
         if (newHud == null) return;
 
         playerStats.isInvulnerable = true;
         newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
 
-        if(!playerStats.getCurrentMatch().isBuyPhase()) {
+        if (!playerStats.getCurrentMatch().isBuyPhase()) {
             HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-                playerStats.isInvulnerable = false;
-                newHud.setEffect(PlayerStats.Effects.NULL);
+                currentWorld.execute(() -> {
+                    playerStats.isInvulnerable = false;
+                    newHud.setEffect(PlayerStats.Effects.NULL);
+                });
             }, 3, TimeUnit.SECONDS);
         }
 
@@ -200,11 +207,10 @@ public class RefactorTool {
         playerStats.timerCanReceivedLoot = 15;
 
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-            playerStats.canReceivedLoot = false;
-
-            newHud.setEffect(PlayerStats.Effects.NULL);
-            playerStats.isInvulnerable = false;
-            }, 15, TimeUnit.SECONDS);
+            currentWorld.execute(() -> {
+                playerStats.canReceivedLoot = false;
+            });
+        }, 15, TimeUnit.SECONDS);
     }
     // ============================================ //
     public static void setChangesInUI(GameMatch match) {
@@ -283,16 +289,27 @@ public class RefactorTool {
         World world = Universe.get().getWorld(playerRef.getWorldUuid());
         assert world != null;
 
-        launchSound(world, sound);
+        Player player = getPlayer(playerRef);
+        launchSound(world, player, sound);
     }
-    public static void launchSound(World world, String sound) {
+    public static void launchSound(World world, Player player, String sound) {
+        Ref<EntityStore> playerRef = player.getReference();
+        Store<EntityStore> store = world.getEntityStore().getStore();
+
         world.execute(() -> {
-            world.getEntityStore().getStore().forEachChunk((archetypeChunk, buffer) -> {
-                switch (sound) {
-                    case "clic": SoundUtil.playSoundEvent2d(SoundEvent.getAssetMap().getIndex("SFX_Clic"), SoundCategory.SFX, buffer); break;
-                    case "fail": SoundUtil.playSoundEvent2d(SoundEvent.getAssetMap().getIndex("SFX_Fail"), SoundCategory.SFX, buffer); break;
-                }
-            });
+            assert playerRef != null;
+            TransformComponent transform = store.getComponent(playerRef, TransformComponent.getComponentType());
+            if (transform == null) return;
+
+            int index = switch (sound) {
+                case "clic" -> SoundEvent.getAssetMap().getIndex("SFX_Clic");
+                case "fail" -> SoundEvent.getAssetMap().getIndex("SFX_Fail");
+                default -> -1;
+            };
+
+            if (index == -1) return;
+
+            SoundUtil.playSoundEvent3dToPlayer(playerRef, index, SoundCategory.SFX, transform.getPosition(), store);
         });
     }
 }
