@@ -49,6 +49,8 @@ public class GameMatch {
     }
     // ================================================ //
     public void startTimer() {
+        if (timerTask != null && !timerTask.isDone()) return;
+        
         if (state == MatchState.STARTING) {
             remainingSeconds = 15;
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
@@ -63,7 +65,8 @@ public class GameMatch {
 
                 remainingSeconds--;
             }, 1, 1, TimeUnit.SECONDS);
-        } else {
+        }
+        else {
             remainingSeconds = 600;
 
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {

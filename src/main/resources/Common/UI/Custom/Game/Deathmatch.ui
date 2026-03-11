@@ -5,6 +5,9 @@
 @BulletTotal        = PatchStyle(TexturePath: "images/icons/Reserve.png");
 @Crosshair          = PatchStyle(TexturePath: "images/weapons/crosshair/weapon.png");
 
+@IconInv          = PatchStyle(TexturePath: "images/icons/inv-icon.png");
+@IconShop          = PatchStyle(TexturePath: "images/icons/shop-icon.png");
+
 @Invulnerability    = PatchStyle(TexturePath: "screen-effects/inv-effect.png");
 
 Group #DeathmatchUI {
@@ -17,14 +20,63 @@ Group #DeathmatchUI {
         Anchor: (Width: 1920, Top: 4);
         FlexWeight: 4;
 
-        Group #Timer {
+        Group #AllTimers {
             LayoutMode: Center;
-            Anchor: (Width: 82, Height: 35, Bottom: 4);
-            Background: @Timer;
+            Anchor: (Height: 40);
 
-            Label #TextTimer {
-                Text: "00:00";
-                Style: (FontSize: 24, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+            Group {
+                LayoutMode: Right;
+                Anchor: (Width: 100);
+
+                Group #InvulnerabilitySector {
+                    LayoutMode: Center;
+                    Anchor: (Height: 40);
+                    Padding: (Horizontal: 8);
+                    Background: @Timer;
+
+                    Group {
+                        Anchor: (Width: 30, Height: 30, Right: 6);
+                        Background: @IconInv;
+                    }
+
+                    Label #InvulnerabilityTimer {
+                        Text: "66";
+                        Style: (FontSize: 16, Alignment: Center, TextColor: #FFFFFF);
+                    }
+                }
+            }
+
+            Group #Timer {
+                LayoutMode: Center;
+                Anchor: (Width: 82, Height: 35, Bottom: 5, Left: 12, Right: 12);
+                Background: @Timer;
+
+                Label #TextTimer {
+                    Text: "00:00";
+                    Style: (FontSize: 24, RenderBold: true, TextColor: #ffffff, Alignment: Center);
+                }
+            }
+
+            Group {
+                LayoutMode: Left;
+                Anchor: (Width: 100);
+
+                Group #ShopSectorTimer {
+                    LayoutMode: Center;
+                    Anchor: (Height: 40);
+                    Padding: (Horizontal: 8);
+                    Background: @Timer;
+
+                    Group {
+                        Anchor: (Width: 30, Height: 30, Right: 6);
+                        Background: @IconShop;
+                    }
+
+                    Label #ShopTimer {
+                        Text: "88";
+                        Style: (FontSize: 16, Alignment: Center, TextColor: #FFFFFF);
+                    }
+                }
             }
         }
 
@@ -270,16 +322,22 @@ Group #DeathmatchUI {
             Group #HeathSector {
                 LayoutMode: Left;
 
-                Group #IconShield {
+                Group {
                     LayoutMode: Middle;
-                    Background: (Color: #ffffff(0.25));
                     Anchor: (Width: 42, Height: 43);
-                    Visible: true;
 
-                    Label #NumberShield {
-                        Text: "88";
-                        Style: (FontSize: 16, Alignment: Center);
+                    Group #IconShield {
+                        LayoutMode: Middle;
+                        Background: (Color: #ffffff(0.25));
+                        Anchor: (Width: 90, Height: 43);
+                        Visible: true;
+
+                        Label #NumberShield {
+                            Text: "88";
+                            Style: (FontSize: 16, Alignment: Center);
+                        }
                     }
+
                 }
 
                 Group #HealthData {

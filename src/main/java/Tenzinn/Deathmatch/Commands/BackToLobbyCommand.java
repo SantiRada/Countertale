@@ -1,6 +1,7 @@
 package Tenzinn.Deathmatch.Commands;
 
 import Tenzinn.Countertale;
+import Tenzinn.Listeners.MapListeners;
 import Tenzinn.Listeners.MessageListeners;
 import Tenzinn.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
@@ -28,8 +29,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class BackToLobbyCommand extends AbstractPlayerCommand {
-
-    public Vector3d spawnLobby = new Vector3d(0, 256, 0);
 
     protected Countertale main;
 
@@ -64,6 +63,8 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
             System.out.println("[LOBBY] world.execute() thread: " + Thread.currentThread().getName());
             try {
                 main.getMatchManager().removePlayerFromMatch(playerRef);
+
+                Vector3d spawnLobby = MapListeners.getLobby().toVector3d();
 
                 Transform spawnPoint = new Transform(spawnLobby.x, spawnLobby.y, spawnLobby.z);
                 Teleport teleport = Teleport.createForPlayer(mainWorld, spawnPoint);

@@ -33,6 +33,12 @@ public class DeathmatchHUD extends CustomUIHud {
     public ScheduledFuture<?> timerTask;
     private int remainingSeconds = 600;
 
+    public ScheduledFuture<?> shopTask;
+    private int shopTimer;
+
+    public ScheduledFuture<?> invTask;
+    private int invTimer;
+
     public DeathmatchHUD(@NonNullDecl PlayerRef playerRef) {
         super(playerRef);
         this.playerRef = playerRef;
@@ -99,7 +105,7 @@ public class DeathmatchHUD extends CustomUIHud {
             String colorText = value == 2 ? "#ffffff" : "#ffffff80";
             uiBuilder.set("#Number02.Style.TextColor", colorText);
 
-            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().image));
+            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().image + "off"));
 
             uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.getFirst().crossType));
             uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().firemode));
@@ -108,7 +114,7 @@ public class DeathmatchHUD extends CustomUIHud {
             String colorText = value == 1 ? "#ffffff" : "#ffffff80";
             uiBuilder.set("#Number01.Style.TextColor", colorText);
 
-            uiBuilder.set("#Weapon01.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().image));
+            uiBuilder.set("#Weapon01.Background", Value.ref("Game/images/weapons/Weapons.ui", value == 1 ? loot.getFirst().image + "on" : loot.getFirst().image + "off"));
 
             uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.getFirst().crossType));
             uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().firemode));
@@ -118,7 +124,7 @@ public class DeathmatchHUD extends CustomUIHud {
             String colorText = value == 2 ? "#ffffff" : "#ffffff80";
             uiBuilder.set("#Number02.Style.TextColor", colorText);
 
-            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(1).image));
+            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", value == 2 ? loot.get(1).image + "on" : loot.get(1).image + "off"));
 
             uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.get(1).crossType));
             uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(1).firemode));
@@ -126,7 +132,7 @@ public class DeathmatchHUD extends CustomUIHud {
 
         // Knife
         uiBuilder.set("#Number03.Style.TextColor", value >= 3 ? "#ffffff" : "#ffffff80");
-        uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", value >= 3 ? "Weapon03" : "Weapon03Off"));
+        uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", value >= 3 ? "Knifeon" : "Knifeoff"));
 
         if (value >= 3) {
             uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", "Melee"));
@@ -168,8 +174,64 @@ public class DeathmatchHUD extends CustomUIHud {
         setHealth((int)current, (int)max);
     }
 
+    public void setShopTimer() {
+        uiBuilder.set("#ShopSectorTimer.Visible", true);
+        shopTimer = 15;
+
+        shopTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+            try {
+                if (shopTimer > 0) {
+                    String visualTimer = shopTimer > 9 ? String.valueOf(shopTimer) : "0" + shopTimer;
+                    uiBuilder.set("#ShopTimer.TextSpans", Message.raw(visualTimer + "s"));
+
+                    update(true, uiBuilder);
+
+                    shopTimer -= 1;
+                } else {
+                    if (shopTask != null && !shopTask.isDone()) {
+                        shopTask.cancel(false);
+                        shopTask = null;
+                    }
+
+                    uiBuilder.set("#ShopSectorTimer.Visible", false);
+                    update(true, uiBuilder);
+                }
+            } catch (Exception e) { if (shopTask != null) shopTask.cancel(false); }
+        }, 0, 1, TimeUnit.SECONDS);
+
+        shopTimer = 15;
+    }
+
+    public void setInvulnerability() {
+        uiBuilder.set("#InvulnerabilitySector.Visible", true);
+        invTimer = 3;
+
+        invTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+            try {
+                if (invTimer > 0) {
+                    uiBuilder.set("#InvulnerabilityTimer.TextSpans", Message.raw("0" + invTimer + "s"));
+
+                    update(true, uiBuilder);
+
+                    invTimer -= 1;
+                } else {
+                    if (invTask != null && !invTask.isDone()) {
+                        invTask.cancel(false);
+                        invTask = null;
+                    }
+
+                    uiBuilder.set("#InvulnerabilitySector.Visible", false);
+                    update(true, uiBuilder);
+                }
+            } catch (Exception e) { if (invTask != null) invTask.cancel(false); }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
     public void setData() {
         if (uiBuilder == null) return;
+
+        uiBuilder.set("#InvulnerabilitySector.Visible", false);
+        uiBuilder.set("#ShopSectorTimer.Visible", false);
 
         List<PlayerStats> playersList = RefactorTool.getPlayerList(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
         playersList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
@@ -197,6 +259,7 @@ public class DeathmatchHUD extends CustomUIHud {
 
     public void setTimer() {
         if (uiBuilder == null) return;
+        stopTimer();
 
         timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
             try {
@@ -222,6 +285,16 @@ public class DeathmatchHUD extends CustomUIHud {
         if (timerTask != null && !timerTask.isDone()) {
             timerTask.cancel(false);
             timerTask = null;
+        }
+
+        if (shopTask != null && !shopTask.isDone()) {
+            shopTask.cancel(false);
+            shopTask = null;
+        }
+
+        if (invTask != null && !invTask.isDone()) {
+            invTask.cancel(false);
+            invTask = null;
         }
     }
 

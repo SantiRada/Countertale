@@ -86,7 +86,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot1Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -117,7 +117,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot2Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -148,7 +148,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot3Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -179,7 +179,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot4Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -210,7 +210,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot5Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -249,7 +249,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot6Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -280,7 +280,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot7Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -311,7 +311,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot8Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -342,7 +342,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot9Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -373,7 +373,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot10Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -413,7 +413,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot11Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -444,7 +444,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot12Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -475,7 +475,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot13Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -506,7 +506,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot14Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -537,7 +537,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot15Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -577,7 +577,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot16Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -608,7 +608,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot17Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -639,7 +639,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot18Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -670,7 +670,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot19Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -701,7 +701,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot20Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -741,7 +741,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot21Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -772,7 +772,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot22Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -803,7 +803,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot23Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -834,7 +834,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot24Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }
@@ -865,7 +865,7 @@ Group {
                             LayoutMode: Center;
 
                             Group #Slot25Icon {
-                                Anchor: (Width: 115, Height: 65);
+                                Anchor: (Width: 115, Height: 50);
 
                             }
                         }

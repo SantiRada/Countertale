@@ -67,6 +67,11 @@ public class DetectPlayerReady {
         player.getHudManager().setCustomHud(playerRef, newHud);
         newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
 
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if (playerStats != null) {
+            playerStats.isInvulnerable = true;
+        }
+
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Health);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Stamina);
@@ -97,9 +102,6 @@ public class DetectPlayerReady {
         LootManager.giveLoot(player, thisLoot);
 
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-            PlayerStats playerStats = RefactorTool.getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
-            assert playerStats != null;
-
             if (playerStats.damageReceived <= 0) {
                 playerStats.setHealth((int)RefactorTool.getMaxHealth(player));
                 RefactorTool.setDamageReceived(player, -1);

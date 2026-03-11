@@ -6,29 +6,56 @@
 @Melee = PatchStyle(TexturePath: "fmodes/melee.png");
 @Single = PatchStyle(TexturePath: "fmodes/single.png");
 
-@Weapon01 = PatchStyle(TexturePath: "weapon-1-on.png");
-@Weapon01Off = PatchStyle(TexturePath: "weapon-1-off.png");
+@Kevlar = PatchStyle(TexturePath: "Shop/Kevlar/on.png");
+@KevlarHelmet = PatchStyle(TexturePath: "Shop/KevlarHelmet/on.png");
 
-@Weapon02 = PatchStyle(TexturePath: "weapon-2-on.png");
-@Weapon02Off = PatchStyle(TexturePath: "weapon-2-off.png");
+@Knifeon = PatchStyle(TexturePath: "Shop/Knife/on.png");
+@Knifeoff = PatchStyle(TexturePath: "Shop/Knife/off.png");
 
-@Weapon03 = PatchStyle(TexturePath: "weapon-3-on.png");
-@Weapon03Off = PatchStyle(TexturePath: "weapon-3-off.png");
+@Ak47on = PatchStyle(TexturePath: "Shop/Ak47/on.png");
+@Ak47off = PatchStyle(TexturePath: "Shop/Ak47/off.png");
+@Ak47active = PatchStyle(TexturePath: "Shop/Ak47/active.png");
 
-@Kevlar = PatchStyle(TexturePath: "kevlar.png");
-@KevlarHelmet = PatchStyle(TexturePath: "kevlar-helmet.png");
+@Awpon = PatchStyle(TexturePath: "Shop/Awp/on.png");
+@Awpoff = PatchStyle(TexturePath: "Shop/Awp/off.png");
+@Awpactive = PatchStyle(TexturePath: "Shop/Awp/active.png");
 
-@Usp = PatchStyle(TexturePath: "usp.png");
-@DualBerettas = PatchStyle(TexturePath: "dual-berettas.png");
-@P250 = PatchStyle(TexturePath: "p250.png");
-@FiveSeven = PatchStyle(TexturePath: "five-seven.png");
-@DesertEagle = PatchStyle(TexturePath: "desert-eagle.png");
+@DesertEagleon = PatchStyle(TexturePath: "Shop/DesertEagle/on.png");
+@DesertEagleoff = PatchStyle(TexturePath: "Shop/DesertEagle/off.png");
+@DesertEagleactive = PatchStyle(TexturePath: "Shop/DesertEagle/active.png");
 
-@Mac10 = PatchStyle(TexturePath: "../shop/coming-soon.png");
-@Mp9 = PatchStyle(TexturePath: "../shop/coming-soon.png");
-@Mag7 = PatchStyle(TexturePath: "../shop/coming-soon.png");
-@SawedOff = PatchStyle(TexturePath: "../shop/coming-soon.png");
+@DualBerettason = PatchStyle(TexturePath: "Shop/DualBerettas/on.png");
+@DualBerettasoff = PatchStyle(TexturePath: "Shop/DualBerettas/off.png");
+@DualBerettasactive = PatchStyle(TexturePath: "Shop/DualBerettas/active.png");
 
-@Ak47 = PatchStyle(TexturePath: "../shop/coming-soon.png");
-@M4a1s = PatchStyle(TexturePath: "../shop/coming-soon.png");
-@Awp = PatchStyle(TexturePath: "../shop/coming-soon.png");
+@FiveSevenon = PatchStyle(TexturePath: "Shop/FiveSeven/on.png");
+@FiveSevenoff = PatchStyle(TexturePath: "Shop/FiveSeven/off.png");
+@FiveSevenactive = PatchStyle(TexturePath: "Shop/FiveSeven/active.png");
+
+@M4a1son = PatchStyle(TexturePath: "Shop/M4a1s/on.png");
+@M4a1soff = PatchStyle(TexturePath: "Shop/M4a1s/off.png");
+@M4a1sactive = PatchStyle(TexturePath: "Shop/M4a1s/active.png");
+
+@Mac10on = PatchStyle(TexturePath: "Shop/Mac10/on.png");
+@Mac10off = PatchStyle(TexturePath: "Shop/Mac10/off.png");
+@Mac10active = PatchStyle(TexturePath: "Shop/Mac10/active.png");
+
+@Mag7on = PatchStyle(TexturePath: "Shop/Mag7/on.png");
+@Mag7off = PatchStyle(TexturePath: "Shop/Mag7/off.png");
+@Mag7active = PatchStyle(TexturePath: "Shop/Mag7/active.png");
+
+@Mp9on = PatchStyle(TexturePath: "Shop/Mp9/on.png");
+@Mp9off = PatchStyle(TexturePath: "Shop/Mp9/off.png");
+@Mp9active = PatchStyle(TexturePath: "Shop/Mp9/active.png");
+
+@P250on = PatchStyle(TexturePath: "Shop/P250/on.png");
+@P250off = PatchStyle(TexturePath: "Shop/P250/off.png");
+@P250active = PatchStyle(TexturePath: "Shop/P250/active.png");
+
+@SawedOffon = PatchStyle(TexturePath: "Shop/SawedOff/on.png");
+@SawedOffoff = PatchStyle(TexturePath: "Shop/SawedOff/off.png");
+@SawedOffactive = PatchStyle(TexturePath: "Shop/SawedOff/active.png");
+
+@Uspon = PatchStyle(TexturePath: "Shop/Usp/on.png");
+@Uspoff = PatchStyle(TexturePath: "Shop/Usp/off.png");
+@Uspactive = PatchStyle(TexturePath: "Shop/Usp/active.png");

@@ -97,7 +97,7 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
             numberCategory += 1;
         }
 
-        for (int numberSlot = 0; numberSlot < (ShopData.getSizeNames() - 1); numberSlot++) {
+        for (int numberSlot = 0; numberSlot < (ShopData.getSizeNames()); numberSlot++) {
             String number = ShopData.getNumbers(numberSlot);
             String image = ShopData.getImages(numberSlot);
 
@@ -105,7 +105,12 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
             uiBuilder.set("#Slot" + (numberSlot + 1) + "Text.TextSpans", Message.raw(number));
             uiBuilder.set("#Slot" + (numberSlot + 1) + "Name.TextSpans", Message.raw(name));
-            uiBuilder.set("#Slot" + (numberSlot + 1) + "Icon.Background", Value.ref("Game/images/weapons/Weapons.ui", image));
+
+            if(name.toLowerCase().contains("kevlar") || name.toLowerCase().contains("soon")) {
+                uiBuilder.set("#Slot" + (numberSlot + 1) + "Icon.Background", Value.ref("Game/images/weapons/Weapons.ui", image));
+            } else {
+                uiBuilder.set("#Slot" + (numberSlot + 1) + "Icon.Background", Value.ref("Game/images/weapons/Weapons.ui", image + "active"));
+            }
         }
     }
 }
