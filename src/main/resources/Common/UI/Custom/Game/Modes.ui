@@ -1,0 +1,49 @@
+
+@background = PatchStyle(TexturePath: "../Common/Background.png");
+@slot = PatchStyle(TexturePath: "images/shop/slot-hover.png");
+
+Group #Modes {
+    FlexWeight: 1;
+    LayoutMode: Middle;
+    Background: (Color: #000000(0.5));
+
+    Group #Background {
+        LayoutMode: Top;
+        Background: @background;
+        Anchor: (Width: 500, Height: 220);
+        Padding: (Full: 40);
+
+        Label #TitleModal {
+            Text: "Select Mode";
+            Style: (FontSize: 24, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
+        }
+
+        Group {
+            FlexWeight: 1;
+            LayoutMode: Left;
+            Anchor: (Top: 20);
+
+            Button #dmButton {
+                FlexWeight: 1;
+                Background: @slot;
+                Anchor: (Right: 10);
+
+                Label {
+                    Text: "Deathmatch";
+                    Style: (FontSize: 18, RenderBold: true, TextColor: #FFFFFF, Alignment: Center);
+                }
+            }
+
+            Button #fvfButton {
+                FlexWeight: 1;
+                Background: @slot;
+                Anchor: (Left: 10);
+
+                Label {
+                    Text: "5v5";
+                    Style: (FontSize: 18, RenderBold: true, TextColor: #FFFFFF, Alignment: Center);
+                }
+            }
+        }
+    }
+}
