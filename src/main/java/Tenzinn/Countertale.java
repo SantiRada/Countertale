@@ -1,17 +1,20 @@
 package Tenzinn;
 
-import Tenzinn.Events.*;
-import Tenzinn.Handle.*;
-import Tenzinn.Deathmatch.*;
-import Tenzinn.Deathmatch.Commands.*;
-import Tenzinn.Deathmatch.UI.QueueHud;
-import Tenzinn.Admin.Commands.AdminCommands;
-import Tenzinn.Deathmatch.Commands.Loot.LootCommands;
-import Tenzinn.Interactions.UseActionBookInteraction;
-import Tenzinn.Deathmatch.Commands.Game.GameCommands;
-import Tenzinn.Deathmatch.Commands.Statue.StatueCommand;
+import Tenzinn.Core.Commands.LeaveQueueCommand;
+import Tenzinn.Core.Commands.QueueCommand;
+import Tenzinn.Core.Events.*;
+import Tenzinn.Core.Handle.*;
+import Tenzinn.Deathmatch.Content.Commands.*;
+import Tenzinn.Deathmatch.Content.UI.QueueHud;
+import Tenzinn.Core.Commands.AdminCommands;
+import Tenzinn.Deathmatch.Content.Commands.Loot.LootCommands;
+import Tenzinn.Deathmatch.Global.GameMatch;
+import Tenzinn.Deathmatch.Global.MatchManager;
+import Tenzinn.Core.Interactions.UseActionBookInteraction;
+import Tenzinn.Deathmatch.Content.Commands.Game.GameCommands;
+import Tenzinn.Deathmatch.Content.Commands.Statue.StatueCommand;
 
-import Tenzinn.Listeners.*;
+import Tenzinn.Core.Listeners.*;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -75,6 +78,7 @@ public class Countertale extends JavaPlugin {
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
 
         // Listeners
+        this.getEntityStoreRegistry().registerSystem(new FVFStatueListener());
         this.getEntityStoreRegistry().registerSystem(new ShopStatueListener());
         this.getEntityStoreRegistry().registerSystem(new QueueStatueListener());
         this.getEntityStoreRegistry().registerSystem(StatueBlockListener.getInstance());
