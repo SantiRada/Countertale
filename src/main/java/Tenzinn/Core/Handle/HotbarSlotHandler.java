@@ -1,6 +1,6 @@
 package Tenzinn.Core.Handle;
 
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
+import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.Packet;

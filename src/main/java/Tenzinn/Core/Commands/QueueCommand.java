@@ -2,9 +2,9 @@ package Tenzinn.Core.Commands;
 
 import Tenzinn.Countertale;
 import Tenzinn.Core.UI.ModesPage;
-import Tenzinn.Deathmatch.Global.GameMatch;
+import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Listeners.MessageListeners;
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
+import Tenzinn.Core.Tools.RefactorTool;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;

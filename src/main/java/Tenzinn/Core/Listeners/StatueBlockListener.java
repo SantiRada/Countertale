@@ -1,7 +1,7 @@
 package Tenzinn.Core.Listeners;
 
 import com.hypixel.hytale.component.*;
-import Tenzinn.Deathmatch.Global.Storage.HologramStorage;
+import Tenzinn.Core.Storage.HologramStorage;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;

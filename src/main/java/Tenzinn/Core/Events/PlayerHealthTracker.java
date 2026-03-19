@@ -1,7 +1,7 @@
 package Tenzinn.Core.Events;
 
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
-import Tenzinn.Deathmatch.Content.UI.DeathmatchHUD;
+import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.UI.GameHUD;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -65,7 +65,7 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
         if (player == null) return;
 
         CustomUIHud customHUD = player.getHudManager().getCustomHud();
-        if (!(customHUD instanceof DeathmatchHUD newHud)) return;
+        if (!(customHUD instanceof GameHUD newHud)) return;
 
         newHud.setHealth((int)current, (int)max);
 

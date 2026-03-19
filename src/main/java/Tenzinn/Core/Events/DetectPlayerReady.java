@@ -1,14 +1,14 @@
 package Tenzinn.Core.Events;
 
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
-import Tenzinn.Deathmatch.Global.GameMatch;
-import Tenzinn.Deathmatch.Global.LootManager;
-import Tenzinn.Deathmatch.Content.Shop.ShopData;
-import Tenzinn.Deathmatch.Content.UI.DeathmatchHUD;
-import Tenzinn.Deathmatch.Content.Objects.PlayerStats;
-import Tenzinn.Deathmatch.Content.Objects.WeaponStats;
-import com.hypixel.hytale.server.core.HytaleServer;
+import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.UI.GameHUD;
+import Tenzinn.Core.LootManager;
+import Tenzinn.Core.Shop.ShopData;
+import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.Core.Objects.WeaponStats;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -49,18 +49,27 @@ public class DetectPlayerReady {
             RefactorTool.Respawn(playerRef);
         }
     }
+
     public static void openGameHud(PlayerRef playerRef, Player player) {
+        // Review active mode for this player
+        assert player.getWorld() != null;
+        String worldMode = player.getWorld().getName().startsWith("fvf") ? "fvf" : "dm";
+
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
         assert thisLoot != null;
-        RefactorTool.setAllLoot(playerRef, thisLoot);
 
-        DeathmatchHUD newHud = new DeathmatchHUD(playerRef);
+        // Get loot for mode
+        if (worldMode.equalsIgnoreCase("dm")) { RefactorTool.setAllLoot(playerRef, thisLoot); }
+        else { RefactorTool.setAllLoot(playerRef, null); }
+
+        GameHUD newHud = new GameHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
-        newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
-
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
-        if (playerStats != null) {
-            playerStats.isInvulnerable = true;
+
+        if(worldMode.equalsIgnoreCase("dm")) {
+            newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
+
+            if (playerStats != null) { playerStats.isInvulnerable = true; }
         }
 
         player.getHudManager().hideHudComponents(playerRef, HudComponent.Hotbar);
@@ -82,11 +91,10 @@ public class DetectPlayerReady {
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BlockVariantSelector);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BuilderToolsMaterialSlotSelector);
 
-        if (RefactorTool.getPlayer(playerRef) != null) {
-            GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
-            if (match != null) {
-                match.startTimer();
-                match.activateEffects();
+        if (worldMode.equalsIgnoreCase("dm")) {
+            if (RefactorTool.getPlayer(playerRef) != null) {
+                GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
+                if (match != null) { match.startTimer(); }
             }
         }
 
