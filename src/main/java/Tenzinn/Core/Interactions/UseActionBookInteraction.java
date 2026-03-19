@@ -1,6 +1,6 @@
 package Tenzinn.Core.Interactions;
 
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
+import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.codec.builder.BuilderCodec;

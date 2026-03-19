@@ -1,8 +1,9 @@
 package Tenzinn.Core.Handle;
 
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
-import Tenzinn.Deathmatch.Global.LootManager;
-import Tenzinn.Deathmatch.Content.Objects.WeaponStats;
+import Tenzinn.Core.Listeners.MapListeners;
+import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.LootManager;
+import Tenzinn.Core.Objects.WeaponStats;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -27,7 +28,6 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
 
     @Override
     public void onComponentAdded(@Nonnull Ref ref, @Nonnull DeathComponent component, @Nonnull Store store, @Nonnull CommandBuffer commandBuffer) {
-
         Damage deathInfo = component.getDeathInfo();
         Player victim = (Player) store.getComponent(ref, Player.getComponentType());
         if (victim == null) return;
@@ -40,10 +40,7 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                 Ref<EntityStore> killerRef = entitySource.getRef();
                 Player killer = (Player) store.getComponent(killerRef, Player.getComponentType());
 
-
                 if (killer != null) {
-                    trackAttackerDamage(killer, damage);
-
                     RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
                     RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, damage);
                 }
@@ -54,7 +51,6 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                 Player killer = (Player) store.getComponent(shooterRef, Player.getComponentType());
 
                 if (killer != null) {
-                    trackAttackerDamage(killer, damage);
                     RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
                     RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, damage);
                 }
@@ -68,19 +64,6 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
         }
     }
 
-    private void trackAttackerDamage(Player attacker, float damage) {
-        var item = attacker.getInventory().getActiveHotbarItem();
-        boolean isMelee = false;
-        if (item != null && item.getItemId() != null) {
-            String itemId = item.getItemId();
-            isMelee = itemId.contains("knife")
-                    || itemId.contains("daggers")
-                    || itemId.contains("sword");
-        }
-        RefactorTool.setDamageCaused(attacker, damage);
-        if (isMelee) RefactorTool.setMeleeDamage(attacker, damage);
-    }
-
     @Override
     public void onComponentRemoved(@Nonnull Ref ref, @Nonnull DeathComponent component, @Nonnull Store store, @Nonnull CommandBuffer commandBuffer) {
         Player playerComponent = (Player) store.getComponent(ref, Player.getComponentType());
@@ -89,9 +72,16 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
         PlayerRef playerRef = Universe.get().getPlayerByUsername(playerComponent.getDisplayName(), NameMatching.EXACT);
         if (playerRef == null) return;
 
-        ArrayList<WeaponStats> loot = LootManager.getGameLoot(playerComponent);
-        if (loot != null) LootManager.giveLoot(playerComponent, loot);
+        if (RefactorTool.getModeForPlayer(playerRef) == MapListeners.SpawnMode.DM) {
+            ArrayList<WeaponStats> loot = LootManager.getGameLoot(playerComponent);
+            if (loot != null) LootManager.giveLoot(playerComponent, loot);
 
-        if (playerComponent.getWorld() != Universe.get().getDefaultWorld()) { RefactorTool.Respawn(playerRef); }
+            if (playerComponent.getWorld() != Universe.get().getDefaultWorld()) { RefactorTool.Respawn(playerRef); }
+        } else {
+            // ACTIVATE SPECTATOR MODE
+
+            ArrayList<WeaponStats> loot = LootManager.getStarterKit();
+            LootManager.giveLoot(playerComponent, loot);
+        }
     }
 }

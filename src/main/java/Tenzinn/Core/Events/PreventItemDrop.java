@@ -1,7 +1,9 @@
 package Tenzinn.Core.Events;
 
+import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Listeners.MessageListeners;
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
+import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.Message;
@@ -23,8 +25,6 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
 
     @Override
     public void handle(int index,@Nonnull ArchetypeChunk<EntityStore> archetypeChunk,@Nonnull Store<EntityStore> store,@Nonnull CommandBuffer<EntityStore> commandBuffer,@Nonnull DropItemEvent.PlayerRequest dropEvent) {
-        dropEvent.setCancelled(true);
-
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
 
         Player player = store.getComponent(ref, Player.getComponentType());
@@ -33,8 +33,31 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
         assert playerRef != null;
 
-        if (RefactorTool.getPlayerStats(playerRef) != null) { CommandManager.get().handleCommand(playerRef, "shop"); }
-        else { playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY)).color(Color.cyan)); }
+        // Is in queue or match
+        if (RefactorTool.getPlayerStats(playerRef) != null) {
+            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+            assert playerStats != null;
+            GameMatch match = playerStats.getCurrentMatch();
+            String mode = match.getMode();
+
+            if (mode.equalsIgnoreCase("dm")) {
+                dropEvent.setCancelled(true);
+                CommandManager.get().handleCommand(playerRef, "shop");
+            } else {
+                // Is in FVF to playing
+                if(match.getState() == GameMatch.MatchState.STARTING || match.getState() == GameMatch.MatchState.IN_PROGRESS) {
+                    CommandManager.get().handleCommand(playerRef, "shop");
+                } else {
+                    // Is in lobby in queue to FVF
+                    playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY_FVF)).color(Color.cyan));
+                }
+            }
+        }
+        else {
+            // Is in the lobby without queue
+            dropEvent.setCancelled(true);
+            playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY)).color(Color.cyan));
+        }
     }
 
     @Override

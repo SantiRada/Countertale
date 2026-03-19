@@ -1,0 +1,338 @@
+package Tenzinn.Core.Tools;
+
+import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.UI.GameHUD;
+import Tenzinn.Core.LootManager;
+import Tenzinn.Deathmatch.UI.MvpPage;
+import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.Core.Objects.WeaponStats;
+import Tenzinn.Deathmatch.UI.ScoreboardPage;
+
+import Tenzinn.FiveVSfive.UI.ScoreboardPageFVF;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
+import Tenzinn.Core.Listeners.MapListeners;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.math.vector.Vector3d;
+import Tenzinn.Core.Listeners.MessageListeners;
+import com.hypixel.hytale.protocol.SoundCategory;
+import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.NameMatching;
+import Tenzinn.Core.Listeners.MapListeners.SpawnMode;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.world.SoundUtil;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+
+import java.awt.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
+
+public class RefactorTool {
+
+    public enum TypeData { SCORE, DEATH, KILL }
+    public static List<PlayerStats> playerStatsList = new ArrayList<>();
+    public static ArrayList<WeaponStats> slots = new ArrayList<>();
+
+    public static void setPlayerStats (PlayerStats playerStats) { playerStatsList.add(playerStats); }
+    public static void setQuitPlayerStats (PlayerStats playerStats) { playerStatsList.remove(playerStats); }
+    public static void setSlots (ArrayList<WeaponStats> newSlots){
+        slots.clear();
+        slots.addAll(newSlots);
+    }
+    public static void setLoot(PlayerRef playerRef, int index) {
+        if (getSizeSlots() <= 0) return;
+
+        WeaponStats newWeapon = slots.get(index - 1);
+
+        if (newWeapon.nameWeapon.equalsIgnoreCase("comingsoon")) return;
+
+        String message = MessageListeners.get(MessageListeners.MessageKey.CHAT_WHEN_BUYING);
+        playerRef.sendMessage(Message.raw(message + newWeapon.nameWeapon).color(Color.cyan));
+
+        for (PlayerStats stats : playerStatsList) {
+            if(stats.getPlayerRef() == playerRef) {
+                switch (newWeapon.typeWeapon.toLowerCase()) {
+                    case "primary":     stats.primaryWeapon = newWeapon;    break;
+                    case "secondary":   stats.secondaryWeapon = newWeapon;  break;
+                    case "shield":      stats.shield = newWeapon;           break;
+                }
+
+                if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) {
+                    playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)).color(Color.yellow));
+                }
+                else { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
+
+                break;
+            }
+        }
+    }
+    public static void setAllLoot(PlayerRef playerRef, ArrayList<WeaponStats> list) {
+
+        if (list == null) { list = LootManager.getStarterKit(); }
+        if (list.isEmpty()) { list = LootManager.getStarterKit(); }
+
+        PlayerStats playerStats = playerStatsList.stream().filter(ps -> ps.getPlayerRef().equals(playerRef)).findFirst().orElse(null);
+        if (playerStats == null) return;
+
+        for (WeaponStats item : list) {
+            if(item.typeWeapon.equalsIgnoreCase("primary")) playerStats.primaryWeapon = item;
+            if(item.typeWeapon.equalsIgnoreCase("secondary")) { playerStats.secondaryWeapon = item; }
+            if(item.typeWeapon.equalsIgnoreCase("shield")) playerStats.shield = item;
+        }
+    }
+    public static void setHealthPlayer (Player player, float value) {
+        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+
+        playerStats.setHealth((int)value);
+    }
+    // ============================================ //
+    public static ArrayList<WeaponStats> getLoot(PlayerRef playerRef) {
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if(playerStats == null) return null;
+
+        ArrayList<WeaponStats> list = new ArrayList<>();
+
+        if(playerStats.primaryWeapon != null) list.add(playerStats.primaryWeapon);
+
+        if(playerStats.secondaryWeapon != null) list.add(playerStats.secondaryWeapon);
+
+        if(playerStats.shield != null) list.add(playerStats.shield);
+
+        return !list.isEmpty() ? list : null;
+    }
+    public static int getSizeSlots () { return slots.size(); }
+    public static PlayerStats getPlayerStats(PlayerRef playerRef) {
+        if (playerStatsList.isEmpty()) return null;
+
+        for (PlayerStats playerStats : playerStatsList) {
+            if (playerStats.getPlayerRef().equals(playerRef)) { return playerStats; }
+        }
+        return null;
+    }
+    public static List<PlayerStats> getPlayerList(GameMatch match) {
+        return playerStatsList.stream()
+                .filter(playerStats -> match.equals(playerStats.getCurrentMatch()))
+                .collect(Collectors.toList());
+    }
+    // ============================================ //
+    public static ArrayList<Vector3d> getSpawns (String nameMap, SpawnMode mode) {
+        try {
+            List<MapListeners.SpawnPoint> allSpawns = MapListeners.get(nameMap, mode);
+
+            ArrayList<Vector3d> spawns = new ArrayList<>();
+
+            for(MapListeners.SpawnPoint spawn : allSpawns) { spawns.add(new Vector3d(spawn.x, spawn.y, spawn.z)); }
+
+            return spawns;
+        } catch (Exception e) { throw new RuntimeException(e); }
+    }
+    public static Vector3d getRandomSpawn(String nameMap) {
+        ArrayList<Vector3d> spawns = new ArrayList<>(getSpawns(nameMap, SpawnMode.DM));
+
+        Random random = new Random();
+        int randomPosition = random.nextInt(10);
+
+        return spawns.get(randomPosition);
+    }
+    public static Vector3d getSpawnForTeam(PlayerRef playerRef) {
+        ArrayList<Vector3d> spawns = getSpawns("dust2", SpawnMode.FVF);
+
+        PlayerStats playerStats = getPlayerStats(playerRef);
+        assert playerStats != null;
+
+        List<PlayerStats> playerList = getPlayerList(playerStats.getCurrentMatch());
+        int index = playerList.indexOf(playerStats);
+
+        return spawns.get(index);
+    }
+    // ============================================ //
+    public static SpawnMode getModeForPlayer(Player player) {
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+        return getModeForPlayer(playerRef);
+    }
+    public static SpawnMode getModeForPlayer(PlayerRef playerRef) {
+        String mode = Objects.requireNonNull(getPlayerStats(playerRef)).getCurrentMatch().getMode();
+
+        if (mode.equalsIgnoreCase("dm")) { return SpawnMode.DM; }
+
+        return SpawnMode.FVF;
+    }
+    public static Player getPlayer(PlayerRef playerRef) {
+        Ref<EntityStore> ref = playerRef.getReference();
+        Store<EntityStore> store = ref.getStore();
+
+        Player player = store.getComponent(ref, Player.getComponentType());
+
+        return player;
+    }
+    public static float getMaxHealth(Player player) {
+        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+
+        return playerStats.maxHealth;
+    }
+    // ============================================ //
+    public static void Respawn(PlayerRef playerRef) {
+        SpawnMode mode = getModeForPlayer(playerRef);
+
+        assert playerRef.getWorldUuid() != null;
+        World currentWorld = Universe.get().getWorld(playerRef.getWorldUuid());
+        if (currentWorld == null) { return; }
+
+        Vector3d spawnPos = getRandomSpawn("dust2");
+        if (mode == SpawnMode.FVF) { spawnPos = getSpawnForTeam(playerRef); }
+        Vector3d finalSpawnPos = spawnPos;
+
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+            currentWorld.execute(() -> {
+                try {
+                    Ref<EntityStore> ref = playerRef.getReference();
+                    Store<EntityStore> store = ref.getStore();
+
+                    Vector3f rotation = new Vector3f(0f, 0f, 0f);
+                    Vector3f targetPosition = new Vector3f((float) finalSpawnPos.getX(), (float) finalSpawnPos.getY(), (float) finalSpawnPos.getZ());
+
+                    Teleport teleport = new Teleport(targetPosition.toVector3d(), rotation);
+                    store.putComponent(ref, Teleport.getComponentType(), teleport);
+                }  catch (Exception e) { e.printStackTrace(); }
+            });
+        }, 150, TimeUnit.MILLISECONDS);
+
+        PlayerStats playerStats = getPlayerStats(playerRef);
+        if(playerStats == null) return;
+
+        CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
+        boolean isInGame = false;
+        if(customHUD instanceof GameHUD hud) {
+            isInGame = true;
+            if(mode == SpawnMode.DM) {
+                if(playerStats.getCurrentMatch().getState() == GameMatch.MatchState.IN_PROGRESS) {
+                    hud.setShopTimer();
+                    hud.setInvulnerability();
+                }
+            }
+        }
+        GameHUD newHud = isInGame ? (GameHUD) customHUD : null;
+        if (newHud == null) return;
+
+        if(mode == SpawnMode.DM) {
+            playerStats.isInvulnerable = true;
+            newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
+
+            if (!playerStats.getCurrentMatch().isBuyPhase()) {
+                HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                    currentWorld.execute(() -> {
+                        playerStats.isInvulnerable = false;
+                        newHud.setEffect(PlayerStats.Effects.NULL);
+                    });
+                }, 3, TimeUnit.SECONDS);
+            }
+
+            playerStats.canReceivedLoot = true;
+            playerStats.timerCanReceivedLoot = 15;
+
+            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                currentWorld.execute(() -> {
+                    playerStats.canReceivedLoot = false;
+                });
+            }, 15, TimeUnit.SECONDS);
+        }
+    }
+    // ============================================ //
+    public static void setChangesInUI(GameMatch match) {
+        ArrayList<PlayerStats> playersList = new ArrayList<>(getPlayerList(match));
+
+        for (PlayerStats playerStats : playersList) {
+            if(playerStats.getPlayer().getHudManager().getCustomHud() == null) continue;
+
+            Object testHud = playerStats.getPlayer().getHudManager().getCustomHud();
+
+            if(testHud instanceof GameHUD gameHUD) { gameHUD.setData(); }
+            else if(testHud instanceof ScoreboardPage scoreboard) { scoreboard.setData(); }
+            else if(testHud instanceof ScoreboardPageFVF scoreboard) { scoreboard.setData(); }
+        }
+    }
+    public static void setChangesInSlots (int value, PlayerRef playerRef) {
+        Player player = getPlayer(playerRef);
+        if(player == null) return;
+
+        Object testHud = player.getHudManager().getCustomHud();
+
+        if(testHud == null) return;
+
+        if(testHud instanceof GameHUD) {
+            GameHUD currentHUD = (GameHUD) testHud;
+
+            if(value > 3) return;
+
+            currentHUD.setWeapons(value);
+        }
+    }
+    public static void setDataScore(Player player, TypeData typeData, float value) {
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+
+        PlayerStats playerStats = getPlayerStats(playerRef);
+        assert playerStats != null;
+
+        switch (typeData) {
+            case TypeData.SCORE: int finalValue = (int)value; playerStats.setScore(finalValue); break;
+            case TypeData.DEATH: playerStats.setDeaths(); break;
+            case TypeData.KILL: playerStats.setKills(); break;
+        }
+    }
+    // ============================================ //
+    public static void finishGame(List<PlayerRef> players) {
+        for (PlayerRef playerRef : players) {
+            Ref<EntityStore> ref = playerRef.getReference();
+            Store<EntityStore> store = ref.getStore();
+
+            playerRef.sendMessage(Message.raw("Se terminó la partida").color(Color.cyan));
+
+            Player player = getPlayer(playerRef);
+
+            if (getModeForPlayer(playerRef) == SpawnMode.DM) { player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef)); }
+            else { /* QUE DEBE PASAR AL TERMINAR EL FVF */ }
+        }
+    }
+    // ============================================ //
+    public static void launchSound(PlayerRef playerRef, String sound) {
+        assert playerRef.getWorldUuid() != null;
+
+        World world = Universe.get().getWorld(playerRef.getWorldUuid());
+        assert world != null;
+
+        Player player = getPlayer(playerRef);
+        launchSound(world, player, sound);
+    }
+    public static void launchSound(World world, Player player, String sound) {
+        Ref<EntityStore> playerRef = player.getReference();
+        Store<EntityStore> store = world.getEntityStore().getStore();
+
+        world.execute(() -> {
+            assert playerRef != null;
+            TransformComponent transform = store.getComponent(playerRef, TransformComponent.getComponentType());
+            if (transform == null) return;
+
+            int index = switch (sound) {
+                case "clic" -> SoundEvent.getAssetMap().getIndex("SFX_Clic");
+                case "fail" -> SoundEvent.getAssetMap().getIndex("SFX_Fail");
+                default -> -1;
+            };
+
+            if (index == -1) return;
+
+            SoundUtil.playSoundEvent3dToPlayer(playerRef, index, SoundCategory.SFX, transform.getPosition(), store);
+        });
+    }
+}

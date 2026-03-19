@@ -20,6 +20,7 @@ public final class MessageListeners {
         CHAT_WHEN_BUYING            ("chat.when-buying"),
         CHAT_BUYING_LATE            ("chat.buying-late"),
         CHAT_SHOP_IN_LOBBY          ("chat.shop-in-lobby"),
+        CHAT_SHOP_IN_LOBBY_FVF      ("chat.shop-in-lobby-fvf"),
         CHAT_DAMAGE_LOBBY           ("chat.damage-lobby"),
         CHAT_IN_QUEUE_X2            ("chat.in-queue-x2"),
         CHAT_COMMAND_LOBBY_INLOBBY  ("chat.command-lobby-inlobby"),

@@ -28,15 +28,32 @@ public final class MapListeners {
         public String toString() { return "SpawnPoint{x=" + x + ", y=" + y + ", z=" + z + "}"; }
     }
 
-    private static final Logger LOGGER       = Logger.getLogger("Countertale");
-    private static final String JSON_PATH    = "Countertale/maps.json";
+    public enum SpawnMode { DM, FVF }
 
-    // Clave: nombre del mapa en minúsculas → lista de spawns
-    private static final Map<String, List<SpawnPoint>> MAPS = new HashMap<>();
+    // Estructura interna: nombre del mapa → (modo → lista de spawns)
+    private static final class MapData {
+        final List<SpawnPoint> dm;
+        final List<SpawnPoint> fvf;
+
+        MapData(List<SpawnPoint> dm, List<SpawnPoint> fvf) {
+            this.dm  = Collections.unmodifiableList(dm);
+            this.fvf = Collections.unmodifiableList(fvf);
+        }
+
+        List<SpawnPoint> get(SpawnMode mode) {
+            return mode == SpawnMode.FVF ? fvf : dm;
+        }
+    }
+
+    private static final Logger LOGGER    = Logger.getLogger("Countertale");
+    private static final String JSON_PATH = "Countertale/maps.json";
+
+    private static final Map<String, MapData> MAPS = new HashMap<>();
     private static Vector3f lobbyPosition = null;
     private static boolean loaded = false;
 
     private MapListeners() { }
+
     public static boolean load() {
         try {
             File jar      = new File(MapListeners.class.getProtectionDomain().getCodeSource().getLocation().toURI());
@@ -47,10 +64,10 @@ public final class MapListeners {
             return false;
         }
     }
+
     public static boolean load(File jsonFile) {
         lobbyPosition = null;
         MAPS.clear();
-
         loaded = false;
 
         if (!jsonFile.exists()) {
@@ -64,29 +81,23 @@ public final class MapListeners {
             JsonArray  mapsArray = root.getAsJsonArray("Maps");
 
             for (JsonElement mapElement : mapsArray) {
-                JsonObject mapObj = mapElement.getAsJsonObject();
+                JsonObject mapObj    = mapElement.getAsJsonObject();
+                String     name      = mapObj.get("name").getAsString().toLowerCase();
+                JsonObject spawnsObj = mapObj.getAsJsonObject("spawns");
 
-                String     name   = mapObj.get("name").getAsString().toLowerCase();
-                JsonArray  spawnsArray = mapObj.getAsJsonArray("spawns");
+                List<SpawnPoint> dmSpawns  = parseSpawnArray(spawnsObj.getAsJsonArray("dm"));
+                List<SpawnPoint> fvfSpawns = parseSpawnArray(spawnsObj.getAsJsonArray("fvf"));
 
-                List<SpawnPoint> spawns = new ArrayList<>();
-                for (JsonElement spawnElement : spawnsArray) {
-                    JsonArray coords = spawnElement.getAsJsonArray();
-                    double x = coords.get(0).getAsDouble();
-                    double y = coords.get(1).getAsDouble();
-                    double z = coords.get(2).getAsDouble();
-                    spawns.add(new SpawnPoint(x, y, z));
-                }
-
-                MAPS.put(name, Collections.unmodifiableList(spawns));
+                MAPS.put(name, new MapData(dmSpawns, fvfSpawns));
             }
 
             if (root.has("Lobby")) {
                 JsonArray lobby = root.getAsJsonArray("Lobby");
-                float lx = lobby.get(0).getAsFloat();
-                float ly = lobby.get(1).getAsFloat();
-                float lz = lobby.get(2).getAsFloat();
-                lobbyPosition = new Vector3f(lx, ly, lz);
+                lobbyPosition = new Vector3f(
+                        lobby.get(0).getAsFloat(),
+                        lobby.get(1).getAsFloat(),
+                        lobby.get(2).getAsFloat()
+                );
             }
 
             loaded = true;
@@ -100,20 +111,47 @@ public final class MapListeners {
 
         return loaded;
     }
-    public static Vector3f getLobby() {
-        if (lobbyPosition == null) { return new Vector3f(0f, 80f, 0f); }
 
-        return lobbyPosition;
+    // ── Helpers de parseo ────────────────────────────────────────────────────
+
+    private static List<SpawnPoint> parseSpawnArray(JsonArray array) {
+        List<SpawnPoint> list = new ArrayList<>();
+        if (array == null) return list;
+        for (JsonElement el : array) {
+            JsonArray coords = el.getAsJsonArray();
+            list.add(new SpawnPoint(
+                    coords.get(0).getAsDouble(),
+                    coords.get(1).getAsDouble(),
+                    coords.get(2).getAsDouble()
+            ));
+        }
+        return list;
     }
-    public static List<SpawnPoint> get(String mapName) {
-        List<SpawnPoint> spawns = MAPS.get(mapName.toLowerCase());
-        if (spawns == null) {
+
+    // ── API pública ──────────────────────────────────────────────────────────
+
+    /** Devuelve los spawns de un mapa según el modo (DM o FVF). */
+    public static List<SpawnPoint> get(String mapName, SpawnMode mode) {
+        MapData data = MAPS.get(mapName.toLowerCase());
+        if (data == null) {
             LOGGER.warning("[Countertale] Map not found: " + mapName);
             return Collections.emptyList();
         }
-        return spawns;
+        return data.get(mode);
     }
-    public static boolean exists(String mapName) { return MAPS.containsKey(mapName.toLowerCase()); }
-    public static java.util.Set<String> getMapNames() { return Collections.unmodifiableSet(MAPS.keySet()); }
-    public static int size() { return MAPS.size(); }
+
+    /** Devuelve los spawns DM de un mapa (shorthand). */
+    public static List<SpawnPoint> getDM(String mapName)  { return get(mapName, SpawnMode.DM);  }
+
+    /** Devuelve los spawns FVF de un mapa (shorthand). */
+    public static List<SpawnPoint> getFVF(String mapName) { return get(mapName, SpawnMode.FVF); }
+
+    public static Vector3f getLobby() {
+        return lobbyPosition != null ? lobbyPosition : new Vector3f(0f, 80f, 0f);
+    }
+
+    public static boolean exists(String mapName)            { return MAPS.containsKey(mapName.toLowerCase()); }
+    public static java.util.Set<String> getMapNames()       { return Collections.unmodifiableSet(MAPS.keySet()); }
+    public static boolean isLoaded()                        { return loaded; }
+    public static int size()                                { return MAPS.size(); }
 }

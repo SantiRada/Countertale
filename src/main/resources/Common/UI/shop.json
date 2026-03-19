@@ -15,7 +15,8 @@
           "image": "Kevlar",
           "typeWeapon": "shield",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [
@@ -29,7 +30,8 @@
           "image": "KevlarHelmet",
           "typeWeapon": "shield",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -38,7 +40,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -47,7 +50,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -56,7 +60,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         }
       ]
     },
@@ -70,7 +75,8 @@
           "image": "Usp",
           "typeWeapon": "Secondary",
           "typeCross": "Weapon",
-          "firemode": "Single"
+          "firemode": "Single",
+          "price": 100
         },
         {
           "id": [ "Weapon_Sword_Adamantite" ],
@@ -79,7 +85,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [ "Weapon_Sword_Cobalt" ],
@@ -88,7 +95,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [ "Weapon_Sword_Thorium" ],
@@ -97,7 +105,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [ "DesertEagle" ],
@@ -106,7 +115,8 @@
           "image": "DesertEagle",
           "typeWeapon": "Secondary",
           "typeCross": "Weapon",
-          "firemode": "Single"
+          "firemode": "Single",
+          "price": 100
         }
       ]
     },
@@ -120,7 +130,8 @@
           "image": "Mac10",
           "typeWeapon": "primary",
           "typeCross": "Weapon",
-          "firemode": "Automatic"
+          "firemode": "Automatic",
+          "price": 100
         },
         {
           "id": [ "MP9" ],
@@ -129,7 +140,8 @@
           "image": "Mp9",
           "typeWeapon": "primary",
           "typeCross": "Weapon",
-          "firemode": "Automatic"
+          "firemode": "Automatic",
+          "price": 100
         },
         {
           "id": [ "Weapon_Battleaxe_Mithril" ],
@@ -138,7 +150,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [ "Weapon_Battleaxe_Adamantite" ],
@@ -147,7 +160,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [ "Weapon_Battleaxe_Cobalt" ],
@@ -156,7 +170,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         }
       ]
     },
@@ -170,7 +185,8 @@
           "image": "Ak47",
           "typeWeapon": "Primary",
           "typeCross": "Weapon",
-          "firemode": "Burst"
+          "firemode": "Burst",
+          "price": 100
         },
         {
           "id": [ "M4A1s" ],
@@ -179,7 +195,8 @@
           "image": "M4a1s",
           "typeWeapon": "Primary",
           "typeCross": "Weapon",
-          "firemode": "Burst"
+          "firemode": "Burst",
+          "price": 100
         },
         {
           "id": [ "Weapon_Battleaxe_Copper" ],
@@ -188,7 +205,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -197,7 +215,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -206,7 +225,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         }
       ]
     },
@@ -220,7 +240,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -229,7 +250,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -238,7 +260,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -247,7 +270,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         },
         {
           "id": [],
@@ -256,7 +280,8 @@
           "image": "ComingSoon",
           "typeWeapon": "Melee",
           "typeCross": "Knife",
-          "firemode": "Melee"
+          "firemode": "Melee",
+          "price": 100
         }
       ]
     }

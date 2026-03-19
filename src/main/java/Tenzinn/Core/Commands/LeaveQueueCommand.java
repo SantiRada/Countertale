@@ -1,12 +1,12 @@
 package Tenzinn.Core.Commands;
 
 import Tenzinn.Countertale;
-import Tenzinn.Deathmatch.Global.GameMatch;
+import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.Listeners.MessageListeners;
 
-import Tenzinn.Deathmatch.Global.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import Tenzinn.Core.Listeners.MessageListeners;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;

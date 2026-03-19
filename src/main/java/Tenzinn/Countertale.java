@@ -1,20 +1,20 @@
 package Tenzinn;
 
-import Tenzinn.Core.Commands.LeaveQueueCommand;
-import Tenzinn.Core.Commands.QueueCommand;
 import Tenzinn.Core.Events.*;
 import Tenzinn.Core.Handle.*;
-import Tenzinn.Deathmatch.Content.Commands.*;
-import Tenzinn.Deathmatch.Content.UI.QueueHud;
-import Tenzinn.Core.Commands.AdminCommands;
-import Tenzinn.Deathmatch.Content.Commands.Loot.LootCommands;
-import Tenzinn.Deathmatch.Global.GameMatch;
-import Tenzinn.Deathmatch.Global.MatchManager;
-import Tenzinn.Core.Interactions.UseActionBookInteraction;
-import Tenzinn.Deathmatch.Content.Commands.Game.GameCommands;
-import Tenzinn.Deathmatch.Content.Commands.Statue.StatueCommand;
-
+import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Commands.*;
 import Tenzinn.Core.Listeners.*;
+import Tenzinn.Core.UI.QueueHud;
+import Tenzinn.Core.MatchManager;
+import Tenzinn.Deathmatch.Commands.*;
+import Tenzinn.Core.Commands.Loot.LootCommands;
+import Tenzinn.Core.Admin.Commands.AdminCommands;
+import Tenzinn.Core.Admin.Commands.Game.GameCommands;
+import Tenzinn.Core.Admin.Commands.ForceStartCommand;
+import Tenzinn.Core.Admin.Commands.Statue.StatueCommand;
+import Tenzinn.Core.Interactions.UseActionBookInteraction;
+
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -24,20 +24,20 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
-import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.universe.world.events.AllWorldsLoadedEvent;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
 import java.util.Map;
 import java.util.List;
+import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 public class Countertale extends JavaPlugin {
 
-    // Sistema de Deathmatch
+    // Sistema de Partidas
     private MatchManager matchManager;
     private ScheduledFuture<?> matchCheckTask;
 
@@ -61,18 +61,19 @@ public class Countertale extends JavaPlugin {
         // Admin Commands
         getCommandRegistry().registerCommand(new AdminCommands("admin", "View list of commands for Countertale"));
         getCommandRegistry().registerCommand(new StatueCommand("statue", "Manage statue configurations."));
-
-        // Deathmatch Commands
-        getCommandRegistry().registerCommand(new QueueCommand("queue", "Join match queue", this));
-        getCommandRegistry().registerCommand(new LeaveQueueCommand("leave", "Leave match queue", this));
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
-        getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
         getCommandRegistry().registerCommand(new ClearHUDCommand("clearhud", "Clear HUD to change instance"));
+
+        // Game Commands
+        getCommandRegistry().registerCommand(new QueueCommand("queue", "Join match queue", this));
+        getCommandRegistry().registerCommand(new LeaveQueueCommand("leave", "Leave match queue", this));
+        getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
+        getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
+
+        // Deathmatch Commands
         getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
         getCommandRegistry().registerCommand(new MvpCommand("mvp", "Open Custom page of MVP"));
-
-        getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
 
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
@@ -140,9 +141,7 @@ public class Countertale extends JavaPlugin {
         if (hud != null) { hud.hideQueueUI(); }
         activeQueueHuds.remove(playerId);
     }
-    public void hideAllQueueHuds(GameMatch match) {
-            for (PlayerRef playerRef : match.getPlayers()) { hideQueueHud(playerRef); }
-    }
+    public void hideAllQueueHuds(GameMatch match) { for (PlayerRef playerRef : match.getPlayers()) { hideQueueHud(playerRef); } }
     public void notifyMatchPlayersAndUpdateHuds(GameMatch match) {
         int playerCount = match.getPlayerCount();
         String message = String.format("Players: %d/10", playerCount);
