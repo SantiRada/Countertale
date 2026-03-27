@@ -52,20 +52,22 @@ public class GameHUD extends CustomUIHud {
         uiCommandBuilder.append("Game/HUD.ui");
         uiBuilder = uiCommandBuilder;
 
-        if (RefactorTool.getModeForPlayer(playerRef) == MapListeners.SpawnMode.DM) { setTimer(); }
-        else { /* ACTIVAR TEMPORIZADOR POR RONDAS */ }
-
+        setTimer();
         setData();
 
         updateHealth();
 
         setShield();
         setWeapons(2);
+
+        uiBuilder.set("#DeathmatchUI.Background", "#ffffff00");
+        update(true, uiBuilder);
+        playerRef.sendMessage(Message.raw("Se intentó sacar el fondo"));
     }
 
     public void setEffect(PlayerStats.Effects effect) {
         switch (effect) {
-            case PlayerStats.Effects.INVULNERABILITY: uiBuilder.set("#DeathmatchUI.Background", Value.ref("Game/Deathmatch.ui", "Invulnerability")); break;
+            case PlayerStats.Effects.INVULNERABILITY: uiBuilder.set("#DeathmatchUI.Background", Value.ref("Game/HUD.ui", "Invulnerability")); break;
             case PlayerStats.Effects.NULL: uiBuilder.set("#DeathmatchUI.Background", "#ffffff00"); break;
         }
 
@@ -206,6 +208,7 @@ public class GameHUD extends CustomUIHud {
     }
 
     public void setInvulnerability() {
+        playerRef.sendMessage(Message.raw("Se activó la invulnerabilidad").color(Color.cyan));
         uiBuilder.set("#InvulnerabilitySector.Visible", true);
         invTimer = 3;
 
@@ -299,6 +302,8 @@ public class GameHUD extends CustomUIHud {
             invTask.cancel(false);
             invTask = null;
         }
+
+
     }
 
     public void clearHUD() {

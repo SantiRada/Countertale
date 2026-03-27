@@ -4,21 +4,21 @@ import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.WeaponStats;
 
-import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.NameMatching;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
-import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
-import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
-import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.Inventory;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 
 import java.util.ArrayList;
 
@@ -40,14 +40,14 @@ public class LootManager {
 
         ArrayList<String> item = new ArrayList<>();
         item.add("Weapon_Handgun");
-        WeaponStats secondary = new WeaponStats("Desert Eagle", "Secondary", "Weapon", "Single", item, "DesertEagle", 7);
+        WeaponStats secondary = new WeaponStats("Desert Eagle", "Secondary", "Weapon", "Single", item, "DesertEagle", 7, 100);
 
         ArrayList<String> item2 = new ArrayList<>();
         item2.add("Armor_Iron_Legs");
         item2.add("Armor_Iron_Hands");
         item2.add("Armor_Iron_Head");
         item2.add("Armor_Iron_Chest");
-        WeaponStats shield = new WeaponStats("Kevlar", "shield", "", "", item2, "Kevlar", 1);
+        WeaponStats shield = new WeaponStats("Kevlar", "shield", "", "", item2, "Kevlar", 1, 100);
 
         list.add(secondary);
         list.add(shield);

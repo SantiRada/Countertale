@@ -1,10 +1,13 @@
 package Tenzinn.Core.Handle;
 
+import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Listeners.MapListeners;
+import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.LootManager;
 import Tenzinn.Core.Objects.WeaponStats;
 
+import Tenzinn.FiveVSfive.Flow.MatchFVF;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
@@ -19,6 +22,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class DeathDetector extends DeathSystems.OnDeathSystem {
@@ -79,6 +83,8 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
             if (playerComponent.getWorld() != Universe.get().getDefaultWorld()) { RefactorTool.Respawn(playerRef); }
         } else {
             // ACTIVATE SPECTATOR MODE
+
+            if(MatchFVF.validateFinishRound()) return;
 
             ArrayList<WeaponStats> loot = LootManager.getStarterKit();
             LootManager.giveLoot(playerComponent, loot);

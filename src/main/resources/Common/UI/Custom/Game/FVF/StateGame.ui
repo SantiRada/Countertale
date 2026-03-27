@@ -1,0 +1,10 @@
+
+Group {
+    LayoutMode: Middle;
+    Anchor: (Width: 1920, Height: 1080);
+
+    Label {
+        Style: (FontSize: 18, RenderBold: true, Alignment: Center, TextColor: (#FFFFFF));
+        Text: "Test State Game";
+    }
+}

@@ -1,19 +1,16 @@
 package Tenzinn.Core;
 
 import Tenzinn.Countertale;
-import com.hypixel.hytale.server.core.HytaleServer;
-import Tenzinn.Core.Tools.RefactorTool;
-import com.hypixel.hytale.server.core.universe.Universe;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
+import Tenzinn.FiveVSfive.Flow.MatchFVF;
 import Tenzinn.Core.Instances.InstanceManager;
+import Tenzinn.Deathmatch.Flow.MatchDeathmatch;
+
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.util.UUID;
 import java.util.List;
-import java.util.Objects;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ScheduledFuture;
 
 public class GameMatch {
 
@@ -26,11 +23,7 @@ public class GameMatch {
     private MatchState state;
     private InstanceManager matchInstance;
 
-    public enum MatchState { WAITING, STARTING, IN_PROGRESS, FINISHED }
-
-    // In-Game Content
-    private ScheduledFuture<?> timerTask;
-    private int remainingSeconds = 600; // 10:00
+    public enum MatchState { WAITING, STARTING, ON_PURCHASE, IN_PROGRESS, FINISHED }
 
     public GameMatch() {
         this.matchId = UUID.randomUUID();
@@ -45,46 +38,31 @@ public class GameMatch {
     }
     // ================================================ //
     public void startTimer() {
-        if (timerTask != null && !timerTask.isDone()) return;
-        
-        if (state == MatchState.STARTING) {
-            remainingSeconds = 15;
-            timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-                if (remainingSeconds <= 0) {
-                    stopTimer();
-
-                    setState(MatchState.IN_PROGRESS);
-                    startTimer();
-
-                    return;
-                }
-
-                remainingSeconds--;
-            }, 1, 1, TimeUnit.SECONDS);
+        if (mode.equalsIgnoreCase("dm")) {
+            // Funcionamiento del temporizador de etapa de compra / tiempo de partida
+            MatchDeathmatch.startTimerMatch(this);
         }
         else {
-            remainingSeconds = 600;
-
-            timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-                if (remainingSeconds <= 0) {
-                    World world = Universe.get().getWorld(Objects.requireNonNull(players.getFirst().getWorldUuid()));
-                    assert world != null;
-                    world.execute(() -> { RefactorTool.finishGame(players); });
-                }
-
-                remainingSeconds--;
-            }, 1, 1, TimeUnit.SECONDS);
+            // Funcionamiento del temporizador de etapa de compra / tiempo de ronda
+            players.get(0).sendMessage(Message.raw("Cargando timer de 5v5"));
+            MatchFVF.startTimerMatch(this);
         }
     }
-    public int getTimer () { return remainingSeconds; }
-    public void stopTimer() { if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false); }
+    public int getTimer () {
+        if(mode.equalsIgnoreCase("dm")) { return MatchDeathmatch.getTimer(); }
+        else { return MatchFVF.getTimer(); }
+    }
+    public void stopTimer() {
+        if(mode.equalsIgnoreCase("dm")) { MatchDeathmatch.stopTimer(); }
+        else { MatchFVF.stopTimer(); }
+    }
     // ================================================ //
     public void setInstance(Countertale main) { matchInstance = new InstanceManager(main); }
     public void setInstance(InstanceManager instance) { matchInstance = instance; }
     public void setState(MatchState state) { this.state = state; }
     public void setMode(String value) { mode = value; }
     // ================================================ //
-    public boolean isBuyPhase () { return state == MatchState.STARTING; }
+    public boolean isBuyPhase () { return state == MatchState.STARTING || state == MatchState.ON_PURCHASE; }
     // ================================================ //
     public List<PlayerRef> getPlayers() { return new ArrayList<>(players); }
     public InstanceManager getInstance() { return matchInstance; }

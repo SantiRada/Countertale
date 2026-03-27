@@ -1,7 +1,7 @@
 {
   "Group": "Tenzinn",
   "Name": "Countertale",
-  "Version": "0.6.0",
+  "Version": "0.7.0",
   "Description": "Is a plugin for Countertale server.",
   "Authors": [
     {
@@ -11,7 +11,7 @@
     }
   ],
   "Website": "https://santiagorada.com/hytale/plugins/countertale",
-  "ServerVersion": "2026.03.19-d0cb09bb3",
+  "ServerVersion": "2026.03.26-89796e57b",
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,

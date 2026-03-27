@@ -60,7 +60,10 @@ public class DetectPlayerReady {
 
         // Get loot for mode
         if (worldMode.equalsIgnoreCase("dm")) { RefactorTool.setAllLoot(playerRef, thisLoot); }
-        else { RefactorTool.setAllLoot(playerRef, null); }
+        else {
+            RefactorTool.setAllLoot(playerRef, LootManager.getStarterKit());
+            thisLoot = LootManager.getStarterKit();
+        }
 
         GameHUD newHud = new GameHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
@@ -99,13 +102,6 @@ public class DetectPlayerReady {
         }
 
         LootManager.giveLoot(player, thisLoot);
-
-        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-            if (playerStats.damageReceived <= 0) {
-                playerStats.setHealth((int)RefactorTool.getMaxHealth(player));
-                RefactorTool.setDamageReceived(player, -1);
-            }
-        }, 1, TimeUnit.SECONDS);
 
         RefactorTool.launchSound(playerRef, "clic");
     }

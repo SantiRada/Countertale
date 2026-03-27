@@ -56,6 +56,7 @@ public class StatusGameCommand extends AbstractPlayerCommand {
             case WAITING -> "W-";
             case STARTING -> "S-";
             case IN_PROGRESS -> "P-";
+            case ON_PURCHASE -> "O-";
             case FINISHED -> "F-";
         };
     }
