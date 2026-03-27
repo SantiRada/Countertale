@@ -25,6 +25,8 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
 
     @Override
     public void handle(int index,@Nonnull ArchetypeChunk<EntityStore> archetypeChunk,@Nonnull Store<EntityStore> store,@Nonnull CommandBuffer<EntityStore> commandBuffer,@Nonnull DropItemEvent.PlayerRequest dropEvent) {
+        dropEvent.setCancelled(true);
+
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
 
         Player player = store.getComponent(ref, Player.getComponentType());
@@ -41,21 +43,22 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
             String mode = match.getMode();
 
             if (mode.equalsIgnoreCase("dm")) {
-                dropEvent.setCancelled(true);
                 CommandManager.get().handleCommand(playerRef, "shop");
             } else {
                 // Is in FVF to playing
-                if(match.getState() == GameMatch.MatchState.STARTING || match.getState() == GameMatch.MatchState.IN_PROGRESS) {
+                if(match.getState() == GameMatch.MatchState.STARTING || match.getState() == GameMatch.MatchState.ON_PURCHASE) {
                     CommandManager.get().handleCommand(playerRef, "shop");
-                } else {
+                }
+                else if(match.getState() == GameMatch.MatchState.IN_PROGRESS) {
+                    playerRef.sendMessage(Message.raw("No puedes comprar durante la ronda."));
+                }
+                else {
                     // Is in lobby in queue to FVF
                     playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY_FVF)).color(Color.cyan));
                 }
             }
         }
         else {
-            // Is in the lobby without queue
-            dropEvent.setCancelled(true);
             playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY)).color(Color.cyan));
         }
     }

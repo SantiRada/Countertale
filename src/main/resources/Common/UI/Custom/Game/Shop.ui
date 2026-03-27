@@ -87,7 +87,15 @@ Group {
 
                             Group #Slot1Icon {
                                 Anchor: (Width: 115, Height: 50);
+                            }
+                        }
 
+                        Group #Economic1 {
+                            LayoutMode: Right;
+
+                            Label #Price1 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -121,6 +129,15 @@ Group {
 
                             }
                         }
+
+                        Group #Economic2 {
+                            LayoutMode: Right;
+
+                            Label #Price2 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot3 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -150,6 +167,15 @@ Group {
                             Group #Slot3Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+
+                        Group #Economic3 {
+                            LayoutMode: Right;
+
+                            Label #Price3 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -183,6 +209,15 @@ Group {
 
                             }
                         }
+
+                        Group #Economic4 {
+                            LayoutMode: Right;
+
+                            Label #Price4 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot5 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -212,6 +247,15 @@ Group {
                             Group #Slot5Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+
+                        Group #Economic5 {
+                            LayoutMode: Right;
+
+                            Label #Price5 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -253,6 +297,15 @@ Group {
 
                             }
                         }
+
+                        Group #Economic6 {
+                            LayoutMode: Right;
+
+                            Label #Price6 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot7 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -282,6 +335,15 @@ Group {
                             Group #Slot7Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+
+                        Group #Economic7 {
+                            LayoutMode: Right;
+
+                            Label #Price7 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -315,6 +377,15 @@ Group {
 
                             }
                         }
+
+                        Group #Economic8 {
+                            LayoutMode: Right;
+
+                            Label #Price8 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot9 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -346,6 +417,15 @@ Group {
 
                             }
                         }
+
+                        Group #Economic9 {
+                            LayoutMode: Right;
+
+                            Label #Price9 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot10 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -375,6 +455,15 @@ Group {
                             Group #Slot10Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+
+                        Group #Economic10 {
+                            LayoutMode: Right;
+
+                            Label #Price10 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -417,6 +506,15 @@ Group {
 
                             }
                         }
+
+                        Group #Economic11 {
+                            LayoutMode: Right;
+
+                            Label #Price11 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot12 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -446,6 +544,15 @@ Group {
                             Group #Slot12Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+
+                        Group #Economic12 {
+                            LayoutMode: Right;
+
+                            Label #Price12 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -479,6 +586,15 @@ Group {
 
                             }
                         }
+
+                        Group #Economic13 {
+                            LayoutMode: Right;
+
+                            Label #Price13 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot14 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -510,6 +626,15 @@ Group {
 
                             }
                         }
+                        
+                        Group #Economic14 {
+                            LayoutMode: Right;
+
+                            Label #Price14 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot15 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -539,6 +664,15 @@ Group {
                             Group #Slot15Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+                        
+                        Group #Economic15 {
+                            LayoutMode: Right;
+
+                            Label #Price15 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -581,6 +715,15 @@ Group {
 
                             }
                         }
+                        
+                        Group #Economic16 {
+                            LayoutMode: Right;
+
+                            Label #Price16 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot17 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -610,6 +753,15 @@ Group {
                             Group #Slot17Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+                        
+                        Group #Economic17 {
+                            LayoutMode: Right;
+
+                            Label #Price17 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -643,6 +795,15 @@ Group {
 
                             }
                         }
+                        
+                        Group #Economic18 {
+                            LayoutMode: Right;
+
+                            Label #Price18 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot19 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -674,6 +835,15 @@ Group {
 
                             }
                         }
+                        
+                        Group #Economic19 {
+                            LayoutMode: Right;
+
+                            Label #Price19 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot20 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -703,6 +873,15 @@ Group {
                             Group #Slot20Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+                        
+                        Group #Economic20 {
+                            LayoutMode: Right;
+
+                            Label #Price20 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -745,6 +924,15 @@ Group {
 
                             }
                         }
+                        
+                        Group #Economic21 {
+                            LayoutMode: Right;
+
+                            Label #Price21 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot22 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -774,6 +962,15 @@ Group {
                             Group #Slot22Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+                        
+                        Group #Economic22 {
+                            LayoutMode: Right;
+
+                            Label #Price22 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -807,6 +1004,15 @@ Group {
 
                             }
                         }
+                        
+                        Group #Economic23 {
+                            LayoutMode: Right;
+
+                            Label #Price23 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                     Button #Slot24 {
                         Anchor: (Width: 196, Height: 108, Bottom: 10);
@@ -836,6 +1042,15 @@ Group {
                             Group #Slot24Icon {
                                 Anchor: (Width: 115, Height: 50);
 
+                            }
+                        }
+                        
+                        Group #Economic24 {
+                            LayoutMode: Right;
+
+                            Label #Price24 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
                             }
                         }
                     }
@@ -869,6 +1084,15 @@ Group {
 
                             }
                         }
+                        
+                        Group #Economic25 {
+                            LayoutMode: Right;
+
+                            Label #Price25 {
+                                Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
+                                Text: "8888";
+                            }
+                        }
                     }
                 }
             }
@@ -883,6 +1107,13 @@ Group {
         Group {
             FlexWeight: 1;
             LayoutMode: Center;
+
+            Group #Money {
+                Label #UserMoney {
+                    Style: (FontSize: 18, RenderBold: true, Alignment: Center, TextColor: (#FFFFFF));
+                    Text: "$888";
+                }
+            }
 
             Group #GuidesIMG {
                 LayoutMode: Left;

@@ -41,7 +41,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -51,7 +51,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -61,7 +61,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         }
       ]
     },
@@ -86,7 +86,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [ "Weapon_Sword_Cobalt" ],
@@ -96,7 +96,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [ "Weapon_Sword_Thorium" ],
@@ -106,7 +106,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [ "DesertEagle" ],
@@ -151,7 +151,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [ "Weapon_Battleaxe_Adamantite" ],
@@ -161,7 +161,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [ "Weapon_Battleaxe_Cobalt" ],
@@ -171,7 +171,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         }
       ]
     },
@@ -206,7 +206,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -216,7 +216,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -226,7 +226,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         }
       ]
     },
@@ -241,7 +241,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -251,7 +251,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -261,7 +261,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -271,7 +271,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         },
         {
           "id": [],
@@ -281,7 +281,7 @@
           "typeWeapon": "Melee",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": -1
         }
       ]
     }

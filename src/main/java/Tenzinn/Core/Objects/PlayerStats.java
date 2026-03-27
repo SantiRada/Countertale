@@ -1,6 +1,7 @@
 package Tenzinn.Core.Objects;
 
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Shop.EconomySystem;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -24,24 +25,43 @@ public class PlayerStats {
     public WeaponStats secondaryWeapon = null;
     public WeaponStats shield = null;
 
+    public PlayerState playerState;
     public GameMatch currentMatch;
+
+    // Economy
+    protected int money = 0;
+    public boolean inShop = false;
+    public ArrayList<Integer> moneySpent = new ArrayList<Integer>();
 
     public PlayerRef playerRef;
     public Player player;
 
+    public enum PlayerState { DEFAULT, SPECTATOR }
     public enum Effects { INVULNERABILITY, NULL }
 
-    public PlayerStats (PlayerRef playerRef, Player player, GameMatch match) { this.playerRef = playerRef; this.player = player; this.currentMatch = match; }
+    public PlayerStats (PlayerRef playerRef, Player player, GameMatch match) {
+        this.playerRef = playerRef;
+        this.currentMatch = match;
+        this.player = player;
+
+        moneySpent.add(-1);
+        moneySpent.add(-1);
+        moneySpent.add(-1);
+    }
     // ================================================= //
     public void setKills () {
         kills += 1;
         score += 15;
+
+        money += EconomySystem.getRevenue(EconomySystem.Revenue.KILL);
 
         RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
     public void setDeaths () {
         deaths += 1;
         score = score > 10 ? score - 10 : 0;
+
+        money += EconomySystem.getRevenue(EconomySystem.Revenue.DEATH);
 
         RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
@@ -51,10 +71,19 @@ public class PlayerStats {
         RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
     public void setHealth(int value) { maxHealth = value; }
+    public void setMoney(int value) { money -= value; }
+    public void giveMoney(int value) { money += value; }
+    public void setFinishBuyZone() {
+        inShop = false;
+        moneySpent.set(0, -1);
+        moneySpent.set(1, -1);
+        moneySpent.set(2, -1);
+    }
     // ================================================= //
     public int getKills() { return kills; }
     public int getDeaths() { return deaths; }
     public int getScore() { return score; }
+    public int getMoney() { return money; }
     public ArrayList<WeaponStats> getLoot() {
         ArrayList<WeaponStats> list = new ArrayList<>();
 
@@ -68,5 +97,4 @@ public class PlayerStats {
     public GameMatch getCurrentMatch () { return currentMatch; }
     public PlayerRef getPlayerRef() { return playerRef; }
     public Player getPlayer() { return player; }
-    public String getName() { return player.getDisplayName(); }
 }

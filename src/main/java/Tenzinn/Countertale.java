@@ -1,10 +1,12 @@
 package Tenzinn;
 
+import Tenzinn.Core.Commands.Economy.RevenueCommands;
 import Tenzinn.Core.Events.*;
 import Tenzinn.Core.Handle.*;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Commands.*;
 import Tenzinn.Core.Listeners.*;
+import Tenzinn.Core.Shop.RevenuesConfig;
 import Tenzinn.Core.UI.QueueHud;
 import Tenzinn.Core.MatchManager;
 import Tenzinn.Deathmatch.Commands.*;
@@ -52,6 +54,7 @@ public class Countertale extends JavaPlugin {
     @Override
     protected void setup() {
         MessageListeners.load();
+        RevenuesConfig.load();
         MapListeners.load();
 
         // Interactions
@@ -64,15 +67,16 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
         getCommandRegistry().registerCommand(new ClearHUDCommand("clearhud", "Clear HUD to change instance"));
+        getCommandRegistry().registerCommand(new RevenueCommands("revenue", "All content to Revenues List"));
 
         // Game Commands
         getCommandRegistry().registerCommand(new QueueCommand("queue", "Join match queue", this));
         getCommandRegistry().registerCommand(new LeaveQueueCommand("leave", "Leave match queue", this));
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
         getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
+        getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
 
         // Deathmatch Commands
-        getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
         getCommandRegistry().registerCommand(new MvpCommand("mvp", "Open Custom page of MVP"));
 
         // Starter Kit

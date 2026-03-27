@@ -1,6 +1,7 @@
 package Tenzinn.Core.UI;
 
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Shop.RevenuesConfig;
 import Tenzinn.Core.Shop.ShopData;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
@@ -23,12 +24,17 @@ import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCu
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.util.Objects;
+
 public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
     private UICommandBuilder uiBuilder;
     private SpawnMode mode;
 
-    public ShopPage(PlayerRef playerRef, SpawnMode mode) { super(playerRef, CustomPageLifetime.CanDismiss, ShopEventData.CODEC); this.mode = mode; }
+    public ShopPage(PlayerRef playerRef, SpawnMode mode) {
+        super(playerRef, CustomPageLifetime.CanDismiss, ShopEventData.CODEC);
+        this.mode = mode;
+    }
 
     @Override
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder uiCommandBuilder, @NonNullDecl UIEventBuilder uiEventBuilder, @NonNullDecl Store<EntityStore> store) {
@@ -45,6 +51,7 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         loadContent();
 
         if (mode == SpawnMode.FVF) { loadEconomy(); }
+        else { hideEconomy(); }
 
         sendUpdate();
     }
@@ -67,7 +74,44 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         if (mode == SpawnMode.DM) { RefactorTool.setLoot(playerRef, index); }
         else {
             // In FVF need verify available money
-            // RefactorTool.setLoot(playerRef, index);
+            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+
+            if (playerStats.getMoney() >= newWeapon.pricing) {
+                // Can buy
+                if(playerStats.inShop) {
+                    int pos = -1;
+                    WeaponStats prevWeapon = null;
+
+                    for (int i = 0; i < playerStats.getLoot().size(); i++) {
+                        WeaponStats item = playerStats.getLoot().get(i);
+
+                        if (newWeapon.typeWeapon.equalsIgnoreCase(item.typeWeapon)) {
+                            prevWeapon = item;
+                            pos = i;
+                            break;
+                        }
+                    }
+
+                    if(pos >= 0) {
+                        playerStats.giveMoney(playerStats.moneySpent.get(pos) > 0 ? playerStats.moneySpent.get(pos) : 0); // Devolver dinero previo
+                        playerRef.sendMessage(Message.raw("Changed " + prevWeapon.nameWeapon + " to " + newWeapon.nameWeapon));
+
+                        playerStats.moneySpent.set(pos, newWeapon.pricing);
+                    } else {
+                        playerRef.sendMessage(Message.raw("El sistema no encontró el arma previa"));
+                        return;
+                    }
+                }
+
+                playerStats.setMoney(newWeapon.pricing);
+                playerStats.inShop = true;
+
+                RefactorTool.setLoot(playerRef, index);
+
+                uiBuilder.set("#UserMoney.TextSpans", Message.raw("$" + Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getMoney()));
+                sendUpdate();
+            }
+            else { playerRef.sendMessage(Message.raw("Insufficient money")); }
         }
 
         sendUpdate();
@@ -120,7 +164,20 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         }
     }
 
+    private void hideEconomy() {
+        for (int numberSlot = 1; numberSlot < (ShopData.getSizeNames()); numberSlot++) { uiBuilder.set("#Economic" + numberSlot + ".Visible", false); }
+        uiBuilder.set("#Money.Visible", false);
+        sendUpdate();
+    }
+
     private void loadEconomy() {
-        // CARGAR INFO DE ECONOMÍA PARA CADA ARMA
+        for (int numberSlot = 1; numberSlot <= (ShopData.getSizeNames()); numberSlot++) {
+            if (ShopData.getPricing(numberSlot - 1) <= 0) { uiBuilder.set("#Economic" + numberSlot + ".Visible", false); }
+            else { uiBuilder.set("#Price" + numberSlot + ".TextSpans", Message.raw("$" + ShopData.getPricing(numberSlot - 1))); }
+        }
+
+        uiBuilder.set("#UserMoney.TextSpans", Message.raw("$" + Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getMoney()));
+
+        sendUpdate();
     }
 }

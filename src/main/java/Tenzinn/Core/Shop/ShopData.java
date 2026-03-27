@@ -90,7 +90,7 @@ public class ShopData {
     public static String getNumbers (int index) { return numbers.size() > index ? numbers.get(index) : "NaN"; }
     public static String getImages (int index) { return images.size() > index ? images.get(index) : "NaN"; }
     public static String getNames (int index) { return names.size() > index ? names.get(index) : "NaN"; }
-    public static int getPricing (int index) { return pricing.size() > index ? pricing.get(index) : 888; }
+    public static int getPricing (int index) { return pricing.size() > index ? pricing.get(index) : -1; }
 
     public static ArrayList<String> getArrayTitle () { return titles; }
     public static int getSizeNames () { return names.isEmpty() ? -1 : names.size(); }

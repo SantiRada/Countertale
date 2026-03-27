@@ -73,8 +73,6 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
         World world = Universe.get().getWorld(player.getWorld().getWorldConfig().getUuid());
         if (world == Universe.get().getDefaultWorld()) return;
 
-        float newAmount = RefactorTool.getMaxHealth(player) - current;
-        RefactorTool.setDamageReceived(player, newAmount);
         RefactorTool.setHealthPlayer(player, current);
     }
 
