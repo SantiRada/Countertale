@@ -1,6 +1,30 @@
 
-@background = PatchStyle(TexturePath: "../Common/Background.png");
-@slot = PatchStyle(TexturePath: "images/shop/slot-hover.png");
+@background = PatchStyle(TexturePath: "images/maps/bg.png");
+
+@Map1 = PatchStyle(TexturePath:"images/maps/map1.png");
+@Map2 = PatchStyle(TexturePath:"images/maps/map2.png");
+@Map3 = PatchStyle(TexturePath:"images/maps/map3.png");
+@Map4 = PatchStyle(TexturePath:"images/maps/map4.png");
+@Map5 = PatchStyle(TexturePath:"images/maps/map5.png");
+
+@BtnDefault = PatchStyle(TexturePath: "images/mvp/btn-default.png");
+@BtnHover = PatchStyle(TexturePath: "images/mvp/btn-hover.png");
+@BtnPressed = PatchStyle(TexturePath: "images/mvp/btn-pressed.png");
+@Btn2Default = PatchStyle(TexturePath: "images/mvp/btn-active-default.png");
+@Btn2Hover = PatchStyle(TexturePath: "images/mvp/btn-active-hover.png");
+@Btn2Pressed = PatchStyle(TexturePath: "images/mvp/btn-active-pressed.png");
+
+@Button1 = (
+  Default: (Background: @BtnDefault),
+  Hovered: (Background: @BtnHover),
+  Pressed: (Background: @BtnPressed)
+);
+
+@Button2 = (
+  Default: (Background: @Btn2Default),
+  Hovered: (Background: @Btn2Hover),
+  Pressed: (Background: @Btn2Pressed)
+);
 
 Group #Modes {
     FlexWeight: 1;
@@ -10,38 +34,110 @@ Group #Modes {
     Group #Background {
         LayoutMode: Top;
         Background: @background;
-        Anchor: (Width: 500, Height: 220);
-        Padding: (Full: 40);
+        Anchor: (Width: 1100, Height: 660);
+        Padding: (Full: 24);
 
-        Label #TitleModal {
-            Text: "Select Mode";
-            Style: (FontSize: 24, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
-        }
+        Group #Buttons {
+            LayoutMode: Center;
 
-        Group {
-            FlexWeight: 1;
-            LayoutMode: Left;
-            Anchor: (Top: 20);
+            Button #ModeDM {
+                LayoutMode: Center;
+                Background: (Color: #3A5867);
+                Padding: (Horizontal: 12, Vertical: 8);
+                Anchor: (Right: 8, Width: 130, Height: 25);
 
-            Button #dmButton {
-                FlexWeight: 1;
-                Background: @slot;
-                Anchor: (Right: 10);
-
-                Label {
+                Label #ModeDMText {
+                    Style: (TextColor: #81D6FD, RenderBold: true, Alignment: Center, FontSize: 16);
                     Text: "Deathmatch";
-                    Style: (FontSize: 18, RenderBold: true, TextColor: #FFFFFF, Alignment: Center);
                 }
             }
 
-            Button #fvfButton {
-                FlexWeight: 1;
-                Background: @slot;
-                Anchor: (Left: 10);
+            Button #ModeFVF {
+                Anchor: (Left: 8, Width: 130, Height: 25);
+                Background: (Color: #202D3C);
+                LayoutMode: Center;
+                Padding: (Horizontal: 12, Vertical: 8);
 
-                Label {
+                Label #ModeFVFText {
+                    Style: (TextColor: #FFFFFF, RenderBold: true, Alignment: Center, FontSize: 16);
                     Text: "5v5";
-                    Style: (FontSize: 18, RenderBold: true, TextColor: #FFFFFF, Alignment: Center);
+                }
+            }
+        }
+
+        Group #Line {
+            LayoutMode: Left;
+            Anchor: (Top: 12, Bottom: 12, Height: 1, Width: 1028);
+            Background: (Color: #CCCCCC(0.2));
+        }
+
+        Group #Texts {
+            LayoutMode: Top;
+            Anchor: (Height: 80, Bottom: 12);
+
+            Label #TitleSector {
+                Style: (TextColor: #AE975D, RenderBold: true, Alignment: Center, FontSize: 24);
+                Text: "Select maps";
+            }
+            Label #DescSector1 {
+                Anchor: (Width: 800);
+                Style: (FontSize: 14, Alignment: Center, TextColor: #FFFFFF(0.5));
+                Text: "Puedes destildar los mapas que no quieres que salgan en la partida.";
+            }
+            Label #DescSector2 {
+                Anchor: (Width: 800);
+                Style: (FontSize: 14, Alignment: Center, TextColor: #FFFFFF(0.5));
+                Text: "Mientras más mapas tengas tildados más rápido encontrarás partida.";
+            }
+        }
+
+        Group #Maps { LayoutMode: Center; }
+
+        Group #FinalButtons {
+            LayoutMode: Center;
+            Anchor: (Width: 1040, Top: 12);
+
+            Group {
+                LayoutMode: Left;
+                Anchor: (Width: 346);
+
+                Button #Back {
+                    Anchor: (Width: 130, Height: 30);
+                    LayoutMode: Center;
+                    Padding: (Horizontal: 12, Vertical: 8);
+                    Style: @Button1;
+
+                    Label {
+                        Style: (TextColor: #FFFFFF, RenderBold: true, Alignment: Center, FontSize: 16);
+                        Text: "Back";
+                    }
+                }
+            }
+
+            Group {
+                LayoutMode: Middle;
+                Anchor: (Width: 346);
+
+                Label #CountSelected {
+                    Style: (TextColor: #FFFFFF(0.75), RenderBold: false, FontSize: 12, Alignment: Center);
+                    Text: "[2/2 Maps selected]";
+                }
+            }
+
+            Group {
+                LayoutMode: Right;
+                Anchor: (Width: 346);
+
+                Button #Game {
+                    Anchor: (Width: 130, Height: 30);
+                    LayoutMode: Center;
+                    Padding: (Horizontal: 12, Vertical: 8);
+                    Style: @Button2;
+
+                    Label {
+                        Style: (TextColor: #FFFFFF, RenderBold: true, Alignment: Center, FontSize: 16);
+                        Text: "Game";
+                    }
                 }
             }
         }

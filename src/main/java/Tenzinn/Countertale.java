@@ -1,17 +1,19 @@
 package Tenzinn;
 
-import Tenzinn.Core.Commands.Economy.RevenueCommands;
 import Tenzinn.Core.Events.*;
 import Tenzinn.Core.Handle.*;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Commands.*;
 import Tenzinn.Core.Listeners.*;
-import Tenzinn.Core.Shop.RevenuesConfig;
 import Tenzinn.Core.UI.QueueHud;
 import Tenzinn.Core.MatchManager;
 import Tenzinn.Deathmatch.Commands.*;
+import Tenzinn.Core.Shop.RevenuesConfig;
 import Tenzinn.Core.Commands.Loot.LootCommands;
 import Tenzinn.Core.Admin.Commands.AdminCommands;
+import Tenzinn.FiveVSfive.Systems.TeamChatSystem;
+import Tenzinn.Core.Commands.Economy.RevenueCommands;
+import Tenzinn.FiveVSfive.Commands.Wall.WallCommands;
 import Tenzinn.Core.Admin.Commands.Game.GameCommands;
 import Tenzinn.Core.Admin.Commands.ForceStartCommand;
 import Tenzinn.Core.Admin.Commands.Statue.StatueCommand;
@@ -25,6 +27,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
+import com.hypixel.hytale.server.core.event.events.player.PlayerChatEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.universe.world.events.AllWorldsLoadedEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
@@ -79,6 +82,9 @@ public class Countertale extends JavaPlugin {
         // Deathmatch Commands
         getCommandRegistry().registerCommand(new MvpCommand("mvp", "Open Custom page of MVP"));
 
+        // FVF Commands
+        getCommandRegistry().registerCommand(new WallCommands("wall", "Manage TemporalWalls for maps"));
+
         // Starter Kit
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
 
@@ -95,6 +101,14 @@ public class Countertale extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new DeathDetector());
         this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
         this.getEntityStoreRegistry().registerSystem(new InvulnerabilitySystem());
+
+        this.getEventRegistry().<String, PlayerChatEvent>registerAsyncGlobal(
+                PlayerChatEvent.class,
+                future -> future.thenApply(event -> {
+                    TeamChatSystem.onPlayerChat(event);
+                    return event;
+                })
+        );
 
         // Handlers
         CancelHandler handler = new CancelHandler();
