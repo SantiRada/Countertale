@@ -84,7 +84,7 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
         } else {
             // ACTIVATE SPECTATOR MODE
 
-            if(MatchFVF.validateFinishRound()) return;
+            if(MatchFVF.validateFinishRound() <= 0) return;
 
             ArrayList<WeaponStats> loot = LootManager.getStarterKit();
             LootManager.giveLoot(playerComponent, loot);

@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 
 public final class MapListeners {
 
+    private static File jsonFileRef = null;
+
     public static final class SpawnPoint {
         public final double x, y, z;
 
@@ -28,16 +30,36 @@ public final class MapListeners {
         public String toString() { return "SpawnPoint{x=" + x + ", y=" + y + ", z=" + z + "}"; }
     }
 
+    // ── NUEVO: TemporalWall ──────────────────────────────────────────────────
+    public static final class TemporalWall {
+        public final double fromX, fromY, fromZ;
+        public final double toX,   toY,   toZ;
+
+        public TemporalWall(double fromX, double fromY, double fromZ,
+                            double toX,   double toY,   double toZ) {
+            this.fromX = fromX; this.fromY = fromY; this.fromZ = fromZ;
+            this.toX   = toX;   this.toY   = toY;   this.toZ   = toZ;
+        }
+
+        @Override
+        public String toString() {
+            return "TemporalWall{from=(" + fromX + "," + fromY + "," + fromZ + ")" +
+                    ", to=(" + toX + "," + toY + "," + toZ + ")}";
+        }
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
     public enum SpawnMode { DM, FVF }
 
-    // Estructura interna: nombre del mapa → (modo → lista de spawns)
     private static final class MapData {
-        final List<SpawnPoint> dm;
-        final List<SpawnPoint> fvf;
+        final List<SpawnPoint>   dm;
+        final List<SpawnPoint>   fvf;
+        final List<TemporalWall> walls; // NUEVO
 
-        MapData(List<SpawnPoint> dm, List<SpawnPoint> fvf) {
-            this.dm  = Collections.unmodifiableList(dm);
-            this.fvf = Collections.unmodifiableList(fvf);
+        MapData(List<SpawnPoint> dm, List<SpawnPoint> fvf, List<TemporalWall> walls) {
+            this.dm    = Collections.unmodifiableList(dm);
+            this.fvf   = Collections.unmodifiableList(fvf);
+            this.walls = Collections.unmodifiableList(walls); // NUEVO
         }
 
         List<SpawnPoint> get(SpawnMode mode) {
@@ -58,6 +80,7 @@ public final class MapListeners {
         try {
             File jar      = new File(MapListeners.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             File jsonFile = new File(jar.getParentFile(), JSON_PATH);
+            jsonFileRef = jsonFile;
             return load(jsonFile);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "[Countertale] No se pudo resolver la ruta del .jar.", e);
@@ -85,10 +108,15 @@ public final class MapListeners {
                 String     name      = mapObj.get("name").getAsString().toLowerCase();
                 JsonObject spawnsObj = mapObj.getAsJsonObject("spawns");
 
-                List<SpawnPoint> dmSpawns  = parseSpawnArray(spawnsObj.getAsJsonArray("dm"));
-                List<SpawnPoint> fvfSpawns = parseSpawnArray(spawnsObj.getAsJsonArray("fvf"));
+                List<SpawnPoint>   dmSpawns  = parseSpawnArray(spawnsObj.getAsJsonArray("dm"));
+                List<SpawnPoint>   fvfSpawns = parseSpawnArray(spawnsObj.getAsJsonArray("fvf"));
 
-                MAPS.put(name, new MapData(dmSpawns, fvfSpawns));
+                // NUEVO: parsear TemporalWall (opcional: puede no existir en el JSON)
+                List<TemporalWall> walls = mapObj.has("TemporalWall")
+                        ? parseWallArray(mapObj.getAsJsonArray("TemporalWall"))
+                        : new ArrayList<>();
+
+                MAPS.put(name, new MapData(dmSpawns, fvfSpawns, walls));
             }
 
             if (root.has("Lobby")) {
@@ -113,7 +141,6 @@ public final class MapListeners {
     }
 
     // ── Helpers de parseo ────────────────────────────────────────────────────
-
     private static List<SpawnPoint> parseSpawnArray(JsonArray array) {
         List<SpawnPoint> list = new ArrayList<>();
         if (array == null) return list;
@@ -128,9 +155,23 @@ public final class MapListeners {
         return list;
     }
 
-    // ── API pública ──────────────────────────────────────────────────────────
+    // NUEVO
+    private static List<TemporalWall> parseWallArray(JsonArray array) {
+        List<TemporalWall> list = new ArrayList<>();
+        if (array == null) return list;
+        for (JsonElement el : array) {
+            JsonObject obj  = el.getAsJsonObject();
+            JsonArray  from = obj.getAsJsonArray("from");
+            JsonArray  to   = obj.getAsJsonArray("to");
+            list.add(new TemporalWall(
+                    from.get(0).getAsDouble(), from.get(1).getAsDouble(), from.get(2).getAsDouble(),
+                    to.get(0).getAsDouble(),   to.get(1).getAsDouble(),   to.get(2).getAsDouble()
+            ));
+        }
+        return list;
+    }
 
-    /** Devuelve los spawns de un mapa según el modo (DM o FVF). */
+    // ── API pública ──────────────────────────────────────────────────────────
     public static List<SpawnPoint> get(String mapName, SpawnMode mode) {
         MapData data = MAPS.get(mapName.toLowerCase());
         if (data == null) {
@@ -139,19 +180,132 @@ public final class MapListeners {
         }
         return data.get(mode);
     }
+    public static List<SpawnPoint>   getDM(String mapName)  { return get(mapName, SpawnMode.DM);  }
+    public static List<SpawnPoint>   getFVF(String mapName) { return get(mapName, SpawnMode.FVF); }
 
-    /** Devuelve los spawns DM de un mapa (shorthand). */
-    public static List<SpawnPoint> getDM(String mapName)  { return get(mapName, SpawnMode.DM);  }
+    // NUEVO
+    public static List<TemporalWall> getWalls(String mapName) {
+        MapData data = MAPS.get(mapName.toLowerCase());
+        if (data == null) {
+            LOGGER.warning("[Countertale] Map not found: " + mapName);
+            return Collections.emptyList();
+        }
+        return data.walls;
+    }
+    public static boolean addWall(String mapName, TemporalWall wall) {
+        if (mapName == null || !loaded) return false;
+        MapData data = MAPS.get(mapName.toLowerCase());
+        if (data == null) return false;
 
-    /** Devuelve los spawns FVF de un mapa (shorthand). */
-    public static List<SpawnPoint> getFVF(String mapName) { return get(mapName, SpawnMode.FVF); }
+        // Necesitamos una lista mutable; reemplazamos MapData
+        List<TemporalWall> mutable = new ArrayList<>(data.walls);
+        mutable.add(wall);
+        MAPS.put(mapName.toLowerCase(), new MapData(data.dm, data.fvf, mutable));
+        save();
+        return true;
+    }
+    public static boolean replaceWall(String mapName, int index, TemporalWall wall) {
+        if (mapName == null || !loaded) return false;
+        MapData data = MAPS.get(mapName.toLowerCase());
+        if (data == null || index < 0 || index >= data.walls.size()) return false;
 
+        List<TemporalWall> mutable = new ArrayList<>(data.walls);
+        mutable.set(index, wall);
+        MAPS.put(mapName.toLowerCase(), new MapData(data.dm, data.fvf, mutable));
+        save();
+        return true;
+    }
+    public static boolean removeWall(String mapName, int index) {
+        if (mapName == null || !loaded) return false;
+        MapData data = MAPS.get(mapName.toLowerCase());
+        if (data == null || index < 0 || index >= data.walls.size()) return false;
+
+        List<TemporalWall> mutable = new ArrayList<>(data.walls);
+        mutable.remove(index);
+        MAPS.put(mapName.toLowerCase(), new MapData(data.dm, data.fvf, mutable));
+        save();
+        return true;
+    }
+    public static boolean isLoaded() { return loaded; }
+    public static boolean exists(String mapName) { return MAPS.containsKey(mapName.toLowerCase()); }
     public static Vector3f getLobby() {
         return lobbyPosition != null ? lobbyPosition : new Vector3f(0f, 80f, 0f);
     }
+    public static java.util.Set<String> getMapNames() { return Collections.unmodifiableSet(MAPS.keySet()); }
+    public static int size() { return MAPS.size(); }
+    public static boolean save() {
+        if (jsonFileRef == null || !loaded) return false;
 
-    public static boolean exists(String mapName)            { return MAPS.containsKey(mapName.toLowerCase()); }
-    public static java.util.Set<String> getMapNames()       { return Collections.unmodifiableSet(MAPS.keySet()); }
-    public static boolean isLoaded()                        { return loaded; }
-    public static int size()                                { return MAPS.size(); }
+        try {
+            JsonObject root = new JsonObject();
+
+            // Lobby
+            if (lobbyPosition != null) {
+                JsonArray lobby = new JsonArray();
+                lobby.add(lobbyPosition.getX());
+                lobby.add(lobbyPosition.getY());
+                lobby.add(lobbyPosition.getZ());
+                root.add("Lobby", lobby);
+            }
+
+            // Maps
+            JsonArray mapsArray = new JsonArray();
+            for (Map.Entry<String, MapData> entry : MAPS.entrySet()) {
+                MapData data = entry.getValue();
+                JsonObject mapObj = new JsonObject();
+                mapObj.addProperty("name", entry.getKey());
+
+                // Spawns
+                JsonObject spawnsObj = new JsonObject();
+                spawnsObj.add("dm",  spawnListToJson(data.dm));
+                spawnsObj.add("fvf", spawnListToJson(data.fvf));
+                mapObj.add("spawns", spawnsObj);
+
+                // TemporalWall (solo si hay)
+                if (!data.walls.isEmpty()) {
+                    mapObj.add("TemporalWall", wallListToJson(data.walls));
+                }
+
+                mapsArray.add(mapObj);
+            }
+            root.add("Maps", mapsArray);
+
+            // Escribir al archivo con pretty print
+            String json = new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root);
+
+            try (java.io.FileWriter writer = new java.io.FileWriter(jsonFileRef)) {
+                writer.write(json);
+            }
+
+            LOGGER.info("[Countertale] maps.json guardado correctamente.");
+            return true;
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "[Countertale] Error al guardar maps.json.", e);
+            return false;
+        }
+    }
+    private static JsonArray spawnListToJson(List<SpawnPoint> list) {
+        JsonArray arr = new JsonArray();
+        for (SpawnPoint sp : list) {
+            JsonArray coords = new JsonArray();
+            coords.add(sp.x); coords.add(sp.y); coords.add(sp.z);
+            arr.add(coords);
+        }
+        return arr;
+    }
+    private static JsonArray wallListToJson(List<TemporalWall> list) {
+        JsonArray arr = new JsonArray();
+        for (TemporalWall w : list) {
+            JsonObject obj  = new JsonObject();
+            JsonArray  from = new JsonArray();
+            from.add(w.fromX); from.add(w.fromY); from.add(w.fromZ);
+            JsonArray  to   = new JsonArray();
+            to.add(w.toX); to.add(w.toY); to.add(w.toZ);
+            obj.add("from", from);
+            obj.add("to",   to);
+            arr.add(obj);
+        }
+        return arr;
+    }
 }

@@ -17,6 +17,7 @@ public class GameMatch {
     private static final int MAX_PLAYERS = 10;
 
     public String mode;
+    public String mapName;
 
     private final UUID matchId;
     private final List<PlayerRef> players;
@@ -44,7 +45,7 @@ public class GameMatch {
         }
         else {
             // Funcionamiento del temporizador de etapa de compra / tiempo de ronda
-            players.get(0).sendMessage(Message.raw("Cargando timer de 5v5"));
+            players.getFirst().sendMessage(Message.raw("Cargando timer de 5v5"));
             MatchFVF.startTimerMatch(this);
         }
     }
