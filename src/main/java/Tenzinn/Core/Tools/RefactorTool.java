@@ -147,10 +147,13 @@ public class RefactorTool {
         return spawns.get(randomPosition);
     }
     public static Vector3d getSpawnForTeam(PlayerRef playerRef) {
-        ArrayList<Vector3d> spawns = getSpawns("dust2", SpawnMode.FVF);
-
         PlayerStats playerStats = getPlayerStats(playerRef);
         assert playerStats != null;
+
+        // El mapa viene del match al que pertenece el jugador
+        String mapId = playerStats.getCurrentMatch().getMapId();
+
+        ArrayList<Vector3d> spawns = getSpawns(mapId, SpawnMode.FVF);
 
         List<PlayerStats> playerList = getPlayerList(playerStats.getCurrentMatch());
         int index = playerList.indexOf(playerStats);
@@ -190,7 +193,12 @@ public class RefactorTool {
         World currentWorld = Universe.get().getWorld(playerRef.getWorldUuid());
         if (currentWorld == null) { return; }
 
-        Vector3d spawnPos = getRandomSpawn("dust2");
+        // Obtener el mapa del match actual del jugador
+        PlayerStats playerStats = getPlayerStats(playerRef);
+        if (playerStats == null) return;
+        String mapId = playerStats.getCurrentMatch().getMapId();
+
+        Vector3d spawnPos = getRandomSpawn(mapId);                // ← usa el mapa del match
         if (mode == SpawnMode.FVF) { spawnPos = getSpawnForTeam(playerRef); }
         Vector3d finalSpawnPos = spawnPos;
 
@@ -200,24 +208,28 @@ public class RefactorTool {
                     Ref<EntityStore> ref = playerRef.getReference();
                     Store<EntityStore> store = ref.getStore();
 
-                    Vector3f rotation = new Vector3f(0f, 0f, 0f);
-                    Vector3f targetPosition = new Vector3f((float) finalSpawnPos.getX(), (float) finalSpawnPos.getY(), (float) finalSpawnPos.getZ());
+                    Vector3f rotation       = new Vector3f(0f, 0f, 0f);
+                    Vector3f targetPosition = new Vector3f(
+                            (float) finalSpawnPos.getX(),
+                            (float) finalSpawnPos.getY(),
+                            (float) finalSpawnPos.getZ()
+                    );
 
                     Teleport teleport = new Teleport(targetPosition.toVector3d(), rotation);
                     store.putComponent(ref, Teleport.getComponentType(), teleport);
-                }  catch (Exception e) { e.printStackTrace(); }
+                } catch (Exception e) { e.printStackTrace(); }
             });
         }, 150, TimeUnit.MILLISECONDS);
 
-        PlayerStats playerStats = getPlayerStats(playerRef);
-        if(playerStats == null) return;
+        // El resto del método (HUD, invulnerabilidad, timers) queda igual que antes.
+        // Solo se movió el playerStats.getCurrentMatch().getMapId() arriba del schedule.
 
         CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
         boolean isInGame = false;
-        if(customHUD instanceof GameHUD hud) {
+        if (customHUD instanceof GameHUD hud) {
             isInGame = true;
-            if(mode == SpawnMode.DM) {
-                if(playerStats.getCurrentMatch().getState() == GameMatch.MatchState.IN_PROGRESS) {
+            if (mode == SpawnMode.DM) {
+                if (playerStats.getCurrentMatch().getState() == GameMatch.MatchState.IN_PROGRESS) {
                     hud.setShopTimer();
                     hud.setInvulnerability();
                 }
@@ -226,7 +238,7 @@ public class RefactorTool {
         GameHUD newHud = isInGame ? (GameHUD) customHUD : null;
         if (newHud == null) return;
 
-        if(mode == SpawnMode.DM) {
+        if (mode == SpawnMode.DM) {
             playerStats.isInvulnerable = true;
             newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
 
@@ -292,26 +304,45 @@ public class RefactorTool {
         }
     }
     // ============================================ //
-    public static void finishGame(List<PlayerRef> players) {
+    /**
+     * Cierra una partida: marca el match como FINISHED y muestra la pantalla final a cada jugador.
+     * La destrucción de la instancia y la reposición en el pool ocurren cuando el último jugador
+     * abandona la partida a través de {@link Tenzinn.Core.MatchManager#removePlayerFromMatch}.
+     *
+     * @param players lista de jugadores en la partida
+     * @param match   la partida que terminó
+     */
+    public static void finishGame(List<PlayerRef> players, Tenzinn.Core.GameMatch match) {
+        if (match != null) match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
+
         for (PlayerRef playerRef : players) {
             Ref<EntityStore> ref = playerRef.getReference();
-            assert ref != null;
+            if (ref == null) continue;
             Store<EntityStore> store = ref.getStore();
 
             Player player = getPlayer(playerRef);
+            if (player == null) continue;
 
-            if (getModeForPlayer(playerRef) == SpawnMode.DM) { player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef)); }
-            else { /* QUE DEBE PASAR AL TERMINAR EL FVF */ }
+            if (getModeForPlayer(playerRef) == SpawnMode.DM) {
+                player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef));
+            } else {
+                /* TODO: pantalla de fin de ronda FVF */
+            }
         }
     }
+    /**
+     * Cuenta jugadores disponibles para jugar: los que están en el lobby (sin PlayerStats).
+     * Los jugadores en partida (con PlayerStats) no se cuentan porque ya están ocupados.
+     * Este valor es el que usa el pool para calcular cuántas instancias precargar.
+     */
     public static int getPlayersReady() {
         List<PlayerRef> playerRefs = Universe.get().getPlayers();
         int playersReady = 0;
 
-        for (int i = 0; i < playerRefs.size(); i++) {
-            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRefs.get(i));
-
-            if(playerStats != null) playersReady += 1;
+        for (PlayerRef ref : playerRefs) {
+            if (RefactorTool.getPlayerStats(ref) == null) { // null = en lobby, disponible
+                playersReady++;
+            }
         }
 
         return playersReady;

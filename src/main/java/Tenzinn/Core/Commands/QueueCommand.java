@@ -3,6 +3,7 @@ package Tenzinn.Core.Commands;
 import Tenzinn.Countertale;
 import Tenzinn.Core.UI.ModesPage;
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Instances.MapVoteStore;
 import Tenzinn.Core.Listeners.MessageListeners;
 import Tenzinn.Core.Tools.RefactorTool;
 
@@ -21,25 +22,32 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;
+import java.util.List;
 
 public class QueueCommand extends AbstractPlayerCommand {
 
     private final Countertale plugin;
-
     private final OptionalArg<String> mode;
 
     public QueueCommand(String name, String description, Countertale plugin) {
         super(name, description);
         this.plugin = plugin;
-
         mode = withOptionalArg("mode", "Select mode for add to queue", ArgTypes.STRING);
     }
 
     @Override
-    protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+    protected void execute(@NonNullDecl CommandContext commandContext,
+                           @NonNullDecl Store<EntityStore> store,
+                           @NonNullDecl Ref<EntityStore> ref,
+                           @NonNullDecl PlayerRef playerRef,
+                           @NonNullDecl World world) {
+
         RefactorTool.launchSound(playerRef, "clic");
 
-        if(mode.get(commandContext).equalsIgnoreCase("null") || mode.get(commandContext).isBlank() || mode.get(commandContext).isEmpty()) {
+        String modeArg = mode.get(commandContext);
+
+        // Sin modo → abrir el selector de modo/mapa (ModesPage)
+        if (modeArg.equalsIgnoreCase("null") || modeArg.isBlank() || modeArg.isEmpty()) {
             Player player = commandContext.senderAs(Player.class);
             player.getPageManager().openCustomPage(ref, store, new ModesPage(playerRef));
             return;
@@ -47,22 +55,37 @@ public class QueueCommand extends AbstractPlayerCommand {
 
         if (plugin.getMatchManager().isPlayerInMatch(playerRef)) {
             GameMatch currentMatch = plugin.getMatchManager().getPlayerMatch(playerRef);
-            commandContext.sendMessage(Message.raw(String.format(MessageListeners.get(MessageListeners.MessageKey.CHAT_ALREADY_IN_GAME) + " (%d/10 players). State: %s",currentMatch.getPlayerCount(),currentMatch.getState())).color(Color.ORANGE));
+            commandContext.sendMessage(Message.raw(String.format(
+                    MessageListeners.get(MessageListeners.MessageKey.CHAT_ALREADY_IN_GAME)
+                    + " (%d/10 players). State: %s",
+                    currentMatch.getPlayerCount(),
+                    currentMatch.getState())).color(Color.ORANGE));
             return;
         }
 
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
 
-        GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef, mode.get(commandContext));
-        player.sendMessage(Message.raw(String.format(MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE) + " [%s] (%d/10 players)",match.getMatchId().toString().substring(0, 8),match.getPlayerCount())).color(Color.orange));
+        // Leer los votos guardados por ModesPage (o todos los mapas si acceso directo)
+        List<String> votes = MapVoteStore.getVotes(playerRef);
+        MapVoteStore.clearVotes(playerRef); // consumidos; los guardamos en la variable local
 
-        plugin.showQueueHud(playerRef, player, match);
+        GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef, modeArg, votes);
+        if (match == null) return; // jugador ya en cola, mensaje enviado en addPlayerToQueue
+
+        player.sendMessage(Message.raw(String.format(
+                MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
+                + " [%s] (%d/10 players)",
+                match.getMatchId().toString().substring(0, 8),
+                match.getPlayerCount())).color(Color.orange));
+
+        // Mostrar QueueHud con la selección de mapas del jugador
+        plugin.showQueueHud(playerRef, player, match, votes);
         plugin.notifyMatchPlayersAndUpdateHuds(match);
 
         if (match.isFull()) {
-            player.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_STARTING_GAME)).color(Color.green));
-
+            player.sendMessage(Message.raw(
+                    MessageListeners.get(MessageListeners.MessageKey.CHAT_STARTING_GAME)).color(Color.green));
             plugin.hideAllQueueHuds(match);
             plugin.startMatch(match);
         }

@@ -29,26 +29,43 @@ public class InstanceManager {
     private boolean isMapLoaded = false;
     private final Countertale main;
     private World newWorld;
-
     private String worldName;
 
-    public InstanceManager(Countertale main) {
-        this.main = main;
+    /** Mapa que contiene esta instancia (ej. "dust2", "assault"). */
+    private final String mapId;
+
+    // ── Constructor ───────────────────────────────────────────────────────────
+
+    public InstanceManager(Countertale main, String mapId) {
+        this.main  = main;
+        this.mapId = mapId.toLowerCase();
     }
 
-    public void preloadMap(Runnable onMapReady, String mode) {
+    // ── Getters ───────────────────────────────────────────────────────────────
+
+    public String getMapId()        { return mapId; }
+    public boolean getMapLoaded()   { return isMapLoaded; }
+
+    // ── Preload ───────────────────────────────────────────────────────────────
+
+    /**
+     * Precarga el mapa en un mundo nuevo y llama a onMapReady cuando termina.
+     * El nombre del mundo se genera como: {@code <mapId>_<uuid_corto>}
+     * para distinguir instancias del mismo mapa.
+     *
+     * @param onMapReady callback invocado cuando la instancia está lista (puede ser null en fallbacks)
+     */
+    public void preloadMap(Runnable onMapReady) {
         Universe universe = Universe.get();
 
-        // mode: [ dm || fvf ]
-        this.worldName = mode.toLowerCase() + "_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        this.worldName = mapId + "_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
 
         universe.addWorld(this.worldName, "Flat", null).thenAccept(instanceWorld -> {
-            main.getLogger().at(Level.INFO).log("Arena vacía creada: " + instanceWorld.getName());
+            main.getLogger().at(Level.INFO).log("[Instance] Arena vacía creada: " + instanceWorld.getName());
 
             WorldConfig config = instanceWorld.getWorldConfig();
             config.setDeleteOnRemove(true);
             config.markChanged();
-
             config.setGameTimePaused(true);
 
             try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
@@ -63,23 +80,37 @@ public class InstanceManager {
 
             instanceWorld.execute(() -> {
                 placePrefabInInstance(instanceWorld);
-                newWorld = instanceWorld;
-                isMapLoaded = true;
+                newWorld     = instanceWorld;
+                isMapLoaded  = true;
 
-                main.getLogger().at(Level.INFO).log("✓ Instancia lista para jugar");
+                main.getLogger().at(Level.INFO).log("[Instance] ✓ Instancia lista [" + mapId + "]: " + worldName);
 
                 if (onMapReady != null) onMapReady.run();
             });
         });
     }
 
+    // ── Prefab ────────────────────────────────────────────────────────────────
+
+    /**
+     * Resuelve el nombre del archivo de prefab a partir del mapId.
+     * Convención: {@code <MapId con primera letra en mayúscula>.prefab.json}
+     * Ejemplos:
+     *   "dust2"   → "Dust2.prefab.json"
+     *   "assault" → "Assault.prefab.json"
+     */
+    private String resolvePrefabName() {
+        String capitalized = Character.toUpperCase(mapId.charAt(0)) + mapId.substring(1);
+        return capitalized + ".prefab.json";
+    }
+
     private void placePrefabInInstance(World instanceWorld) {
         try {
             PrefabStore store = PrefabStore.get();
+            String prefabName = resolvePrefabName();
 
-            BlockSelection prefab = store.getAssetPrefabFromAnyPack("Dust2.prefab.json");
-
-            if (prefab == null) { throw new RuntimeException("Prefab 'Dust2.prefab.json' no encontrado"); }
+            BlockSelection prefab = store.getAssetPrefabFromAnyPack(prefabName);
+            if (prefab == null) { throw new RuntimeException("Prefab '" + prefabName + "' no encontrado"); }
 
             BlockSelection cleanPrefab = new BlockSelection();
             cleanPrefab.setPosition(0, 52, 0);
@@ -87,7 +118,6 @@ public class InstanceManager {
             prefab.forEachBlock((x, y, z, block) -> {
                 cleanPrefab.addBlockAtLocalPos(x, y, z, block.blockId(), block.rotation(), block.filler(), block.supportValue());
             });
-
             prefab.forEachFluid(cleanPrefab::addFluidAtLocalPos);
 
             Vector3i pos = new Vector3i(0, 52, 0);
@@ -96,71 +126,72 @@ public class InstanceManager {
             config.setBlockTicking(false);
             config.setTicking(false);
 
-            long startTime = System.currentTimeMillis();
+            long start = System.currentTimeMillis();
             cleanPrefab.placeNoReturn(instanceWorld, pos, null);
-            long elapsed = System.currentTimeMillis() - startTime;
+            long elapsed = System.currentTimeMillis() - start;
 
             config.setBlockTicking(true);
             config.setTicking(true);
 
-            main.getLogger().at(Level.INFO).log("✓ Prefab colocado en " + elapsed + "ms");
+            main.getLogger().at(Level.INFO).log("[Instance] ✓ Prefab '" + prefabName + "' colocado en " + elapsed + "ms");
 
         } catch (Exception e) {
-            main.getLogger().at(Level.SEVERE).log("Error al colocar prefab: " + e.getMessage());
+            main.getLogger().at(Level.SEVERE).log("[Instance] Error al colocar prefab: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    // ── Teleport ──────────────────────────────────────────────────────────────
+
     public void teleportPlayers(List<PlayerRef> playerRefs) {
-        main.getLogger().at(Level.INFO).log("=== INICIO TELEPORT ===");
+        main.getLogger().at(Level.INFO).log("[Instance] === INICIO TELEPORT [" + mapId + "] ===");
 
         if (newWorld == null || !isMapLoaded) {
-            main.getLogger().at(Level.WARNING).log("No se puede teletransportar: mapa no cargado");
+            main.getLogger().at(Level.WARNING).log("[Instance] No se puede teletransportar: mapa no cargado");
             return;
         }
 
-        ArrayList<Vector3d> spawns = RefactorTool.getSpawns("dust2", RefactorTool.getModeForPlayer(playerRefs.getFirst()));
+        ArrayList<Vector3d> spawns = RefactorTool.getSpawns(mapId, RefactorTool.getModeForPlayer(playerRefs.getFirst()));
 
-        // Actualmente en FVF organiza los equipos según el orden de ingreso a la partida. Los primeros 5 son el primer equipo.
         for (int i = 0; i < playerRefs.size(); i++) {
             Vector3d spawnPos = spawns.get(i % spawns.size());
             Transform spawnPoint = new Transform(spawnPos.x, spawnPos.y, spawnPos.z);
-
-            PlayerRef playerRef = playerRefs.get(i);
+            PlayerRef playerRef  = playerRefs.get(i);
 
             try {
                 UUID playerUUID = playerRef.getUuid();
-                PlayerRef updatedPlayerRef = Universe.get().getPlayer(playerUUID);
+                PlayerRef updatedRef = Universe.get().getPlayer(playerUUID);
 
-                if (updatedPlayerRef == null || updatedPlayerRef.getReference() == null) continue;
+                if (updatedRef == null || updatedRef.getReference() == null) continue;
 
-                Ref<EntityStore> ref = updatedPlayerRef.getReference();
-                assert updatedPlayerRef.getWorldUuid() != null;
-
-                World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
+                Ref<EntityStore> ref   = updatedRef.getReference();
+                assert updatedRef.getWorldUuid() != null;
+                World currentWorld = Universe.get().getWorld(updatedRef.getWorldUuid());
 
                 if (currentWorld == null) continue;
 
-                updatedPlayerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME)));
+                updatedRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME)));
 
                 currentWorld.execute(() -> {
                     try {
                         Store<EntityStore> store = currentWorld.getEntityStore().getStore();
                         Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
-                        main.getLogger().at(Level.INFO).log("✓ Jugador teletransportado: " + playerUUID);
+                        main.getLogger().at(Level.INFO).log("[Instance] ✓ Jugador teletransportado: " + playerUUID);
                     } catch (Exception e) {
-                        main.getLogger().at(Level.SEVERE).log("Error al teletransportar: " + e.getMessage());
+                        main.getLogger().at(Level.SEVERE).log("[Instance] Error al teletransportar: " + e.getMessage());
                         e.printStackTrace();
                     }
                 });
 
             } catch (Exception e) {
-                main.getLogger().at(Level.SEVERE).log("Error en teleportPlayers: " + e.getMessage());
+                main.getLogger().at(Level.SEVERE).log("[Instance] Error en teleportPlayers: " + e.getMessage());
                 e.printStackTrace();
             }
         }
     }
+
+    // ── Destrucción ───────────────────────────────────────────────────────────
 
     public void removeInstance() {
         if (worldName == null) return;
@@ -178,8 +209,7 @@ public class InstanceManager {
         }
 
         isMapLoaded = false;
-        newWorld = null;
-        worldName = null;
+        newWorld    = null;
+        worldName   = null;
     }
-    public boolean getMapLoaded() { return isMapLoaded; }
 }

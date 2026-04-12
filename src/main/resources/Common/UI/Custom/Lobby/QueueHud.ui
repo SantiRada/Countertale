@@ -4,7 +4,7 @@ Group #QueueHUD {
 
   Group #TimerPanel {
     LayoutMode: Top;
-    Anchor: (Width: 450, Height: 200, Top: 120);
+    Anchor: (Width: 450, Height: 240, Top: 120);
 
     Group {
         LayoutMode: Center;
@@ -25,6 +25,12 @@ Group #QueueHUD {
       Anchor: (Top: 6);
       Text: "X/10 Players";
       Style: (FontSize: 14, TextColor: #02090A(0.75), Alignment: Center);
+    }
+
+    Label #MapsLabel {
+      Anchor: (Top: 4);
+      Text: "Maps: ...";
+      Style: (FontSize: 12, TextColor: #02090A(0.5), Alignment: Center);
     }
   }
 }
