@@ -1,5 +1,6 @@
 package Tenzinn.Core.UI;
 
+import Tenzinn.Core.Instances.MapVoteStore;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.FiveVSfive.UI.Events.ModesEventData;
 
@@ -171,6 +172,8 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
                     startErrorTimer();
                     return;
                 }
+                // Guardar los votos del jugador ANTES de encolar; QueueCommand los leerá desde MapVoteStore
+                MapVoteStore.setVotes(playerRef, new ArrayList<>(selected));
                 CommandManager.get().handleCommand(playerRef, "queue --mode=" + mode);
                 player.getPageManager().setPage(ref, store, Page.None);
                 break;
