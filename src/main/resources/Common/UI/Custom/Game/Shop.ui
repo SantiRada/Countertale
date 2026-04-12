@@ -22,8 +22,19 @@ Group {
     Background: @Fullsize;
     LayoutMode: Top;
 
+    Group #Money {
+        FlexWeight: 1;
+        LayoutMode: Left;
+        Padding: (Top: 12, Left: 12);
+
+        Label #UserMoney {
+            Style: (FontSize: 24, RenderBold: true, TextColor: (#FFFFFF));
+            Text: "$888";
+        }
+    }
+
     Group #Top {
-        FlexWeight: 12;
+        FlexWeight: 14;
         LayoutMode: Middle;
 
         Group #Shop {
@@ -92,6 +103,7 @@ Group {
 
                         Group #Economic1 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price1 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -132,6 +144,7 @@ Group {
 
                         Group #Economic2 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price2 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -172,6 +185,7 @@ Group {
 
                         Group #Economic3 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price3 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -212,6 +226,7 @@ Group {
 
                         Group #Economic4 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price4 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -252,6 +267,7 @@ Group {
 
                         Group #Economic5 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price5 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -300,6 +316,7 @@ Group {
 
                         Group #Economic6 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price6 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -340,6 +357,7 @@ Group {
 
                         Group #Economic7 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price7 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -380,6 +398,7 @@ Group {
 
                         Group #Economic8 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price8 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -420,6 +439,7 @@ Group {
 
                         Group #Economic9 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price9 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -460,6 +480,7 @@ Group {
 
                         Group #Economic10 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price10 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -509,6 +530,7 @@ Group {
 
                         Group #Economic11 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price11 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -549,6 +571,7 @@ Group {
 
                         Group #Economic12 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price12 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -589,6 +612,7 @@ Group {
 
                         Group #Economic13 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price13 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -629,6 +653,7 @@ Group {
                         
                         Group #Economic14 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price14 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -669,6 +694,7 @@ Group {
                         
                         Group #Economic15 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price15 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -718,6 +744,7 @@ Group {
                         
                         Group #Economic16 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price16 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -758,6 +785,7 @@ Group {
                         
                         Group #Economic17 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price17 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -798,6 +826,7 @@ Group {
                         
                         Group #Economic18 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price18 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -838,6 +867,7 @@ Group {
                         
                         Group #Economic19 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price19 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -878,6 +908,7 @@ Group {
                         
                         Group #Economic20 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price20 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -927,6 +958,7 @@ Group {
                         
                         Group #Economic21 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price21 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -967,6 +999,7 @@ Group {
                         
                         Group #Economic22 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price22 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -1007,6 +1040,7 @@ Group {
                         
                         Group #Economic23 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price23 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -1047,6 +1081,7 @@ Group {
                         
                         Group #Economic24 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price24 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -1087,6 +1122,7 @@ Group {
                         
                         Group #Economic25 {
                             LayoutMode: Right;
+                            Padding: (Right: 12);
 
                             Label #Price25 {
                                 Style: (TextColor: (#FFFFFF(0.6)), RenderBold: true, Alignment: End, FontSize: 16);
@@ -1107,13 +1143,6 @@ Group {
         Group {
             FlexWeight: 1;
             LayoutMode: Center;
-
-            Group #Money {
-                Label #UserMoney {
-                    Style: (FontSize: 18, RenderBold: true, Alignment: Center, TextColor: (#FFFFFF));
-                    Text: "$888";
-                }
-            }
 
             Group #GuidesIMG {
                 LayoutMode: Left;

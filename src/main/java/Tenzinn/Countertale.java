@@ -7,7 +7,6 @@ import Tenzinn.Core.Commands.*;
 import Tenzinn.Core.Listeners.*;
 import Tenzinn.Core.UI.QueueHud;
 import Tenzinn.Core.MatchManager;
-import Tenzinn.Deathmatch.Commands.*;
 import Tenzinn.Core.Shop.RevenuesConfig;
 import Tenzinn.Core.Commands.Loot.LootCommands;
 import Tenzinn.Core.Admin.Commands.AdminCommands;
@@ -80,7 +79,6 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
 
         // Deathmatch Commands
-        getCommandRegistry().registerCommand(new MvpCommand("mvp", "Open Custom page of MVP"));
 
         // FVF Commands
         getCommandRegistry().registerCommand(new WallCommands("wall", "Manage TemporalWalls for maps"));
@@ -89,7 +87,6 @@ public class Countertale extends JavaPlugin {
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);
 
         // Listeners
-        this.getEntityStoreRegistry().registerSystem(new FVFStatueListener());
         this.getEntityStoreRegistry().registerSystem(new ShopStatueListener());
         this.getEntityStoreRegistry().registerSystem(new QueueStatueListener());
         this.getEntityStoreRegistry().registerSystem(StatueBlockListener.getInstance());

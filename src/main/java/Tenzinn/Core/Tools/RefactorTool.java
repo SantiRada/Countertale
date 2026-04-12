@@ -295,15 +295,41 @@ public class RefactorTool {
     public static void finishGame(List<PlayerRef> players) {
         for (PlayerRef playerRef : players) {
             Ref<EntityStore> ref = playerRef.getReference();
+            assert ref != null;
             Store<EntityStore> store = ref.getStore();
-
-            playerRef.sendMessage(Message.raw("Se terminó la partida").color(Color.cyan));
 
             Player player = getPlayer(playerRef);
 
             if (getModeForPlayer(playerRef) == SpawnMode.DM) { player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef)); }
             else { /* QUE DEBE PASAR AL TERMINAR EL FVF */ }
         }
+    }
+    public static int getPlayersReady() {
+        List<PlayerRef> playerRefs = Universe.get().getPlayers();
+        int playersReady = 0;
+
+        for (int i = 0; i < playerRefs.size(); i++) {
+            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRefs.get(i));
+
+            if(playerStats != null) playersReady += 1;
+        }
+
+        return playersReady;
+    }
+    public static int getPlayersReadyInOneMinute() {
+        List<PlayerRef> playerRefs = Universe.get().getPlayers();
+        int playersReadyInOneMinute = 0;
+
+        for (int i = 0; i < playerRefs.size(); i++) {
+            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRefs.get(i));
+
+            if(playerStats != null) {
+                int remainingTime = playerStats.getCurrentMatch().getTimer();
+                if (remainingTime <= 60) playersReadyInOneMinute += 1;
+            }
+        }
+
+        return playersReadyInOneMinute;
     }
     // ============================================ //
     public static void launchSound(PlayerRef playerRef, String sound) {

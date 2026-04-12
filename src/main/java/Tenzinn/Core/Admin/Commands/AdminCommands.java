@@ -1,10 +1,19 @@
 package Tenzinn.Core.Admin.Commands;
 
-import com.hypixel.hytale.server.core.Message;
+import Tenzinn.Core.UI.AdminPage;
+
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
+
 
 public class AdminCommands extends CommandBase {
 
@@ -12,25 +21,15 @@ public class AdminCommands extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
+        Player player = commandContext.senderAs(Player.class);
 
-        commandContext.sendMessage(Message.raw("========== ALL COMANDS SERVER =========="));
-        commandContext.sendMessage(Message.raw("/admin: View list of commands for Countertale"));
-        commandContext.sendMessage(Message.raw("/forcestart: Force start current match (DEBUG)"));
-        commandContext.sendMessage(Message.raw("/game status: Review status of the instances"));
-        commandContext.sendMessage(Message.raw("/mvp: Open Custom page of Endgame (MVP)"));
-        commandContext.sendMessage(Message.raw("====================================="));
-        commandContext.sendMessage(Message.raw("/loot get: Get messages with loot for this player"));
-        commandContext.sendMessage(Message.raw("/loot give: Give selected loot for this player"));
-        commandContext.sendMessage(Message.raw("/loot reset: Give starter kit for this player"));
-        commandContext.sendMessage(Message.raw("====================================="));
-        commandContext.sendMessage(Message.raw("/statue set: Set the statue's configuration according to the model you are looking at"));
-        commandContext.sendMessage(Message.raw("/statue deletes: Delete all hologram statues from the world"));
-        commandContext.sendMessage(Message.raw("========= AVAILABLE TO USERS ==========="));
-        commandContext.sendMessage(Message.raw("/queue: Join match queue"));
-        commandContext.sendMessage(Message.raw("/leave: Leave match queue"));
-        commandContext.sendMessage(Message.raw("/lobby: Back to lobby in game"));
-        commandContext.sendMessage(Message.raw("/shop: Open Custom page of shop"));
-        commandContext.sendMessage(Message.raw("====================================="));
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+        assert playerRef != null;
+        Ref<EntityStore> ref = playerRef.getReference();
+        assert ref != null;
+        Store<EntityStore> store = ref.getStore();
+
+        player.getPageManager().openCustomPage(ref, store, new AdminPage(playerRef));
     }
 
     @Override

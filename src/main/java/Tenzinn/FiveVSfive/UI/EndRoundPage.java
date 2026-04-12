@@ -27,17 +27,22 @@ public class EndRoundPage extends InteractiveCustomUIPage<ShopEventData> {
         uiBuilder = uiCommandBuilder;
 
         setData();
-
         sendUpdate();
     }
     private void setData() {
         int winner = MatchFVF.winner;
         int teamPlayer = MatchFVF.validateTeamMembership(playerRef);
 
-        if (winner == teamPlayer) { uiBuilder.set("#Title.TextSpans", Message.raw("VICTORY")); }
-        else { uiBuilder.set("#Title.TextSpans", Message.raw("DEFEAT")); }
+        if (winner == teamPlayer) {
+            uiBuilder.set("#Title.TextSpans", Message.raw("VICTORY"));
+            uiBuilder.set("#Title.Style.TextColor", "#00FF00");
+        }
+        else {
+            uiBuilder.set("#Title.TextSpans", Message.raw("DEFEAT"));
+            uiBuilder.set("#Title.Style.TextColor", "#FF0000");
+        }
 
-        uiBuilder.set("#NumRound.TextSpans", Message.raw("Ronda " + MatchFVF.getNumberRound()));
+        uiBuilder.set("#NumRound.TextSpans", Message.raw("Ronda " + MatchFVF.getNumberRound(teamPlayer)));
 
         sendUpdate();
     }

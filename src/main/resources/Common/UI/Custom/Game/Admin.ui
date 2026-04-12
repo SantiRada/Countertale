@@ -1,0 +1,442 @@
+@background = PatchStyle(TexturePath: "images/maps/bg.png");
+
+@BtnDefault = PatchStyle(TexturePath: "images/mvp/btn-default.png");
+@BtnHover = PatchStyle(TexturePath: "images/mvp/btn-hover.png");
+@BtnPressed = PatchStyle(TexturePath: "images/mvp/btn-pressed.png");
+@Btn2Default = PatchStyle(TexturePath: "images/mvp/btn-active-default.png");
+@Btn2Hover = PatchStyle(TexturePath: "images/mvp/btn-active-hover.png");
+@Btn2Pressed = PatchStyle(TexturePath: "images/mvp/btn-active-pressed.png");
+
+@Button1 = (
+  Default: (Background: @BtnDefault),
+  Hovered: (Background: @BtnHover),
+  Pressed: (Background: @BtnPressed)
+);
+
+@Button2 = (
+  Default: (Background: @Btn2Default),
+  Hovered: (Background: @Btn2Hover),
+  Pressed: (Background: @Btn2Pressed)
+);
+
+@itemName = (
+    TextColor: #cccccc,
+    FontSize: 16,
+    VerticalAlignment: Center,
+    RenderBold: true
+);
+
+@itemDesc = (
+    TextColor: #999999,
+    VerticalAlignment: Center,
+    FontSize: 13,
+    RenderBold: false
+);
+
+@titleSector = (
+    TextColor: #eeeeee,
+    FontSize: 18,
+    RenderBold: true
+);
+
+Group {
+    FlexWeight: 1;
+    LayoutMode: Middle;
+    Background: (Color: #000000(0.35));
+
+    Group #Background {
+        Anchor: (Width: 1200, Height: 800);
+        Background: @background;
+        Padding: (Full: 24);
+        LayoutMode: Top;
+        ContentHeight: 1150;
+        ScrollbarStyle: (Size: 10);
+
+        Label #Title {
+            Style: (TextColor: #FFFFFF, RenderBold: true, FontSize: 48);
+            Text: "Admin Dasboard";
+        }
+
+        Group #Content {
+            FlexWeight: 1;
+            LayoutMode: Top;
+
+            Group #ListCommands {
+                FlexWeight: 1;
+                LayoutMode: Top;
+
+                Group #Admin {
+                    LayoutMode: Top;
+                    Anchor: (Height: 820, Bottom: 16);
+                    Padding: (Full: 12);
+                    Background: (Color: #000000(0.25));
+
+                    Label {
+                        Style:(TextColor: #CCCCCC, RenderBold: true, FontSize: 24);
+                        Text: "Admin Commands";
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Top: 4, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/forcestart";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Force start current match (DEBUG).";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/game status";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Review status of the instances.";
+                        }
+                    }
+
+                    Label {
+                        Style: @titleSector;
+                        Anchor: (Top: 4, Bottom: 8);
+                        Text: "/Loot";
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/loot get";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Get messages with loot for this player.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/loot give";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Give selected loot for this player.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/loot reset";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Give starter kit for this player.";
+                        }
+                    }
+
+                    Label {
+                        Style: @titleSector;
+                        Anchor: (Top: 4, Bottom: 8);
+                        Text: "/Statue";
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/statue set";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Set the statue's configuration according to the model you are looking at.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/statue deletes";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Delete all hologram statues from the world.";
+                        }
+                    }
+
+                    Label {
+                        Style: @titleSector;
+                        Anchor: (Top: 4, Bottom: 8);
+                        Text: "/Wall";
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/wall set";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Add a new TemporalWall to a map.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/wall get";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "List all TemporalWalls of a map.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/wall build";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Build TemporalWalls of a map.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/wall remove";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Remove an existing TemporalWall by index.";
+                        }
+                    }
+
+                    Label {
+                        Style: @titleSector;
+                        Anchor: (Top: 4, Bottom: 8);
+                        Text: "/Revenue";
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/revenue set";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Set type revenue in one line.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/revenue get";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Get list revenues.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/revenue give";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Give money to any player.";
+                        }
+                    }
+                }
+
+                Group #Users {
+                    LayoutMode: Top;
+                    Padding: (Full: 12);
+                    Anchor: (Height: 250);
+                    Background: (Color: #000000(0.25));
+
+                    Label {
+                        Style:(TextColor: #CCCCCC, RenderBold: true, FontSize: 24);
+                        Text: "Commands Available to Users";
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Top: 4, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/queue";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Join match queue.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Top: 4, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/leave";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Leave match queue.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Top: 4, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/lobby";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Back to lobby in game.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Top: 4, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/shop";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Open Custom page of shop.";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
