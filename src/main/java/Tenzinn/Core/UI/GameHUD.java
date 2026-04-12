@@ -1,10 +1,9 @@
 package Tenzinn.Core.UI;
 
-import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Tools.RefactorTool;
-import Tenzinn.Core.Events.PlayerHealthTracker;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.Core.Events.PlayerHealthTracker;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.Value;
@@ -30,6 +29,7 @@ public class GameHUD extends CustomUIHud {
 
     private final PlayerRef playerRef;
     private final PlayerStats playerStats;
+    private String mode;
 
     public ScheduledFuture<?> timerTask;
     private int remainingSeconds = 600;
@@ -49,7 +49,11 @@ public class GameHUD extends CustomUIHud {
 
     @Override
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {
-        uiCommandBuilder.append("Game/HUD.ui");
+        mode = playerStats.getCurrentMatch().getMode();
+
+        if (mode.equalsIgnoreCase("fvf")) { uiCommandBuilder.append("Game/FVF/HUDFVF.ui"); }
+        else { uiCommandBuilder.append("Game/HUD.ui"); }
+
         uiBuilder = uiCommandBuilder;
 
         setTimer();
@@ -62,10 +66,11 @@ public class GameHUD extends CustomUIHud {
 
         uiBuilder.set("#DeathmatchUI.Background", "#ffffff00");
         update(true, uiBuilder);
-        playerRef.sendMessage(Message.raw("Se intentó sacar el fondo"));
     }
-
+    // ================================================== //
     public void setEffect(PlayerStats.Effects effect) {
+        if (mode.equalsIgnoreCase("fvf")) return;
+
         switch (effect) {
             case PlayerStats.Effects.INVULNERABILITY: uiBuilder.set("#DeathmatchUI.Background", Value.ref("Game/HUD.ui", "Invulnerability")); break;
             case PlayerStats.Effects.NULL: uiBuilder.set("#DeathmatchUI.Background", "#ffffff00"); break;
@@ -73,7 +78,6 @@ public class GameHUD extends CustomUIHud {
 
         update(true, uiBuilder);
     }
-
     public void setShield() {
         if (uiBuilder == null) return;
 
@@ -89,7 +93,6 @@ public class GameHUD extends CustomUIHud {
         uiBuilder.set("#IconShield.Background", Value.ref("Game/images/weapons/Weapons.ui", shield.image));
         update(true, uiBuilder);
     }
-
     public void setWeapons(int value) {
         if (uiBuilder == null) return;
         if (RefactorTool.getSizeSlots() <= 0) {
@@ -146,7 +149,6 @@ public class GameHUD extends CustomUIHud {
 
         update(true, uiBuilder);
     }
-
     public void setHealth(int value, int max) {
         if (uiBuilder == null) return;
 
@@ -169,7 +171,6 @@ public class GameHUD extends CustomUIHud {
 
         update(true, uiBuilder);
     }
-
     public void updateHealth() {
         UUID uuid = playerRef.getUuid();
 
@@ -178,7 +179,6 @@ public class GameHUD extends CustomUIHud {
 
         setHealth((int)current, (int)max);
     }
-
     public void setShopTimer() {
         uiBuilder.set("#ShopSectorTimer.Visible", true);
         shopTimer = 15;
@@ -206,9 +206,9 @@ public class GameHUD extends CustomUIHud {
 
         shopTimer = 15;
     }
-
     public void setInvulnerability() {
-        playerRef.sendMessage(Message.raw("Se activó la invulnerabilidad").color(Color.cyan));
+        if (mode.equalsIgnoreCase("fvf")) return;
+
         uiBuilder.set("#InvulnerabilitySector.Visible", true);
         invTimer = 3;
 
@@ -232,9 +232,9 @@ public class GameHUD extends CustomUIHud {
             } catch (Exception e) { if (invTask != null) invTask.cancel(false); }
         }, 0, 1, TimeUnit.SECONDS);
     }
-
     public void setData() {
         if (uiBuilder == null) return;
+        if (mode.equalsIgnoreCase("fvf")) return;
 
         uiBuilder.set("#InvulnerabilitySector.Visible", false);
         uiBuilder.set("#ShopSectorTimer.Visible", false);
@@ -262,7 +262,14 @@ public class GameHUD extends CustomUIHud {
 
         update(true, uiBuilder);
     }
+    // ================================================== //
+    public void setRounds(int team1, int team2) {
+        uiBuilder.set("#TextRound.TextSpans", Message.raw(team1 + " | " + team2));
+        updateHealth();
 
+        update(true, uiBuilder);
+    }
+    // ================================================== //
     public void setTimer() {
         if (uiBuilder == null) return;
         stopTimer();
@@ -280,13 +287,10 @@ public class GameHUD extends CustomUIHud {
                 int seconds = remainingSeconds % 60;
                 String timerText = String.format("%02d:%02d", minutes, seconds);
 
-                uiBuilder.set("#TextTimer.TextSpans", Message.raw(timerText));
-                update(true, uiBuilder);
-
+                if(remainingSeconds > 0) { uiBuilder.set("#TextTimer.TextSpans", Message.raw(timerText)); update(true, uiBuilder); }
             } catch (Exception e) { if (timerTask != null) timerTask.cancel(false); }
         }, 0, 1, TimeUnit.SECONDS);
     }
-
     public void stopTimer() {
         if (timerTask != null && !timerTask.isDone()) {
             timerTask.cancel(false);
@@ -305,7 +309,6 @@ public class GameHUD extends CustomUIHud {
 
 
     }
-
     public void clearHUD() {
         if (uiBuilder == null) return;
 
@@ -317,4 +320,5 @@ public class GameHUD extends CustomUIHud {
         } catch (Exception e) { }
         uiBuilder = null;
     }
+    // ================================================== //
 }

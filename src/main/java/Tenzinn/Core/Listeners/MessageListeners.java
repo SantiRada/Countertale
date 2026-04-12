@@ -49,9 +49,7 @@ public final class MessageListeners {
         UI_TITLE_QUEUE    ("ui.title-queue"),
         UI_DESC_QUEUE    ("ui.desc-queue"),
         UI_TITLE_SHOP    ("ui.title-shop"),
-        UI_DESC_SHOP    ("ui.desc-shop"),
-        UI_TITLE_FVF    ("ui.title-fvf"),
-        UI_DESC_FVF    ("ui.desc-fvf");
+        UI_DESC_SHOP    ("ui.desc-shop");
         // ────────────────────────────────────────────────────────────────────────
 
         private final String key;

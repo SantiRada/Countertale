@@ -11,7 +11,7 @@ public class WallCommands extends AbstractCommandCollection {
 
         addSubCommand(new SetWallCommand("set", "Add a new TemporalWall to a map"));
         addSubCommand(new GetWallCommand("get", "List all TemporalWalls of a map"));
-        addSubCommand(new RemoveWallCommand("remove", "Remove an existing TemporalWall by index"));
         addSubCommand(new BuildWallCommand("build", "Build TemporalWalls of a map"));
+        addSubCommand(new RemoveWallCommand("remove", "Remove an existing TemporalWall by index"));
     }
 }

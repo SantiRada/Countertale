@@ -49,7 +49,7 @@ public class QueueStatueListener extends EntityEventSystem<EntityStore, DamageBl
         boolean inQueue = RefactorTool.getPlayerStats(playerRef) != null;
 
         if (inQueue) CommandManager.get().handleCommand(player, "leave");
-        else CommandManager.get().handleCommand(player, "queue --mode=dm");
+        else CommandManager.get().handleCommand(player, "queue --mode=null");
     }
 
     @Override

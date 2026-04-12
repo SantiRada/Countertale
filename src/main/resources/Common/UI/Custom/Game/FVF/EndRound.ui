@@ -1,15 +1,43 @@
 
+@background = PatchStyle(TexturePath: "images/back-endround.png");
+@logo = PatchStyle(TexturePath: "images/logo.png");
+
 Group {
-    LayoutMode: Middle;
-    Anchor: (Width: 1920, Height: 1080);
+    FlexWeight: 1;
+    Padding: (Top: 220);
+    LayoutMode: Center;
+    Background: (Color: #000000(0.15));
 
-    Label #Title {
-        Style: (FontSize: 36, RenderBold: true, Alignment: Center, TextColor: (#FFFFFF));
-        Text: "TEST";
-    }
+    Group {
+        LayoutMode: Top;
 
-    Label #NumRound {
-        Style: (FontSize: 16, RenderBold: false, Alignment: Center, TextColor: (#CCCCCC));
-        Text: "Ronda XX";
+        Group #Logo {
+            Background: @logo;
+            Anchor: (Width: 85, Height: 85, Bottom: -5);
+        }
+        Group #Content {
+            LayoutMode: Top;
+            Padding: (Top: 12, Bottom: 12);
+            Background: @background;
+            Anchor: (Width: 870);
+
+            Label #NumRound {
+                Style: (FontSize: 12, RenderBold: false, Alignment: Center, TextColor: (#999999));
+                Text: "Ronda XX";
+            }
+            Group {
+                LayoutMode: Center;
+                Padding: (Vertical: 8);
+
+                Label #Title {
+                    Style: (FontSize: 22, RenderBold: true, Alignment: Center, TextColor: #948B60);
+                    Text: "TEST EXAMPLE";
+                }
+            }
+            Label #Message {
+                Style: (FontSize: 16, RenderBold: false, Alignment: Center, TextColor: #999999);
+                Text: "Wins by the death of all the players on the other team.";
+            }
+        }
     }
 }

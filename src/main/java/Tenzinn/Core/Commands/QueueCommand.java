@@ -39,7 +39,7 @@ public class QueueCommand extends AbstractPlayerCommand {
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         RefactorTool.launchSound(playerRef, "clic");
 
-        if(mode.get(commandContext).equalsIgnoreCase("null")) {
+        if(mode.get(commandContext).equalsIgnoreCase("null") || mode.get(commandContext).isBlank() || mode.get(commandContext).isEmpty()) {
             Player player = commandContext.senderAs(Player.class);
             player.getPageManager().openCustomPage(ref, store, new ModesPage(playerRef));
             return;

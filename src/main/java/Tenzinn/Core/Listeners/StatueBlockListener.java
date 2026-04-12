@@ -72,10 +72,6 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
                 titleLine = MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_QUEUE);
                 subtitleLine = MessageListeners.get(MessageListeners.MessageKey.UI_DESC_QUEUE);
                 break;
-            case "fvf":
-                titleLine    = MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_FVF);
-                subtitleLine = MessageListeners.get(MessageListeners.MessageKey.UI_DESC_FVF);
-                break;
             default:
                 titleLine    = MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_SHOP);
                 subtitleLine = MessageListeners.get(MessageListeners.MessageKey.UI_DESC_SHOP);
