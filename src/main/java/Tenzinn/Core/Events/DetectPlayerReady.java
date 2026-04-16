@@ -1,5 +1,6 @@
 package Tenzinn.Core.Events;
 
+import Tenzinn.Core.Effects.PlayerEntityEffect;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.LootManager;
@@ -24,6 +25,8 @@ public class DetectPlayerReady {
     public static void onPlayerReady(PlayerReadyEvent event) {
         Player player = event.getPlayer();
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+
+        PlayerEntityEffect.clearAllEffects(player, playerRef.getReference().getStore());
 
         ShopData.loadContent();
 

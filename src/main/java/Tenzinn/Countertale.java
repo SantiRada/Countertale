@@ -1,5 +1,6 @@
 package Tenzinn;
 
+import Tenzinn.Core.Commands.Party.PartyCommands;
 import Tenzinn.Core.Events.*;
 import Tenzinn.Core.Handle.*;
 import Tenzinn.Core.GameMatch;
@@ -81,6 +82,7 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
         getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
         getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
+        getCommandRegistry().registerCommand(new PartyCommands("party", "All commands to custom groups"));
 
         // FVF Commands
         getCommandRegistry().registerCommand(new WallCommands("wall", "Manage TemporalWalls for maps"));

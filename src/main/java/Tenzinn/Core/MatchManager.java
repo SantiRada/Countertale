@@ -43,25 +43,6 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
                 .count();
     }
 
-    // ── Matchmaking ───────────────────────────────────────────────────────────
-
-    /**
-     * Agrega un jugador a la cola respetando su selección de mapas.
-     *
-     * <p>Busca una partida en estado WAITING que:
-     * <ul>
-     *   <li>tenga el mismo modo de juego</li>
-     *   <li>tenga al menos un mapa en común con los mapas permitidos del jugador</li>
-     * </ul>
-     * Si no encuentra ninguna compatible, crea una nueva.
-     * La instancia del servidor NO se asigna aquí; se asigna en
-     * {@link Countertale#startMatch} cuando la partida se completa.
-     *
-     * @param playerRef   el jugador que se une
-     * @param mode        "dm" o "fvf"
-     * @param allowedMaps mapas que el jugador acepta jugar (su voto)
-     * @return la partida asignada, o null si el jugador ya estaba en cola
-     */
     public GameMatch addPlayerToQueue(PlayerRef playerRef, String mode, List<String> allowedMaps) {
 
         boolean isInList = playerMatches.keySet().stream()
@@ -117,12 +98,6 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
         return match;
     }
 
-    /**
-     * Elimina un jugador de su partida actual.
-     * Si la partida queda vacía, destruye la instancia y notifica al pool.
-     *
-     * @return true si el jugador fue eliminado correctamente
-     */
     public boolean removePlayerFromMatch(PlayerRef playerRef) {
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
 
@@ -163,8 +138,6 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
         return true;
     }
 
-    // ── Consultas ─────────────────────────────────────────────────────────────
-
     public GameMatch getPlayerMatch(PlayerRef playerRef) {
         PlayerStats ps = RefactorTool.getPlayerStats(playerRef);
         return ps != null ? ps.getCurrentMatch() : null;
@@ -182,8 +155,6 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
                 .filter(m -> m.getState() == GameMatch.MatchState.WAITING)
                 .toList();
     }
-
-    // ── Diagnóstico ───────────────────────────────────────────────────────────
 
     public String getStats() {
         int total      = activeMatches.size();

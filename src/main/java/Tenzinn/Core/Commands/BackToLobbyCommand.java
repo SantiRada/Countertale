@@ -1,5 +1,6 @@
 package Tenzinn.Core.Commands;
 
+import Tenzinn.Core.Effects.PlayerEntityEffect;
 import Tenzinn.Countertale;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Listeners.MapListeners;
@@ -76,7 +77,10 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
                             if (lobbyPlayer != null) {
                                 lobbyPlayer.getInventory().clear();
                                 lobbyPlayer.getInventory().getHotbar().addItemStack(new ItemStack("actions_book", 1));
+
+                                PlayerEntityEffect.clearAllEffects(lobbyPlayer, lobbyStore);
                             }
+
                         } catch (Exception e) {
                             main.getLogger().at(Level.SEVERE).log("Error en callback lobby: " + e.getMessage());
                         }
