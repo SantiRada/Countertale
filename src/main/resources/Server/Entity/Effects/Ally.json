@@ -1,0 +1,8 @@
+{
+  "Duration": 150,
+  "ApplicationEffects": {
+    "EntityBottomTint": "#07ff00",
+    "EntityTopTint": "#07ff00"
+  },
+  "ValueType": "Absolute"
+}

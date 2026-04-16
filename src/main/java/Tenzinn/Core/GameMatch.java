@@ -16,11 +16,6 @@ public class GameMatch {
     public String mode;
     private String mapId;
 
-    /**
-     * Intersección de los mapas votados por todos los jugadores en esta partida.
-     * Se establece con el primer jugador y se va reduciendo a medida que se unen más.
-     * Cuando la partida inicia, el mapa final se elige de este conjunto.
-     */
     private List<String> eligibleMaps = new ArrayList<>();
 
     private final UUID matchId;
@@ -46,32 +41,18 @@ public class GameMatch {
 
     public void removePlayer(PlayerRef playerRef) { players.remove(playerRef); }
 
-    // ── Mapas elegibles (sistema de votos) ───────────────────────────────────
-
-    /**
-     * Establece los mapas elegibles cuando se crea la partida con el primer jugador.
-     */
     public void initEligibleMaps(List<String> maps) {
         this.eligibleMaps = new ArrayList<>(maps);
     }
 
-    /**
-     * Reduce los mapas elegibles a la intersección con los del nuevo jugador.
-     *
-     * @param playerMaps mapas aceptados por el jugador que se une
-     * @return true si la intersección es no vacía (jugador compatible), false si es vacía
-     */
     public boolean intersectEligibleMaps(List<String> playerMaps) {
         eligibleMaps.retainAll(playerMaps);
         return !eligibleMaps.isEmpty();
     }
 
-    /** Devuelve la lista actual de mapas elegibles (inmutable). */
     public List<String> getEligibleMaps() {
         return Collections.unmodifiableList(eligibleMaps);
     }
-
-    // ── Timer y flujo de partida ──────────────────────────────────────────────
 
     public void startTimer() {
         if (mode.equalsIgnoreCase("dm")) {
@@ -92,15 +73,11 @@ public class GameMatch {
         else { MatchFVF.stopTimer(); }
     }
 
-    // ── Instancia ─────────────────────────────────────────────────────────────
-
     public void setInstance(InstanceManager instance) { matchInstance = instance; }
 
     public void removeInstance() {
         if (matchInstance != null) { matchInstance.removeInstance(); }
     }
-
-    // ── Getters / Setters ─────────────────────────────────────────────────────
 
     public String getMapId()        { return mapId; }
     public void   setMapId(String m){ this.mapId = m; }

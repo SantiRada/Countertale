@@ -1,0 +1,76 @@
+
+@background = PatchStyle(TexturePath: "images/back-party.png");
+
+@titleSmall = (
+    TextColor: #CCCCCC,
+    VerticalAlignment: Center,
+    FontSize: 16,
+    RenderBold: false
+);
+
+@member = (
+    TextColor: #FFFFFF,
+    FontSize: 20,
+    RenderBold: false
+);
+
+@command = (
+    TextColor: #CCCCCC,
+    FontSize: 14,
+    RenderBold: false
+);
+
+Group #PartyHUD {
+    LayoutMode: Right;
+    Anchor: (Height: 500);
+    Padding: (Full: 40);
+
+    Group {
+        LayoutMode: Top;
+        Padding: (Full: 24);
+        Anchor: (Width: 350);
+        Background: @background;
+
+        Group #Top {
+            FlexWeight: 1;
+            LayoutMode: Top;
+            Anchor: (Bottom: 24);
+
+            Label {
+                Style: @titleSmall;
+                Text: "Party Leader";
+            }
+            Label #PartyLeader {
+                Style: (TextColor: #F5BD58, RenderBold: true, FontSize: 22);
+                Anchor: (Bottom: 8);
+                Text: "Tenzinn";
+            }
+
+            Group #Members {
+                LayoutMode: Top;
+
+                Label {
+                    Style: @titleSmall;
+                    Text: "Party Members";
+                }
+            }
+        }
+
+        Group #Bottom {
+            LayoutMode: Bottom;
+
+            Group {
+                Anchor: (Height: 4, Bottom: 24);
+                Background: (Color: #F5BD58);
+            }
+            Label {
+                Style: @command;
+                Text: "/party leave: Abandonar el grupo.";
+            }
+            Label {
+                Style: @command;
+                Text: "/party order: Pedir al lider empezar partida.";
+            }
+        }
+    }
+}

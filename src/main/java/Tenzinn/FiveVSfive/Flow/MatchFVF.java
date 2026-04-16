@@ -8,6 +8,7 @@ import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.GameMatch.MatchState;
 import Tenzinn.FiveVSfive.UI.EndRoundPage;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.Core.Effects.PlayerEntityEffect;
 import Tenzinn.FiveVSfive.Systems.TemporalWallSystem;
 
 import com.hypixel.hytale.component.Ref;
@@ -40,15 +41,42 @@ public class MatchFVF {
     private static int timePerPurchase = 15;
 
     public static int winner = -1;
+    public static final int numRoundsPerWinner = 4;
     public static ArrayList<Integer> numRoundsPerTeam = new ArrayList<>();
     private static boolean inEndRound = false;
     private static boolean inEndPurchase = false;
 
     private static GameMatch myMatch;
 
+    public static void startMatch() {
+        List<PlayerRef> playerRefs = myMatch.getPlayers();
+
+        World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
+        assert currentWorld != null;
+
+        currentWorld.execute(() -> {
+            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                currentWorld.execute(() -> {
+                    for (int i = 0; i < playerRefs.size(); i++) {
+                        Ref<EntityStore> ref = playerRefs.get(i).getReference();
+                        if (ref == null) continue;
+
+                        Store<EntityStore> store = ref.getStore();
+                        Player player = store.getComponent(ref, Player.getComponentType());
+                        if (player == null) continue;
+
+                        if (myMatch.getState() == MatchState.ON_PURCHASE || myMatch.getState() == MatchState.STARTING) {
+                            PlayerEntityEffect.applyEffect(player, "NotMove", store);
+                        }
+                    }
+                });
+            }, 300, TimeUnit.MILLISECONDS);
+        });
+    }
     // ================================================== //
     public static void startTimerMatch(GameMatch match) {
         myMatch = match;
+        startMatch();
 
         if (timerTask != null && !timerTask.isDone()) return;
 
@@ -96,6 +124,10 @@ public class MatchFVF {
         if (myMatch != null) {
             World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
             assert currentWorld != null;
+
+            // FIX: setState y setup de players en el world thread, pero startTimerMatch
+            // se llama FUERA del execute() con un pequeño delay para evitar execute() anidados
+            // y para garantizar que el setState ya fue procesado antes de arrancar el timer.
             currentWorld.execute(() -> {
                 for (int i = 0; i < myMatch.getPlayers().size(); i++) {
                     PlayerStats playerStats = RefactorTool.getPlayerStats(myMatch.getPlayers().get(i));
@@ -109,6 +141,11 @@ public class MatchFVF {
                     Store<EntityStore> store = ref.getStore();
 
                     playerStats.getPlayer().getPageManager().setPage(ref, store, Page.None);
+
+                    PlayerEntityEffect.clearAllEffects(playerStats.getPlayer(), store);
+
+                    String effect = validateTeamMembership(myMatch.getPlayers().get(i)) == 1 ? "Ally" : "Enemy";
+                    PlayerEntityEffect.applyEffect(playerStats.getPlayer(), effect, store);
                 }
 
                 String mapName = "Dust2";
@@ -116,13 +153,18 @@ public class MatchFVF {
 
                 myMatch.setState(GameMatch.MatchState.IN_PROGRESS);
             });
-        }
 
-        startTimerMatch(myMatch);
+            // FIX: startTimerMatch fuera del execute() con delay mínimo para que
+            // el setState anterior ya esté aplicado cuando arranque el nuevo timer.
+            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                startTimerMatch(myMatch);
+            }, 100, TimeUnit.MILLISECONDS);
+        }
     }
     public static void onReloadRound() {
         stopTimer();
 
+        // FIX: setState antes del execute() — correcto, sin cambios necesarios acá.
         myMatch.setState(MatchState.ON_PURCHASE);
 
         World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
@@ -142,8 +184,11 @@ public class MatchFVF {
             }
         });
 
-        startTimerMatch(myMatch);
-
+        // FIX: startTimerMatch fuera del execute() con delay mínimo para consistencia
+        // y para que el resetPlayers/buildWalls ya estén encolados antes de arrancar el timer.
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+            startTimerMatch(myMatch);
+        }, 100, TimeUnit.MILLISECONDS);
     }
     public static void onEndRound() {
         inEndRound = true;
@@ -242,10 +287,7 @@ public class MatchFVF {
         }
 
         winner = stateTeam01 ? 1 : stateTeam02 ? 2 : 0;
-
-        if (winner > 0) {
-            finishRound();
-        }
+        if (winner > 0) finishRound();
 
         return winner;
     }
@@ -277,7 +319,15 @@ public class MatchFVF {
         for (int i = 0; i < players.size(); i++) {
             Player player = RefactorTool.getPlayer(players.get(i));
             GameHUD customHUD = (GameHUD) player.getHudManager().getCustomHud();
+            assert customHUD != null;
             customHUD.setRounds(numRoundsPerTeam.getFirst(), numRoundsPerTeam.getLast());
+
+            if (numRoundsPerTeam.getFirst() >= numRoundsPerWinner || numRoundsPerTeam.get(1) >= numRoundsPerWinner) {
+                assert player.getReference() != null;
+                PlayerEntityEffect.clearAllEffects(player, player.getReference().getStore());
+            }
         }
+
+        if (numRoundsPerTeam.getFirst() >= numRoundsPerWinner || numRoundsPerTeam.get(1) >= numRoundsPerWinner) { RefactorTool.finishGame(myMatch.getPlayers(), myMatch); }
     }
 }
