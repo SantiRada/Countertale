@@ -1,53 +1,54 @@
 package Tenzinn.Core.UI;
 
-import Tenzinn.Core.Listeners.MessageListeners;
-
-import com.hypixel.hytale.server.core.HytaleServer;
+import Tenzinn.Core.PartyManager;
+import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.Objects.PartyObject;
 import com.hypixel.hytale.server.core.Message;
+import Tenzinn.Core.Listeners.MessageListeners;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ScheduledFuture;
 
 public class QueueHud extends CustomUIHud {
 
     private UICommandBuilder uiBuilder;
     private ScheduledFuture<?> updateTask;
     private long startTime;
+    private PlayerRef playerRef;
+
+    private PartyObject myParty;
 
     public QueueHud(@NonNullDecl PlayerRef playerRef) {
         super(playerRef);
+        this.playerRef = playerRef;
         this.startTime = System.currentTimeMillis();
     }
-
     @Override
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {
         uiCommandBuilder.append("Lobby/QueueHud.ui");
         uiBuilder = uiCommandBuilder;
 
-        uiBuilder.set("#LeaveMessage.TextSpans",
-                Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_MESSAGE_COMMAND_LEAVE)));
+        uiBuilder.set("#PartyHUD.Visible", false);
+        uiBuilder.set("#LeaveMessage.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_MESSAGE_COMMAND_LEAVE)));
 
         startUpdating();
     }
-
-    // ── Timer ─────────────────────────────────────────────────────────────────
-
     private void startUpdating() {
         updateTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(
                 this::updateTimer, 0, 1, TimeUnit.SECONDS);
     }
-
     public void stopUpdating() {
         if (updateTask != null && !updateTask.isDone()) updateTask.cancel(true);
     }
-
     private void updateTimer() {
         long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
         int minutes = (int) (elapsedSeconds / 60);
@@ -57,22 +58,11 @@ public class QueueHud extends CustomUIHud {
         uiBuilder.set("#TimerLabel.TextSpans", Message.raw(timeText));
         update(true, uiBuilder);
     }
-
-    // ── Actualizaciones externas ──────────────────────────────────────────────
-
-    /** Actualiza el contador de jugadores en el HUD. */
     public void updatePlayerCount(int playerCount) {
         String playerText = String.format("%d/10 Players", playerCount);
         uiBuilder.set("#PlayerCountLabel.TextSpans", Message.raw(playerText));
         update(true, uiBuilder);
     }
-
-    /**
-     * Muestra los mapas que el jugador seleccionó al entrar en cola.
-     * Capitaliza el primer carácter de cada nombre de mapa.
-     *
-     * @param maps lista de mapIds (ej. ["dust2", "assault"])
-     */
     public void setMapsInfo(List<String> maps) {
         if (uiBuilder == null || maps == null || maps.isEmpty()) return;
 
@@ -83,13 +73,6 @@ public class QueueHud extends CustomUIHud {
         uiBuilder.set("#MapsLabel.TextSpans", Message.raw("Maps: " + mapsText));
         update(true, uiBuilder);
     }
-
-    /**
-     * Muestra el estado de carga del escenario en el HUD.
-     * Se llama cuando la partida ya tiene 10 jugadores y está esperando
-     * que la instancia del mapa termine de cargarse.
-     * Oculta el mensaje de /leave (ya no se puede salir) y actualiza las etiquetas.
-     */
     public void showLoadingMap() {
         if (uiBuilder == null) return;
 
@@ -104,16 +87,18 @@ public class QueueHud extends CustomUIHud {
 
         update(true, uiBuilder);
     }
+    public void setDeleteParty() {
+        myParty = null;
+        uiBuilder.set("#PartyHUD.Visible", false);
 
-    /** Oculta el HUD de cola y detiene el timer. */
-    public void hideQueueUI() {
-        stopUpdating();
+        update(true, uiBuilder);
+    }
+    public void setDataParty(PartyObject myParty) {
+        uiBuilder.set("#PartyHUD.Visible", true);
 
-        try {
-            uiBuilder.remove("#QueueHUD");
-            update(true, uiBuilder);
-        } catch (Exception ignored) { }
+        this.myParty = myParty;
+        uiBuilder.set("#PartyLeader.TextSpans", Message.raw(myParty.leaderUsername));
 
-        uiBuilder = null;
+        update(true, uiBuilder);
     }
 }

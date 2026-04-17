@@ -72,14 +72,12 @@ public final class MapPopularityTracker {
 
         for (String mapId : MapListeners.getMapNames()) { stats.computeIfAbsent(mapId.toLowerCase(), k -> new MapStats()); }
     }
-
     public synchronized void recordMatchFinished(String mapId) {
         MapStats s = getOrCreate(mapId);
         s.recordMatch();
         save();
         LOGGER.log(Level.FINE, "[Popularity] Partida registrada en mapa: " + mapId + " | weekly=" + s.weeklyPlayed + " total=" + s.totalPlayed);
     }
-
     public synchronized void recordFallback(String mapId) {
         MapStats s = getOrCreate(mapId);
         s.recordFallback();
@@ -92,7 +90,6 @@ public final class MapPopularityTracker {
         save();
         LOGGER.log(Level.INFO, "[Popularity] Fallback en mapa: " + mapId + " | consecutivos=" + s.consecutiveFallbacks);
     }
-
     public synchronized List<String> getMapsSortedByPriority() {
         List<String> allMaps = new ArrayList<>(stats.keySet());
 
@@ -105,7 +102,6 @@ public final class MapPopularityTracker {
 
         return Collections.unmodifiableList(allMaps);
     }
-
     public synchronized String pickBestMap(List<String> candidates) {
         if (candidates == null || candidates.isEmpty()) return null;
 
@@ -117,7 +113,6 @@ public final class MapPopularityTracker {
                 }))
                 .orElse(candidates.get(0));
     }
-
     public synchronized Map<String, Integer> distribute(int ceiling) {
         List<String> sorted = getMapsSortedByPriority();
         int mapCount = sorted.size();
@@ -128,7 +123,6 @@ public final class MapPopularityTracker {
         if (ceiling <= 0 || mapCount == 0) return result;
 
         if (mapCount >= 4) {
-            // Ratio 2:1: top 50% son populares
             int popularCount  = mapCount / 2;
             int popularWeight = 2;
             int normalWeight  = 1;
@@ -146,14 +140,12 @@ public final class MapPopularityTracker {
                 remaining -= allocated;
             }
 
-            // Sobrantes por redondeo → mapas más populares
             for (String mapId : sorted) {
                 if (remaining <= 0) break;
                 result.merge(mapId, 1, Integer::sum);
                 remaining--;
             }
         } else {
-            // Con 2-3 mapas: 1 base por mapa, excedente a los más populares
             int remaining = ceiling;
 
             for (String mapId : sorted) {
@@ -170,7 +162,6 @@ public final class MapPopularityTracker {
 
         return result;
     }
-
     public synchronized String getSummary() {
         StringBuilder sb = new StringBuilder("[Popularity] Estado actual:\n");
         for (Map.Entry<String, MapStats> e : stats.entrySet()) {
@@ -196,7 +187,6 @@ public final class MapPopularityTracker {
             statsFile = null;
         }
     }
-
     private void load() {
         if (statsFile == null || !statsFile.exists()) return;
 
@@ -213,7 +203,6 @@ public final class MapPopularityTracker {
                 if (obj.has("consecutiveFallbacks"))  s.consecutiveFallbacks = obj.get("consecutiveFallbacks").getAsInt();
                 if (obj.has("promoted"))              s.promoted             = obj.get("promoted").getAsBoolean();
 
-                // Si la ventana semanal venció, resetear antes de cargar
                 s.checkWeeklyReset();
                 stats.put(mapId.toLowerCase(), s);
             }
@@ -223,12 +212,10 @@ public final class MapPopularityTracker {
             LOGGER.log(Level.WARNING, "[Popularity] Error al leer map_stats.json.", e);
         }
     }
-
     private synchronized void save() {
         if (statsFile == null) return;
 
         try {
-            // Asegurar que el directorio padre existe
             if (!statsFile.getParentFile().exists()) {
                 statsFile.getParentFile().mkdirs();
             }
@@ -253,6 +240,5 @@ public final class MapPopularityTracker {
             LOGGER.log(Level.WARNING, "[Popularity] Error al guardar map_stats.json.", e);
         }
     }
-
     private MapStats getOrCreate(String mapId) { return stats.computeIfAbsent(mapId.toLowerCase(), k -> new MapStats()); }
 }

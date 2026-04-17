@@ -1,6 +1,5 @@
 package Tenzinn.Core.Events;
 
-import Tenzinn.Core.Effects.PlayerEntityEffect;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.LootManager;
@@ -8,8 +7,9 @@ import Tenzinn.Core.Shop.ShopData;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Objects.WeaponStats;
+import Tenzinn.Core.Effects.PlayerEntityEffect;
+
 import com.hypixel.hytale.server.core.NameMatching;
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -18,7 +18,6 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 
 import java.util.Objects;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class DetectPlayerReady {
 
@@ -26,15 +25,13 @@ public class DetectPlayerReady {
         Player player = event.getPlayer();
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
 
-        PlayerEntityEffect.clearAllEffects(player, playerRef.getReference().getStore());
+        assert playerRef != null;
+        PlayerEntityEffect.clearAllEffects(player, Objects.requireNonNull(playerRef.getReference()).getStore());
 
         ShopData.loadContent();
-
         assert player.getWorld() != null;
 
         if (Objects.equals(Universe.get().getDefaultWorld(), Universe.get().getWorld(player.getWorld().getName()))) {
-            assert playerRef != null;
-
             player.getHudManager().showHudComponents(playerRef, HudComponent.Chat);
             player.getHudManager().showHudComponents(playerRef, HudComponent.Hotbar);
             player.getHudManager().showHudComponents(playerRef, HudComponent.Health);
@@ -47,21 +44,17 @@ public class DetectPlayerReady {
         }
         else {
             openGameHud(playerRef, player);
-
-            assert playerRef != null;
             RefactorTool.Respawn(playerRef);
         }
     }
 
     public static void openGameHud(PlayerRef playerRef, Player player) {
-        // Review active mode for this player
         assert player.getWorld() != null;
         String worldMode = player.getWorld().getName().startsWith("fvf") ? "fvf" : "dm";
 
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
         assert thisLoot != null;
 
-        // Get loot for mode
         if (worldMode.equalsIgnoreCase("dm")) { RefactorTool.setAllLoot(playerRef, thisLoot); }
         else {
             RefactorTool.setAllLoot(playerRef, LootManager.getStarterKit());
@@ -70,11 +63,11 @@ public class DetectPlayerReady {
 
         GameHUD newHud = new GameHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
+
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
 
         if(worldMode.equalsIgnoreCase("dm")) {
             newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
-
             if (playerStats != null) { playerStats.isInvulnerable = true; }
         }
 
@@ -105,7 +98,6 @@ public class DetectPlayerReady {
         }
 
         LootManager.giveLoot(player, thisLoot);
-
         RefactorTool.launchSound(playerRef, "clic");
     }
 }

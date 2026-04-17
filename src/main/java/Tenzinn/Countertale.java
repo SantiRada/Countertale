@@ -6,6 +6,10 @@ import Tenzinn.Core.Handle.*;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Commands.*;
 import Tenzinn.Core.Listeners.*;
+import Tenzinn.Core.Objects.PartyObject;
+import Tenzinn.Core.PartyManager;
+import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.UI.PartyHUD;
 import Tenzinn.Core.UI.QueueHud;
 import Tenzinn.Core.MatchManager;
 import Tenzinn.Core.Instances.InstanceManager;
@@ -30,12 +34,15 @@ import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.event.events.player.PlayerChatEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.events.AllWorldsLoadedEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
@@ -140,18 +147,7 @@ public class Countertale extends JavaPlugin {
         ScheduledFuture<Void> matchTask = (ScheduledFuture<Void>) matchCheckTask;
         getTaskRegistry().registerTask(matchTask);
     }
-
     // ── Queue HUD ─────────────────────────────────────────────────────────────
-
-    /**
-     * Muestra el HUD de cola al jugador.
-     * Si ya tiene un HUD activo, solo actualiza el contador de jugadores.
-     *
-     * @param playerRef el jugador
-     * @param player    entidad del jugador
-     * @param match     la partida a la que se unió
-     * @param playerMaps los mapas que el jugador seleccionó (para mostrar en el HUD)
-     */
     public void showQueueHud(PlayerRef playerRef, Player player, GameMatch match, List<String> playerMaps) {
         String playerId = playerRef.getUuid().toString();
 
@@ -166,25 +162,29 @@ public class Countertale extends JavaPlugin {
 
         queueHud.updatePlayerCount(match.getPlayerCount());
         queueHud.setMapsInfo(playerMaps);
+
+        int partyIndex = PartyManager.GetPartyIdForPlayer(playerRef);
+        if (partyIndex >= 0) { queueHud.setDataParty(PartyManager.totalParty.get(partyIndex)); }
+
         activeQueueHuds.put(playerId, queueHud);
     }
-
     public void hideQueueHud(PlayerRef playerRef) {
         String playerId = playerRef.getUuid().toString();
         QueueHud hud = activeQueueHuds.get(playerId);
-        if (hud != null) { hud.hideQueueUI(); }
+        if (hud != null) {
+            hud.stopUpdating();
+
+            Player player = RefactorTool.getPlayer(playerRef);
+            player.getHudManager().setCustomHud(playerRef, null);
+
+            int id = PartyManager.GetPartyIdForPlayer(playerRef);
+            if (id >= 0) { player.getHudManager().setCustomHud(playerRef, new PartyHUD(playerRef, PartyManager.totalParty.get(id))); }
+        }
         activeQueueHuds.remove(playerId);
     }
-
     public void hideAllQueueHuds(GameMatch match) {
         for (PlayerRef playerRef : match.getPlayers()) { hideQueueHud(playerRef); }
     }
-
-    /**
-     * Actualiza el HUD de todos los jugadores de la partida al estado "Cargando escenario...".
-     * Se llama cuando la partida alcanzó 10 jugadores y está esperando que el mapa cargue.
-     * El HUD no se oculta hasta que la instancia esté lista y se vaya a teletransportar.
-     */
     public void showLoadingStateHuds(GameMatch match) {
         for (PlayerRef playerRef : match.getPlayers()) {
             String playerId = playerRef.getUuid().toString();
@@ -192,7 +192,6 @@ public class Countertale extends JavaPlugin {
             if (hud != null) hud.showLoadingMap();
         }
     }
-
     public void notifyMatchPlayersAndUpdateHuds(GameMatch match) {
         int playerCount = match.getPlayerCount();
         String message  = String.format("Players: %d/10", playerCount);
@@ -205,73 +204,53 @@ public class Countertale extends JavaPlugin {
             if (queueHud != null) queueHud.updatePlayerCount(playerCount);
         }
     }
-
-    // ── Arranque de partidas ──────────────────────────────────────────────────
-
     public MatchManager getMatchManager() { return matchManager; }
-
     private void checkAndStartFullMatches() {
         List<GameMatch> fullMatches = matchManager.getFullMatches();
         for (GameMatch match : fullMatches) {
             startMatch(match);
         }
     }
-
-    /**
-     * Inicia una partida completa.
-     * <ol>
-     *   <li>Elige el mapa más popular de los mapas elegibles (intersección de votos).</li>
-     *   <li>Toma la instancia precargada del pool (o crea una en caliente si no hay).</li>
-     *   <li>Teletransporta a todos los jugadores.</li>
-     * </ol>
-     * Si el match ya no está en estado WAITING, no hace nada (protección ante doble llamada).
-     */
     public void startMatch(GameMatch match) {
         if (match.getState() != GameMatch.MatchState.WAITING) return;
         match.setState(GameMatch.MatchState.STARTING);
 
         try {
-            // Notificar a todos los jugadores que el escenario está cargando.
-            // El HUD permanece visible hasta que la instancia esté lista.
             showLoadingStateHuds(match);
 
-            // Elegir mapa de la intersección de votos de los jugadores
             if (match.getMapId() == null) {
-                List<String> eligible = new ArrayList<>(match.getEligibleMaps());
-                if (eligible.isEmpty()) {
-                    // Fallback defensivo: todos los mapas disponibles
-                    eligible = new ArrayList<>(MapListeners.getMapNames());
-                }
+                List<String> eligible = new ArrayList<>(match.getEligibleMaps()).stream().map(String::toLowerCase).collect(java.util.stream.Collectors.toList());
+                if (eligible.isEmpty()) { eligible = new ArrayList<>(MapListeners.getMapNames()); }
 
-                String mapId = matchManager.getInstancePool()
-                        .getPopularity()
-                        .pickBestMap(eligible);
-
-                if (mapId == null) mapId = eligible.get(0);
+                String mapId = matchManager.getInstancePool().getPopularity().pickBestMap(eligible);
+                if (mapId == null) mapId = eligible.getFirst();
                 match.setMapId(mapId);
 
-                getLogger().at(Level.INFO).log(
-                        "[Countertale] Mapa seleccionado para match: " + mapId
-                        + " (candidatos: " + eligible + ")");
+                getLogger().at(Level.INFO).log("[Countertale] Mapa seleccionado para match: " + mapId + " (candidatos: " + eligible + ")");
             }
 
-            // Capturar la lista de jugadores antes de entrar al callback asíncrono
             final List<PlayerRef> playersSnapshot = match.getPlayers();
             final String finalMapId = match.getMapId();
+            final InstanceManager[] instanceRef = new InstanceManager[1];
 
-            InstanceManager instance = matchManager.getInstancePool().take(finalMapId, () -> {
-                // Se ejecuta cuando la instancia está lista:
-                //   - inmediatamente si era precargada
-                //   - diferido si fue fallback en caliente
-                // Ocultar el HUD justo antes de teletransportar para que los jugadores
-                // vean "Cargando escenario..." hasta el último momento.
-                hideAllQueueHuds(match);
+            instanceRef[0] = matchManager.getInstancePool().take(finalMapId, () -> {
+                match.setInstance(instanceRef[0]);
+
+                for (PlayerRef playerRef : playersSnapshot) {
+                    UUID worldUuid = playerRef.getWorldUuid();
+                    if (worldUuid == null) continue;
+
+                    World world = Universe.get().getWorld(worldUuid);
+                    if (world == null) continue;
+
+                    world.execute(() -> hideQueueHud(playerRef));
+                }
+
                 match.getInstance().teleportPlayers(playersSnapshot);
             });
-            match.setInstance(instance);
 
         } catch (Exception e) {
-            match.setState(GameMatch.MatchState.WAITING); // revertir para reintentar
+            match.setState(GameMatch.MatchState.WAITING);
             getLogger().at(Level.SEVERE).log("[Countertale] Error al iniciar partida: " + e.getMessage());
         }
     }
