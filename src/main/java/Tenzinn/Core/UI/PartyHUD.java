@@ -2,6 +2,7 @@ package Tenzinn.Core.UI;
 
 import Tenzinn.Core.Objects.PartyObject;
 
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
@@ -19,6 +20,8 @@ public class PartyHUD extends CustomUIHud {
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {
         uiCommandBuilder.append("Game/PartyHUD.ui");
         uiBuilder = uiCommandBuilder;
+
+        uiBuilder.set("#PartyLeader.TextSpans", Message.raw(myParty.leaderUsername));
 
         update(true, uiBuilder);
     }

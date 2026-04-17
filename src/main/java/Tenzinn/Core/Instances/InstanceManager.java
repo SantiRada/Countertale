@@ -31,30 +31,14 @@ public class InstanceManager {
     private World newWorld;
     private String worldName;
 
-    /** Mapa que contiene esta instancia (ej. "dust2", "assault"). */
     private final String mapId;
-
-    // ── Constructor ───────────────────────────────────────────────────────────
 
     public InstanceManager(Countertale main, String mapId) {
         this.main  = main;
         this.mapId = mapId.toLowerCase();
     }
-
-    // ── Getters ───────────────────────────────────────────────────────────────
-
     public String getMapId()        { return mapId; }
     public boolean getMapLoaded()   { return isMapLoaded; }
-
-    // ── Preload ───────────────────────────────────────────────────────────────
-
-    /**
-     * Precarga el mapa en un mundo nuevo y llama a onMapReady cuando termina.
-     * El nombre del mundo se genera como: {@code <mapId>_<uuid_corto>}
-     * para distinguir instancias del mismo mapa.
-     *
-     * @param onMapReady callback invocado cuando la instancia está lista (puede ser null en fallbacks)
-     */
     public void preloadMap(Runnable onMapReady) {
         Universe universe = Universe.get();
 
@@ -89,21 +73,18 @@ public class InstanceManager {
             });
         });
     }
-
-    // ── Prefab ────────────────────────────────────────────────────────────────
-
-    /**
-     * Resuelve el nombre del archivo de prefab a partir del mapId.
-     * Convención: {@code <MapId con primera letra en mayúscula>.prefab.json}
-     * Ejemplos:
-     *   "dust2"   → "Dust2.prefab.json"
-     *   "assault" → "Assault.prefab.json"
-     */
     private String resolvePrefabName() {
-        String capitalized = Character.toUpperCase(mapId.charAt(0)) + mapId.substring(1);
-        return capitalized + ".prefab.json";
+        String[] parts = mapId.split("-");
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            sb.append(Character.toUpperCase(part.charAt(0)))
+                    .append(part.substring(1));
+            sb.append("-");
+        }
+        // Eliminar el guión final
+        if (sb.length() > 0) sb.setLength(sb.length() - 1);
+        return sb + ".prefab.json";
     }
-
     private void placePrefabInInstance(World instanceWorld) {
         try {
             PrefabStore store = PrefabStore.get();
@@ -140,9 +121,6 @@ public class InstanceManager {
             e.printStackTrace();
         }
     }
-
-    // ── Teleport ──────────────────────────────────────────────────────────────
-
     public void teleportPlayers(List<PlayerRef> playerRefs) {
         main.getLogger().at(Level.INFO).log("[Instance] === INICIO TELEPORT [" + mapId + "] ===");
 
@@ -190,9 +168,6 @@ public class InstanceManager {
             }
         }
     }
-
-    // ── Destrucción ───────────────────────────────────────────────────────────
-
     public void removeInstance() {
         if (worldName == null) return;
 

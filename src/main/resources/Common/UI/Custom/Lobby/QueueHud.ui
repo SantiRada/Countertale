@@ -1,36 +1,116 @@
 
+@background = PatchStyle(TexturePath: "../Game/images/back-party.png");
+
+@titleSmall = (
+    TextColor: #CCCCCC,
+    VerticalAlignment: Center,
+    FontSize: 16,
+    RenderBold: false
+);
+
+@member = (
+    TextColor: #FFFFFF,
+    FontSize: 20,
+    RenderBold: false
+);
+
+@command = (
+    TextColor: #CCCCCC,
+    FontSize: 14,
+    RenderBold: false
+);
+
 Group #QueueHUD {
-  LayoutMode: Center;
-
-  Group #TimerPanel {
     LayoutMode: Top;
-    Anchor: (Width: 450, Height: 240, Top: 120);
 
-    Group {
+    Group #QueueContent {
         LayoutMode: Center;
-        Anchor: (Width: 450);
-        Label #TimerLabel {
-          Text: "88:88";
-          Style: (FontSize: 36, RenderBold: true, TextColor: #02090A(0.85), Alignment: Center);
+
+        Group #TimerPanel {
+            LayoutMode: Top;
+            Anchor: (Width: 450, Height: 240, Top: 120);
+
+            Group {
+                LayoutMode: Center;
+                Anchor: (Width: 450);
+                Label #TimerLabel {
+                  Text: "88:88";
+                  Style: (FontSize: 36, RenderBold: true, TextColor: #02090A(0.85), Alignment: Center);
+                }
+            }
+
+            Label #LeaveMessage {
+              Anchor: (Top: 6);
+              Text: "Use /leave to leave the queue";
+              Style: (FontSize: 24, TextColor: #02090A(0.5), Alignment: Center);
+            }
+
+            Label #PlayerCountLabel {
+              Anchor: (Top: 6);
+              Text: "X/10 Players";
+              Style: (FontSize: 14, TextColor: #02090A(0.75), Alignment: Center);
+            }
+
+            Label #MapsLabel {
+              Anchor: (Top: 4);
+              Text: "Maps: ...";
+              Style: (FontSize: 12, TextColor: #02090A(0.5), Alignment: Center);
+            }
         }
     }
 
-    Label #LeaveMessage {
-      Anchor: (Top: 6);
-      Text: "Use /leave to leave the queue";
-      Style: (FontSize: 24, TextColor: #02090A(0.5), Alignment: Center);
-    }
+    Group #PartyHUD {
+        LayoutMode: Right;
+        Anchor: (Height: 500, Top: -75);
+        Padding: (Full: 40);
 
-    Label #PlayerCountLabel {
-      Anchor: (Top: 6);
-      Text: "X/10 Players";
-      Style: (FontSize: 14, TextColor: #02090A(0.75), Alignment: Center);
-    }
+        Group {
+            LayoutMode: Top;
+            Padding: (Full: 24);
+            Anchor: (Width: 350);
+            Background: @background;
 
-    Label #MapsLabel {
-      Anchor: (Top: 4);
-      Text: "Maps: ...";
-      Style: (FontSize: 12, TextColor: #02090A(0.5), Alignment: Center);
+            Group #Top {
+                FlexWeight: 1;
+                LayoutMode: Top;
+                Anchor: (Bottom: 24);
+
+                Label {
+                    Style: @titleSmall;
+                    Text: "Party Leader";
+                }
+                Label #PartyLeader {
+                    Style: (TextColor: #F5BD58, RenderBold: true, FontSize: 22);
+                    Anchor: (Bottom: 8);
+                    Text: "Tenzinn";
+                }
+
+                Group #Members {
+                    LayoutMode: Top;
+
+                    Label {
+                        Style: @titleSmall;
+                        Text: "Party Members";
+                    }
+                }
+            }
+
+            Group #Bottom {
+                LayoutMode: Bottom;
+
+                Group {
+                    Anchor: (Height: 4, Bottom: 24);
+                    Background: (Color: #F5BD58);
+                }
+                Label {
+                    Style: @command;
+                    Text: "/party leave: Abandonar el grupo.";
+                }
+                Label {
+                    Style: @command;
+                    Text: "/party order: Pedir al lider empezar partida.";
+                }
+            }
+        }
     }
-  }
 }

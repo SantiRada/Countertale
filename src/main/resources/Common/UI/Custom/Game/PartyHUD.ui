@@ -43,7 +43,7 @@ Group #PartyHUD {
             Label #PartyLeader {
                 Style: (TextColor: #F5BD58, RenderBold: true, FontSize: 22);
                 Anchor: (Bottom: 8);
-                Text: "Tenzinn";
+                Text: "---";
             }
 
             Group #Members {

@@ -36,14 +36,9 @@ public class QueueCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    protected void execute(@NonNullDecl CommandContext commandContext,
-                           @NonNullDecl Store<EntityStore> store,
-                           @NonNullDecl Ref<EntityStore> ref,
-                           @NonNullDecl PlayerRef playerRef,
-                           @NonNullDecl World world) {
-
+    protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref,
+                           @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         RefactorTool.launchSound(playerRef, "clic");
-
         String modeArg = mode.get(commandContext);
 
         // Sin modo → abrir el selector de modo/mapa (ModesPage)
@@ -56,10 +51,8 @@ public class QueueCommand extends AbstractPlayerCommand {
         if (plugin.getMatchManager().isPlayerInMatch(playerRef)) {
             GameMatch currentMatch = plugin.getMatchManager().getPlayerMatch(playerRef);
             commandContext.sendMessage(Message.raw(String.format(
-                    MessageListeners.get(MessageListeners.MessageKey.CHAT_ALREADY_IN_GAME)
-                    + " (%d/10 players). State: %s",
-                    currentMatch.getPlayerCount(),
-                    currentMatch.getState())).color(Color.ORANGE));
+                    MessageListeners.get(MessageListeners.MessageKey.CHAT_ALREADY_IN_GAME) + " (%d/10 players). State: %s",
+                    currentMatch.getPlayerCount(), currentMatch.getState())).color(Color.ORANGE));
             return;
         }
 
@@ -68,16 +61,13 @@ public class QueueCommand extends AbstractPlayerCommand {
 
         // Leer los votos guardados por ModesPage (o todos los mapas si acceso directo)
         List<String> votes = MapVoteStore.getVotes(playerRef);
-        MapVoteStore.clearVotes(playerRef); // consumidos; los guardamos en la variable local
+        MapVoteStore.clearVotes(playerRef);
 
         GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef, modeArg, votes);
-        if (match == null) return; // jugador ya en cola, mensaje enviado en addPlayerToQueue
+        if (match == null) return;
 
-        player.sendMessage(Message.raw(String.format(
-                MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
-                + " [%s] (%d/10 players)",
-                match.getMatchId().toString().substring(0, 8),
-                match.getPlayerCount())).color(Color.orange));
+        player.sendMessage(Message.raw(String.format(MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
+                + " [%s] (%d/10 players)", match.getMatchId().toString().substring(0, 8), match.getPlayerCount())).color(Color.orange));
 
         // Mostrar QueueHud con la selección de mapas del jugador
         plugin.showQueueHud(playerRef, player, match, votes);

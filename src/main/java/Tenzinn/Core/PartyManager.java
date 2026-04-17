@@ -3,17 +3,20 @@ package Tenzinn.Core;
 import Tenzinn.Core.Objects.PartyObject;
 import Tenzinn.Core.Objects.InvitationParty;
 
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class PartyManager {
 
     public static List<PartyObject> totalParty = new ArrayList<>();
     public static List<InvitationParty> totalInvitations = new ArrayList<>();
+    private static int partyIdCounter = 0;
 
     public static void CreateParty(PlayerRef playerRef) {
         for (PartyObject partyObject : totalParty) {
@@ -23,9 +26,10 @@ public class PartyManager {
             }
         }
 
-        PartyObject newParty = new PartyObject(totalParty.size(), playerRef);
+        PartyObject newParty = new PartyObject(partyIdCounter++, playerRef);
         totalParty.add(newParty);
-        newParty.TransferLeadership();
+
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(newParty::TransferLeadership, 100, TimeUnit.MILLISECONDS);
         playerRef.sendMessage(Message.raw("Created party!").color(Color.cyan));
     }
     public static void InviteToParty(int id, PlayerRef playerRef) {
@@ -76,14 +80,11 @@ public class PartyManager {
         if (index < 0) return;
 
         PlayerRef leader = totalParty.get(index).players.getFirst();
-
         totalParty.get(index).RemovePlayer(playerRef);
-        totalParty.get(index).RemoveHUD(playerRef);
 
         if (leader.equals(playerRef)) {
-            // Sos el leader
             if (!totalParty.get(index).players.isEmpty()) {
-                // Se transfiere el liderazgo
+                totalParty.get(index).RemoveHUD(playerRef);
                 totalParty.get(index).TransferLeadership();
                 totalParty.get(index).leaderUsername = totalParty.get(index).players.getFirst().getUsername();
                 totalParty.get(index).UpdateHUD();
@@ -92,7 +93,7 @@ public class PartyManager {
                 totalInvitations.removeIf(item -> item.id == id);
                 totalParty.remove(index);
             }
-        }
+        } else { totalParty.get(index).RemoveHUD(playerRef); }
     }
     public static void OrderParty(PlayerRef playerRef) {
         int id = GetPartyIdForPlayer(playerRef);

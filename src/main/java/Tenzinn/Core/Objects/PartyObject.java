@@ -1,17 +1,20 @@
 package Tenzinn.Core.Objects;
 
-import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.UI.QueueHud;
 import Tenzinn.Core.UI.PartyHUD;
+import Tenzinn.Core.Tools.RefactorTool;
+
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.World;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.ArrayList;
 
 public class PartyObject {
 
@@ -26,34 +29,38 @@ public class PartyObject {
     }
     // ================================================== //
     public void AddPlayer(PlayerRef playerRef) {
-        for (int i = 0; i < players.size(); i++) { if (players.get(i).equals(playerRef)) return; }
+        for (PlayerRef ref : players) { if (ref.equals(playerRef)) return; }
 
         players.add(playerRef);
-
         UpdateHUD();
 
         SendMessageToAllPlayers(playerRef.getUsername() + " ha entrado al grupo.");
     }
     public void UpdateHUD() {
-        for (int i = 0; i < players.size(); i++) {
-            Player player = RefactorTool.getPlayer(players.get(i));
+        for (PlayerRef playerRef : players) {
+            Player player = RefactorTool.getPlayer(playerRef);
 
             CustomUIHud customHUD = player.getHudManager().getCustomHud();
-            if(customHUD == null) {
-                player.getHudManager().setCustomHud(players.get(i), new PartyHUD(players.get(i), this));
-                return;
-            }
-            if(customHUD instanceof PartyHUD partyHUD) { partyHUD.setData(); }
+            if (customHUD == null) { player.getHudManager().setCustomHud(playerRef, new PartyHUD(playerRef, this)); return; }
+            if (customHUD instanceof QueueHud queueHUD) { queueHUD.setDataParty(this); }
+            if (customHUD instanceof PartyHUD partyHUD) { partyHUD.setData(); }
         }
-
     }
-    public void RemovePlayer(PlayerRef playerRef) { players.remove(playerRef); }
-    public void TransferLeadership() {
-        Objects.requireNonNull(Universe.get().getWorld(Objects.requireNonNull(players.getFirst().getWorldUuid()))).execute(() -> {
-            Player player = RefactorTool.getPlayer(players.getFirst());
-            player.getHudManager().setCustomHud(players.getFirst(), new PartyHUD(players.getFirst(), this));
+    public void RemovePlayer(PlayerRef playerRef) {
+        players.remove(playerRef);
+
+        assert playerRef.getWorldUuid() != null;
+        World world = Universe.get().getWorld(playerRef.getWorldUuid());
+
+        assert world != null;
+        world.execute(() -> {
+            Player player = RefactorTool.getPlayer(playerRef);
+            CustomUIHud customHud = player.getHudManager().getCustomHud();
+            if (customHud instanceof QueueHud queueHUD) { queueHUD.setDeleteParty(); }
+            if (customHud instanceof PartyHUD) { player.getHudManager().setCustomHud(playerRef, null); }
         });
     }
+    public void TransferLeadership() { Objects.requireNonNull(Universe.get().getWorld(Objects.requireNonNull(players.getFirst().getWorldUuid()))).execute(this::UpdateHUD); }
     public void RemoveHUD(PlayerRef playerRef) {
         assert playerRef.getWorldUuid() != null;
         Objects.requireNonNull(Universe.get().getWorld(playerRef.getWorldUuid())).execute(() -> {
