@@ -1,0 +1,60 @@
+$C = "../Common.ui";
+
+$C.@PageOverlay {
+    LayoutMode: Middle;
+
+    Group {
+        LayoutMode: Top;
+        Anchor: (Width: 360);
+        Background: (Color: #0D1117(0.93));
+        Padding: (Horizontal: 40, Vertical: 36);
+
+        Label {
+            Anchor: (Height: 48);
+            Style: (
+                FontSize: 22,
+                TextColor: #E05252,
+                RenderBold: true,
+                RenderUppercase: true,
+                HorizontalAlignment: Center
+            );
+            Text: "You are dead.";
+        }
+
+        Group {
+            Anchor: (Height: 2, Top: 2, Bottom: 18);
+            Background: (Color: #E05252(0.25));
+        }
+
+        Label {
+            Anchor: (Height: 20, Bottom: 6);
+            Style: (
+                FontSize: 12,
+                TextColor: #8B9BAE,
+                HorizontalAlignment: Center
+            );
+            Text: "Available respawn in";
+        }
+
+        Label #Timer {
+            Anchor: (Height: 60);
+            Style: (
+                FontSize: 46,
+                TextColor: #FFFFFF,
+                RenderBold: true,
+                HorizontalAlignment: Center
+            );
+            Text: "00:00";
+        }
+
+        Group {
+            Anchor: (Height: 2, Top: 18, Bottom: 22);
+            Background: (Color: #FFFFFF(0.07));
+        }
+
+        $C.@TextButton #RespawnButton {
+            @Text = "Respawn";
+            Anchor: (Height: 44);
+        }
+    }
+}

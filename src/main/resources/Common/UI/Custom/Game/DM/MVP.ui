@@ -1,0 +1,815 @@
+
+@Fullsize = PatchStyle(TexturePath: "../images/shop/fullsize.png");
+
+@BackScore = PatchStyle(TexturePath: "../images/scoreboard.png");
+@BackGeneral = PatchStyle(TexturePath: "../../Common/Background.png");
+
+@Logo = PatchStyle(TexturePath: "../images/mvp/logo-1.png");
+@Icon01 = PatchStyle(TexturePath: "../images/mvp/Icon-1.png");
+@Icon03 = PatchStyle(TexturePath: "../images/mvp/Icon-2.png");
+@Icon02 = PatchStyle(TexturePath: "../images/mvp/Icon-3.png");
+@ComingSoon = PatchStyle(TexturePath: "../images/shop/coming-soon.png");
+
+@BtnDefault = PatchStyle(TexturePath: "../images/mvp/btn-default.png");
+@BtnHover = PatchStyle(TexturePath: "../images/mvp/btn-hover.png");
+@BtnPressed = PatchStyle(TexturePath: "../images/mvp/btn-pressed.png");
+@Btn2Default = PatchStyle(TexturePath: "../images/mvp/btn-active-default.png");
+@Btn2Hover = PatchStyle(TexturePath: "../images/mvp/btn-active-hover.png");
+@Btn2Pressed = PatchStyle(TexturePath: "../images/mvp/btn-active-pressed.png");
+
+@Button1 = (
+  Default: (Background: @BtnDefault),
+  Hovered: (Background: @BtnHover),
+  Pressed: (Background: @BtnPressed)
+);
+
+@Button2 = (
+  Default: (Background: @Btn2Default),
+  Hovered: (Background: @Btn2Hover),
+  Pressed: (Background: @Btn2Pressed)
+);
+
+Group {
+    FlexWeight: 1;
+    Background: @Fullsize;
+    LayoutMode: Top;
+
+    Group #Title {
+        FlexWeight: 4;
+        LayoutMode: Bottom;
+        Anchor: (Bottom: 24);
+
+        Group {
+            LayoutMode: Center;
+
+            Group #Logo01 {
+                Anchor: (Width: 32, Height: 32, Right: 24);
+                Background: @Logo;
+            }
+
+            Label {
+                Style: (TextColor: #FFFFFF(0.35), RenderBold: true, FontSize: 42, Alignment: Center);
+                Text: "DEATHMATCH";
+            }
+
+            Group #Logo02 {
+                Anchor: (Width: 32, Height: 32, Left: 24);
+                Background: @Logo;
+            }
+        }
+    }
+
+    Group #ContentGeneral {
+        FlexWeight: 12;
+        LayoutMode: Top;
+
+        Group #Content {
+            LayoutMode: Center;
+            Anchor: (Height: 655);
+
+            Group #LeftContent {
+                LayoutMode: Top;
+                Anchor: (Right: 14);
+
+                Group #TextGlobal {
+                    LayoutMode: Top;
+                    Anchor: (Width: 200);
+                    FlexWeight: 1;
+
+                    Label #ModeGame {
+                        Style: (TextColor: #FFFFFF(0.5), Alignment: End, FontSize: 14);
+                        Text: "Casual Game";
+                    }
+
+                    Label #MapText {
+                        Style: (TextColor: #FFFFFF(0.5), Alignment: End, FontSize: 14);
+                        Text: "MAP - Dust2";
+                    }
+
+                    Label {
+                        Style: (TextColor: #FFFFFF(0.5), Alignment: End, FontSize: 14);
+                        Text: "Duration - 10:00";
+                    }
+                }
+
+                Group #Buttons {
+                    Anchor: (Width: 150);
+                    FlexWeight: 1;
+                    LayoutMode: Bottom;
+
+                    Button #PlayButton {
+                        LayoutMode: Center;
+                        Anchor: (Width: 200, Height: 50, Bottom: 14);
+                        Background: @Btn2Default;
+                        Style: @Button2;
+
+                        Label #PlayGame {
+                            Style: (FontSize: 18, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
+                            Text: "Play Game";
+                        }
+                    }
+                    Button #LobbyButton {
+                        LayoutMode: Center;
+                        Anchor: (Width: 200, Height: 50);
+                        Background: @BtnDefault;
+                        Style: @Button1;
+
+                        Label #BackLobby {
+                            Style: (FontSize: 18, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
+                            Text: "Back to Lobby";
+                        }
+                    }
+                }
+
+            }
+
+            Group #MiddleContent {
+                LayoutMode: Top;
+                Anchor: (Right: 14);
+
+                Group #B1 {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+                    Anchor: (Width: 275, Bottom: 14);
+                    Background: @BackGeneral;
+
+                    Group #ComingSoonIcon {
+                        Anchor: (Width: 150, Height: 85, Bottom: 16);
+                        Background: @ComingSoon;
+                    }
+
+                    Label {
+                        Style: (FontSize: 24, TextColor: #FFFFFF(0.25), Alignment: Center, RenderBold: true);
+                        Text: "Coming Soon";
+                    }
+                }
+                Group #B2 {
+                    LayoutMode: Top;
+                    Anchor: (Width: 275);
+                    Background: @BackGeneral;
+                    Padding: (Full: 16);
+
+                    Label #Summary {
+                        Style: (FontSize: 20, TextColor: #FFFFFF(0.25), RenderBold: true);
+                        Text: "Summary";
+                    }
+
+                    Group {
+                        LayoutMode: Top;
+                        Anchor: (Top: 16);
+
+                        Group #Item01 {
+                            LayoutMode: Left;
+                            Anchor: (Bottom: 12);
+
+                            Group #Icon01 {
+                                Anchor: (Width: 80, Height: 80, Right: 12);
+                                Background: @Icon01;
+                            }
+
+                            Group {
+                                LayoutMode: Top;
+
+                                Label #DamageCaused {
+                                    Style: (FontSize: 16, TextColor: #FFFFFF(0.5));
+                                    Text: "Damage caused";
+                                }
+
+                                Label #DamageCausedText {
+                                    Style: (FontSize: 48, TextColor: #FFFFFF, RenderBold: true);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+
+                        Group #Item02 {
+                            LayoutMode: Left;
+                            Anchor: (Bottom: 12);
+
+                            Group #Icon02 {
+                                Anchor: (Width: 80, Height: 80, Right: 12);
+                                Background: @Icon02;
+                            }
+
+                            Group {
+                                LayoutMode: Top;
+
+                                Label #DamageReceived {
+                                    Style: (FontSize: 16, TextColor: #FFFFFF(0.5));
+                                    Text: "Damage received";
+                                }
+
+                                Label #DamageReceivedText {
+                                    Style: (FontSize: 48, TextColor: #FFFFFF, RenderBold: true);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+
+                        Group #Item03 {
+                            LayoutMode: Left;
+                            Anchor: (Bottom: 12);
+
+                            Group #Icon03 {
+                                Anchor: (Width: 80, Height: 80, Right: 12);
+                                Background: @Icon03;
+                            }
+
+                            Group {
+                                LayoutMode: Top;
+
+                                Label #MeleeDamage {
+                                    Style: (FontSize: 16, TextColor: #FFFFFF(0.5));
+                                    Text: "Melee damage";
+                                }
+
+                                Label #MeleeDamageValue {
+                                    Style: (FontSize: 48, TextColor: #FFFFFF, RenderBold: true);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Group #RightContent {
+                LayoutMode: Top;
+                Anchor: (Width: 850, Height: 655);
+                Background: @BackScore;
+
+                Group #TopSector {
+                    LayoutMode: Left;
+                    Anchor: (Width: 850, Left: 24, Right: 24, Top: 24, Bottom: 12);
+
+                    Group #TopSectorLeft {
+                        LayoutMode: Left;
+                        FlexWeight: 1;
+
+                        Group #Icon {
+                            Anchor: (Width: 24, Height: 24, Right: 16);
+                            Background: @Logo;
+                        }
+
+                        Label #NameMap {
+                            Text: "Countertale | Deathmatch";
+                            Style: (FontSize: 18, TextColor: #ffffff(0.5));
+                        }
+                    }
+
+                    Group #TopSectorRight {
+                        LayoutMode: Right;
+                        FlexWeight: 1;
+
+                        Label #Timer {
+                            Text: "--:--";
+                            Style: (FontSize: 18, TextColor: #ffffff(0.5), Alignment: End);
+                        }
+                    }
+                }
+
+                Group #MiddleSector {
+                    LayoutMode: Left;
+                    Anchor: (Width: 850, Left: 24, Right: 24, Top: 13);
+
+                    Group #MiddleSectorLeft {
+                        LayoutMode: Left;
+                        FlexWeight: 1;
+
+                        Label {
+                            Text: "Players";
+                            Style: (FontSize: 24, TextColor: #ffffff, RenderBold: true);
+                        }
+                    }
+
+                    Group #MiddleSectorRight {
+                        LayoutMode: Right;
+                        FlexWeight: 1;
+
+                        Label {
+                            Anchor: (Width: 70, Height: 41);
+                            Style: (FontSize: 24, TextColor: #ffffff, RenderBold: true);
+                            Text: "K";
+                        }
+                        Label {
+                            Anchor: (Width: 72, Height: 41);
+                            Style: (FontSize: 24, TextColor: #ffffff, RenderBold: true);
+                            Text: "D";
+                        }
+                        Label {
+                            Anchor: (Width: 104, Height: 41);
+                            Style: (FontSize: 24, TextColor: #ffffff, RenderBold: true);
+                            Text: "Score";
+                        }
+                    }
+                }
+
+                Group #BottomSector {
+                    LayoutMode: Top;
+                    Anchor: (Width: 850, Left: 24, Right: 24);
+
+                    Group #DataUser01 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name01 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill01 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death01 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score01 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser02 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name02 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill02 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death02 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score02 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser03 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name03 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill03 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death03 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score03 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser04 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name04 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill04 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death04 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score04 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser05 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name05 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill05 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death05 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score05 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser06 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name06 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill06 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death06 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score06 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser07 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name07 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill07 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death07 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score07 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser08 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name08 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill08 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death08 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score08 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser09 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name09 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill09 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death09 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score09 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                    Group #DataUser010 {
+                        LayoutMode: Center;
+                        Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+                        Padding: (Left: 15, Right: 14);
+                        OutlineColor: #E0B448;
+                        OutlineSize: 0;
+
+                        Group {
+                            LayoutMode: Left;
+                            FlexWeight: 1;
+
+                            Label #Name010 {
+                                Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                                Text: "Username";
+                            }
+                        }
+                        Group {
+                            LayoutMode: Right;
+                            Anchor: (Right: 8);
+                            FlexWeight: 1;
+
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44);
+
+                                Label #Kill010 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "88";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 64, Height: 44, Left: 4);
+
+                                Label #Death010 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8";
+                                }
+                            }
+                            Group {
+                                LayoutMode: Center;
+                                Anchor: (Width: 90, Height: 44, Left: 23);
+
+                                Label #Score010 {
+                                    Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                                    Text: "8888";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

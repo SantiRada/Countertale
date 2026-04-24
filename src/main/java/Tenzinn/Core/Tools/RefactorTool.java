@@ -6,20 +6,20 @@ import Tenzinn.Core.LootManager;
 import Tenzinn.Deathmatch.UI.MvpPage;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Objects.WeaponStats;
+import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
-
+import Tenzinn.Core.Listeners.MessageListeners;
 import Tenzinn.FiveVSfive.UI.ScoreboardPageFVF;
+import Tenzinn.Core.Listeners.MapListeners.SpawnMode;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import Tenzinn.Core.Listeners.MapListeners;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.math.vector.Vector3d;
-import Tenzinn.Core.Listeners.MessageListeners;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.NameMatching;
-import Tenzinn.Core.Listeners.MapListeners.SpawnMode;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -180,11 +180,6 @@ public class RefactorTool {
 
         return player;
     }
-    public static float getMaxHealth(Player player) {
-        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
-
-        return playerStats.maxHealth;
-    }
     // ============================================ //
     public static void Respawn(PlayerRef playerRef) {
         SpawnMode mode = getModeForPlayer(playerRef);
@@ -193,12 +188,11 @@ public class RefactorTool {
         World currentWorld = Universe.get().getWorld(playerRef.getWorldUuid());
         if (currentWorld == null) { return; }
 
-        // Obtener el mapa del match actual del jugador
         PlayerStats playerStats = getPlayerStats(playerRef);
         if (playerStats == null) return;
         String mapId = playerStats.getCurrentMatch().getMapId();
 
-        Vector3d spawnPos = getRandomSpawn(mapId);                // ← usa el mapa del match
+        Vector3d spawnPos = getRandomSpawn(mapId);
         if (mode == SpawnMode.FVF) { spawnPos = getSpawnForTeam(playerRef); }
         Vector3d finalSpawnPos = spawnPos;
 
@@ -220,9 +214,6 @@ public class RefactorTool {
                 } catch (Exception e) { e.printStackTrace(); }
             });
         }, 150, TimeUnit.MILLISECONDS);
-
-        // El resto del método (HUD, invulnerabilidad, timers) queda igual que antes.
-        // Solo se movió el playerStats.getCurrentMatch().getMapId() arriba del schedule.
 
         CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
         boolean isInGame = false;
@@ -283,9 +274,7 @@ public class RefactorTool {
 
         if(testHud == null) return;
 
-        if(testHud instanceof GameHUD) {
-            GameHUD currentHUD = (GameHUD) testHud;
-
+        if(testHud instanceof GameHUD currentHUD) {
             if(value > 3) return;
 
             currentHUD.setWeapons(value);
@@ -304,14 +293,6 @@ public class RefactorTool {
         }
     }
     // ============================================ //
-    /**
-     * Cierra una partida: marca el match como FINISHED y muestra la pantalla final a cada jugador.
-     * La destrucción de la instancia y la reposición en el pool ocurren cuando el último jugador
-     * abandona la partida a través de {@link Tenzinn.Core.MatchManager#removePlayerFromMatch}.
-     *
-     * @param players lista de jugadores en la partida
-     * @param match   la partida que terminó
-     */
     public static void finishGame(List<PlayerRef> players, Tenzinn.Core.GameMatch match) {
         if (match != null) match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
 
@@ -330,11 +311,6 @@ public class RefactorTool {
             }
         }
     }
-    /**
-     * Cuenta jugadores disponibles para jugar: los que están en el lobby (sin PlayerStats).
-     * Los jugadores en partida (con PlayerStats) no se cuentan porque ya están ocupados.
-     * Este valor es el que usa el pool para calcular cuántas instancias precargar.
-     */
     public static int getPlayersReady() {
         List<PlayerRef> playerRefs = Universe.get().getPlayers();
         int playersReady = 0;

@@ -28,7 +28,7 @@ public class ScoreboardPageFVF extends CustomUIHud {
 
     @Override
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {
-        uiCommandBuilder.append("Game/Scoreboard_FVF.ui");
+        uiCommandBuilder.append("Game/FVF/Scoreboard_FVF.ui");
         uiBuilder = uiCommandBuilder;
 
         setTimer();

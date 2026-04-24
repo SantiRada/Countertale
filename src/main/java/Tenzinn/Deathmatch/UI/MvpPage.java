@@ -30,7 +30,7 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
 
     @Override
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder uiCommandBuilder, @NonNullDecl UIEventBuilder uiEventBuilder, @NonNullDecl Store<EntityStore> store) {
-        uiCommandBuilder.append("Game/MVP.ui");
+        uiCommandBuilder.append("Game/DM/MVP.ui");
         uiBuilder = uiCommandBuilder;
 
         uiBuilder.set("#Summary.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_SUMMARY)));

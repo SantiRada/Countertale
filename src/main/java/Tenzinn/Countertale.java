@@ -6,7 +6,6 @@ import Tenzinn.Core.Handle.*;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Commands.*;
 import Tenzinn.Core.Listeners.*;
-import Tenzinn.Core.Objects.PartyObject;
 import Tenzinn.Core.PartyManager;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.UI.PartyHUD;
@@ -65,14 +64,12 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void setup() {
-        MessageListeners.load();
-        RevenuesConfig.load();
         MapListeners.load();
+        RevenuesConfig.load();
+        MessageListeners.load();
 
         // Interactions
-        this.getCodecRegistry(Interaction.CODEC).register(
-                "use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
-
+        this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
         matchManager = new MatchManager(this);
 
         // Admin Commands
@@ -106,16 +103,12 @@ public class Countertale extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
         this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
-        this.getEntityStoreRegistry().registerSystem(new DeathDetector());
         this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
         this.getEntityStoreRegistry().registerSystem(new InvulnerabilitySystem());
+        this.getEntityStoreRegistry().registerSystem(new DeathDetector());
 
-        this.getEventRegistry().<String, PlayerChatEvent>registerAsyncGlobal(
-                PlayerChatEvent.class,
-                future -> future.thenApply(event -> {
-                    TeamChatSystem.onPlayerChat(event);
-                    return event;
-                })
+        this.getEventRegistry().<String, PlayerChatEvent>registerAsyncGlobal(PlayerChatEvent.class, future -> future.thenApply(event -> {
+                    TeamChatSystem.onPlayerChat(event); return event; })
         );
 
         // Handlers
