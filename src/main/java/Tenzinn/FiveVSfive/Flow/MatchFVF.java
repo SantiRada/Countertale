@@ -17,6 +17,8 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -37,7 +39,7 @@ public class MatchFVF {
     private static ScheduledFuture<?> timerTask;
     private static int remainingSeconds = 150;
 
-    private static int timePerRound = 15;
+    private static int timePerRound = 150;
     private static int timePerPurchase = 15;
 
     public static int winner = -1;
@@ -212,17 +214,21 @@ public class MatchFVF {
             Player player = RefactorTool.getPlayer(playerRefs.get(i));
             LootManager.giveLoot(player, LootManager.getStarterKit());
 
-            // Curar al player
+            Ref<EntityStore> ref = playerRefs.get(i).getReference();
+            assert ref != null;
+            Store<EntityStore> store = ref.getStore();
+            EntityStatMap statMap = store.getComponent(ref, EntityStatMap.getComponentType());
+            if (statMap != null) { statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth()); }
         }
 
         teleportPlayers(playerRefs);
     }
     public static void teleportPlayers(List<PlayerRef> playerRefs) {
-        ArrayList<Vector3d> spawns = RefactorTool.getSpawns("dust2", RefactorTool.getModeForPlayer(playerRefs.getFirst()));
+        ArrayList<Vector3d> spawns = RefactorTool.getSpawns(myMatch.getMapId(), RefactorTool.getModeForPlayer(playerRefs.getFirst()));
         if (spawns.isEmpty()) return;
 
-        assert playerRefs.get(0).getWorldUuid() != null;
-        World newWorld = Universe.get().getWorld(playerRefs.get(0).getWorldUuid());
+        assert playerRefs.getFirst().getWorldUuid() != null;
+        World newWorld = Universe.get().getWorld(playerRefs.getFirst().getWorldUuid());
 
         for (int i = 0; i < playerRefs.size(); i++) {
             Vector3d spawnPos = spawns.get(i % spawns.size());
@@ -254,6 +260,7 @@ public class MatchFVF {
             } catch (Exception e) { e.printStackTrace(); }
         }
     }
+    public static List<PlayerRef> getPlayers() { return myMatch != null ? myMatch.getPlayers() : new ArrayList<>(); }
     // ================================================== //
     public static int getTimer() { return remainingSeconds; }
     public static void stopTimer() { if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false); }

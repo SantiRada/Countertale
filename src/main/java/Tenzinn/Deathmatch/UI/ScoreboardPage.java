@@ -11,8 +11,8 @@ import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ScheduledFuture;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -28,7 +28,7 @@ public class ScoreboardPage extends CustomUIHud {
 
     @Override
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {
-        uiCommandBuilder.append("Game/Scoreboard_DM.ui");
+        uiCommandBuilder.append("Game/DM/Scoreboard_DM.ui");
         uiBuilder = uiCommandBuilder;
 
         setTimer();
@@ -63,7 +63,7 @@ public class ScoreboardPage extends CustomUIHud {
             uiBuilder.set("#Score0" + i + ".TextSpans", Message.raw(""));
         }
 
-        String[] nameWorld = RefactorTool.getPlayer(playerRef).getWorld().getName().split("_");
+        String[] nameWorld = Objects.requireNonNull(RefactorTool.getPlayer(playerRef).getWorld()).getName().split("_");
         String worldNameWithSpaces = String.join(" ", nameWorld);
         int withInstance = worldNameWithSpaces.toLowerCase().indexOf("instance");
         if (withInstance != -1) { worldNameWithSpaces = worldNameWithSpaces.substring(0, withInstance).trim(); }
@@ -75,7 +75,7 @@ public class ScoreboardPage extends CustomUIHud {
 
     public void setTimer() {
         timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            remainingSeconds = RefactorTool.getPlayerStats(playerRef).getCurrentMatch().getTimer();
+            remainingSeconds = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch().getTimer();
 
             int minutes = remainingSeconds / 60;
             int seconds = remainingSeconds % 60;
@@ -89,7 +89,6 @@ public class ScoreboardPage extends CustomUIHud {
 
     public void clearHUD() {
         if (timerTask != null && !timerTask.isDone()) timerTask.cancel(true);
-
         if (uiBuilder == null) return;
 
         try {
