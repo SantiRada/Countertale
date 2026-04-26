@@ -1,0 +1,165 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Flamethrower_Goblin.name",
+    "Description": "server.items.Flamethrower_Goblin.description"
+  },
+  "Categories": [
+    "Items.Weapons",
+    "HyGuns.Guns"
+  ],
+  "Icon": "Icons/ItemsGenerated/Flamethrower_Goblin.png",
+  "ItemLevel": 40,
+  "Quality": "Rare",
+  "Model": "NPC/Intelligent/Goblin/Models/Weapons/Flamethrower/Flamethrower_Goblin.blockymodel",
+  "Texture": "NPC/Intelligent/Goblin/Models/Weapons/Flamethrower/Flamethrower_Goblin_Texture.png",
+  "PlayerAnimationsId": "Rifle",
+  "Interactions": {
+    "Primary": "Hyguns_Flamethrower_Goblin_Primary",
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "Flamethrower_Reload",
+                "WorldSoundEventId": "Flamethrower_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "InteractionVars": {
+    "Flamethrower_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Hyguns_Weapon_Stick_Fire_Secondary_Damage",
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Fire": 12
+            }
+          },
+          "DamageEffects": {
+            "Knockback": {
+              "Direction": {
+                "X": 0,
+                "Y": 2.0,
+                "Z": -3.0
+              },
+              "Force": 8.0,
+              "VelocityType": "Add"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Explosion"
+              }
+            ]
+          },
+          "Next": {
+            "Type": "ApplyEffect",
+            "EffectId": "Hyguns_Flame_Staff_Burn",
+            "Entity": "Target"
+          }
+        }
+      ]
+    }
+  },
+  "IconProperties": {
+    "Scale": 0.35,
+    "Rotation": [
+      318,
+      102,
+      0
+    ],
+    "Translation": [
+      -5,
+      -31
+    ]
+  },
+  "Particles": [
+    {
+      "TargetNodeName": "Flame",
+      "SystemId": "Candle_Fire",
+      "Color": "#ffb537"
+    }
+  ],
+  "Light": {
+    "Radius": 1,
+    "Color": "#a73"
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "MaxDurability": 300,
+  "Tags": {
+    "Family": [
+      "Gun"
+    ],
+    "Type": [
+      "Weapon"
+    ]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Output": [
+      {
+        "ItemId": "Flamethrower_Goblin"
+      }
+    ],
+    "Input": [
+      {
+        "Quantity": 10,
+        "ResourceTypeId": "Wood_Trunk"
+      },
+      {
+        "Quantity": 10,
+        "ItemId": "Ingredient_Bar_Iron"
+      },
+      {
+        "Quantity": 10,
+        "ItemId": "Ingredient_Fire_Essence"
+      },
+      {
+        "ItemId": "Potion_Empty",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Bench_Gunsmith",
+        "Categories": [
+          "Utility"
+        ],
+        "RequiredTierLevel": 2
+      }
+    ]
+  },
+  "Weapon": {},
+  "ItemSoundSetId": "ISS_Weapons_Wood",
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/GoblinFlamethrower.png",
+      "Ammo": {
+        "Family": "Fuel",
+        "WeaponClass": [
+          "GoblinFlamethrower"
+        ],
+        "Capacity": 500,
+        "Reload": {
+          "Time": 3.5,
+          "Amount": 500
+        }
+      }
+    }
+  }
+}

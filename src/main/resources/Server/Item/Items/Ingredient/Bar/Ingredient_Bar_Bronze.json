@@ -1,0 +1,50 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Ingredient_Bar_Bronze.name",
+    "Description": "server.items.Ingredient_Bar_Bronze.description"
+  },
+  "Categories": ["Items", "HyGuns.Items"],
+  "ResourceTypes": [
+    {
+      "Id": "Copper_Iron_Bar"
+    }
+  ],
+  "Model": "Resources/Materials/Ingot.blockymodel",
+  "Texture": "Resources/Materials/Ingot_Textures/Bronze.png",
+  "Icon": "Icons/ItemsGenerated/Ingredient_Bar_Bronze.png",
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 1,
+    "Translation": [0, -3],
+    "Rotation": [22.5, 45, 22.5]
+  },
+  "Tags": {
+    "Type": ["Ingredient"]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": null
+  },
+  "ItemSoundSetId": "ISS_Items_Ingots",
+  "DropOnDeath": true,
+  "Recipe": {
+    "BenchRequirement": [
+      {
+        "Type": "Processing",
+        "Id": "Furnace",
+        "RequiredTierLevel": 1
+      }
+    ],
+    "Input": [
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Bar_Copper"
+      },
+      {
+        "Quantity": 1,
+        "ItemId": "Ingredient_Bar_Iron"
+      }
+    ],
+    "OutputQuantity": 2,
+    "TimeSeconds": 10
+  }
+}

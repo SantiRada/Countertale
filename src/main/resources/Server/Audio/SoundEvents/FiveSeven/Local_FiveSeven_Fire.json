@@ -1,0 +1,11 @@
+{
+  "Layers": [
+    {
+      "Files": ["Sounds/FiveSeven/Local_FiveSeven_Fire_01.ogg"]
+    }
+  ],
+  "MaxInstance": 30,
+  "Volume": 1.0,
+  "PreventSoundInterruption": true,
+  "Parent": "SFX_Attn_Loud"
+}

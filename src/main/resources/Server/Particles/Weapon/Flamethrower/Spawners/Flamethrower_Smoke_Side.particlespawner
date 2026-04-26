@@ -1,0 +1,141 @@
+{
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "BillboardVelocity",
+  "LinearFiltering": true,
+  "LightInfluence": 1.0,
+  "ParticleRotateWithSpawner": false,
+  "TrailSpawnerPositionMultiplier": 1,
+  "TrailSpawnerRotationMultiplier": 1,
+  "MaxConcurrentParticles": 20,
+  "ParticleLifeSpan": {
+    "Min": 0.7,
+    "Max": 0.9
+  },
+  "SpawnRate": {
+    "Max": 50.0,
+    "Min": 30.0
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Smoke/Smoke_Impact.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Require",
+    "UVOption": "RandomFlipU",
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 0.5,
+            "Max": 0.5
+          }
+        },
+        "Opacity": 1.0,
+        "Rotation": {
+          "Z": {
+            "Min": 0.0,
+            "Max": 0.0
+          }
+        },
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Color": "#ffaa6d"
+      },
+      "25": {
+        "Color": "#7c6969",
+        "Opacity": 0.75
+      },
+      "50": {
+        "Scale": {
+          "X": {
+            "Min": 0.75,
+            "Max": 0.75
+          }
+        },
+        "Opacity": 0.5
+      },
+      "75": {
+        "Opacity": 0.25
+      },
+      "100": {
+        "Opacity": 0,
+        "Rotation": {
+          "Z": {
+            "Min": -30.0,
+            "Max": 30.0
+          }
+        },
+        "Color": "#a9a9a9",
+        "Scale": {
+          "X": {
+            "Min": 1,
+            "Max": 1
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Opacity": 0.85,
+      "Color": "#ffffff",
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.3,
+          "Max": 0.5
+        }
+      },
+      "Rotation": {
+        "Z": {
+          "Min": 180.0,
+          "Max": 180.0
+        }
+      }
+    }
+  },
+  "SpawnBurst": false,
+  "TotalParticles": {
+    "Min": 20,
+    "Max": 40
+  },
+  "EmitOffset": {
+    "Y": {
+      "Max": 0.2,
+      "Min": 0.1
+    },
+    "X": {
+      "Min": 0.1,
+      "Max": 0.2
+    },
+    "Z": {
+      "Min": 0.1,
+      "Max": 0.2
+    }
+  },
+  "Attractors": [
+    {
+      "DampingMultiplier": {
+        "X": 0.75,
+        "Y": 0.75,
+        "Z": 0.75
+      },
+      "Radius": 0.0
+    }
+  ],
+  "InitialVelocity": {
+    "Speed": {
+      "Min": 0.5,
+      "Max": 1.0
+    },
+    "Pitch": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    }
+  }
+}

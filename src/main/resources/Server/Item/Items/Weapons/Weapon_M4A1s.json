@@ -1,0 +1,166 @@
+{
+  "Icon": "Icons/ItemsGenerated/M4A1s.png",
+  "Model": "Items/Weapons/M4A1s/M4A1s.blockymodel",
+  "Texture": "Items/Weapons/M4A1s/M4A1s.png",
+  "TranslationProperties": {
+    "Name": "server.items.M4A1s.name",
+    "Description": "server.items.M4A1s.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1.2,
+  "IconProperties": {
+    "Scale": 0.3,
+    "Rotation": [315, 90, 0],
+    "Translation": [-3, -36]
+  },
+  "Quality": "Epic",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0.09
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "World_M4A1s_Fire",
+              "LocalSoundEventId": "Local_M4A1s_Fire",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 1.42,
+                    "Y": 0.1
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "Z": 1.1,
+                    "Y": 0.1
+                  }
+                }
+              ],
+              "CameraEffect": "Handgun_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "M4A1s_Reload",
+                "WorldSoundEventId": "M4A1s_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "M4A1s_Equip",
+            "LocalSoundEventId": "M4A1s_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 500,
+  "PlayerAnimationsId": "Rifle",
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["Rifle_Assault"]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 12,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 8,
+        "ItemId": "Ingredient_Bar_HardenedSteel"
+      },
+      {
+        "Quantity": 8,
+        "ItemId": "Ingredient_Bar_Adamantite"
+      },
+      {
+        "Quantity": 5,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_M4A1s"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["Rifles"],
+        "Id": "Bench_Gunsmith",
+        "RequiredTierLevel": 3
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/M4A1.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["Rifle"],
+        "Capacity": 25,
+        "Reload": {
+          "Time": 2.5,
+          "Amount": 25
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0.005,
+        "Count": 1,
+        "Damage": 14
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+	"Type": "CheckDurability",
+	"Amount": ">0",
+	"Next": {
+		"Type": "Holding",
+		"Utility": true,
+		"ItemIds": [
+			"Furniture_Crude_Torch",
+			"Furniture_Ancient_Torch",
+			"Furniture_Temple_Emerald_Torch",
+			"Furniture_Human_Ruins_Torch",
+			"Furniture_Human_Ruins_Candle",
+			"Furniture_Temple_Wind_Candle",
+			"Furniture_Crude_Candle"
+		],
+		"Select": {
+			"Furniture_Temple_Emerald_Torch": {
+				"Flamethrower_EffectInteraction": {
+					"Interactions": [
+						"Hyguns_Flamethrower_Emerald_Effect"
+					]
+				}
+			}
+		},
+		"Next": {
+			"Type": "Hyguns_Heat",
+			"OverheatEnabled": true,
+			"OverheatTime": 10.0,
+			"CooldownTime": 4.0,
+			"UI": {
+				"BarPath": "Bars/CircularFlame",
+				"Offset": [
+					-8,
+					0
+				],
+				"ValueRange": [
+					0.25,
+					1.0
+				]
+			},
+			"Next": {
+				"Type": "ModifyInventory",
+				"AdjustHeldItemDurability": -3,
+				"Next": {
+					"Type": "Parallel",
+					"Interactions": [
+						{
+							"Interactions": [
+								{
+									"Type": "ApplyEffect",
+									"EffectId": "FlamethrowerSource"
+								},
+								{
+									"Type": "Replace",
+									"Var": "Flamethrower_EffectInteraction",
+									"DefaultOk": true,
+									"DefaultValue": {
+										"Interactions": [
+											"Hyguns_Flamethrower_Default_Effect"
+										]
+									}
+								}
+							]
+						},
+						{
+							"Interactions": [
+								"Hyguns_Flamethrower_Default_Selector"
+							]
+						}
+					]
+				}
+			}
+		}
+	}
+}

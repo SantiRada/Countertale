@@ -1,0 +1,16 @@
+{
+  "Layers": [
+    {
+      "Files": [
+        "Sounds/MP9/MP9_Fire_01.ogg",
+        "Sounds/MP9/MP9_Fire_02.ogg",
+        "Sounds/MP9/MP9_Fire_03.ogg",
+        "Sounds/MP9/MP9_Fire_04.ogg"
+      ]
+    }
+  ],
+  "MaxInstance": 30,
+  "Volume": 1.0,
+  "PreventSoundInterruption": true,
+  "Parent": "SFX_Attn_Loud"
+}

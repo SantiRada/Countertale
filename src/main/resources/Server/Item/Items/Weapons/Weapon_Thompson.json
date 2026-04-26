@@ -1,0 +1,170 @@
+{
+  "Icon": "Icons/ItemsGenerated/Thompson.png",
+  "Model": "Items/Weapons/Thompson/Thompson.blockymodel",
+  "Texture": "Items/Weapons/Thompson/Thompson.png",
+  "TranslationProperties": {
+    "Name": "server.items.Thompson.name",
+    "Description": "server.items.Thompson.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1.2,
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [315, 71, 0],
+    "Translation": [14, -12]
+  },
+  "Quality": "Rare",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0.075
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "SFX_Rifle_Fire",
+              "LocalSoundEventId": "SFX_Rifle_Fire_Local",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 1,
+                    "Y": 0
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "Z": 0.7,
+                    "Y": 0.1
+                  }
+                }
+              ],
+              "CameraEffect": "Handgun_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "SFX_Blunderbuss_No_Ammo",
+                "WorldSoundEventId": "SFX_Bow_No_Ammo"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "Thompson_Equip",
+            "LocalSoundEventId": "Thompson_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 1000,
+  "PlayerAnimationsId": "Rifle",
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["SMG"]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 6,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 6,
+        "ItemId": "Ingredient_Bar_Bronze"
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Bar_HardenedSteel"
+      },
+      {
+        "Quantity": 5,
+        "ResourceTypeId": "Wood_Trunk"
+      },
+      {
+        "Quantity": 5,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_Thompson"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["SMGs"],
+        "Id": "Bench_Gunsmith",
+        "RequiredTierLevel": 2
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/Thompson.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["SMG", "Pistol"],
+        "Capacity": 50,
+        "Reload": {
+          "Time": 2.13333,
+          "Amount": 50
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0.05,
+        "Count": 1,
+        "Damage": 3
+      }
+    }
+  }
+}

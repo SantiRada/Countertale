@@ -1,0 +1,40 @@
+{
+	"Type": "Selector",
+	"RunTime": 0.2,
+	"Selector": {
+		"Id": "Stab",
+		"TestLineOfSight": false,
+		"ExtendTop": 0.4,
+		"ExtendLeft": 0.4,
+		"ExtendRight": 0.4,
+		"ExtendBottom": 0.4,
+		"StartDistance": 0.25,
+		"EndDistance": 6
+	},
+	"HitEntity": {
+		"Interactions": [
+			{
+				"Type": "Replace",
+				"Var": "Flamethrower_Damage",
+				"DefaultOk": true,
+				"DefaultValue": {
+					"Interactions": [
+						"Hyguns_Weapon_Stick_Fire_Secondary_Damage"
+					]
+				}
+			}
+		]
+	},
+	"HitBlock": {
+		"Interactions": [
+			{
+				"Type": "PlaceFluid",
+				"FluidToPlace": "Fire",
+				"RemoveItemInHand": false,
+				"Effects": {
+					"WorldSoundEventId": "SFX_Flame_Build"
+				}
+			}
+		]
+	}
+}

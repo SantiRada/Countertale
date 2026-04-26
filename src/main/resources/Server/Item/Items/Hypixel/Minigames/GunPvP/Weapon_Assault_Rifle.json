@@ -1,0 +1,168 @@
+{
+  "Icon": "Icons/ItemsGenerated/Weapon_Assault_Rifle.png",
+  "Model": "Items/Hypixel/Minigames/GunPvP/Weapons/Assault_Rifles/Assault_Rifle.blockymodel",
+  "Texture": "Items/Hypixel/Minigames/GunPvP/Weapons/Assault_Rifles/Assault_Rifle_Texture.png",
+  "TranslationProperties": {
+    "Name": "Rifle",
+    "Description": "server.items.AssaultRifle.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1,
+  "IconProperties": {
+    "Scale": 0.37,
+    "Translation": [-3.6, -20.4],
+    "Rotation": [315, 90, 0]
+  },
+  "Quality": "Rare",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0.112
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_Shoot",
+          "Next": {
+            "Type": "Hyguns_UpdateHud"
+          },
+          "Failed": "Gun_Shoot_Fail",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Rifle_Fire",
+            "LocalSoundEventId": "SFX_Rifle_Fire_Local",
+            "ItemAnimationId": "Shoot",
+            "FirstPersonParticles": [
+              {
+                "SystemId": "RifleShooting",
+                "PositionOffset": {
+                  "X": -0.1,
+                  "Z": 1.42,
+                  "Y": 0.1
+                },
+                "RotationOffset": {
+                  "Yaw": 0,
+                  "Pitch": 90
+                }
+              }
+            ],
+            "Particles": [
+              {
+                "SystemId": "RifleShooting",
+                "RotationOffset": {
+                  "Pitch": 90
+                },
+                "PositionOffset": {
+                  "Z": 1.1,
+                  "Y": 0.1
+                }
+              }
+            ],
+            "CameraEffect": "Handgun_Shoot"
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Next": {
+                "Type": "Hyguns_UpdateHud"
+              },
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "AK47_Reload",
+                "WorldSoundEventId": "AK47_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "AK47_Equip",
+            "LocalSoundEventId": "AK47_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 600,
+  "PlayerAnimationsId": "Rifle",
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 6,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 4,
+        "ItemId": "Ingredient_Bar_HardenedSteel"
+      },
+      {
+        "Quantity": 5,
+        "ItemId": "Ingredient_Powder_Boom"
+      },
+      {
+        "Quantity": 10,
+        "ResourceTypeId": "Wood_Trunk"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_Assault_Rifle"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["Rifles"],
+        "Id": "Bench_Gunsmith",
+        "RequiredTierLevel": 2
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/AK47.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "Capacity": 30,
+        "WeaponClass": ["Rifle"],
+        "Reload": {
+          "Time": 2.43,
+          "Amount": 30
+        }
+      },
+      "Fire": {
+        "Cooldown": 0.112
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0.02,
+        "Count": 1,
+        "Damage": 5
+      }
+    }
+  }
+}

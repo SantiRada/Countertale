@@ -1,0 +1,167 @@
+{
+  "Icon": "Icons/ItemsGenerated/DoubleBarrel.png",
+  "Model": "Items/Weapons/DoubleBarrel/DoubleBarrel.blockymodel",
+  "Texture": "Items/Weapons/DoubleBarrel/DoubleBarrel.png",
+  "TranslationProperties": {
+    "Name": "server.items.DoubleBarrel.name",
+    "Description": "server.items.DoubleBarrel.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1.5,
+  "PlayerAnimationsId": "Rifle",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [315, 71, 0],
+    "Translation": [14, -12]
+  },
+  "Quality": "Rare",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 1
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "DoubleBarrel_Fire",
+              "LocalSoundEventId": "DoubleBarrel_Fire",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 2,
+                    "Y": -0.125
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 1,
+                    "Y": -0.125
+                  }
+                }
+              ],
+              "CameraEffect": "Handgun_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "DoubleBarrel_Reload",
+                "WorldSoundEventId": "DoubleBarrel_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "DoubleBarrel_Equip",
+            "LocalSoundEventId": "DoubleBarrel_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 80,
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["Shotgun"]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 6,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 2,
+        "ItemId": "Ingredient_Bar_HardenedSteel"
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Powder_Boom"
+      },
+      {
+        "Quantity": 5,
+        "ResourceTypeId": "Wood_Trunk"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_DoubleBarrel"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["Shotguns"],
+        "Id": "Bench_Gunsmith",
+        "RequiredTierLevel": 2
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/DoubleBarrel.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["Shotgun"],
+        "Capacity": 2,
+        "Reload": {
+          "Time": 1.2,
+          "Amount": 2
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0.12,
+        "Count": 20,
+        "Damage": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "Layers": [
+    {
+      "Files": ["Sounds/Flamethrower/Flamethrower_Shoot.ogg"]
+    }
+  ],
+  "Volume": 1.0,
+  "Parent": "SFX_Attn_Loud"
+}

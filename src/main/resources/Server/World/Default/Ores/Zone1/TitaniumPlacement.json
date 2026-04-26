@@ -1,0 +1,30 @@
+{
+  "Name": "Titanium",
+  "BlockMask": {
+    "Default": [
+      "Rock_Stone",
+      "Rock_Basalt",
+      "Rock_Marble",
+      "Rock_Chalk",
+      "Soil_Dirt",
+      "Soil_Gravel",
+      "Rock_Volcanic",
+      { "Replace": false, "Fluid": "Water_Source" }
+    ]
+  },
+  "Entry": {
+    "File": "Ores.Zone1.Titanium"
+  },
+  "EntryPoints": {
+    "$Comment": "Horizontal Density",
+    "Density": [0, 1],
+    "Seed": "Caves-Ore-Titanium",
+    "Scale": 0.0125,
+    "Jitter": 0.5
+  },
+  "HeightRadiusFactor": {
+    "Positions": [150, 160],
+    "Values": [0, 1]
+  },
+  "Pitch": 0
+}

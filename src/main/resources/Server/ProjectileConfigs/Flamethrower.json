@@ -1,0 +1,66 @@
+{
+  "Model": "Flamethrower_Projectile",
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 5,
+    "TerminalVelocityAir": 5,
+    "RotationMode": "Velocity",
+    "Bounciness": 0.0,
+    "SticksVertically": true,
+    "DensityAir": 30,
+    "DensityWater": 1000
+  },
+  "LaunchForce": 50,
+  "Interactions": {
+    "ProjectileHit": {
+      "Interactions": [
+        {
+          "Type": "DamageEntity",
+          "Entity": "Target",
+          "Next": {
+            "Type": "EffectCondition",
+            "Entity": "Target",
+            "EntityEffectIds": [""],
+            "Match": "None",
+            "Next": {
+              "Type": "ClearEntityEffect",
+              "Entity": "Target",
+              "EntityEffectId": "Lava_Burn",
+              "Next": {
+                "Type": "ApplyEffect",
+                "Entity": "Target",
+                "EffectId": "Lava_Burn"
+              }
+            }
+          },
+          "DamageCalculator": {
+            "Type": "Absolute",
+            "BaseDamage": {
+              "Fire": 0
+            },
+            "RandomPercentageModifier": 1
+          },
+          "RunTime": 0
+        },
+        {
+          "Type": "RemoveEntity",
+          "Entity": "User"
+        }
+      ]
+    },
+    "ProjectileMiss": {
+      "Interactions": [
+        {
+          "Type": "Simple"
+        },
+        {
+          "Type": "RemoveEntity",
+          "Entity": "User"
+        }
+      ]
+    }
+  },
+  "SpawnOffset": {
+    "Z": -1.5
+  }
+}

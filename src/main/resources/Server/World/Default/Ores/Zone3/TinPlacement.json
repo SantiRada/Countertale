@@ -1,0 +1,27 @@
+{
+  "Name": "Tin",
+  "BlockMask": {
+    "Default": [
+      "Rock_Shale",
+      "Rock_Slate",
+      "Rock_Volcanic",
+      "Rock_Basalt",
+      { "Replace": false, "Fluid": "Water_Source" }
+    ]
+  },
+  "Entry": {
+    "File": "Ores.Zone3.Tin"
+  },
+  "EntryPoints": {
+    "Density": [0, 1],
+    "Seed": "Caves-Ore-Tin",
+    "Scale": 0.1,
+    "Jitter": 0.5
+  },
+  "FixedEntryHeight": 0,
+  "HeightRadiusFactor": {
+    "Positions": [0, 255],
+    "Values": [1, 1]
+  },
+  "Pitch": 0
+}

@@ -1,0 +1,45 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "FlamethrowerColor_Main",
+      "PositionOffset": {
+        "Z": 2.5
+      }
+    },
+    {
+      "SpawnerId": "FlamethrowerColor_Sparks_End",
+      "PositionOffset": {
+        "Z": 1
+      }
+    },
+    {
+      "SpawnerId": "FlamethrowerColor_Distortion",
+      "PositionOffset": {
+        "Z": 2
+      }
+    },
+    {
+      "SpawnerId": "FlamethrowerColor_Glow_Start",
+      "PositionOffset": {
+        "Z": 2.5
+      }
+    },
+    {
+      "SpawnerId": "FlamethrowerColor_EndSpread",
+      "PositionOffset": {
+        "Z": 1
+      }
+    },
+    {
+      "SpawnerId": "FlamethrowerColor_EndSpread_FlyOff"
+    },
+    {
+      "SpawnerId": "Flamethrower_CoreThin",
+      "PositionOffset": {
+        "Z": 3
+      }
+    }
+  ],
+  "CullDistance": 100.0,
+  "IsImportant": false
+}

@@ -1,0 +1,58 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Frag.name",
+    "Description": "server.items.Frag.description"
+  },
+  "Quality": "Rare",
+  "ItemLevel": 20,
+  "PlayerAnimationsId": "Item",
+  "Interactions": {
+    "Primary": {
+      "Interactions": ["Frag_Throw"]
+    }
+  },
+  "MaxStack": 5,
+  "IconProperties": {
+    "Scale": 1,
+    "Rotation": [0, 312, 339],
+    "Translation": [-1, -6]
+  },
+  "Model": "Items/Weapons/Frag/Frag.blockymodel",
+  "Texture": "Items/Weapons/Frag/Frag_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Frag.png",
+  "Particles": [],
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["Bomb"]
+  },
+  "Weapon": {},
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "UsePlayerAnimations": false,
+  "Scale": 2,
+  "SoundEventId": "Frag_Equip",
+  "Recipe": {
+    "TimeSeconds": 0,
+    "BenchRequirement": [
+      {
+        "Id": "Bench_Gunsmith",
+        "Categories": ["Utility"]
+      }
+    ],
+    "Input": [
+      {
+        "Quantity": 1,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 2,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_Frag",
+        "Quantity": 1
+      }
+    ]
+  }
+}

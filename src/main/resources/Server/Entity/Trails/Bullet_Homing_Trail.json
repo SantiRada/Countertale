@@ -1,0 +1,16 @@
+{
+  "LifeSpan": 200,
+  "Roll": 90,
+  "LightInfluence": 0,
+  "Start": {
+    "Color": "#318d18a7",
+    "Width": 0.08
+  },
+  "End": {
+    "Color": "#25561c7b",
+    "Width": 0
+  },
+  "RenderMode": "Erosion",
+  "Smooth": true,
+  "TexturePath": "Trails/Arrow.png"
+}

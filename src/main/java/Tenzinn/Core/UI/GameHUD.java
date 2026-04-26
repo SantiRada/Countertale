@@ -63,6 +63,7 @@ public class GameHUD extends CustomUIHud {
 
         setShield();
         setWeapons(2);
+        hideHygunsAmmo();
 
         uiBuilder.set("#DeathmatchUI.Background", "#ffffff00");
         update(true, uiBuilder);
@@ -321,4 +322,46 @@ public class GameHUD extends CustomUIHud {
         uiBuilder = null;
     }
     // ================================================== //
+    public void setHygunsAmmo(int ammo, int reserveAmmo, boolean reloading) {
+        if (uiBuilder == null) return;
+
+        uiBuilder.set("#BulletSector.Visible", true);
+        uiBuilder.set("#CurrentBullet.TextSpans", Message.raw(reloading ? "..." : String.valueOf(ammo)));
+        uiBuilder.set("#TotalBullet.TextSpans", Message.raw(String.valueOf(reserveAmmo)));
+
+        update(true, uiBuilder);
+    }
+
+    public void hideHygunsAmmo() {
+        if (uiBuilder == null) return;
+
+        uiBuilder.set("#BulletSector.Visible", false);
+        uiBuilder.set("#CurrentBullet.TextSpans", Message.raw(""));
+        uiBuilder.set("#TotalBullet.TextSpans", Message.raw(""));
+
+        update(true, uiBuilder);
+    }
+    public void setHygunsWeaponVisual(String image, String crosshair, String firemode, int activeSlot) {
+        if (uiBuilder == null) return;
+
+        if (image != null && !image.isBlank()) {
+            if (activeSlot == 1) {
+                uiBuilder.set("#Weapon01.Background", Value.ref("Game/images/weapons/Weapons.ui", image + "on"));
+            } else if (activeSlot == 2) {
+                uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", image + "on"));
+            } else if (activeSlot >= 3) {
+                uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", image + "on"));
+            }
+        }
+
+        if (crosshair != null && !crosshair.isBlank()) {
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", crosshair));
+        }
+
+        if (firemode != null && !firemode.isBlank()) {
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", firemode));
+        }
+
+        update(true, uiBuilder);
+    }
 }

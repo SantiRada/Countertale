@@ -1,0 +1,16 @@
+{
+  "Layers": [
+    {
+      "Files": [
+        "Sounds/AK47/Local_AK47_Fire_01.ogg",
+        "Sounds/AK47/Local_AK47_Fire_02.ogg",
+        "Sounds/AK47/Local_AK47_Fire_03.ogg",
+        "Sounds/AK47/Local_AK47_Fire_04.ogg"
+      ]
+    }
+  ],
+  "MaxInstance": 30,
+  "Volume": 1.0,
+  "PreventSoundInterruption": true,
+  "Parent": "SFX_Attn_Loud"
+}

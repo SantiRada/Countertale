@@ -1,0 +1,21 @@
+{
+  "Type": "Explode",
+  "Parent": "Explode_Generic_Entities",
+  "RunTime": 0.1,
+  "Effects": {
+    "WorldSoundEventId": "Frag_Explode",
+    "LocalSoundEventId": "Frag_Explode",
+    "Particles": [
+      {
+        "SystemId": "Explosion_Big",
+        "TargetEntityPart": "Entity"
+      }
+    ]
+  },
+  "Config": {
+    "DamageEntities": true,
+    "EntityDamage": 50,
+    "EntityDamageRadius": 7,
+    "EntityDamageFalloff": 0.6
+  }
+}

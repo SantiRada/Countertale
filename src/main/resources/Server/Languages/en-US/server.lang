@@ -1,3 +1,134 @@
 # === items ===
 items.action_book.name = Actions Book
 items.action_book.description = Right-click to enter the queue for Deathmatch mode
+
+# === Hyguns Plugin ===
+items.Weapon_Repair_Kit.name=Weapon Repair Kit
+items.Weapon_Repair_Kit.description=A kit what allow repair weapons without durability penalty
+items.Ammo_Box.name=Ammo Box
+items.Ammo_Box.description=A portable ammo chest with 9 internal slots for carrying extra ammunition
+
+
+interactionHints.ammoBoxRefill = Hold [{key}] to refill {name}
+
+# === Hyguns ===
+items.Ammo_Bullet_Base.name=Bullet Ammo
+items.Ammo_Bullet_Base.description=Standard handgun ammunition\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Base_Incendiary.name=Incendiary Bullet Ammo
+items.Ammo_Bullet_Base_Incendiary.description=Handgun rounds packed with incendiary compound that ignite targets on impact\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Base_Poison.name=Poison Bullet Ammo
+items.Ammo_Bullet_Base_Poison.description=Handgun rounds coated with venom that poison targets on impact\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Base_Teleport.name=Teleport Bullet Ammo
+items.Ammo_Bullet_Base_Teleport.description=Teleports the shooter to the struck block on impact\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Base_Mark.name=Mark Bullet Ammo
+items.Ammo_Bullet_Base_Mark.description=Handgun rounds that mark targets for follow-up shots\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Base_Scout.name=Scout Bullet Ammo
+items.Ammo_Bullet_Base_Scout.description=Handgun rounds that seek marked targets or nearby enemies\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Rifle.name=Rifle Ammo
+items.Ammo_Bullet_Rifle.description=High velocity rifle ammunition\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Rifle_Incendiary.name=Incendiary Rifle Ammo
+items.Ammo_Bullet_Rifle_Incendiary.description=Rifle rounds packed with incendiary compound that ignite targets on impact\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Rifle_Poison.name=Poison Rifle Ammo
+items.Ammo_Bullet_Rifle_Poison.description=Rifle rounds coated with venom that poison targets on impact\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Rifle_Teleport.name=Teleport Rifle Ammo
+items.Ammo_Bullet_Rifle_Teleport.description=Teleports the shooter to the struck block on impact\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Rifle_Mark.name=Mark Rifle Ammo
+items.Ammo_Bullet_Rifle_Mark.description=Rifle rounds that mark targets for guided follow-up shots\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Rifle_Scout.name=Scout Rifle Ammo
+items.Ammo_Bullet_Rifle_Scout.description=Guided rifle rounds that seek marked targets or nearby enemies\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Shotgun.name=Shotgun Ammo
+items.Ammo_Bullet_Shotgun.description=Pellet shells for shotguns\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Shotgun_Incendiary.name=Incendiary Shotgun Ammo
+items.Ammo_Bullet_Shotgun_Incendiary.description=Shotgun shells packed with incendiary compound that ignite targets on impact\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Bullet_Shotgun_Scout.name=Scout Shotgun Ammo
+items.Ammo_Bullet_Shotgun_Scout.description=Guided shotgun shells that seek marked targets or nearby enemies\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Fuel_Tank.name=Fuel Tank
+items.Fuel_Tank.description=Pressurized fuel canister for flamethrowers\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Fuel_FireBottle.name=Fire Bottle
+items.Fuel_FireBottle.description=Fire Bottle for goblin flamethrowers\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
+items.Ammo_Box_Tier_I.name=Ammo Box Tier I
+items.Ammo_Box_Tier_I.description=A portable ammo chest with 3 internal slots for carrying extra ammunition
+items.Ammo_Box_Tier_II.name=Ammo Box Tier II
+items.Ammo_Box_Tier_II.description=A portable ammo chest with 5 internal slots for carrying extra ammunition
+items.Ammo_Box_Tier_III.name=Ammo Box Tier III
+items.Ammo_Box_Tier_III.description=A portable ammo chest with 7 internal slots for carrying extra ammunition
+
+items.Frag.name=Frag Grenade
+items.Frag.description=Ammo: <color is="#ffffff">Frag Grenade</color>\nDamage: 50\nSpread: 0\nCooldown: 1\nClipsize: 1
+items.Spray_Can.name=Spray Can
+items.Spray_Can.description=Ammo: <color is="#ffffff">Torch in opposite hand</color>\nDamage: 12\nSpread: 0\nCooldown: 0.1\nClipsize: 1
+items.AssaultRifle.name=Rifle
+items.AssaultRifle.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 5\nSpread: 0.02\nCooldown: 0.112\nReload: 2.43s\nClipsize: 30
+items.Handgun.name=Handgun
+items.Handgun.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 7\nSpread: 0.05\nCooldown: 0.15\nReload: 1s\nClipsize: 20
+items.AK47.name=AK-47
+items.AK47.description=Ammo: <color is="#ffffff">Rifle Ammo</color>\nDamage: 17\nSpread: 0.02\nCooldown: 0.1\nReload: 2.43s\nClipsize: 30
+items.ColtRevolver.name=Colt Navy Revolver
+items.ColtRevolver.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 24\nSpread: 0\nCooldown: 1\nReload: 2.2s\nClipsize: 6
+items.DoubleBarrel.name=Double Barrel Shotgun
+items.DoubleBarrel.description=Ammo: <color is="#ffffff">Shotgun Ammo</color>\nDamage: 3x20\nSpread: 0.12\nCooldown: 1\nReload: 1.2s\nClipsize: 2
+items.Flamethrower.name=Flamethrower
+items.Flamethrower.description=Ammo: <color is="#ffffff">Fuel Tank</color>\nDamage: 10\nSpread: 0\nCooldown: 0.05\nReload: 3.5s\nClipsize: 500
+items.Flamethrower_Goblin.description=Ammo: <color is="#ffffff">Fire Bottle</color>\nDamage: 12\nSpread: 0\nOverheat: 10.0s\nCooldown: 4.0s\nInterval: 0.2s\nReload: 3.5s\nClipsize: 500
+items.Glock18.name=Glock-18
+items.Glock18.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 6\nSpread: 0\nCooldown: 0.25\nReload: 1.3s\nClipsize: 20
+items.USPS.name=USP-S
+items.USPS.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 10\nSpread: 0\nCooldown: 0.4\nReload: 1.3s\nClipsize: 20
+items.FiveSeven.name=FiveSeven
+items.FiveSeven.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 8\nSpread: 0\nCooldown: 0.25\nReload: 1.3s\nClipsize: 20
+items.Mac10.name=Mac-10
+items.Mac10.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 2\nSpread: 0.05\nCooldown: 0.05\nReload: 1.5s\nClipsize: 30
+items.P90.name=P90
+items.P90.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 5\nSpread: 0.05\nCooldown: 0.05\nReload: 3s\nClipsize: 50
+items.M4A1s.name=M4A1s
+items.M4A1s.description=Ammo: <color is="#ffffff">Rifle Ammo</color>\nDamage: 14\nSpread: 0.01\nCooldown: 0.09\nReload: 2.5s\nClipsize: 25
+items.MP9.name=MP9
+items.MP9.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 3\nSpread: 0.03\nCooldown: 0.075\nReload: 1.8s\nClipsize: 30
+items.Barret50.name=Barret .50 Cal
+items.Barret50.description=Ammo: <color is="#ffffff">Rifle Ammo</color>\nDamage: 60\nSpread: 0\nCooldown: 2.5\nReload: 2.3s\nClipsize: 10
+items.AWP.name=AWP
+items.AWP.description=Ammo: <color is="#ffffff">Rifle Ammo</color>\nDamage: 100\nSpread: 0\nCooldown: 3\nReload: 3.7s\nClipsize: 5
+items.DesertEagle.name=Desert Eagle
+items.DesertEagle.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 25\nSpread: 0\nCooldown: 1\nReload: 2.133s\nClipsize: 7
+items.Thompson.name=Thompson
+items.Thompson.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 3\nSpread: 0.05\nCooldown: 0.075\nReload: 2.133s\nClipsize: 50
+
+items.Bench_Gunsmith.name=Gunsmith Bench
+items.Bench_Gunsmith.description=A workstation used to create firearms and explosives
+
+benchCategories.rifles=Rifles
+benchCategories.shotguns=Shotguns
+benchCategories.smgs=SMGs
+benchCategories.pistols=Pistols
+benchCategories.utility=Utility
+benchCategories.ammo=Ammunition
+
+items.Ingredient_Bar_Bronze.name=Bronze Ingot
+items.Ingredient_Bar_Bronze.description=Made in a <color is="#ffffff">Furnace Tier 2</color> using three Copper Bars and one Iron Bar
+items.Ingredient_Bar_Steel.name=Steel Ingot
+items.Ingredient_Bar_Steel.description=Made in a <color is="#ffffff">Furnace Tier 2</color> using two Iron Bars and one Charcoal
+items.Ingredient_Bar_HardenedSteel.name=Hardened Steel
+items.Ingredient_Bar_HardenedSteel.description=Made in a <color is="#ffffff">Furnace Tier 2</color> using two pieces of Fire Essence and Steel Bar
+items.Ingredient_Bar_Lead.name=Lead Ingot
+items.Ingredient_Bar_Tin.name=Tin Ingot
+items.Ingredient_Bar_Titanium.name=Titanium Ingot
+items.Ore_Lead.name=Lead Ore
+items.Ore_Lead_Stone.name=Lead Ore - Stone
+items.Ore_Lead_Sandstone.name=Lead Ore - Sandstone
+items.Ore_Lead_Shale.name=Lead Ore - Shale
+items.Ore_Lead_Basalt.name=Lead Ore - Basalt
+items.Ore_Tin.name=Tin Ore
+items.Ore_Tin_Stone.name=Tin Ore - Stone
+items.Ore_Tin_Sandstone.name=Tin Ore - Sandstone
+items.Ore_Tin_Shale.name=Tin Ore - Shale
+items.Ore_Titanium.name=Titanium Ore
+items.Ore_Titanium_Volcanic.name=Titanium Ore - Volcanic
+items.Ore_Titanium_Basalt.name=Titanium Ore - Basalt
+
+ui.itemcategory.hyguns=HyGuns
+ui.hyguns.category.guns=Guns
+ui.hyguns.category.ammo=Ammo
+ui.hyguns.category.blocks=Blocks
+ui.hyguns.category.furniture=Furniture
+ui.hyguns.category.items=Items
+ui.hyguns.category.tools=Tools

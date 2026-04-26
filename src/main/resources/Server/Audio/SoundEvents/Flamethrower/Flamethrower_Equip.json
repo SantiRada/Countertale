@@ -1,0 +1,16 @@
+{
+  "Layers": [
+    {
+      "Files": ["Sounds/Flamethrower/Flamethrower_Equip.ogg"],
+      "RandomSettings": {
+        "MinPitch": -1,
+        "MaxPitch": 1,
+        "MinVolume": -0.9151498112135024,
+        "MaxVolume": 0.8278537031645015
+      },
+      "Volume": 6
+    }
+  ],
+  "Volume": 6.0,
+  "Parent": "SFX_Attn_Moderate"
+}

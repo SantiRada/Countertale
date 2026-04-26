@@ -1,0 +1,9 @@
+{
+  "Type": "Simple",
+  "RunTime": 0.2,
+  "Effects": {
+    "ItemAnimationId": "Interact",
+    "WorldSoundEventId": "Clip_Empty_Rifle",
+    "LocalSoundEventId": "Clip_Empty_Rifle"
+  }
+}

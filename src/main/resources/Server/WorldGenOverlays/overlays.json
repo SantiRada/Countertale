@@ -1,0 +1,22 @@
+{
+  "Overlays": [
+    {
+      "Name": "HyGuns Overlay Tin",
+      "Generator": "Default",
+      "Ores": ["Tin"],
+      "Zones": ["Zone0", "Zone1", "Zone2", "Zone3"]
+    },
+    {
+      "Name": "HyGuns Overlay Lead",
+      "Generator": "Default",
+      "Ores": ["Lead"],
+      "Zones": ["Zone1", "Zone2", "Zone3"]
+    },
+    {
+      "Name": "HyGuns Overlay Titanium",
+      "Generator": "Default",
+      "Ores": ["Titanium"],
+      "Zones": ["Zone1", "Zone3", "Zone4"]
+    }
+  ]
+}

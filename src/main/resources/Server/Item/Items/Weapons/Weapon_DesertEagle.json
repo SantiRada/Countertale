@@ -1,0 +1,166 @@
+{
+  "Icon": "Icons/ItemsGenerated/DesertEagle.png",
+  "Model": "Items/Weapons/DesertEagle/DesertEagle.blockymodel",
+  "Texture": "Items/Weapons/DesertEagle/DesertEagle.png",
+  "TranslationProperties": {
+    "Name": "server.items.DesertEagle.name",
+    "Description": "server.items.DesertEagle.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "PlayerAnimationsId": "HygunsPistols",
+  "MaxStack": 1,
+  "Scale": 1.4,
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [315, 71, 0],
+    "Translation": [14, -12]
+  },
+  "Quality": "Rare",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 1
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "DesertEagle_Fire",
+              "LocalSoundEventId": "DesertEagle_Fire",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 0.7,
+                    "Y": 0
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "Z": 0.4
+                  }
+                }
+              ],
+              "CameraEffect": "DesertEagle_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Reload",
+                "LocalSoundEventId": "DesertEagle_Reload",
+                "WorldSoundEventId": "DesertEagle_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "DesertEagle_Equip",
+            "LocalSoundEventId": "DesertEagle_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 140,
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["Pistol"]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 6,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 4,
+        "ItemId": "Ingredient_Bar_Bronze"
+      },
+      {
+        "Quantity": 2,
+        "ItemId": "Ingredient_Bar_HardenedSteel"
+      },
+      {
+        "Quantity": 2,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_DesertEagle"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["Pistols"],
+        "Id": "Bench_Gunsmith",
+        "RequiredTierLevel": 2
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/Deagle.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["Pistol"],
+        "Capacity": 7,
+        "Reload": {
+          "Time": 2.13333,
+          "Amount": 7
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0,
+        "Count": 1,
+        "Damage": 25
+      }
+    }
+  },
+  "UsePlayerAnimations": true
+}

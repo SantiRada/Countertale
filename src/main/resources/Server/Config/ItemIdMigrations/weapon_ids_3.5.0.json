@@ -1,0 +1,15 @@
+{
+  "Chains": [
+    ["Bullet", "Ammo_Bullet_Base"],
+    ["AK47", "Weapon_AK47"],
+    ["Barret50", "Weapon_Barret50"],
+    ["DesertEagle", "Weapon_DesertEagle"],
+    ["DoubleBarrel", "Weapon_DoubleBarrel"],
+    ["Frag", "Weapon_Frag"],
+    ["Fuel_Tank", "Ammo_Fuel_Tank"],
+    ["Glock18", "Weapon_Glock18"],
+    ["M4A1s", "Weapon_M4A1s"],
+    ["Mac10", "Weapon_Mac10"],
+    ["MP9", "Weapon_MP9"],
+  ]
+}

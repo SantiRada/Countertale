@@ -1,0 +1,160 @@
+{
+  "Icon": "Icons/ItemsGenerated/MP9.png",
+  "Model": "Items/Weapons/MP9/MP9.blockymodel",
+  "Texture": "Items/Weapons/MP9/MP9.png",
+  "TranslationProperties": {
+    "Name": "server.items.MP9.name",
+    "Description": "server.items.MP9.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1.7,
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [315, 71, 0],
+    "Translation": [14, -12]
+  },
+  "Quality": "Uncommon",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0.075
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "MP9_Fire",
+              "LocalSoundEventId": "MP9_Fire",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 0.7,
+                    "Y": -0.1
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "Z": 0.2
+                  }
+                }
+              ],
+              "CameraEffect": "Handgun_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "MP9_Reload",
+                "WorldSoundEventId": "MP9_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "MP9_Equip",
+            "LocalSoundEventId": "MP9_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 600,
+  "PlayerAnimationsId": "Rifle",
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["SMG"]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 5,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Bar_Bronze"
+      },
+      {
+        "Quantity": 5,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_MP9"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["SMGs"],
+        "Id": "Bench_Gunsmith"
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/MP9.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["SMG", "Pistol"],
+        "Capacity": 30,
+        "Reload": {
+          "Time": 1.8,
+          "Amount": 30
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0.03,
+        "Count": 1,
+        "Damage": 3
+      }
+    }
+  }
+}

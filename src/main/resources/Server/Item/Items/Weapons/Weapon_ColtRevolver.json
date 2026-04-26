@@ -1,0 +1,165 @@
+{
+  "Icon": "Icons/ItemsGenerated/ColtRevolver.png",
+  "Model": "Items/Weapons/ColtRevolver/ColtRevolver.blockymodel",
+  "Texture": "Items/Weapons/ColtRevolver/ColtRevolver.png",
+  "TranslationProperties": {
+    "Name": "server.items.ColtRevolver.name",
+    "Description": "server.items.ColtRevolver.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1.3,
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [325, 90, 0],
+    "Translation": [-11, -22]
+  },
+  "Quality": "Uncommon",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 1
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "ColtRevolver_Fire",
+              "LocalSoundEventId": "ColtRevolver_Fire",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "Z": 0.9,
+                    "Y": 0.1
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "Z": 0.7,
+                    "Y": 0.1
+                  }
+                }
+              ],
+              "CameraEffect": "Handgun_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "ColtRevolver_Reload",
+                "WorldSoundEventId": "ColtRevolver_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "ColtRevolver_Equip",
+            "LocalSoundEventId": "ColtRevolver_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 120,
+  "PlayerAnimationsId": "Handgun",
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["Revolver"]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 4,
+        "ItemId": "Ingredient_Bar_Bronze"
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 3,
+        "ResourceTypeId": "Wood_Trunk"
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_ColtRevolver",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Bench_Gunsmith",
+        "Categories": ["Pistols"],
+        "RequiredTierLevel": 0
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/ColtNavy.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["Pistol"],
+        "Capacity": 6,
+        "Reload": {
+          "Time": 2.2,
+          "Amount": 6
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0,
+        "Count": 1,
+        "Damage": 24
+      }
+    }
+  }
+}

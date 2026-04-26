@@ -1,5 +1,6 @@
 package Tenzinn;
 
+import com.thescar.hygunsplugin.HygunsPluginMain;
 import Tenzinn.Core.Commands.Party.PartyCommands;
 import Tenzinn.Core.Events.*;
 import Tenzinn.Core.Handle.*;
@@ -25,7 +26,6 @@ import Tenzinn.Core.Interactions.UseActionBookInteraction;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Countertale extends JavaPlugin {
+public class Countertale extends HygunsPluginMain {
 
     // Sistema de Partidas
     private MatchManager matchManager;
@@ -64,6 +64,8 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void setup() {
+        super.setup();
+
         MapListeners.load();
         RevenuesConfig.load();
         MessageListeners.load();
@@ -128,11 +130,16 @@ public class Countertale extends JavaPlugin {
     protected void shutdown() {
         if (detectFilter != null) { PacketAdapters.deregisterInbound(detectFilter); }
         if (hotbarFilter != null) { PacketAdapters.deregisterInbound(hotbarFilter); }
+
         matchManager.getInstancePool().shutdown();
+
+        super.shutdown();
     }
 
     @Override
     protected void start() {
+        super.start();
+
         matchCheckTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(
                 this::checkAndStartFullMatches, 5, 5, TimeUnit.SECONDS);
 

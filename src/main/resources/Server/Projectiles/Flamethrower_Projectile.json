@@ -1,0 +1,27 @@
+{
+  "Appearance": "Flamethrower_Projectile",
+  "VerticalCenterShot": 0.25,
+  "HorizontalCenterShot": 0.25,
+  "PitchAdjustShot": true,
+  "SticksVertically": true,
+  "MuzzleVelocity": 50,
+  "TerminalVelocity": 5,
+  "Gravity": 5,
+  "DeathEffectsOnHit": false,
+  "ExplosionConfig": {
+    "DamageEntities": true,
+    "DamageBlocks": false,
+    "EntityDamage": 10,
+    "Knockback": {
+      "Force": 0,
+      "Duration": 0
+    },
+    "EntityDamageRadius": 4
+  },
+  "Density": 2000,
+  "DeadTimeMiss": 0,
+  "WaterHitImpulseLoss": 1,
+  "WaterTerminalVelocityMultiplier": 2,
+  "Bounciness": 0,
+  "DepthShot": 0.3
+}

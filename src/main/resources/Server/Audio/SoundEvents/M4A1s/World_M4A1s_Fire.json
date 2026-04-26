@@ -1,0 +1,11 @@
+{
+  "Layers": [
+    {
+      "Files": ["Sounds/M4A1s/World_M4A1s_Fire.ogg"]
+    }
+  ],
+  "MaxInstance": 30,
+  "Volume": 1.0,
+  "PreventSoundInterruption": true,
+  "Parent": "SFX_Attn_Loud"
+}

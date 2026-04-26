@@ -1,0 +1,162 @@
+{
+  "Icon": "Icons/ItemsGenerated/Weapon_Handgun.png",
+  "Model": "Items/Hypixel/Minigames/GunPvP/Weapons/Handguns/Handgun.blockymodel",
+  "Texture": "Items/Hypixel/Minigames/GunPvP/Weapons/Handguns/Handgun_Texture.png",
+  "TranslationProperties": {
+    "Name": "Handgun",
+    "Description": "server.items.Handgun.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1,
+  "IconProperties": {
+    "Scale": 0.37,
+    "Translation": [-3.6, -20.4],
+    "Rotation": [315, 90, 0]
+  },
+  "Quality": "Uncommon",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0.15
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_Shoot",
+          "Next": {
+            "Type": "Hyguns_UpdateHud"
+          },
+          "Failed": "Gun_Shoot_Fail",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Handgun_Fire",
+            "LocalSoundEventId": "SFX_Handgun_Fire_Local",
+            "ItemAnimationId": "Shoot",
+            "FirstPersonParticles": [
+              {
+                "SystemId": "RifleShooting",
+                "PositionOffset": {
+                  "Z": 0.5,
+                  "Y": 0.1
+                },
+                "RotationOffset": {
+                  "Yaw": 0,
+                  "Pitch": 90
+                }
+              }
+            ],
+            "Particles": [
+              {
+                "SystemId": "RifleShooting",
+                "RotationOffset": {
+                  "Pitch": 90
+                },
+                "PositionOffset": {
+                  "Z": 0.3,
+                  "Y": 0.2
+                }
+              }
+            ],
+            "CameraEffect": "Handgun_Shoot"
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Next": {
+                "Type": "Hyguns_UpdateHud"
+              },
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "SFX_Blunderbuss_No_Ammo",
+                "WorldSoundEventId": "SFX_Bow_No_Ammo"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "Glock18_Equip",
+            "LocalSoundEventId": "Glock18_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 400,
+  "PlayerAnimationsId": "Handgun",
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 2,
+        "ItemId": "Ingredient_Bar_Bronze"
+      },
+      {
+        "Quantity": 2,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_Handgun",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Bench_Gunsmith",
+        "Categories": ["Pistols"]
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/Handgun.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "Capacity": 20,
+        "WeaponClass": ["Pistol"],
+        "Reload": {
+          "Time": 1,
+          "Amount": 20
+        }
+      },
+      "Fire": {
+        "Cooldown": 0.15
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0.05,
+        "Count": 1,
+        "Damage": 7
+      }
+    }
+  }
+}

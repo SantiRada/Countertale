@@ -1,0 +1,15 @@
+{
+  "Layers": [
+    {
+      "Files": [
+        "Sounds/USPS/Local_USPs_Fire_01.ogg",
+        "Sounds/USPS/Local_USPs_Fire_02.ogg",
+        "Sounds/USPS/Local_USPs_Fire_03.ogg"
+      ]
+    }
+  ],
+  "MaxInstance": 30,
+  "Volume": 1.0,
+  "PreventSoundInterruption": true,
+  "Parent": "SFX_Attn_Loud"
+}

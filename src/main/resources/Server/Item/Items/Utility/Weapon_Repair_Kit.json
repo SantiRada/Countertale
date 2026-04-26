@@ -1,0 +1,72 @@
+{
+  "Model": "Items/Utility/Weapon_Repair_Kit.blockymodel",
+  "Texture": "Items/Utility/Weapon_Repair_Kit.png",
+  "TranslationProperties": {
+    "Name": "Weapon repair kit"
+  },
+  "Categories": ["HyGuns.Tools"],
+  "MaxStack": 20,
+  "Scale": 1,
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 0.55,
+    "Rotation": [335, 150, 10],
+    "Translation": [0, -11]
+  },
+  "Quality": "Rare",
+  "Recipe": {
+    "TimeSeconds": 1,
+    "KnowledgeRequired": false,
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Steel",
+        "Quantity": 2
+      },
+      {
+        "ItemId": "Ingredient_Bar_Adamantite",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Ingredient_Fabric_Scrap_Shadoweave",
+        "Quantity": 2
+      },
+      {
+        "ItemId": "Ingredient_Leather_Medium",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Bench_Gunsmith",
+        "Type": "Crafting",
+        "Categories": ["Utility"]
+      }
+    ]
+  },
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "OpenCustomUI",
+          "Page": {
+            "Id": "WeaponRepairKit"
+          }
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "OpenCustomUI",
+          "Page": {
+            "Id": "WeaponRepairKit"
+          }
+        }
+      ]
+    }
+  },
+  "Icon": "Icons/ItemsGenerated/Weapon_Repair_Kit.png"
+}

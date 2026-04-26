@@ -1,0 +1,100 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Fuel_FireBottle.name",
+    "Description": "server.items.Fuel_FireBottle.description"
+  },
+  "Categories": ["HyGuns.Ammo"],
+  "Quality": "Uncommon",
+  "ItemLevel": 14,
+  "PlayerAnimationsId": "Item",
+  "Recipe": {
+    "TimeSeconds": 0,
+    "KnowledgeRequired": false,
+    "Input": [
+      {
+        "Quantity": 30,
+        "ItemId": "Potion_Empty"
+      },
+      {
+        "Quantity": 30,
+        "ItemId": "Ingredient_Fire_Essence"
+      }
+    ],
+    "OutputQuantity": 250,
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Id": "Bench_Gunsmith",
+        "Categories": ["Ammo"]
+      }
+    ]
+  },
+  "IconProperties": {
+    "Scale": 1,
+    "Rotation": [16, 165, 8],
+    "Translation": [-2, -11]
+  },
+  "Model": "Items/Ammo/Fuel/Fuel_FireBottle.blockymodel",
+  "Texture": "Items/Ammo/Fuel/Fuel_FireBottle.png",
+  "MaxStack": 1000,
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "Tags": {
+    "Type": ["Ammo"]
+  },
+  "ItemSoundSetId": "ISS_Items_Ingots",
+  "Icon": "Icons/ItemsGenerated/Fuel_FireBottle.png",
+  "HyGuns": {
+    "AmmoSettings": {
+      "Family": "Fuel",
+      "WeaponClass": "GoblinFlamethrower",
+      "Icon": "Ammo/Ammo_Flamethrower_Goblin.png",
+			"AmmoBox": {
+				"Generate": true,
+				"Categories": ["HyGuns.Furniture"],
+				"Model": "Items/Utility/Ammo_Box.blockymodel",
+				"ModelTexture": "Items/Utility/Ammo_Box_Tier_I.png",
+				"Icon": "Icons/ItemsGenerated/Ammo_Box_Tier_I.png",
+				"RefillTime": 1.0,
+				"RefillAmount": 250
+			},
+			"Piles": {
+				"Generate": true,
+				"Variants": [
+					{
+						"Id": "Small",
+						"Categories": ["HyGuns.Furniture"],
+						"Model": "Blocks/Piles/Ammo/Pile_Ammo_Fuel_FireBottle_Small.blockymodel",
+						"ModelTexture": "Items/Ammo/Fuel/Fuel_FireBottle.png",
+						"HitboxType": "Pile_Ammo_Fuel_FireBottle_Small",
+						"Icon": "Icons/ItemsGenerated/Pile_Ammo_Fuel_FireBottle_Small.png",
+						"Scale": 0.6,
+						"IconScale": 2.0,
+						"Amount": 250
+					},
+					{
+						"Id": "Medium",
+						"Categories": ["HyGuns.Furniture"],
+						"Model": "Blocks/Piles/Ammo/Pile_Ammo_Fuel_FireBottle_Medium.blockymodel",
+						"ModelTexture": "Items/Ammo/Fuel/Fuel_FireBottle.png",
+						"HitboxType": "Pile_Ammo_Fuel_FireBottle_Medium",
+						"Icon": "Icons/ItemsGenerated/Pile_Ammo_Fuel_FireBottle_Medium.png",
+						"Scale": 0.6,
+						"IconScale": 2.0,
+						"Amount": 500
+					},
+					{
+						"Id": "Huge",
+						"Categories": ["HyGuns.Furniture"],
+						"Model": "Blocks/Piles/Ammo/Pile_Ammo_Fuel_FireBottle_Huge.blockymodel",
+						"ModelTexture": "Items/Ammo/Fuel/Fuel_FireBottle.png",
+						"HitboxType": "Pile_Ammo_Fuel_FireBottle_Huge",
+						"Icon": "Icons/ItemsGenerated/Pile_Ammo_Fuel_FireBottle_Huge.png",
+						"Scale": 0.6,
+						"IconScale": 2.0,
+						"Amount": 750
+					}
+				]
+			}
+		}
+  }
+}

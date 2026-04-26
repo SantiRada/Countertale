@@ -1,0 +1,39 @@
+{
+	"Type": "Simple",
+	"RunTime": 0.2,
+	"Effects": {
+		"Particles": [
+			{
+				"PositionOffset": {
+					"X": 0,
+					"Y": 0.15,
+					"Z": 3.7
+				},
+				"RotationOffset": {
+					"Pitch": 0,
+					"Roll": 0,
+					"Yaw": 180
+				},
+				"Color": "#6dff48",
+				"SystemId": "FlamethrowerColor"
+			},
+			{
+				"PositionOffset": {
+					"X": 0,
+					"Y": 0.15,
+					"Z": 3.7
+				},
+				"RotationOffset": {
+					"Pitch": 0,
+					"Roll": 0,
+					"Yaw": 180
+				},
+				"Color": "#ebff89",
+				"SystemId": "FlamethrowerColor"
+			}
+		],
+		"ItemPlayerAnimationsId": "Rifle",
+		"ItemAnimationId": "Shoot",
+		"ClearAnimationOnFinish": true
+	}
+}

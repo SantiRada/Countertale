@@ -1,0 +1,66 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Ore_Titanium_Volcanic.name"
+  },
+  "Icon": "Icons/ItemsGenerated/Ore_Titanium_Volcanic.png",
+  "Categories": ["Blocks.Ores"],
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "CubeWithModel",
+    "CustomModel": "Resources/Ores/Ore_Large.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Resources/Ores/Titanium.png",
+        "Weight": 1
+      }
+    ],
+    "Group": "Volcanic",
+    "Flags": {},
+    "RandomRotation": "YawStep90",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "DropList": {
+          "Container": {
+            "Type": "Multiple",
+            "Containers": [
+              {
+                "Type": "Single",
+                "Item": {
+                  "ItemId": "Ore_Titanium"
+                }
+              },
+              {
+                "Type": "Single",
+                "Item": {
+                  "ItemId": "Rock_Volcanic_Cobble"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "BlockParticleSetId": "Ore",
+    "Textures": [
+      {
+        "Weight": 1,
+        "All": "BlockTextures/Rock_Volcanic.png"
+      }
+    ],
+    "ParticleColor": "#35323f",
+    "BlockSoundSetId": "Ore"
+  },
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": ["Ore"],
+    "Family": ["Titanium"]
+  },
+  "MaxStack": 25,
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Rotation": [22.5, 45, 22.5],
+    "Translation": [0, -13.5]
+  }
+}

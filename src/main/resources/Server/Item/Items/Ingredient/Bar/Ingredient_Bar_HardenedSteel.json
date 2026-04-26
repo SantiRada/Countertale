@@ -1,0 +1,50 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Ingredient_Bar_HardenedSteel.name",
+    "Description": "server.items.Ingredient_Bar_HardenedSteel.description"
+  },
+  "Categories": ["Items", "HyGuns.Items"],
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Steel",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Ingredient_Fire_Essence",
+        "Quantity": 2
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Processing",
+        "Id": "Furnace",
+        "RequiredTierLevel": 1
+      }
+    ],
+    "OutputQuantity": 1,
+    "TimeSeconds": 15
+  },
+  "Model": "Resources/Materials/Ingot.blockymodel",
+  "Texture": "Resources/Bars/HardenedSteel.png",
+  "Icon": "Icons/ItemsGenerated/Ingredient_Bar_HardenedSteel.png",
+  "ResourceTypes": [
+    {
+      "Id": "Metal_Bars"
+    }
+  ],
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 1,
+    "Rotation": [22.5, 45, 22.5],
+    "Translation": [0, -3]
+  },
+  "Tags": {
+    "Type": ["Ingredient"]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": null
+  },
+  "ItemSoundSetId": "ISS_Items_Ingots",
+  "DropOnDeath": true
+}

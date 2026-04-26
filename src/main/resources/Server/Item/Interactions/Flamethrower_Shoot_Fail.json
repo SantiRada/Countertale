@@ -1,0 +1,9 @@
+{
+  "Type": "Simple",
+  "RunTime": 0.2,
+  "Effects": {
+    "ItemAnimationId": "Interact",
+    "WorldSoundEventId": "Flamethrower_Empty",
+    "LocalSoundEventId": "Flamethrower_Empty"
+  }
+}

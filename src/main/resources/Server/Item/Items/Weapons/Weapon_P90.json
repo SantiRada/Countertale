@@ -1,0 +1,165 @@
+{
+  "Icon": "Icons/ItemsGenerated/Weapon_P90.png",
+  "Model": "Items/Weapons/P90/P90.blockymodel",
+  "Texture": "Items/Weapons/P90/P90.png",
+  "TranslationProperties": {
+    "Name": "server.items.P90.name",
+    "Description": "server.items.P90.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "MaxStack": 1,
+  "Scale": 1.2,
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [315, 71, 0],
+    "Translation": [11, -16]
+  },
+  "Quality": "Epic",
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0.05
+      },
+      "RequireNewClick": false,
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "World_P90_Fire",
+              "LocalSoundEventId": "Local_P90_Fire",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 0.7,
+                    "Y": 0
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "Z": 0.2
+                  }
+                }
+              ],
+              "CameraEffect": "Handgun_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "P90_Reload",
+                "WorldSoundEventId": "P90_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "P90_Equip",
+            "LocalSoundEventId": "P90_Equip"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 600,
+  "PlayerAnimationsId": "Rifle",
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["SMG"]
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 12,
+        "ItemId": "Ingredient_Bar_HardenedSteel"
+      },
+      {
+        "Quantity": 8,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 8,
+        "ItemId": "Ingredient_Bar_Adamantite"
+      },
+      {
+        "Quantity": 5,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_P90"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["SMGs"],
+        "Id": "Bench_Gunsmith",
+        "RequiredTierLevel": 3
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/P90.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["SMG", "Pistol"],
+        "Capacity": 50,
+        "Reload": {
+          "Time": 3,
+          "Amount": 50
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0.05,
+        "Count": 1,
+        "Damage": 5
+      }
+    }
+  }
+}

@@ -19,6 +19,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
+import com.thescar.hygunsplugin.support.hytale.PlayerInventoryAccess;
+import com.thescar.hygunsplugin.ui.hud.HudCoordinator;
 
 import java.util.ArrayList;
 
@@ -39,7 +41,7 @@ public class LootManager {
         ArrayList<WeaponStats> list = new ArrayList<>();
 
         ArrayList<String> item = new ArrayList<>();
-        item.add("Weapon_Handgun");
+        item.add("Weapon_DesertEagle");
         WeaponStats secondary = new WeaponStats("Desert Eagle", "Secondary", "Weapon", "Single", item, "DesertEagle", 7, 100);
 
         ArrayList<String> item2 = new ArrayList<>();
@@ -67,8 +69,12 @@ public class LootManager {
             player.getInventory().clear();
             Inventory inv = player.getInventory();
 
-            ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
-            inv.getStorage().addItemStack(bullets);
+            //ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
+            //inv.getStorage().addItemStack(bullets);
+
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Base", 300));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Rifle", 300));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Shotgun", 80));
 
             WeaponStats primary   = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("primary")).findFirst().orElse(null);
             WeaponStats secondary = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("secondary")).findFirst().orElse(null);
@@ -102,6 +108,15 @@ public class LootManager {
             if (customHUD instanceof GameHUD newHud) {
                 newHud.setWeapons(player.getInventory().getActiveHotbarSlot() + 1);
                 newHud.setShield();
+
+                HudCoordinator.attachPlayer(playerRef, player);
+
+                ItemStack held = PlayerInventoryAccess.getItemInHand(player);
+                if (held == null) {
+                    HudCoordinator.hideAmmo(playerRef);
+                } else {
+                    HudCoordinator.updateAmmo(playerRef, held);
+                }
             }
         });
     }

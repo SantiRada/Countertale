@@ -20,6 +20,7 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -30,6 +31,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.thescar.hygunsplugin.support.hytale.PlayerInventoryAccess;
+import com.thescar.hygunsplugin.ui.hud.HudCoordinator;
 
 import java.awt.*;
 import java.util.List;
@@ -274,10 +277,18 @@ public class RefactorTool {
 
         if(testHud == null) return;
 
-        if(testHud instanceof GameHUD currentHUD) {
-            if(value > 3) return;
+        if (testHud instanceof GameHUD currentHUD) {
+            if (value > 3) return;
 
             currentHUD.setWeapons(value);
+
+            ItemStack held = PlayerInventoryAccess.getItemInHand(player);
+            if (held == null) {
+                HudCoordinator.hideAmmo(playerRef);
+                return;
+            }
+
+            HudCoordinator.updateAmmo(playerRef, held);
         }
     }
     public static void setDataScore(Player player, TypeData typeData, float value) {

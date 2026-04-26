@@ -1,0 +1,38 @@
+{
+  "Icon": "Icons/ItemCategories/HyGuns.png",
+  "Order": 2,
+  "Children": [
+    {
+      "Icon": "Icons/ItemCategories/HyGuns-Guns.png",
+      "Name": "server.ui.hyguns.category.guns",
+      "Id": "Guns"
+    },
+    {
+      "Name": "server.ui.hyguns.category.ammo",
+      "Id": "Ammo",
+      "Icon": "Icons/ItemCategories/HyGuns-Ammo.png"
+    },
+    {
+      "Id": "Blocks",
+      "Name": "server.ui.hyguns.category.blocks",
+      "Icon": "Icons/ItemCategories/Scripted Blocks.png"
+    },
+    {
+      "Id": "Furniture",
+      "Name": "server.ui.hyguns.category.furniture",
+      "Icon": "Icons/ItemCategories/Build-Furnitures.png"
+    },
+    {
+      "Id": "Items",
+      "Name": "server.ui.hyguns.category.items",
+      "Icon": "Icons/ItemCategories/Items-Ingredients.png"
+    },
+    {
+      "Id": "Tools",
+      "Name": "server.ui.hyguns.category.tools",
+      "Icon": "Icons/ItemCategories/Items-Tools.png"
+    }
+  ],
+  "Name": "HyGuns",
+  "Id": "HyGuns"
+}

@@ -1,0 +1,15 @@
+{
+  "Duration": 60,
+  "ApplicationEffects": {
+    "EntityTopTint": "#0fff00",
+    "EntityBottomTint": "#000000",
+    "Particles": [
+      {
+        "SystemId": "Effect_MarkEntity"
+      }
+    ],
+    "KnockbackMultiplier": 0,
+    "ModelVFXId": "Mark"
+  },
+  "Debuff": false
+}

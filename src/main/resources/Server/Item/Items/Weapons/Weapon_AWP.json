@@ -1,0 +1,224 @@
+{
+  "Icon": "Icons/ItemsGenerated/Weapon_AWP.png",
+  "Model": "Items/Weapons/AWP/AWP.blockymodel",
+  "Texture": "Items/Weapons/AWP/AWP.png",
+  "IconProperties": {
+    "Scale": 0.25,
+    "Rotation": [321, 71, 0],
+    "Translation": [-24, -44]
+  },
+  "MaxStack": 1,
+  "Scale": 1.4,
+  "PlayerAnimationsId": "Rifle",
+  "Quality": "Epic",
+  "TranslationProperties": {
+    "Name": "server.items.AWP.name",
+    "Description": "server.items.AWP.description"
+  },
+  "Categories": ["Items.Weapons", "HyGuns.Guns"],
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": {
+      "RequireNewClick": false,
+      "Cooldown": {
+        "Cooldown": 3.0
+      },
+      "Interactions": [
+        {
+          "Type": "Hyguns_CanShoot",
+          "Next": {
+            "Type": "Hyguns_Shoot",
+            "Failed": "Gun_Shoot_Fail",
+            "Effects": {
+              "WorldSoundEventId": "AWP_Fire",
+              "LocalSoundEventId": "AWP_Fire",
+              "ItemAnimationId": "Shoot",
+              "FirstPersonParticles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 1.9,
+                    "Y": 0
+                  },
+                  "RotationOffset": {
+                    "Yaw": 0,
+                    "Pitch": 90
+                  }
+                }
+              ],
+              "Particles": [
+                {
+                  "SystemId": "RifleShooting",
+                  "RotationOffset": {
+                    "Pitch": 90
+                  },
+                  "PositionOffset": {
+                    "X": -0.1,
+                    "Z": 1.9,
+                    "Y": 0
+                  }
+                }
+              ],
+              "CameraEffect": "Barret50_Shoot"
+            }
+          }
+        }
+      ]
+    },
+    "Ability3": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "DisplayProgress": false,
+          "AllowIndefiniteHold": false,
+          "Next": {
+            "0": {
+              "Type": "Hyguns_Reload",
+              "Effects": {
+                "ItemAnimationId": "Interact",
+                "LocalSoundEventId": "AWP_Reload",
+                "WorldSoundEventId": "AWP_Reload"
+              }
+            },
+            "0.25": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "AmmoSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SwapTo": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "AWP_Equip",
+            "LocalSoundEventId": "AWP_Equip"
+          }
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "Scope_Zoom",
+          "OverlayTexturePath": "Scope/Scope_2.png",
+          "MaxDistance": 30,
+          "MinDistance": 1,
+          "DefaultZoomMultiplier": 1,
+          "MaxZoomMultiplier": 3,
+          "ZoomMultiplierStep": 1,
+          "Effects": {
+            "WorldSoundEventId": "Scope_Zoom_In",
+            "LocalSoundEventId": "Scope_Zoom_In"
+          }
+        }
+      ]
+    },
+    "Ability1": {
+      "Interactions": [
+        {
+          "Type": "Scope_Zoom_Out",
+          "Effects": {
+            "LocalSoundEventId": "Scope_Zoom_Out",
+            "WorldSoundEventId": "Scope_Zoom_Out"
+          }
+        }
+      ]
+    },
+    "Ability2": {
+      "Interactions": [
+        {
+          "Type": "Scope_Zoom_In",
+          "Effects": {
+            "WorldSoundEventId": "Scope_Zoom_In",
+            "LocalSoundEventId": "Scope_Zoom_In"
+          }
+        }
+      ]
+    }
+  },
+  "MaxDurability": 100,
+  "Tags": {
+    "Type": ["Weapon"],
+    "Family": ["Rifle_Sniper"]
+  },
+  "Recipe": {
+    "TimeSeconds": 2,
+    "Input": [
+      {
+        "Quantity": 16,
+        "ItemId": "Ingredient_Bar_HardenedSteel"
+      },
+      {
+        "Quantity": 8,
+        "ItemId": "Ingredient_Bar_Steel"
+      },
+      {
+        "Quantity": 12,
+        "ItemId": "Ingredient_Bar_Adamantite"
+      },
+      {
+        "Quantity": 10,
+        "ItemId": "Ingredient_Powder_Boom"
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Weapon_AWP"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["Rifles"],
+        "Id": "Bench_Gunsmith",
+        "RequiredTierLevel": 3
+      }
+    ]
+  },
+  "HyGuns": {
+    "Settings": {
+      "WeaponIcon": "Weapons/AWP.png",
+      "Ammo": {
+        "Family": "Bullet",
+        "WeaponClass": ["Sniper", "Rifle"],
+        "Capacity": 5,
+        "Reload": {
+          "Time": 3.7,
+          "Amount": 5
+        }
+      },
+      "Projectiles": {
+        "ConfigId": "Hyguns_Projectile_Config_Bullet",
+        "Spread": 0,
+        "Count": 1,
+        "Damage": 80
+      },
+      "WallPenetration": {
+        "Enabled": true,
+        "Blocks": 2
+      },
+      "DamageModifiers": {
+        "Head": {
+          "Type": "MULTIPLY",
+          "Value": 3
+        },
+        "Body": {
+          "Type": "MULTIPLY",
+          "Value": 1.5
+        },
+        "*": {
+          "Type": "MULTIPLY",
+          "Value": 1
+        }
+      }
+    }
+  }
+}

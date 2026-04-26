@@ -1,0 +1,172 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Bench_Gunsmith.name",
+    "Description": "server.items.Bench_Gunsmith.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Bench_Gunsmith.png",
+  "Categories": ["Furniture.Benches", "HyGuns.Blocks"],
+  "Recipe": {
+    "TimeSeconds": 3,
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Copper",
+        "Quantity": 5
+      },
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 5
+      },
+      {
+        "ResourceTypeId": "Wood_Trunk",
+        "Quantity": 10
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": ["Workbench_Crafting"],
+        "Id": "Workbench"
+      }
+    ]
+  },
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/Benches/Gunsmith.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Benches/Gunsmith_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "VariantRotation": "NESW",
+    "HitboxType": "Bench_Gunsmith",
+    "BlockEntity": {
+      "Components": {
+        "BenchBlock": {}
+      }
+    },
+    "State": {
+      "Definitions": {
+        "CraftCompleted": {
+          "CustomModelAnimation": "Blocks/Benches/Gunsmith_Crafting.blockyanim",
+          "Looping": true
+        },
+        "CraftCompletedInstant": {
+          "CustomModelAnimation": "Blocks/Benches/Gunsmith_Crafting.blockyanim"
+        }
+      }
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Benches"
+      }
+    },
+    "Bench": {
+      "Type": "Crafting",
+      "LocalOpenSoundEventId": "SFX_Weapon_Bench_Open",
+      "LocalCloseSoundEventId": "SFX_Weapon_Bench_Close",
+      "CompletedSoundEventId": "SFX_Weapon_Bench_Craft",
+      "BenchUpgradeSoundEventId": "SFX_Workbench_Upgrade_Start_Default",
+      "BenchUpgradeCompletedSoundEventId": "SFX_Workbench_Upgrade_Complete_Default",
+      "Categories": [
+        {
+          "Id": "Rifles",
+          "Icon": "Icons/CraftingCategories/Gunsmith/Weapon_Assault_Rifle.png",
+          "Name": "server.benchCategories.rifles"
+        },
+        {
+          "Id": "Shotguns",
+          "Icon": "Icons/CraftingCategories/Gunsmith/DoubleBarrel.png",
+          "Name": "server.benchCategories.shotguns"
+        },
+        {
+          "Id": "SMGs",
+          "Icon": "Icons/CraftingCategories/Gunsmith/Mac10.png",
+          "Name": "server.benchCategories.smgs"
+        },
+        {
+          "Id": "Pistols",
+          "Icon": "Icons/CraftingCategories/Gunsmith/Weapon_Handgun.png",
+          "Name": "server.benchCategories.pistols"
+        },
+        {
+          "Id": "Utility",
+          "Icon": "Icons/CraftingCategories/Gunsmith/Frag.png",
+          "Name": "server.benchCategories.utility"
+        },
+        {
+          "Id": "Ammo",
+          "Icon": "Icons/CraftingCategories/Gunsmith/Bullet.png",
+          "Name": "server.benchCategories.ammo"
+        }
+      ],
+      "Id": "Bench_Gunsmith",
+      "TierLevels": [
+        {
+          "UpgradeRequirement": {
+            "Material": [
+              {
+                "ItemId": "Ingredient_Powder_Boom",
+                "Quantity": 10
+              },
+              {
+                "ItemId": "Ingredient_Bar_Copper",
+                "Quantity": 20
+              },
+              {
+                "ItemId": "Ingredient_Bar_Iron",
+                "Quantity": 10
+              }
+            ],
+            "TimeSeconds": 3
+          },
+          "CraftingTimeReductionModifier": 0.1
+        },
+        {
+          "CraftingTimeReductionModifier": 0.25,
+          "UpgradeRequirement": {
+            "Material": [
+              {
+                "ItemId": "Ingredient_Bar_Cobalt",
+                "Quantity": 5
+              },
+              {
+                "ItemId": "Ingredient_Bar_Thorium",
+                "Quantity": 5
+              },
+              {
+                "ItemId": "Ingredient_Powder_Boom",
+                "Quantity": 10
+              }
+            ],
+            "TimeSeconds": 3
+          }
+        }
+      ]
+    },
+    "BlockParticleSetId": "Stone",
+    "ParticleColor": "#5C583E",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "BlockSoundSetId": "Stone"
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.35,
+    "Rotation": [22.5, 45, 22.5],
+    "Translation": [14, -23]
+  },
+  "Tags": {
+    "Type": ["Bench"]
+  },
+  "MaxStack": 1,
+  "ItemLevel": 2,
+  "ItemSoundSetId": "ISS_Blocks_Stone"
+}

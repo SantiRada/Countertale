@@ -1,0 +1,28 @@
+{
+  "Name": "Tin",
+  "BlockMask": {
+    "Default": [
+      "Rock_Sandstone",
+      "Rock_Sandstone_White",
+      "Rock_Sandstone_Red",
+      "Soil_Dirt_Dry",
+      "Soil_Mud_Dry",
+      { "Replace": false, "Fluid": "Water_Source" }
+    ]
+  },
+  "Entry": {
+    "File": "Ores.Zone2.Tin"
+  },
+  "EntryPoints": {
+    "Density": [0, 1],
+    "Seed": "Caves-Ore-Tin",
+    "Scale": 0.15,
+    "Jitter": 0.5
+  },
+  "FixedEntryHeight": 0,
+  "HeightRadiusFactor": {
+    "Positions": [0, 255],
+    "Values": [1, 1]
+  },
+  "Pitch": 0
+}

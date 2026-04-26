@@ -1,0 +1,69 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Ammo_Box.name",
+    "Description": "server.items.Ammo_Box_Tier_I.description"
+  },
+  "Categories": ["HyGuns.Tools"],
+  "Quality": "Uncommon",
+  "ItemLevel": 12,
+  "PlayerAnimationsId": "AmmoBox",
+  "Icon": "Icons/ItemsGenerated/Ammo_Box_Tier_I.png",
+  "MaxStack": 1,
+  "Utility": {
+    "Compatible": true,
+    "Usable": true
+  },
+  "Container": {
+    "Capacity": 3,
+    "ItemTag": "Ammo"
+  },
+  "Recipe": {
+    "TimeSeconds": 1,
+    "KnowledgeRequired": false,
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Steel",
+        "Quantity": 3
+      },
+      {
+        "ItemId": "Ingredient_Bar_Thorium",
+        "Quantity": 2
+      },
+      {
+        "ItemId": "Ingredient_Fabric_Scrap_Shadoweave",
+        "Quantity": 2
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Bench_Gunsmith",
+        "Type": "Crafting",
+        "Categories": ["Utility"]
+      }
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "OpenItemStackContainer"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "OpenItemStackContainer"
+        }
+      ]
+    }
+  },
+  "IconProperties": {
+    "Scale": 0.8,
+    "Rotation": [350, 235, 345],
+    "Translation": [0, -13]
+  },
+  "Model": "Items/Utility/Ammo_Box.blockymodel",
+  "Texture": "Items/Utility/Ammo_Box_Tier_I.png",
+  "UsePlayerAnimations": false
+}
