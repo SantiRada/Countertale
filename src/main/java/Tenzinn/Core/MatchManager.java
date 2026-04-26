@@ -95,6 +95,69 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
         PlayerStats playerStats = new PlayerStats(playerRef, RefactorTool.getPlayer(playerRef), match);
         playerMatches.put(playerStats, match);
         RefactorTool.setPlayerStats(playerStats);
+
+        // Register solo player as a single-member group for team formation
+        match.addPartyGroup(Collections.singletonList(playerRef));
+
+        return match;
+    }
+
+    /**
+     * Adds an entire party group to the queue atomically.
+     * Only matches where ALL members fit (playerCount + groupSize ≤ 10) are considered.
+     * If no compatible match exists, a new one is created.
+     */
+    public GameMatch addGroupToQueue(List<PlayerRef> group, String mode, List<String> allowedMaps) {
+        // Verify no member is already queued / in game
+        for (PlayerRef playerRef : group) {
+            boolean inMatch = playerMatches.keySet().stream()
+                    .anyMatch(s -> s.getPlayerRef().equals(playerRef));
+            if (inMatch) {
+                group.get(0).sendMessage(Message.raw(
+                        playerRef.getUsername() + " ya está en cola o en partida. El grupo no puede unirse.")
+                        .color(Color.pink));
+                return null;
+            }
+        }
+
+        List<String> effectiveAllowed = (allowedMaps == null || allowedMaps.isEmpty())
+                ? new ArrayList<>(MapListeners.getMapNames())
+                : allowedMaps;
+
+        int groupSize = group.size();
+
+        Optional<GameMatch> availableMatch = activeMatches.stream()
+                .filter(m -> m.getState() == GameMatch.MatchState.WAITING)
+                .filter(m -> m.getPlayerCount() + groupSize <= 10)
+                .filter(m -> mode.equals(m.getMode()))
+                .filter(m -> !Collections.disjoint(m.getEligibleMaps(), effectiveAllowed))
+                .findFirst();
+
+        GameMatch match;
+        if (availableMatch.isPresent()) {
+            match = availableMatch.get();
+            match.intersectEligibleMaps(effectiveAllowed);
+            main.getLogger().at(Level.INFO).log(
+                    "[MatchManager] Grupo de " + groupSize + " unido a match existente.");
+        } else {
+            match = new GameMatch();
+            match.setMode(mode);
+            match.initEligibleMaps(effectiveAllowed);
+            activeMatches.add(match);
+            main.getLogger().at(Level.INFO).log(
+                    "[MatchManager] Nueva partida creada para grupo de " + groupSize + ".");
+        }
+
+        for (PlayerRef playerRef : group) {
+            match.addPlayer(playerRef);
+            PlayerStats playerStats = new PlayerStats(playerRef, RefactorTool.getPlayer(playerRef), match);
+            playerMatches.put(playerStats, match);
+            RefactorTool.setPlayerStats(playerStats);
+        }
+
+        // Register the whole party as one group for team formation
+        match.addPartyGroup(group);
+
         return match;
     }
 

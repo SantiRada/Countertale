@@ -5,6 +5,8 @@ import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.LootManager;
 import Tenzinn.Deathmatch.UI.MvpPage;
 import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.FiveVSfive.Flow.MatchFVF;
+import Tenzinn.FiveVSfive.UI.EndMatchPage;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
@@ -32,10 +34,8 @@ import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
@@ -294,7 +294,12 @@ public class RefactorTool {
     }
     // ============================================ //
     public static void finishGame(List<PlayerRef> players, Tenzinn.Core.GameMatch match) {
-        if (match != null) match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
+        if (match != null) {
+            match.stopTimer();
+            match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
+        }
+
+        int winningTeam = MatchFVF.winner;
 
         for (PlayerRef playerRef : players) {
             Ref<EntityStore> ref = playerRef.getReference();
@@ -307,7 +312,13 @@ public class RefactorTool {
             if (getModeForPlayer(playerRef) == SpawnMode.DM) {
                 player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef));
             } else {
-                /* TODO: pantalla de fin de ronda FVF */
+                UUID worldId = playerRef.getWorldUuid();
+                if (worldId == null) continue;
+                World world = Universe.get().getWorld(worldId);
+                if (world == null) continue;
+                final int fWinningTeam = winningTeam;
+                world.execute(() -> player.getPageManager().openCustomPage(ref, store,
+                        new EndMatchPage(playerRef, fWinningTeam)));
             }
         }
     }

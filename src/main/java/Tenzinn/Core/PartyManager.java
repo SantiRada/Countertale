@@ -36,6 +36,13 @@ public class PartyManager {
         String leader = GetLeaderById(id);
         if(leader == null) return;
 
+        // Revisar si el grupo ya está lleno
+        int partyIndex = GetIndexPartyById(id);
+        if (partyIndex >= 0 && totalParty.get(partyIndex).players.size() >= 5) {
+            SendMessageToLeader(id, "No puedes invitar más jugadores. El grupo está lleno (máximo 5).");
+            return;
+        }
+
         // Revisar si el usuario ya tiene una invitación
         int testInvitation = GetInvitationByPlayer(playerRef);
         if(testInvitation >= 0) {
@@ -93,7 +100,10 @@ public class PartyManager {
                 totalInvitations.removeIf(item -> item.id == id);
                 totalParty.remove(index);
             }
-        } else { totalParty.get(index).RemoveHUD(playerRef); }
+        } else {
+            totalParty.get(index).RemoveHUD(playerRef);
+            totalParty.get(index).TransferLeadership(); // refresh remaining members' HUD
+        }
     }
     public static void OrderParty(PlayerRef playerRef) {
         int id = GetPartyIdForPlayer(playerRef);
@@ -112,8 +122,8 @@ public class PartyManager {
         if (index < 0) return;
 
         totalParty.get(index).RemovePlayer(playerRef);
-
         totalParty.get(index).players.getFirst().sendMessage(Message.raw("Has eliminado al jugador " + playerRef.getUsername() + " del grupo.").color(Color.yellow));
+        totalParty.get(index).TransferLeadership(); // refresh remaining members' HUD
     }
     // ============================================= //
     private static int GetInvitationByPlayer(PlayerRef playerRef) {

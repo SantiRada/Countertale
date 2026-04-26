@@ -18,6 +18,7 @@ import Tenzinn.Core.Admin.Commands.AdminCommands;
 import Tenzinn.FiveVSfive.Systems.TeamChatSystem;
 import Tenzinn.Core.Commands.Economy.RevenueCommands;
 import Tenzinn.FiveVSfive.Commands.Wall.WallCommands;
+import Tenzinn.FiveVSfive.Commands.Round.RoundCommands;
 import Tenzinn.Core.Admin.Commands.Game.GameCommands;
 import Tenzinn.Core.Admin.Commands.ForceStartCommand;
 import Tenzinn.Core.Admin.Commands.Statue.StatueCommand;
@@ -90,6 +91,7 @@ public class Countertale extends JavaPlugin {
 
         // FVF Commands
         getCommandRegistry().registerCommand(new WallCommands("wall", "Manage TemporalWalls for maps"));
+        getCommandRegistry().registerCommand(new RoundCommands("round", "Admin round control commands"));
 
         // Events
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, DetectPlayerReady::onPlayerReady);

@@ -76,9 +76,26 @@ Group #Scoreboard {
         LayoutMode: Top;
         Anchor: (Width: 850, Left: 24, Right: 24);
 
-        Group #DataUser01 {
+        // ── Team 1 ────────────────────────────────────────────────────────────
+
+        Group #Team1Header {
+            LayoutMode: Left;
+            Anchor: (Height: 20, Top: 5, Bottom: 4);
+
+            Label {
+                Anchor: (Right: 8);
+                Style: (FontSize: 12, TextColor: #4DA6FF, RenderBold: true, VerticalAlignment: Center);
+                Text: "Team 1";
+            }
+            Label #Team1Rounds {
+                Style: (FontSize: 12, TextColor: #4DA6FF(0.65), VerticalAlignment: Center);
+                Text: "0 rounds";
+            }
+        }
+
+        Group #T1DataUser01 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -86,9 +103,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name01 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T1Name01 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -99,36 +115,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill01 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T1Kill01 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death01 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T1Death01 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score01 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T1Score01 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser02 {
+        Group #T1DataUser02 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -136,9 +149,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name02 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T1Name02 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -149,36 +161,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill02 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T1Kill02 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death02 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T1Death02 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score02 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T1Score02 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser03 {
+        Group #T1DataUser03 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -186,9 +195,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name03 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T1Name03 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -199,36 +207,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill03 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T1Kill03 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death03 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T1Death03 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score03 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T1Score03 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser04 {
+        Group #T1DataUser04 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -236,9 +241,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name04 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T1Name04 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -249,36 +253,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill04 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T1Kill04 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death04 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T1Death04 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score04 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T1Score04 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser05 {
+        Group #T1DataUser05 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -286,9 +287,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name05 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T1Name05 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -299,36 +299,58 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill05 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T1Kill05 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death05 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T1Death05 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score05 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T1Score05 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser06 {
+
+        // ── Separator ─────────────────────────────────────────────────────────
+
+        Group {
+            Anchor: (Height: 2, Top: 5, Bottom: 5);
+            Background: (Color: #FFFFFF(0.08));
+        }
+
+        // ── Team 2 ────────────────────────────────────────────────────────────
+
+        Group #Team2Header {
+            LayoutMode: Left;
+            Anchor: (Height: 20, Bottom: 4);
+
+            Label {
+                Anchor: (Right: 8);
+                Style: (FontSize: 12, TextColor: #FF6B6B, RenderBold: true, VerticalAlignment: Center);
+                Text: "Team 2";
+            }
+            Label #Team2Rounds {
+                Style: (FontSize: 12, TextColor: #FF6B6B(0.65), VerticalAlignment: Center);
+                Text: "0 rounds";
+            }
+        }
+
+        Group #T2DataUser01 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -336,9 +358,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name06 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T2Name01 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -349,36 +370,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill06 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T2Kill01 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death06 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T2Death01 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score06 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T2Score01 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser07 {
+        Group #T2DataUser02 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -386,9 +404,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name07 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T2Name02 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -399,36 +416,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill07 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T2Kill02 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death07 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T2Death02 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score07 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T2Score02 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser08 {
+        Group #T2DataUser03 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -436,9 +450,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name08 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T2Name03 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -449,36 +462,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill08 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T2Kill03 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death08 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T2Death03 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score08 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T2Score03 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser09 {
+        Group #T2DataUser04 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 4);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -486,9 +496,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name09 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T2Name04 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -499,36 +508,33 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill09 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T2Kill04 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death09 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T2Death04 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score09 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T2Score04 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }
         }
-        Group #DataUser010 {
+        Group #T2DataUser05 {
             LayoutMode: Center;
-            Anchor: (Height: 44, Left: 1, Right: 2, Bottom: 7);
+            Anchor: (Height: 40, Left: 1, Right: 2, Bottom: 7);
             Padding: (Left: 15, Right: 14);
             OutlineColor: #E0B448;
             OutlineSize: 0;
@@ -536,9 +542,8 @@ Group #Scoreboard {
             Group {
                 LayoutMode: Left;
                 FlexWeight: 1;
-
-                Label #Name010 {
-                    Style: (FontSize: 20, TextColor: #ffffff, VerticalAlignment: Center);
+                Label #T2Name05 {
+                    Style: (FontSize: 18, TextColor: #ffffff, VerticalAlignment: Center);
                     Text: "Username";
                 }
             }
@@ -549,29 +554,26 @@ Group #Scoreboard {
 
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44);
-
-                    Label #Kill010 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "88";
+                    Anchor: (Width: 64, Height: 40);
+                    Label #T2Kill05 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 64, Height: 44, Left: 4);
-
-                    Label #Death010 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8";
+                    Anchor: (Width: 64, Height: 40, Left: 4);
+                    Label #T2Death05 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
                 Group {
                     LayoutMode: Center;
-                    Anchor: (Width: 90, Height: 44, Left: 23);
-
-                    Label #Score010 {
-                        Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
-                        Text: "8888";
+                    Anchor: (Width: 90, Height: 40, Left: 23);
+                    Label #T2Score05 {
+                        Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center, VerticalAlignment: Center);
+                        Text: "0";
                     }
                 }
             }

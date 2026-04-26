@@ -31,19 +31,33 @@ public class PartyObject {
     public void AddPlayer(PlayerRef playerRef) {
         for (PlayerRef ref : players) { if (ref.equals(playerRef)) return; }
 
-        players.add(playerRef);
-        UpdateHUD();
+        if (players.size() >= 5) {
+            playerRef.sendMessage(Message.raw("El grupo está lleno (máximo 5 jugadores).").color(Color.red));
+            return;
+        }
 
+        players.add(playerRef);
         SendMessageToAllPlayers(playerRef.getUsername() + " ha entrado al grupo.");
+
+        if (playerRef.getWorldUuid() != null) {
+            World world = Universe.get().getWorld(playerRef.getWorldUuid());
+            if (world != null) { world.execute(this::UpdateHUD); }
+        }
     }
     public void UpdateHUD() {
         for (PlayerRef playerRef : players) {
             Player player = RefactorTool.getPlayer(playerRef);
+            if (player == null) continue;
 
             CustomUIHud customHUD = player.getHudManager().getCustomHud();
-            if (customHUD == null) { player.getHudManager().setCustomHud(playerRef, new PartyHUD(playerRef, this)); return; }
-            if (customHUD instanceof QueueHud queueHUD) { queueHUD.setDataParty(this); }
-            if (customHUD instanceof PartyHUD partyHUD) { partyHUD.setData(); }
+            if (customHUD instanceof QueueHud queueHUD) {
+                // Player is queuing — update party info inside the existing QueueHud
+                queueHUD.setDataParty(this);
+            } else {
+                // No HUD or outdated PartyHUD — always create a fresh one so the
+                // member list is never stale or duplicated
+                player.getHudManager().setCustomHud(playerRef, new PartyHUD(playerRef, this));
+            }
         }
     }
     public void RemovePlayer(PlayerRef playerRef) {
@@ -60,7 +74,13 @@ public class PartyObject {
             if (customHud instanceof PartyHUD) { player.getHudManager().setCustomHud(playerRef, null); }
         });
     }
-    public void TransferLeadership() { Objects.requireNonNull(Universe.get().getWorld(Objects.requireNonNull(players.getFirst().getWorldUuid()))).execute(this::UpdateHUD); }
+    public void TransferLeadership() {
+        if (players.isEmpty()) return;
+        if (players.getFirst().getWorldUuid() == null) return;
+        World world = Universe.get().getWorld(players.getFirst().getWorldUuid());
+        if (world == null) return;
+        world.execute(this::UpdateHUD);
+    }
     public void RemoveHUD(PlayerRef playerRef) {
         assert playerRef.getWorldUuid() != null;
         Objects.requireNonNull(Universe.get().getWorld(playerRef.getWorldUuid())).execute(() -> {

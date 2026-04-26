@@ -9,6 +9,8 @@ import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.util.List;
+
 public class PartyHUD extends CustomUIHud {
 
     private UICommandBuilder uiBuilder;
@@ -22,17 +24,21 @@ public class PartyHUD extends CustomUIHud {
         uiBuilder = uiCommandBuilder;
 
         uiBuilder.set("#PartyLeader.TextSpans", Message.raw(myParty.leaderUsername));
-
-        update(true, uiBuilder);
+        fillMembers(uiCommandBuilder);
     }
 
     public void setData() {
         if (uiBuilder == null) return;
-        for (PlayerRef player : myParty.players) {
-            uiBuilder.appendInline("#Members","Label { " + "TextColor: #FFFFFF; " + "FontSize: 20; " + "RenderBold: false; " +
-                            "Text: \"" + player.getUsername() + "\"; " + "}");
-        }
+        UICommandBuilder updateBuilder = new UICommandBuilder();
+        fillMembers(updateBuilder);
+        update(true, updateBuilder);
+    }
 
-        update(true, uiBuilder);
+    private void fillMembers(UICommandBuilder builder) {
+        List<PlayerRef> members = myParty.players;
+        for (int i = 0; i < 5; i++) {
+            String name = i < members.size() ? members.get(i).getUsername() : "";
+            builder.set("#Member" + (i + 1) + ".TextSpans", Message.raw(name));
+        }
     }
 }
