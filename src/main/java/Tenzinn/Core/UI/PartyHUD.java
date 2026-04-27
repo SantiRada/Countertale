@@ -24,11 +24,17 @@ public class PartyHUD extends CustomUIHud {
         uiBuilder = uiCommandBuilder;
 
         uiBuilder.set("#PartyLeader.TextSpans", Message.raw(myParty.leaderUsername));
-        fillMembers(uiCommandBuilder);
+
+        update(true, uiBuilder);
     }
 
     public void setData() {
         if (uiBuilder == null) return;
+        for (PlayerRef player : myParty.players) {
+            uiBuilder.appendInline("#Members","Label { " + "TextColor: #FFFFFF; " + "FontSize: 20; " + "RenderBold: false; " +
+                            "Text: \"" + player.getUsername() + "\"; " + "}");
+        }
+
         UICommandBuilder updateBuilder = new UICommandBuilder();
         fillMembers(updateBuilder);
         update(true, updateBuilder);

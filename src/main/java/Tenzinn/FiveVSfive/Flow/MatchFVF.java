@@ -1,6 +1,7 @@
 package Tenzinn.FiveVSfive.Flow;
 
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Shop.EconomySystem;
 import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.LootManager;
 import Tenzinn.Core.Tools.RefactorTool;
@@ -17,6 +18,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -27,10 +29,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.Objects;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 
@@ -45,7 +44,7 @@ public class MatchFVF {
     private static int timePerPurchase = 15;
 
     public static int winner = -1;
-    public static final int numRoundsPerWinner = 4;
+    public static final int numRoundsPerWinner = 13;
     public static ArrayList<Integer> numRoundsPerTeam = new ArrayList<>();
     private static boolean inEndRound = false;
     private static boolean inEndPurchase = false;
@@ -95,8 +94,22 @@ public class MatchFVF {
     }
     // ================================================== //
     public static void startTimerMatch(GameMatch match) {
+        // Reset all per-match static state when a genuinely new match begins.
+        // myMatch == match means we are resuming a round within the same match (fine).
+        // myMatch != match means this is a fresh game — stale state from the previous
+        // match would corrupt round counts and leave a leaked timer blocking the new one.
+        if (myMatch != match) {
+            stopTimer();                    // cancel any leaked timer from the previous match
+            numRoundsPerTeam.clear();       // round scores must start at 0-0
+            winner       = -1;
+            inEndRound   = false;
+            inEndPurchase = false;
+        }
         prepareRoundScoresFor(match);
         myMatch = match;
+        // Assign teams once per match (idempotent — ignored on subsequent rounds)
+        if (myMatch.getTeamAssignments().isEmpty()) { myMatch.formTeams(); }
+
         startMatch();
 
         if (timerTask != null && !timerTask.isDone()) return;
@@ -104,14 +117,13 @@ public class MatchFVF {
         if (myMatch.getState() == MatchState.IN_PROGRESS) {
             remainingSeconds = timePerRound;
             inEndRound = false;
+            winner = -1;
 
             String mapName = myMatch.getMapId();
             TemporalWallSystem.removeWalls(mapName, myMatch.getPlayers().getFirst());
 
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-                if (remainingSeconds <= 0 && !inEndRound) { onEndRound(); }
-                if (remainingSeconds <= -5) { onReloadRound(); }
-
+                if (remainingSeconds <= 0 && !inEndRound) { onTimeExpired(); }
                 remainingSeconds--;
             }, 1, 1, TimeUnit.SECONDS);
         } else {
@@ -146,9 +158,6 @@ public class MatchFVF {
             World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
             assert currentWorld != null;
 
-            // FIX: setState and player setup on the world thread, but startTimerMatch
-            // called OUTSIDE execute() with a short delay to avoid nested execute() calls
-            // to ensure setState is processed before starting the timer.
             currentWorld.execute(() -> {
                 for (int i = 0; i < myMatch.getPlayers().size(); i++) {
                     PlayerStats playerStats = RefactorTool.getPlayerStats(myMatch.getPlayers().get(i));
@@ -177,11 +186,9 @@ public class MatchFVF {
                 String mapName = myMatch.getMapId();
                 TemporalWallSystem.removeWalls(mapName, myMatch.getPlayers().getFirst());
 
-                myMatch.setState(GameMatch.MatchState.IN_PROGRESS);
+                myMatch.setState(MatchState.IN_PROGRESS);
             });
 
-            // FIX: startTimerMatch outside execute() with a minimal delay so
-            // the previous setState is applied when the new timer starts.
             HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
                 startTimerMatch(myMatch);
             }, 100, TimeUnit.MILLISECONDS);
@@ -189,8 +196,8 @@ public class MatchFVF {
     }
     public static void onReloadRound() {
         stopTimer();
+        giveRoundMoney();
 
-        // FIX: setState before execute() - correct, no changes needed here.
         myMatch.setState(MatchState.ON_PURCHASE);
 
         World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
@@ -218,6 +225,7 @@ public class MatchFVF {
     }
     public static void onEndRound() {
         inEndRound = true;
+        stopTimer();
         List<PlayerRef> players = myMatch.getPlayers();
 
         World currentWorld = Universe.get().getWorld(Objects.requireNonNull(players.getFirst().getWorldUuid()));
@@ -231,16 +239,45 @@ public class MatchFVF {
                 player.getPageManager().openCustomPage(ref, store, new EndRoundPage(players.get(i)));
             }
         });
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> onReloadRound(), 3, TimeUnit.SECONDS);
+    }
+    public static void onTimeExpired() {
+        inEndRound = true;
+
+        boolean team1HasAlive = false;
+        boolean team2HasAlive = false;
+
+        for (PlayerRef playerRef : myMatch.getPlayers()) {
+            PlayerStats ps = RefactorTool.getPlayerStats(playerRef);
+            if (ps == null) continue;
+            int team = validateTeamMembership(playerRef);
+            if (ps.playerState == PlayerStats.PlayerState.DEFAULT) {
+                if (team == 1) team1HasAlive = true;
+                else if (team == 2) team2HasAlive = true;
+            }
+        }
+
+        winner = (!team1HasAlive && team2HasAlive) ? 2 : 1;
+
+        finishRound();
     }
     // ================================================== //
     public static void resetPlayers(List<PlayerRef> playerRefs) {
         for (int i = 0; i < playerRefs.size(); i++) {
-            Player player = RefactorTool.getPlayer(playerRefs.get(i));
-            LootManager.giveLoot(player, LootManager.getStarterKit());
-
-            Ref<EntityStore> ref = playerRefs.get(i).getReference();
+            PlayerRef playerRef = playerRefs.get(i);
+            Ref<EntityStore> ref = playerRef.getReference();
             assert ref != null;
             Store<EntityStore> store = ref.getStore();
+
+            PlayerStats ps = RefactorTool.getPlayerStats(playerRef);
+            if (ps != null && ps.playerState == PlayerStats.PlayerState.SPECTATOR) {
+                ps.playerState = PlayerStats.PlayerState.DEFAULT;
+                DeathComponent.respawn(store, ref);
+            }
+
+            Player player = RefactorTool.getPlayer(playerRef);
+            LootManager.giveLoot(player, LootManager.getStarterKit());
+
             EntityStatMap statMap = store.getComponent(ref, EntityStatMap.getComponentType());
             if (statMap != null) { statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth()); }
         }
@@ -254,10 +291,16 @@ public class MatchFVF {
         assert playerRefs.getFirst().getWorldUuid() != null;
         World newWorld = Universe.get().getWorld(playerRefs.getFirst().getWorldUuid());
 
-        for (int i = 0; i < playerRefs.size(); i++) {
-            Vector3d spawnPos = spawns.get(i % spawns.size());
+        Map<UUID, Integer> teams = myMatch.getTeamAssignments();
+        int team1Count = 0;
+        int team2Count = 0;
+
+        for (PlayerRef playerRef : playerRefs) {
+            int team = teams.getOrDefault(playerRef.getUuid(), 1);
+            // Team 1 → spawns [0..4], Team 2 → spawns [5..9]
+            int spawnIndex = (team == 1) ? team1Count++ : 5 + team2Count++;
+            Vector3d spawnPos = spawns.get(spawnIndex % spawns.size());
             Transform spawnPoint = new Transform(spawnPos.x + 0.5f, spawnPos.y, spawnPos.z + 0.5f);
-            PlayerRef playerRef = playerRefs.get(i);
 
             try {
                 UUID playerUUID = playerRef.getUuid();
@@ -285,6 +328,20 @@ public class MatchFVF {
         }
     }
     public static List<PlayerRef> getPlayers() { return myMatch != null ? myMatch.getPlayers() : new ArrayList<>(); }
+    public static boolean isMatchActive()       { return myMatch != null; }
+    public static void forceAddRound(int team) {
+        if (myMatch == null) return;
+        getNumberRound(1);
+        winner = team;
+        finishRound();
+    }
+    public static void forceWinMatch(int team) {
+        if (myMatch == null) return;
+        getNumberRound(1);
+        numRoundsPerTeam.set(team - 1, numRoundsPerWinner - 1);
+        winner = team;
+        finishRound();
+    }
     // ================================================== //
     public static int getTimer() { return remainingSeconds; }
     public static void stopTimer() {
@@ -309,18 +366,12 @@ public class MatchFVF {
         boolean stateTeam01 = true;
         boolean stateTeam02 = true;
 
-        int halfAmount;
-        if (myMatch.getPlayers().size() % 2 == 0) { halfAmount = myMatch.getPlayers().size() / 2; }
-        else { halfAmount = (myMatch.getPlayers().size() - 1) / 2; }
-
-        for (int i = 0; i < halfAmount; i++) {
-            PlayerStats playerStats = RefactorTool.getPlayerStats(myMatch.getPlayers().get(i));
-            if (playerStats.playerState == PlayerStats.PlayerState.DEFAULT) { stateTeam01 = false; break; }
-        }
-
-        for (int i = halfAmount; i < myMatch.getPlayers().size(); i++) {
-            PlayerStats playerStats = RefactorTool.getPlayerStats(myMatch.getPlayers().get(i));
-            if (playerStats.playerState == PlayerStats.PlayerState.DEFAULT) { stateTeam02 = false; break; }
+        for (PlayerRef playerRef : myMatch.getPlayers()) {
+            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+            if (playerStats == null) continue;
+            int team = validateTeamMembership(playerRef);
+            if (team == 1 && playerStats.playerState == PlayerStats.PlayerState.DEFAULT) { stateTeam01 = false; }
+            else if (team == 2 && playerStats.playerState == PlayerStats.PlayerState.DEFAULT) { stateTeam02 = false; }
         }
 
         winner = stateTeam01 ? 1 : stateTeam02 ? 2 : 0;
@@ -329,26 +380,24 @@ public class MatchFVF {
         return winner;
     }
     public static int validateTeamMembership(PlayerRef playerRef) {
-        List<PlayerRef> players = myMatch.getPlayers();
-        int value = -1;
-
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getUuid().equals(playerRef.getUuid())) {
-                value = i;
-                break;
-            }
-        }
-
-        int halfAmount;
-        if (myMatch.getPlayers().size() % 2 == 0) { halfAmount = myMatch.getPlayers().size() / 2; }
-        else { halfAmount = (myMatch.getPlayers().size() - 1) / 2; }
-
-        if (value == -1) return -1;
-        if (value >= halfAmount) return 2;
-
-        return 1;
+        Map<UUID, Integer> assignments = myMatch.getTeamAssignments();
+        Integer team = assignments.get(playerRef.getUuid());
+        return team != null ? team : -1;
     }
     // ================================================== //
+
+    private static void giveRoundMoney() {
+        if (myMatch == null || winner <= 0) return;
+        int bonus = EconomySystem.getRevenue(EconomySystem.Revenue.ROUND);
+        for (PlayerRef playerRef : myMatch.getPlayers()) {
+            PlayerStats ps = RefactorTool.getPlayerStats(playerRef);
+            if (ps == null) continue;
+            if (validateTeamMembership(playerRef) == winner) {
+                ps.giveMoney(bonus);
+            }
+        }
+    }
+
     private static void finishRound () {
         prepareRoundScoresFor(myMatch);
 
@@ -364,11 +413,14 @@ public class MatchFVF {
 
         if (!matchFinished) {
             HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-                if (myMatch != null && myMatch.getState() != GameMatch.MatchState.FINISHED) {
+                if (myMatch != null && myMatch.getState() != MatchState.FINISHED) {
                     onReloadRound();
                 }
             }, 5, TimeUnit.SECONDS);
         }
+
+        boolean matchOver = numRoundsPerTeam.getFirst() >= numRoundsPerWinner
+                || numRoundsPerTeam.get(1) >= numRoundsPerWinner;
 
         List<PlayerRef> players = myMatch.getPlayers();
 
@@ -378,14 +430,16 @@ public class MatchFVF {
             assert customHUD != null;
             customHUD.setRounds(numRoundsPerTeam.getFirst(), numRoundsPerTeam.getLast());
 
-            if (numRoundsPerTeam.getFirst() >= numRoundsPerWinner || numRoundsPerTeam.get(1) >= numRoundsPerWinner) {
+            if (matchOver) {
                 assert player.getReference() != null;
                 PlayerEntityEffect.clearAllEffects(player, player.getReference().getStore());
             }
         }
 
-        if (matchFinished) {
+        if (matchOver) {
             RefactorTool.finishGame(myMatch.getPlayers(), myMatch);
+        } else {
+            onEndRound();
         }
     }
 }

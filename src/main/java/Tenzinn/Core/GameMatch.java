@@ -52,7 +52,7 @@ public class GameMatch {
         if (mode.equalsIgnoreCase("dm")) {
             MatchDeathmatch.startTimerMatch(this);
         } else {
-            players.getFirst().sendMessage(Message.raw("Loading timer of 5v5"));
+            players.getFirst().sendMessage(Message.raw("Loading 5v5 timer"));
             MatchFVF.startTimerMatch(this);
         }
     }

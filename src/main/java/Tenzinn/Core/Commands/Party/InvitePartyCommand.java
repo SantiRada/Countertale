@@ -34,7 +34,7 @@ public class InvitePartyCommand extends CommandBase {
 
         PlayerRef playerRef = Universe.get().getPlayerByUsername(username.get(commandContext), NameMatching.EXACT);
         if(playerRef == null) {
-            player.sendMessage(Message.raw("The user could not be found: '" + username.get(commandContext) + "'").color(Color.orange));
+            player.sendMessage(Message.raw("User '" + username.get(commandContext) + "' was not found").color(Color.orange));
             return;
         }
 

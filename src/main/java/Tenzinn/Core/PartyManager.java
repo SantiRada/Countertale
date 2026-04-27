@@ -36,7 +36,14 @@ public class PartyManager {
         String leader = GetLeaderById(id);
         if(leader == null) return;
 
-        // Check whether the user already has an invitation
+        // Check if the group is already full
+        int partyIndex = GetIndexPartyById(id);
+        if (partyIndex >= 0 && totalParty.get(partyIndex).players.size() >= 5) {
+            SendMessageToLeader(id, "You cannot invite any more players. The group is full (maximum 5).");
+            return;
+        }
+
+        // Check if the user already has an invitation
         int testInvitation = GetInvitationByPlayer(playerRef);
         if(testInvitation >= 0) {
             playerRef.sendMessage(Message.raw("You have a pending invitation. Other parties cannot invite you until you respond.").color(Color.orange));

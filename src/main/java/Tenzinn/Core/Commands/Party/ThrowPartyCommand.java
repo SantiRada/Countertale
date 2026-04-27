@@ -37,4 +37,10 @@ public class ThrowPartyCommand extends CommandBase {
 
         PartyManager.ThrowParty(playerRef);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party.throw"; }
+
+    @Override
+    public String getName() { return "party.throw"; }
 }

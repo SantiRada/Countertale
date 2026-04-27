@@ -38,4 +38,10 @@ public class SetStatueTypeCommand extends AbstractPlayerCommand {
                 Message.raw("Hit a block to assign it as [" + statueType.toUpperCase() + "].").color(Color.cyan)
         );
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.statue.set.type"; }
+
+    @Override
+    public String getName() { return "statue.set.type"; }
 }

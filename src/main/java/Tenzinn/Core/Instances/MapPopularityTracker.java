@@ -76,7 +76,7 @@ public final class MapPopularityTracker {
         MapStats s = getOrCreate(mapId);
         s.recordMatch();
         save();
-        LOGGER.log(Level.FINE, "[Popularity] Game recorded on map: " + mapId + " | weekly=" + s.weeklyPlayed + " total=" + s.totalPlayed);
+        LOGGER.log(Level.FINE, "[Popularity] Match recorded on map: " + mapId + " | weekly=" + s.weeklyPlayed + " total=" + s.totalPlayed);
     }
     public synchronized void recordFallback(String mapId) {
         MapStats s = getOrCreate(mapId);
@@ -84,11 +84,11 @@ public final class MapPopularityTracker {
 
         if (!s.promoted && s.consecutiveFallbacks >= FALLBACK_PROMOTION_THRESHOLD) {
             s.promoted = true;
-            LOGGER.log(Level.WARNING, "[Popularity] Map '" + mapId + "' promoted to popular by " + s.consecutiveFallbacks + " fallbacks consecutive.");
+            LOGGER.log(Level.WARNING, "[Popularity] Map '" + mapId + "' promoted to popular after " + s.consecutiveFallbacks + " consecutive fallbacks.");
         }
 
         save();
-        LOGGER.log(Level.INFO, "[Popularity] Fallback in map: " + mapId + " | consecutive=" + s.consecutiveFallbacks);
+        LOGGER.log(Level.INFO, "[Popularity] Fallback on map: " + mapId + " | consecutive=" + s.consecutiveFallbacks);
     }
     public synchronized List<String> getMapsSortedByPriority() {
         List<String> allMaps = new ArrayList<>(stats.keySet());
@@ -108,10 +108,10 @@ public final class MapPopularityTracker {
         return candidates.stream()
                 .max(Comparator.comparingInt(mapId -> {
                     MapStats s = stats.get(mapId.toLowerCase());
-                    if (s != null && s.promoted) return Integer.MAX_VALUE;
+                    if (s != null && s.promoted) return Integer.MAX_VALUE; // promoted maps always first
                     return s != null ? s.popularityScore() : 0;
                 }))
-                .orElse(candidates.getFirst());
+                .orElse(candidates.get(0));
     }
     public synchronized Map<String, Integer> distribute(int ceiling) {
         List<String> sorted = getMapsSortedByPriority();
@@ -163,7 +163,7 @@ public final class MapPopularityTracker {
         return result;
     }
     public synchronized String getSummary() {
-        StringBuilder sb = new StringBuilder("[Popularity] Current state:\n");
+        StringBuilder sb = new StringBuilder("[Popularity] Current status:\n");
         for (Map.Entry<String, MapStats> e : stats.entrySet()) {
             MapStats s = e.getValue();
             sb.append("  ").append(e.getKey())
@@ -183,7 +183,7 @@ public final class MapPopularityTracker {
                     .getProtectionDomain().getCodeSource().getLocation().toURI());
             statsFile = new File(jar.getParentFile(), STATS_PATH);
         } catch (URISyntaxException e) {
-            LOGGER.log(Level.WARNING, "[Popularity] The path to map_stats.json could not be resolved.", e);
+            LOGGER.log(Level.WARNING, "[Popularity] Could not resolve path to map_stats.json.", e);
             statsFile = null;
         }
     }
@@ -209,7 +209,7 @@ public final class MapPopularityTracker {
 
             LOGGER.info("[Popularity] Stats loaded from map_stats.json (" + stats.size() + " maps).");
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "[Popularity] Error to read map_stats.json.", e);
+            LOGGER.log(Level.WARNING, "[Popularity] Error reading map_stats.json.", e);
         }
     }
     private synchronized void save() {
@@ -237,7 +237,7 @@ public final class MapPopularityTracker {
                 GSON.toJson(root, writer);
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "[Popularity] Error to save map_stats.json.", e);
+            LOGGER.log(Level.WARNING, "[Popularity] Error saving map_stats.json.", e);
         }
     }
     private MapStats getOrCreate(String mapId) { return stats.computeIfAbsent(mapId.toLowerCase(), k -> new MapStats()); }

@@ -1,5 +1,7 @@
 package Tenzinn.Core.Commands;
 
+import Tenzinn.Core.Objects.PartyObject;
+import Tenzinn.Core.PartyManager;
 import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.UI.ModesPage;
 import Tenzinn.Core.GameMatch;
@@ -22,6 +24,7 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QueueCommand extends AbstractPlayerCommand {
@@ -55,6 +58,56 @@ public class QueueCommand extends AbstractPlayerCommand {
                     currentMatch.getPlayerCount(), currentMatch.getState())).color(Color.ORANGE));
             return;
         }
+
+        // Party flow
+        int partyIdx = PartyManager.GetPartyIdForPlayer(playerRef);
+        if (partyIdx >= 0) {
+            PartyObject party = PartyManager.totalParty.get(partyIdx);
+            boolean isLeader = party.players.getFirst().equals(playerRef);
+
+            if (!isLeader) {
+                playerRef.sendMessage(Message.raw("Only the party leader can join the queue. Use /party order to request it.").color(Color.orange));
+                return;
+            }
+
+            // Verify that no member is already in the queue or game
+            for (PlayerRef member : party.players) {
+                if (plugin.getMatchManager().isPlayerInMatch(member)) {
+                    playerRef.sendMessage(Message.raw(member.getUsername() + " is already in the queue or in a match. The group cannot join.").color(Color.red));
+                    return;
+                }
+            }
+
+            List<PlayerRef> partyMembers = new ArrayList<>(party.players);
+            List<String> votes = MapVoteStore.getVotes(playerRef);
+            MapVoteStore.clearVotes(playerRef);
+
+            GameMatch match = plugin.getMatchManager().addGroupToQueue(partyMembers, modeArg, votes);
+            if (match == null) return;
+
+            String matchShortId = match.getMatchId().toString().substring(0, 8);
+            for (PlayerRef member : partyMembers) {
+                Player memberPlayer = RefactorTool.getPlayer(member);
+                if (memberPlayer == null) continue;
+                member.sendMessage(Message.raw(String.format(
+                                MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
+                                        + " [%s] (%d/10 players)", matchShortId, match.getPlayerCount()))
+                        .color(Color.orange));
+                plugin.showQueueHud(member, memberPlayer, match, votes);
+            }
+
+            plugin.notifyMatchPlayersAndUpdateHuds(match);
+
+            if (match.isFull()) {
+                playerRef.sendMessage(Message.raw(
+                        MessageListeners.get(MessageListeners.MessageKey.CHAT_STARTING_GAME)).color(Color.green));
+                plugin.hideAllQueueHuds(match);
+                plugin.startMatch(match);
+            }
+            return;
+        }
+
+        // Single Flow
 
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;

@@ -2,6 +2,8 @@ package Tenzinn.Core.UI;
 
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Listeners.MapListeners;
+import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.FiveVSfive.Flow.MatchFVF;
 import com.hypixel.hytale.codec.Codec;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
@@ -46,33 +48,53 @@ public class DiePage extends InteractiveCustomUIPage<DiePage.DiePageEventData> {
 
     @Override
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder commandBuilder, @Nonnull UIEventBuilder eventBuilder, @Nonnull Store<EntityStore> store) {
-        commandBuilder.append("Game/DiePage.ui");
-
-        timeToRespawn = 10;
-
-        commandBuilder.set("#RespawnButton.Disabled", true);
+        boolean isFvF = RefactorTool.getModeForPlayer(playerRef) == MapListeners.SpawnMode.FVF;
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#RespawnButton", EventData.of("Action", "Respawn"));
 
-        timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            timeToRespawn -= 1;
+        if (isFvF) {
+            commandBuilder.append("Game/DiePage_FVF.ui");
+            commandBuilder.set("#TeamAlive.TextSpans", Message.raw(String.valueOf(countAliveTeammates())));
+            commandBuilder.set("#RespawnButton.Disabled", false);
+        } else {
+            commandBuilder.append("Game/DiePage.ui");
 
-            // New clean builder on each tick
-            UICommandBuilder tickBuilder = new UICommandBuilder();
+            timeToRespawn = 10;
+            commandBuilder.set("#RespawnButton.Disabled", true);
 
-            int minutes = timeToRespawn / 60;
-            int seconds = timeToRespawn % 60;
-            tickBuilder.set("#Timer.TextSpans", Message.raw(String.format("%02d:%02d", minutes, seconds)));
+            timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+                timeToRespawn -= 1;
 
-            if (timeToRespawn <= 0) {
-                timerTask.cancel(false);
-                timerTask = null;
-                tickBuilder.set("#Timer.Visible", false);
-                tickBuilder.set("#RespawnButton.Disabled", false);
-            }
+                UICommandBuilder tickBuilder = new UICommandBuilder();
 
-            sendUpdate(tickBuilder, false);
-        }, 1, 1, TimeUnit.SECONDS);
+                int minutes = timeToRespawn / 60;
+                int seconds = timeToRespawn % 60;
+                tickBuilder.set("#Timer.TextSpans", Message.raw(String.format("%02d:%02d", minutes, seconds)));
+
+                if (timeToRespawn <= 0) {
+                    timerTask.cancel(false);
+                    timerTask = null;
+                    tickBuilder.set("#Timer.Visible", false);
+                    tickBuilder.set("#RespawnButton.Disabled", false);
+                }
+
+                sendUpdate(tickBuilder, false);
+            }, 1, 1, TimeUnit.SECONDS);
     }
+}
+
+private int countAliveTeammates() {
+    int myTeam = MatchFVF.validateTeamMembership(playerRef);
+    if (myTeam < 0) return 0;
+
+    int count = 0;
+    for (PlayerRef p : MatchFVF.getPlayers()) {
+        if (p.equals(playerRef)) continue;
+        if (MatchFVF.validateTeamMembership(p) != myTeam) continue;
+        PlayerStats ps = RefactorTool.getPlayerStats(p);
+        if (ps != null && ps.playerState == PlayerStats.PlayerState.DEFAULT) count++;
+    }
+    return count;
+}
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull DiePageEventData data) {

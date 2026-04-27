@@ -34,7 +34,7 @@ public class BuildWallCommand extends AbstractAsyncCommand {
         Player player = context.senderAs(Player.class);
 
         if (!MapListeners.exists(mapArg.get(context))) {
-            player.sendMessage(Message.raw("The selected map was not found.").color(Color.cyan));
+            player.sendMessage(Message.raw("Selected map was not found").color(Color.cyan));
             return null;
         }
 

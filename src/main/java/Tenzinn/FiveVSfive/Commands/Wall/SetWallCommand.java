@@ -107,4 +107,10 @@ public class SetWallCommand extends AbstractAsyncCommand {
             return null;
         }
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.Wall.set"; }
+
+    @Override
+    public String getName() { return "wall.set"; }
 }

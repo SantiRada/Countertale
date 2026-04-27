@@ -1,7 +1,9 @@
 package Tenzinn.Core.UI;
 
+import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Instances.MapVoteStore;
 import Tenzinn.Core.Listeners.MapListeners;
+import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.FiveVSfive.UI.Events.ModesEventData;
 
 import com.hypixel.hytale.component.Ref;
@@ -35,6 +37,7 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
     private List<String> selected = new ArrayList<>();
     private List<String> mapList = new ArrayList<>();
     private ScheduledFuture<?> errorTimerTask;
+    private ScheduledFuture<?> countUpdateTask;
     private int errorSeconds = 0;
 
     private UICommandBuilder uiBuilder;
@@ -59,22 +62,36 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
         setListeners(uiEventBuilder);
 
         sendUpdate(buildCommandBuilder(), false);
+
+        // Periodically refresh the per-map player counts so they stay current
+        countUpdateTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+            sendUpdate(buildCommandBuilder(), false);
+        }, 3, 3, TimeUnit.SECONDS);
+    }
+
+    private int getQueuedPlayers(String mapName) {
+        return (int) RefactorTool.playerStatsList.stream()
+                .filter(ps -> ps.getCurrentMatch() != null
+                        && ps.getCurrentMatch().getState() == GameMatch.MatchState.WAITING
+                        && ps.getCurrentMatch().getEligibleMaps().contains(mapName))
+                .count();
     }
 
     private void appendMaps(UICommandBuilder builder) {
-        int totalSlots = 5;
+        int totalSlots = 3;
         int activeMaps = mapList.size();
 
         for (int i = 0; i < totalSlots; i++) {
             String anchor = i < totalSlots - 1
-                    ? "Anchor: (Width: 196, Height: 420, Right: 16);"
-                    : "Anchor: (Width: 196, Height: 420);";
+                    ? "Anchor: (Width: 270, Height: 420, Right: 16);"
+                    : "Anchor: (Width: 270, Height: 420);";
 
             String inlineUI;
 
             if (i < activeMaps) {
                 String mapName = mapList.get(i);
                 String outlineColor = selected.contains(mapName) ? "#FFFFFF" : "#FFFFFF00";
+                int queued = getQueuedPlayers(mapName);
 
                 inlineUI =
                         "Button #Map" + (i + 1) + " {\n" +
@@ -91,7 +108,7 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
                                 "\n" +
                                 "    Label #CountPlayers" + (i + 1) + " {\n" +
                                 "        Style: (TextColor: #FFFFFF(0.5), Alignment: Center, FontSize: 12);\n" +
-                                "        Text: \"0/10 Players\";\n" +
+                                "        Text: \"" + queued + "/10 Players\";\n" +
                                 "    }\n" +
                                 "}";
             } else {
@@ -123,6 +140,9 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
         for (int i = 0; i < mapList.size(); i++) {
             String outlineColor = selected.contains(mapList.get(i)) ? "#FFFFFF" : "#FFFFFF00";
             builder.set("#Map" + (i + 1) + ".OutlineColor", outlineColor);
+
+            int queued = getQueuedPlayers(mapList.get(i));
+            builder.set("#CountPlayers" + (i + 1) + ".TextSpans", Message.raw(queued + "/10 Players"));
         }
 
         // Tabs DM / FVF
@@ -172,7 +192,8 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
                     startErrorTimer();
                     return;
                 }
-                // Save player votes BEFORE queueing; QueueCommand reads them from MapVoteStore
+                // Save player votes BEFORE queuing; QueueCommand will read them from MapVoteStore
+                stopCountUpdating();
                 MapVoteStore.setVotes(playerRef, new ArrayList<>(selected));
                 CommandManager.get().handleCommand(playerRef, "queue --mode=" + mode);
                 player.getPageManager().setPage(ref, store, Page.None);
@@ -229,6 +250,12 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
             errorTimerTask.cancel(true);
             errorTimerTask = null;
             errorSeconds = 0;
+        }
+    }
+    private void stopCountUpdating() {
+        if (countUpdateTask != null && !countUpdateTask.isDone()) {
+            countUpdateTask.cancel(true);
+            countUpdateTask = null;
         }
     }
 

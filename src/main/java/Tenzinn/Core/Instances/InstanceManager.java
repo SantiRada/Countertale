@@ -81,7 +81,7 @@ public class InstanceManager {
                     .append(part.substring(1));
             sb.append("-");
         }
-        // Eliminar el guión final
+        // Remove trailing hyphen
         if (sb.length() > 0) sb.setLength(sb.length() - 1);
         return sb + ".prefab.json";
     }
@@ -91,7 +91,7 @@ public class InstanceManager {
             String prefabName = resolvePrefabName();
 
             BlockSelection prefab = store.getAssetPrefabFromAnyPack(prefabName);
-            if (prefab == null) { throw new RuntimeException("Prefab '" + prefabName + "' not be found"); }
+            if (prefab == null) { throw new RuntimeException("Prefab '" + prefabName + "' not found"); }
 
             BlockSelection cleanPrefab = new BlockSelection();
             cleanPrefab.setPosition(0, 52, 0);
@@ -114,7 +114,7 @@ public class InstanceManager {
             config.setBlockTicking(true);
             config.setTicking(true);
 
-            main.getLogger().at(Level.INFO).log("[Instance] ✓ Prefab '" + prefabName + "' created in " + elapsed + "ms");
+            main.getLogger().at(Level.INFO).log("[Instance] ✓ Prefab '" + prefabName + "' placed in " + elapsed + "ms");
 
         } catch (Exception e) {
             main.getLogger().at(Level.SEVERE).log("[Instance] Error placing prefab: " + e.getMessage());
@@ -122,14 +122,19 @@ public class InstanceManager {
         }
     }
     public void teleportPlayers(List<PlayerRef> playerRefs) {
-        main.getLogger().at(Level.INFO).log("[Instance] === STARTING TELEPORT [" + mapId + "] ===");
+        main.getLogger().at(Level.INFO).log("[Instance] === TELEPORT START [" + mapId + "] ===");
 
         if (newWorld == null || !isMapLoaded) {
-            main.getLogger().at(Level.WARNING).log("[Instance] Unable to teleport: map not loaded");
+            main.getLogger().at(Level.WARNING).log("[Instance] Cannot teleport: map not loaded");
             return;
         }
 
         ArrayList<Vector3d> spawns = RefactorTool.getSpawns(mapId, RefactorTool.getModeForPlayer(playerRefs.getFirst()));
+
+        if (spawns == null || spawns.isEmpty()) {
+            main.getLogger().at(Level.SEVERE).log("[Instance] No spawn points found for map: " + mapId);
+            return;
+        }
 
         for (int i = 0; i < playerRefs.size(); i++) {
             Vector3d spawnPos = spawns.get(i % spawns.size());
@@ -155,9 +160,9 @@ public class InstanceManager {
                         Store<EntityStore> store = currentWorld.getEntityStore().getStore();
                         Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
-                        main.getLogger().at(Level.INFO).log("[Instance] ✓ Teleported player: " + playerUUID);
+                        main.getLogger().at(Level.INFO).log("[Instance] ✓ Player teleported: " + playerUUID);
                     } catch (Exception e) {
-                        main.getLogger().at(Level.SEVERE).log("[Instance] Teleportation error: " + e.getMessage());
+                        main.getLogger().at(Level.SEVERE).log("[Instance] Error teleporting player: " + e.getMessage());
                         e.printStackTrace();
                     }
                 });
@@ -177,9 +182,9 @@ public class InstanceManager {
         if (instanceWorld != null) {
             try {
                 universe.removeWorld(worldName);
-                main.getLogger().at(Level.INFO).log("[Instance] ✓ Deleted world: " + worldName);
+                main.getLogger().at(Level.INFO).log("[Instance] ✓ World removed: " + worldName);
             } catch (Exception e) {
-                main.getLogger().at(Level.WARNING).log("[Instance] Error deleting World: " + e.getMessage());
+                main.getLogger().at(Level.WARNING).log("[Instance] Error removing world: " + e.getMessage());
             }
         }
 

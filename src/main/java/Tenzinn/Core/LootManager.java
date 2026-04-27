@@ -65,13 +65,23 @@ public class LootManager {
         World world = Universe.get().getWorld(playerRef.getWorldUuid());
         if (world == null) return;
 
+        WeaponStats utility = loot.stream()
+                .filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("utility"))
+                .findFirst()
+                .orElse(null);
+
         world.execute(() -> {
             player.getInventory().clear();
             Inventory inv = player.getInventory();
 
+            //ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
+            //inv.getStorage().addItemStack(bullets);
+
             inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Base", 300));
             inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Rifle", 300));
             inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Shotgun", 80));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Fuel_Tank", 100));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Fuel_FireBottle", 50));
 
             WeaponStats primary   = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("primary")).findFirst().orElse(null);
             WeaponStats secondary = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("secondary")).findFirst().orElse(null);
@@ -90,8 +100,13 @@ public class LootManager {
                     inv.getArmor().addItemStack(new ItemStack(itemId, 1));
 
             inv.getHotbar().setItemStackForSlot((short) 2, new ItemStack("Weapon_Daggers_Cobalt", 1));
+            if (utility != null) {
+                for (String itemId : utility.giveItems) {
+                    inv.getHotbar().addItemStack(new ItemStack(itemId, 1));
+                }
+            }
 
-            // Stats and HUD in the same execute, without a separate schedule
+            // Stats and HUD in the same execute call, no separate schedule
             Ref<EntityStore> ref = playerRef.getReference();
             Store<EntityStore> store = ref.getStore();
 

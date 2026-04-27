@@ -6,20 +6,36 @@
   },
   "groups": {
     "Default": [
-      "orbisoffensive.queue",
-      "orbisoffensive.leave",
-      "orbisoffensive.lobby",
-      "orbisoffensive.loot",
-      "orbisoffensive.shop"
+      "OrbisOffensive.queue",
+      "OrbisOffensive.leave",
+      "OrbisOffensive.lobby",
+      "OrbisOffensive.loot",
+      "OrbisOffensive.shop",
+      "OrbisOffensive.party",
+      "OrbisOffensive.party.create",
+      "OrbisOffensive.party.invite",
+      "OrbisOffensive.party.join",
+      "OrbisOffensive.party.decline",
+      "OrbisOffensive.party.leave",
+      "OrbisOffensive.party.order",
+      "OrbisOffensive.party.throw"
     ],
     "Adventure": [
-      "orbisoffensive.queue",
-      "orbisoffensive.leave",
-      "orbisoffensive.lobby",
-      "orbisoffensive.loot",
-      "orbisoffensive.loot.give",
-      "orbisoffensive.loot.reset",
-      "orbisoffensive.shop"
+      "OrbisOffensive.queue",
+      "OrbisOffensive.leave",
+      "OrbisOffensive.lobby",
+      "OrbisOffensive.loot",
+      "OrbisOffensive.loot.give",
+      "OrbisOffensive.loot.reset",
+      "OrbisOffensive.shop",
+      "OrbisOffensive.party",
+      "OrbisOffensive.party.create",
+      "OrbisOffensive.party.invite",
+      "OrbisOffensive.party.join",
+      "OrbisOffensive.party.decline",
+      "OrbisOffensive.party.leave",
+      "OrbisOffensive.party.order",
+      "OrbisOffensive.party.throw"
     ],
     "Moderator": [
       "*"

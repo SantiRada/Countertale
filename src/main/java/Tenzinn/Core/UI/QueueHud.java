@@ -76,14 +76,8 @@ public class QueueHud extends CustomUIHud {
     public void showLoadingMap() {
         if (uiBuilder == null) return;
 
-        // Set counter to full
         uiBuilder.set("#PlayerCountLabel.TextSpans", Message.raw("10/10 Players"));
-
-        // Show loading status instead of selected maps
         uiBuilder.set("#MapsLabel.TextSpans", Message.raw("Loading map..."));
-
-        // Hide /leave message: the match is about to start
-        uiBuilder.set("#LeaveMessage.TextSpans", Message.raw(""));
 
         update(true, uiBuilder);
     }

@@ -6,6 +6,7 @@ import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -23,10 +24,19 @@ public class ForceStartCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
 
-        GameMatch match = RefactorTool.getPlayerStats(playerRef).getCurrentMatch();
+        var stats = RefactorTool.getPlayerStats(playerRef);
+        if (stats == null) {
+            commandContext.sendMessage(Message.raw("You are not in the queue."));
+            return;
+        }
 
+        GameMatch match = stats.getCurrentMatch();
         if (match == null) return;
-        if (match.getState() != GameMatch.MatchState.WAITING) return;
+        if (match.getState() != GameMatch.MatchState.WAITING) {
+            commandContext.sendMessage(Message.raw(
+                    "The game is underway... (State: " + match.getState() + ")."));
+            return;
+        }
 
         plugin.startMatch(match);
     }

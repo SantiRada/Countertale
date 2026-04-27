@@ -70,7 +70,7 @@ Group #PartyHUD {
             }
             Label {
                 Style: @command;
-                Text: "/party leave: Leave the party.";
+                Text: "/party leave: Abandonar el grupo.";
             }
             Label {
                 Style: @command;

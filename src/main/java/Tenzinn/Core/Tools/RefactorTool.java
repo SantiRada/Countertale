@@ -9,6 +9,8 @@ import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.FiveVSfive.Flow.MatchFVF;
+import Tenzinn.FiveVSfive.UI.EndMatchPage;
 import Tenzinn.FiveVSfive.UI.ScoreboardPageFVF;
 import Tenzinn.Core.Listeners.MapListeners.SpawnMode;
 
@@ -35,10 +37,8 @@ import com.thescar.hygunsplugin.support.hytale.PlayerInventoryAccess;
 import com.thescar.hygunsplugin.ui.hud.HudCoordinator;
 
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
@@ -309,13 +309,12 @@ public class RefactorTool {
             else if(testHud instanceof ScoreboardPageFVF scoreboard) { scoreboard.setData(); }
         }
     }
-    public static void setChangesInSlots (int value, PlayerRef playerRef) {
+    public static void setChangesInSlots(int value, PlayerRef playerRef) {
         Player player = getPlayer(playerRef);
-        if(player == null) return;
+        if (player == null) return;
 
         Object testHud = player.getHudManager().getCustomHud();
-
-        if(testHud == null) return;
+        if (testHud == null) return;
 
         if (testHud instanceof GameHUD currentHUD) {
             if (value <= 3) {
@@ -346,6 +345,12 @@ public class RefactorTool {
     // ============================================ //
     public static void finishGame(List<PlayerRef> players, Tenzinn.Core.GameMatch match) {
         if (match != null) match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
+        if (match != null) {
+            match.stopTimer();
+            match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
+        }
+
+        int winningTeam = MatchFVF.winner;
 
         for (PlayerRef playerRef : players) {
             Ref<EntityStore> ref = playerRef.getReference();
@@ -358,7 +363,13 @@ public class RefactorTool {
             if (getModeForPlayer(playerRef) == SpawnMode.DM) {
                 player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef));
             } else {
-                /* TODO: FVF end-of-round screen */
+                UUID worldId = playerRef.getWorldUuid();
+                if (worldId == null) continue;
+                World world = Universe.get().getWorld(worldId);
+                if (world == null) continue;
+                final int fWinningTeam = winningTeam;
+                world.execute(() -> player.getPageManager().openCustomPage(ref, store,
+                        new EndMatchPage(playerRef, fWinningTeam)));
             }
         }
     }

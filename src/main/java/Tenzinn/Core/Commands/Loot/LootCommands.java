@@ -15,7 +15,7 @@ public class LootCommands extends AbstractCommandCollection {
     }
 
     @Override
-    public String getPermission() { return "OrbisOffensive.loot"; }
+    public String getPermission() { return "orbisoffensive.loot"; }
 
     @Override
     public String getName() { return "loot"; }

@@ -65,6 +65,8 @@ Group #DeathmatchUI {
                 Anchor: (Width: 50, Height: 50, Left: 1);
             }
         }
+    }
+
 
         Group { FlexWeight: 1; }
 

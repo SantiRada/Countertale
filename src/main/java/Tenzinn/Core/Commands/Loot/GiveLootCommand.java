@@ -41,7 +41,6 @@ public class GiveLootCommand extends CommandBase {
         LootManager.giveLoot(player, currentLoot);
     }
 
-
     @Override
     public String getPermission() { return "OrbisOffensive.loot.give"; }
 

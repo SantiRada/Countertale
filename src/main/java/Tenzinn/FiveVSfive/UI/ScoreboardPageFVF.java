@@ -2,7 +2,6 @@ package Tenzinn.FiveVSfive.UI;
 
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
-import Tenzinn.FiveVSfive.Flow.MatchFVF;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -36,7 +35,6 @@ public class ScoreboardPageFVF extends CustomUIHud {
         setTimer();
         setData();
     }
-
     public void setData() {
         PlayerStats myStats = RefactorTool.getPlayerStats(playerRef);
         if (myStats == null) return;
@@ -50,6 +48,7 @@ public class ScoreboardPageFVF extends CustomUIHud {
             if (team == 1) team1.add(ps);
             else           team2.add(ps);
         }
+
 
         team1.sort((a, b) -> Integer.compare(b.getKills(), a.getKills()));
         team2.sort((a, b) -> Integer.compare(b.getKills(), a.getKills()));
@@ -66,6 +65,7 @@ public class ScoreboardPageFVF extends CustomUIHud {
         String worldNameWithSpaces = String.join(" ", nameWorld);
         int withInstance = worldNameWithSpaces.toLowerCase().indexOf("instance");
         if (withInstance != -1) { worldNameWithSpaces = worldNameWithSpaces.substring(0, withInstance).trim(); }
+
         uiBuilder.set("#NameMap.TextSpans", Message.raw("Competitive | " + worldNameWithSpaces));
 
         update(true, uiBuilder);
@@ -97,14 +97,16 @@ public class ScoreboardPageFVF extends CustomUIHud {
         }
     }
 
+
     public void setTimer() {
         timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
             remainingSeconds = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch().getTimer();
 
             int minutes = remainingSeconds / 60;
             int seconds = remainingSeconds % 60;
-            uiBuilder.set("#Timer.TextSpans", Message.raw(String.format("%02d:%02d", minutes, seconds)));
+            String timerText = String.format("%02d:%02d", minutes, seconds);
 
+            uiBuilder.set("#Timer.TextSpans", Message.raw(String.format("%02d:%02d", minutes, seconds)));
             update(true, uiBuilder);
         }, 1, 1, TimeUnit.SECONDS);
     }
