@@ -20,7 +20,7 @@ public class PartyManager {
 
     public static void CreateParty(PlayerRef playerRef) {
         for (PartyObject partyObject : totalParty) {
-            if (partyObject.players.stream().anyMatch(player -> player == playerRef)) {
+            if (GetPartyIndexForPlayer(playerRef) >= 0) {
                 playerRef.sendMessage(Message.raw("You cannot create another party if you are already in one. You can leave it with /party leave"));
                 return;
             }
@@ -83,7 +83,7 @@ public class PartyManager {
         totalInvitations.remove(index);
     }
     public static void LeaveParty(PlayerRef playerRef) {
-        int index = GetPartyIdForPlayer(playerRef);
+        int index = GetPartyIndexForPlayer(playerRef);
         if (index < 0) return;
 
         PlayerRef leader = totalParty.get(index).players.getFirst();
@@ -103,26 +103,44 @@ public class PartyManager {
         } else { totalParty.get(index).RemoveHUD(playerRef); }
     }
     public static void OrderParty(PlayerRef playerRef) {
-        int id = GetPartyIdForPlayer(playerRef);
-        if (id < 0) return;
-
-        int index = GetIndexPartyById(id);
+        int index = GetPartyIndexForPlayer(playerRef);
         if (index < 0) return;
 
-        totalParty.get(index).players.getFirst().sendMessage(Message.raw(playerRef.getUsername() + ", ask to start the match!").color(Color.yellow));
+        totalParty.get(index).players.getFirst().sendMessage(
+                Message.raw(playerRef.getUsername() + " asks you to start the match!").color(Color.yellow)
+        );
     }
-    public static void ThrowParty(PlayerRef playerRef) {
-        int id = GetPartyIdForPlayer(playerRef);
-        if (id < 0) return;
-
-        int index = GetIndexPartyById(id);
+    public static void ThrowParty(PlayerRef senderRef, PlayerRef targetRef) {
+        int index = GetPartyIndexForPlayer(senderRef);
         if (index < 0) return;
 
-        totalParty.get(index).RemovePlayer(playerRef);
+        PartyObject party = totalParty.get(index);
 
-        totalParty.get(index).players.getFirst().sendMessage(Message.raw("You removed player " + playerRef.getUsername() + " from the party.").color(Color.yellow));
+        if (!samePlayer(party.players.getFirst(), senderRef)) {
+            senderRef.sendMessage(Message.raw("Only the party leader can remove players from the party.").color(Color.orange));
+            return;
+        }
+
+        if (samePlayer(senderRef, targetRef)) {
+            senderRef.sendMessage(Message.raw("You cannot remove yourself with /party throw. Use /party leave instead.").color(Color.orange));
+            return;
+        }
+
+        boolean targetInParty = party.players.stream().anyMatch(player -> samePlayer(player, targetRef));
+        if (!targetInParty) {
+            senderRef.sendMessage(Message.raw(targetRef.getUsername() + " is not in your party.").color(Color.orange));
+            return;
+        }
+
+        party.RemovePlayer(targetRef);
+        targetRef.sendMessage(Message.raw("You were removed from the party.").color(Color.orange));
+        party.SendMessageToAllPlayers(targetRef.getUsername() + " was removed from the party.");
+        party.UpdateHUD();
     }
     // ============================================= //
+    private static boolean samePlayer(PlayerRef a, PlayerRef b) {
+        return a != null && b != null && a.getUuid().equals(b.getUuid());
+    }
     private static int GetInvitationByPlayer(PlayerRef playerRef) {
         int index = -1;
 
@@ -166,12 +184,21 @@ public class PartyManager {
 
         totalParty.get(index).players.getFirst().sendMessage(Message.raw(message).color(Color.orange));
     }
-    public static int GetPartyIdForPlayer(PlayerRef playerRef) {
+    public static int GetPartyIndexForPlayer(PlayerRef playerRef) {
         for (int i = 0; i < totalParty.size(); i++) {
-            if (totalParty.get(i).players.stream().anyMatch(player -> player == playerRef)) { return i; }
+            if (totalParty.get(i).players.stream().anyMatch(player -> samePlayer(player, playerRef))) {
+                return i;
+            }
         }
 
         return -1;
+    }
+
+    public static int GetPartyIdForPlayer(PlayerRef playerRef) {
+        int index = GetPartyIndexForPlayer(playerRef);
+        if (index < 0) return -1;
+
+        return totalParty.get(index).id;
     }
     private static int ValidateInvitationToPlayer(PlayerRef playerRef) {
         int index = -1;

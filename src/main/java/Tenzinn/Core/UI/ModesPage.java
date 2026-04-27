@@ -62,11 +62,6 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
         setListeners(uiEventBuilder);
 
         sendUpdate(buildCommandBuilder(), false);
-
-        // Periodically refresh the per-map player counts so they stay current
-        countUpdateTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            sendUpdate(buildCommandBuilder(), false);
-        }, 3, 3, TimeUnit.SECONDS);
     }
 
     private int getQueuedPlayers(String mapName) {
@@ -184,6 +179,8 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
 
         switch (action.toLowerCase()) {
             case "back":
+                stopErrorTimer();
+                stopCountUpdating();
                 player.getPageManager().setPage(ref, store, Page.None);
                 break;
             case "play":
@@ -193,6 +190,7 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
                     return;
                 }
                 // Save player votes BEFORE queuing; QueueCommand will read them from MapVoteStore
+                stopErrorTimer();
                 stopCountUpdating();
                 MapVoteStore.setVotes(playerRef, new ArrayList<>(selected));
                 CommandManager.get().handleCommand(playerRef, "queue --mode=" + mode);
@@ -219,30 +217,9 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
     }
 
     private void startErrorTimer() {
-        // Cancel previous timer if it existed
-        if (errorTimerTask != null && !errorTimerTask.isCancelled()) {
-            errorTimerTask.cancel(true);
-        }
-
-        errorSeconds = 0;
-
-        errorTimerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            errorSeconds++;
-
-            if (errorSeconds == 1) {
-                // First tick: show the error message in red
-                UICommandBuilder builder = buildCommandBuilder();
-                builder.set("#CountSelected.TextSpans", Message.raw("Select maps to join queue").color(Color.red));
-                sendUpdate(builder, false);
-            }
-
-            if (errorSeconds >= 3) {
-                // After 3 seconds: restore normal text and cancel
-                sendUpdate(buildCommandBuilder(), false);
-                stopErrorTimer();
-            }
-
-        }, 0, 1, TimeUnit.SECONDS);
+        UICommandBuilder builder = buildCommandBuilder();
+        builder.set("#CountSelected.TextSpans", Message.raw("Select maps to join queue").color(Color.red));
+        sendUpdate(builder, false);
     }
 
     private void stopErrorTimer() {

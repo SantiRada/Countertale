@@ -55,52 +55,86 @@ public class RefactorTool {
         slots.addAll(newSlots);
     }
     public static void setLoot(PlayerRef playerRef, int index) {
-        if (getSizeSlots() <= 0) return;
+        if (playerRef == null) return;
 
-        WeaponStats newWeapon = slots.get(index - 1);
+        int slotIndex = index - 1;
+        if (slotIndex < 0 || slotIndex >= slots.size()) return;
 
-        if (
-                newWeapon.nameWeapon.equalsIgnoreCase("coming soon")
-                        || newWeapon.giveItems.isEmpty()
-                        || newWeapon.pricing < 0
-        ) {
+        WeaponStats newWeapon = slots.get(slotIndex);
+        if (newWeapon == null
+                || newWeapon.nameWeapon == null
+                || newWeapon.nameWeapon.equalsIgnoreCase("coming soon")
+                || newWeapon.giveItems == null
+                || newWeapon.giveItems.isEmpty()
+                || newWeapon.pricing < 0) {
             return;
+        }
+
+        PlayerStats stats = getPlayerStats(playerRef);
+        if (stats == null || stats.getCurrentMatch() == null) return;
+
+        switch (newWeapon.typeWeapon.toLowerCase()) {
+            case "primary":
+                stats.primaryWeapon = newWeapon;
+                break;
+
+            case "secondary":
+                stats.secondaryWeapon = newWeapon;
+                break;
+
+            case "shield":
+                stats.shield = newWeapon;
+                break;
+
+            case "utility":
+                stats.utility = newWeapon;
+                break;
+
+            default:
+                return;
         }
 
         String message = MessageListeners.get(MessageListeners.MessageKey.CHAT_WHEN_BUYING);
         playerRef.sendMessage(Message.raw(message + newWeapon.nameWeapon).color(Color.cyan));
 
-        for (PlayerStats stats : playerStatsList) {
-            if (stats.getPlayerRef() != null && stats.getPlayerRef().getUuid().equals(playerRef.getUuid())) {
-                switch (newWeapon.typeWeapon.toLowerCase()) {
-                    case "primary":     stats.primaryWeapon = newWeapon;    break;
-                    case "secondary":   stats.secondaryWeapon = newWeapon;  break;
-                    case "shield":      stats.shield = newWeapon;           break;
-                    case "utility": stats.utility = newWeapon; break;
-                }
-
-                if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) {
-                    playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)).color(Color.yellow));
-                }
-                else { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
-
-                break;
-            }
+        if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) {
+            playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)).color(Color.yellow));
+            return;
         }
+
+        Player livePlayer = getPlayer(playerRef);
+        if (livePlayer == null) livePlayer = stats.getPlayer();
+        if (livePlayer == null) return;
+
+        LootManager.giveLoot(livePlayer, getLoot(playerRef));
     }
     public static void setAllLoot(PlayerRef playerRef, ArrayList<WeaponStats> list) {
+        if (playerRef == null) return;
 
-        if (list == null) { list = LootManager.getStarterKit(); }
-        if (list.isEmpty()) { list = LootManager.getStarterKit(); }
+        if (list == null || list.isEmpty()) {
+            list = LootManager.getStarterKit();
+        }
 
-        PlayerStats playerStats = playerStatsList.stream().filter(ps -> ps.getPlayerRef().equals(playerRef)).findFirst().orElse(null);
+        PlayerStats playerStats = getPlayerStats(playerRef);
         if (playerStats == null) return;
 
+        playerStats.primaryWeapon = null;
+        playerStats.secondaryWeapon = null;
+        playerStats.shield = null;
+        playerStats.utility = null;
+
         for (WeaponStats item : list) {
-            if(item.typeWeapon.equalsIgnoreCase("primary")) playerStats.primaryWeapon = item;
-            if(item.typeWeapon.equalsIgnoreCase("secondary")) { playerStats.secondaryWeapon = item; }
-            if(item.typeWeapon.equalsIgnoreCase("shield")) playerStats.shield = item;
-            if (item.typeWeapon.equalsIgnoreCase("utility")) playerStats.utility = item;
+            if (item == null || item.typeWeapon == null) continue;
+
+            if (item.typeWeapon.equalsIgnoreCase("primary")) {
+                playerStats.primaryWeapon = item;
+            } else if (item.typeWeapon.equalsIgnoreCase("secondary")) {
+                playerStats.secondaryWeapon = item;
+            } else if (item.typeWeapon.equalsIgnoreCase("shield")) {
+                playerStats.shield = item;
+            } else if (item.typeWeapon.equalsIgnoreCase("utility")) {
+                playerStats.utility = item;
+            }
         }
     }
     public static void setHealthPlayer (Player player, float value) {
@@ -208,12 +242,15 @@ public class RefactorTool {
         return SpawnMode.FVF;
     }
     public static Player getPlayer(PlayerRef playerRef) {
+        if (playerRef == null) return null;
+
         Ref<EntityStore> ref = playerRef.getReference();
+        if (ref == null) return null;
+
         Store<EntityStore> store = ref.getStore();
+        if (store == null) return null;
 
-        Player player = store.getComponent(ref, Player.getComponentType());
-
-        return player;
+        return store.getComponent(ref, Player.getComponentType());
     }
     // ============================================ //
     public static void Respawn(PlayerRef playerRef) {
@@ -331,19 +368,36 @@ public class RefactorTool {
         }
     }
     public static void setDataScore(Player player, TypeData typeData, float value) {
+        if (player == null) return;
+
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+        if (playerRef == null) return;
 
         PlayerStats playerStats = getPlayerStats(playerRef);
-        assert playerStats != null;
+        if (playerStats == null) return;
 
         switch (typeData) {
-            case TypeData.SCORE: int finalValue = (int)value; playerStats.setScore(finalValue); break;
-            case TypeData.DEATH: playerStats.setDeaths(); break;
-            case TypeData.KILL: playerStats.setKills(); break;
+            case TypeData.SCORE:
+                int finalValue = (int) value;
+                playerStats.setScore(finalValue);
+                break;
+
+            case TypeData.DEATH:
+                playerStats.setDeaths();
+                break;
+
+            case TypeData.KILL:
+                playerStats.setKills();
+                break;
+        }
+
+        if (playerStats.getCurrentMatch() != null) {
+            setChangesInUI(playerStats.getCurrentMatch());
         }
     }
     // ============================================ //
     public static void finishGame(List<PlayerRef> players, Tenzinn.Core.GameMatch match) {
+        Tenzinn.Deathmatch.Bots.DeathmatchBotManager.removeBots(match);
         if (match != null) match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
         if (match != null) {
             match.stopTimer();

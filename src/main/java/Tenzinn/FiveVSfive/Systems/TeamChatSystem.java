@@ -11,21 +11,25 @@ import java.util.List;
 import java.util.Objects;
 
 public class TeamChatSystem {
-
     public static void onPlayerChat(PlayerChatEvent event) {
         PlayerRef sender = event.getSender();
 
-        if (RefactorTool.getPlayerStats(sender) != null) {
-            String content = event.getContent();
-            event.setCancelled(true);
+        var senderStats = RefactorTool.getPlayerStats(sender);
+        if (senderStats == null || senderStats.getCurrentMatch() == null) return;
 
-            List<PlayerRef> players = Objects.requireNonNull(RefactorTool.getPlayerStats(sender)).getCurrentMatch().getPlayers();
-            int team = MatchFVF.validateTeamMembership(sender);
+        if (!senderStats.getCurrentMatch().getMode().equalsIgnoreCase("fvf")) {
+            return;
+        }
 
-            for (int i = 0; i < players.size(); i++) {
-                if (MatchFVF.validateTeamMembership(players.get(i)) == team) {
-                    players.get(i).sendMessage(Message.raw("[TEAM] " + sender.getUsername() + ": " + content).color(Color.CYAN));
-                }
+        String content = event.getContent();
+        event.setCancelled(true);
+
+        List<PlayerRef> players = senderStats.getCurrentMatch().getPlayers();
+        int team = MatchFVF.validateTeamMembership(sender);
+
+        for (PlayerRef player : players) {
+            if (MatchFVF.validateTeamMembership(player) == team) {
+                player.sendMessage(Message.raw("[TEAM] " + sender.getUsername() + ": " + content).color(Color.CYAN));
             }
         }
     }

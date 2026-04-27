@@ -55,6 +55,9 @@ public class GameHUD extends CustomUIHud {
         if (mode.equalsIgnoreCase("fvf")) { uiCommandBuilder.append("Game/FVF/HUDFVF.ui"); }
         else { uiCommandBuilder.append("Game/HUD.ui"); }
 
+        // Add the scope overlay once, then keep it hidden until scoping.
+        uiCommandBuilder.append("Scope/Scope_Overlay.ui");
+
         uiBuilder = uiCommandBuilder;
 
         setTimer();
@@ -65,6 +68,7 @@ public class GameHUD extends CustomUIHud {
         setShield();
         setWeapons(2);
         hideHygunsAmmo();
+        hideScopeOverlay();
 
         uiBuilder.set("#DeathmatchUI.Background", "#ffffff00");
 
@@ -102,50 +106,54 @@ public class GameHUD extends CustomUIHud {
     }
     public void setWeapons(int value) {
         if (uiBuilder == null) return;
-        if (RefactorTool.getSizeSlots() <= 0) {
-            playerRef.sendMessage(Message.raw("Slots did not load.").color(Color.red));
-            return;
-        }
 
         ArrayList<WeaponStats> loot = playerStats.getLoot();
-        if (loot.isEmpty()) {
+        if (loot == null || loot.isEmpty()) {
             playerRef.sendMessage(Message.raw("Loot did not load.").color(Color.red));
             return;
         }
 
-        if (!loot.get(0).typeWeapon.equalsIgnoreCase("primary")) {
+        WeaponStats primary = loot.stream()
+                .filter(w -> w != null && w.typeWeapon != null && w.typeWeapon.equalsIgnoreCase("primary"))
+                .findFirst()
+                .orElse(null);
+
+        WeaponStats secondary = loot.stream()
+                .filter(w -> w != null && w.typeWeapon != null && w.typeWeapon.equalsIgnoreCase("secondary"))
+                .findFirst()
+                .orElse(null);
+
+        if (primary == null) {
             uiBuilder.set("#Number01.Style.TextColor", "#ffffff00");
             uiBuilder.set("#Weapon01.Background", "#ffffff00");
-
-            String colorText = value == 2 ? "#ffffff" : "#ffffff80";
-            uiBuilder.set("#Number02.Style.TextColor", colorText);
-
-            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().image + "off"));
-
-            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.getFirst().crossType));
-            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().firemode));
-        }
-        else {
+        } else {
             String colorText = value == 1 ? "#ffffff" : "#ffffff80";
             uiBuilder.set("#Number01.Style.TextColor", colorText);
-
-            uiBuilder.set("#Weapon01.Background", Value.ref("Game/images/weapons/Weapons.ui", value == 1 ? loot.getFirst().image + "on" : loot.getFirst().image + "off"));
-
-            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.getFirst().crossType));
-            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.getFirst().firemode));
+            uiBuilder.set("#Weapon01.Background", Value.ref("Game/images/weapons/Weapons.ui", value == 1 ? primary.image + "on" : primary.image + "off"));
         }
 
-        if(loot.get(1).typeWeapon.equalsIgnoreCase("secondary")) {
+        if (secondary == null) {
+            uiBuilder.set("#Number02.Style.TextColor", "#ffffff00");
+            uiBuilder.set("#Weapon02.Background", "#ffffff00");
+        } else {
             String colorText = value == 2 ? "#ffffff" : "#ffffff80";
             uiBuilder.set("#Number02.Style.TextColor", colorText);
-
-            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", value == 2 ? loot.get(1).image + "on" : loot.get(1).image + "off"));
-
-            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", loot.get(1).crossType));
-            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", loot.get(1).firemode));
+            uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", value == 2 ? secondary.image + "on" : secondary.image + "off"));
         }
 
-        // Knife
+        WeaponStats selectedWeapon = null;
+
+        if (value == 1 && primary != null) {
+            selectedWeapon = primary;
+        } else if (value == 2 && secondary != null) {
+            selectedWeapon = secondary;
+        }
+
+        if (selectedWeapon != null) {
+            uiBuilder.set("#Crosshair.Background", Value.ref("Game/images/weapons/Crosshair.ui", selectedWeapon.crossType));
+            uiBuilder.set("#IconBullet.Background", Value.ref("Game/images/weapons/Weapons.ui", selectedWeapon.firemode));
+        }
+
         uiBuilder.set("#Number03.Style.TextColor", value >= 3 ? "#ffffff" : "#ffffff80");
         uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", value >= 3 ? "Knifeon" : "Knifeoff"));
 
@@ -310,8 +318,7 @@ public class GameHUD extends CustomUIHud {
 
                 uiBuilder.set("#TextTimer.TextSpans", Message.raw(timerText));
                 update(true, uiBuilder);
-
-                if (remainingSeconds <= 0 || stats.getCurrentMatch().getState() == GameMatch.MatchState.FINISHED) {
+                if (stats.getCurrentMatch().getState() == GameMatch.MatchState.FINISHED) {
                     if (timerTask != null && !timerTask.isDone()) {
                         timerTask.cancel(false);
                         timerTask = null;
@@ -350,6 +357,19 @@ public class GameHUD extends CustomUIHud {
         uiBuilder = null;
     }
     // ================================================== //
+    public void showScopeOverlay(String overlayTexturePath) {
+        if (uiBuilder == null) return;
+
+        uiBuilder.set("#HygunsScopeOverlayRoot.Visible", true);
+        update(true, uiBuilder);
+    }
+
+    public void hideScopeOverlay() {
+        if (uiBuilder == null) return;
+
+        uiBuilder.set("#HygunsScopeOverlayRoot.Visible", false);
+        update(true, uiBuilder);
+    }
     public void setHygunsAmmo(int ammo, int reserveAmmo, boolean reloading) {
         if (uiBuilder == null) return;
 

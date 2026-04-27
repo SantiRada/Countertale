@@ -26,7 +26,7 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
 
     private UICommandBuilder uiBuilder;
 
-    public MvpPage(PlayerRef playerRef) { super(playerRef, CustomPageLifetime.CanDismiss, Tenzinn.Deathmatch.UI.MvpEventData.CODEC); }
+    public MvpPage(PlayerRef playerRef) { super(playerRef, CustomPageLifetime.CantClose, Tenzinn.Deathmatch.UI.MvpEventData.CODEC); }
 
     @Override
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder uiCommandBuilder, @NonNullDecl UIEventBuilder uiEventBuilder, @NonNullDecl Store<EntityStore> store) {
@@ -56,9 +56,17 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         sendUpdate();
     }
     public void setSummary() {
-
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
-        assert playerStats != null;
+        if (playerStats == null) return;
+
+        uiBuilder.set("#DamageCaused.TextSpans", Message.raw("Kills"));
+        uiBuilder.set("#DamageCausedText.TextSpans", Message.raw(String.valueOf(playerStats.getKills())));
+
+        uiBuilder.set("#DamageReceived.TextSpans", Message.raw("Deaths"));
+        uiBuilder.set("#DamageReceivedText.TextSpans", Message.raw(String.valueOf(playerStats.getDeaths())));
+
+        uiBuilder.set("#MeleeDamage.TextSpans", Message.raw("Score"));
+        uiBuilder.set("#MeleeDamageValue.TextSpans", Message.raw(String.valueOf(playerStats.getScore())));
 
         sendUpdate();
     }

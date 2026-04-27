@@ -1,5 +1,6 @@
 package com.thescar.hygunsplugin.runtime.systems;
 
+import Tenzinn.Core.Tools.RefactorTool;
 import com.thescar.hygunsplugin.gameplay.ammo.AmmoService;
 import com.thescar.hygunsplugin.gameplay.reload.ReloadManager;
 import com.thescar.hygunsplugin.runtime.components.AmmoDataComponent;
@@ -65,7 +66,17 @@ public final class WeaponReloadTickSystem extends RuntimeEntityTickingSystem<Ite
 			return;
 		}
 
-		int availableAmmo = AmmoService.countAmmo(AmmoService.getAmmoContainer(player), ammoItemId);
+		boolean isDeathmatch = false;
+
+		var playerStats = RefactorTool.getPlayerStats(playerRef);
+		if (playerStats != null && playerStats.getCurrentMatch() != null) {
+			isDeathmatch = playerStats.getCurrentMatch().getMode().equalsIgnoreCase("dm");
+		}
+
+		int availableAmmo = isDeathmatch
+				? neededAmmo
+				: AmmoService.countAmmo(AmmoService.getAmmoContainer(player), ammoItemId);
+
 		int ammoToLoad = Math.min(neededAmmo, Math.max(0, availableAmmo));
 		if (ammoToLoad <= 0) {
 			player.sendMessage(Message.raw("No ammo in inventory."));
@@ -74,7 +85,10 @@ public final class WeaponReloadTickSystem extends RuntimeEntityTickingSystem<Ite
 			return;
 		}
 
-		int removedAmmo = AmmoService.removeAmmo(player, ammoItemId, ammoToLoad, null);
+		int removedAmmo = isDeathmatch
+				? ammoToLoad
+				: AmmoService.removeAmmo(player, ammoItemId, ammoToLoad, null);
+
 		if (removedAmmo <= 0) {
 			player.sendMessage(Message.raw("No ammo in inventory."));
 			removeReloadComponent(commandBuffer, archetypeChunk, index, weaponRef, reload);

@@ -5,7 +5,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -13,6 +15,7 @@ import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.TimeUnit;
 
 public class HotbarSlotHandler implements PlayerPacketFilter {
 
@@ -41,6 +44,13 @@ public class HotbarSlotHandler implements PlayerPacketFilter {
 
         if (world.getName().equals("default")) return;
 
-        world.execute(() -> { RefactorTool.setChangesInSlots(toSlot + 1, playerRef); });
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+            if (playerRef.getWorldUuid() == null) return;
+
+            World latestWorld = Universe.get().getWorld(playerRef.getWorldUuid());
+            if (latestWorld == null) return;
+
+            latestWorld.execute(() -> RefactorTool.setChangesInSlots(toSlot + 1, playerRef));
+        }, 50, TimeUnit.MILLISECONDS);
     }
 }

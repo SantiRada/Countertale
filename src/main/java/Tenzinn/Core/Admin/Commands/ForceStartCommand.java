@@ -38,6 +38,11 @@ public class ForceStartCommand extends AbstractPlayerCommand {
             return;
         }
 
+        if (match.getMode().equalsIgnoreCase("dm")) {
+            int bots = Math.max(0, 10 - match.getPlayerCount());
+            commandContext.sendMessage(Message.raw("Starting deathmatch with " + bots + " bot(s)."));
+        }
+
         plugin.startMatch(match);
     }
 

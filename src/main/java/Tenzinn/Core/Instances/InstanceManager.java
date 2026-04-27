@@ -1,5 +1,8 @@
 package Tenzinn.Core.Instances;
 
+import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Listeners.MapListeners;
+import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Listeners.MessageListeners;
@@ -20,6 +23,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,11 +38,18 @@ public class InstanceManager {
     private final String mapId;
 
     public InstanceManager(OrbisOffensive main, String mapId) {
-        this.main  = main;
+        this.main = main;
         this.mapId = mapId.toLowerCase();
     }
-    public String getMapId()        { return mapId; }
-    public boolean getMapLoaded()   { return isMapLoaded; }
+
+    public String getMapId() {
+        return mapId;
+    }
+
+    public boolean getMapLoaded() {
+        return isMapLoaded;
+    }
+
     public void preloadMap(Runnable onMapReady) {
         Universe universe = Universe.get();
 
@@ -52,20 +63,32 @@ public class InstanceManager {
             config.markChanged();
             config.setGameTimePaused(true);
 
-            try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
-            catch (Exception e) { main.getLogger().at(Level.SEVERE).log("Error setting GameTime: " + e.getMessage()); }
+            try {
+                config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z"));
+            } catch (Exception e) {
+                main.getLogger().at(Level.SEVERE).log("Error setting GameTime: " + e.getMessage());
+            }
 
             config.setBlockTicking(true);
             config.setTicking(true);
-            config.setIsAllNPCFrozen(true);
+            config.setIsAllNPCFrozen(false);
             config.setSpawningNPC(false);
             config.setPvpEnabled(true);
             config.setCanUnloadChunks(false);
 
             instanceWorld.execute(() -> {
-                placePrefabInInstance(instanceWorld);
-                newWorld     = instanceWorld;
-                isMapLoaded  = true;
+                boolean placed = placePrefabInInstance(instanceWorld);
+
+                if (!placed) {
+                    isMapLoaded = false;
+                    newWorld = null;
+                    main.getLogger().at(Level.SEVERE).log("[Instance] Map failed to load and will not be marked ready: " + mapId);
+                    if (onMapReady != null) onMapReady.run();
+                    return;
+                }
+
+                newWorld = instanceWorld;
+                isMapLoaded = true;
 
                 main.getLogger().at(Level.INFO).log("[Instance] ✓ Instance ready [" + mapId + "]: " + worldName);
 
@@ -73,6 +96,7 @@ public class InstanceManager {
             });
         });
     }
+
     private String resolvePrefabName() {
         String[] parts = mapId.split("-");
         StringBuilder sb = new StringBuilder();
@@ -85,13 +109,16 @@ public class InstanceManager {
         if (sb.length() > 0) sb.setLength(sb.length() - 1);
         return sb + ".prefab.json";
     }
-    private void placePrefabInInstance(World instanceWorld) {
+
+    private boolean placePrefabInInstance(World instanceWorld) {
         try {
             PrefabStore store = PrefabStore.get();
             String prefabName = resolvePrefabName();
 
             BlockSelection prefab = store.getAssetPrefabFromAnyPack(prefabName);
-            if (prefab == null) { throw new RuntimeException("Prefab '" + prefabName + "' not found"); }
+            if (prefab == null) {
+                throw new RuntimeException("Prefab '" + prefabName + "' not found");
+            }
 
             BlockSelection cleanPrefab = new BlockSelection();
             cleanPrefab.setPosition(0, 52, 0);
@@ -115,10 +142,12 @@ public class InstanceManager {
             config.setTicking(true);
 
             main.getLogger().at(Level.INFO).log("[Instance] ✓ Prefab '" + prefabName + "' placed in " + elapsed + "ms");
+            return true;
 
         } catch (Exception e) {
             main.getLogger().at(Level.SEVERE).log("[Instance] Error placing prefab: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
     }
     public void teleportPlayers(List<PlayerRef> playerRefs) {
@@ -129,29 +158,86 @@ public class InstanceManager {
             return;
         }
 
-        ArrayList<Vector3d> spawns = RefactorTool.getSpawns(mapId, RefactorTool.getModeForPlayer(playerRefs.getFirst()));
-
-        if (spawns == null || spawns.isEmpty()) {
-            main.getLogger().at(Level.SEVERE).log("[Instance] No spawn points found for map: " + mapId);
+        if (playerRefs == null || playerRefs.isEmpty()) {
+            main.getLogger().at(Level.WARNING).log("[Instance] Cannot teleport: no players supplied");
             return;
         }
 
+        PlayerStats firstStats = RefactorTool.getPlayerStats(playerRefs.getFirst());
+        if (firstStats == null || firstStats.getCurrentMatch() == null) {
+            main.getLogger().at(Level.SEVERE).log("[Instance] Cannot teleport: first player has no match stats");
+            return;
+        }
+
+        GameMatch match = firstStats.getCurrentMatch();
+
+        MapListeners.SpawnMode mode = match.getMode().equalsIgnoreCase("dm")
+                ? MapListeners.SpawnMode.DM
+                : MapListeners.SpawnMode.FVF;
+
+        ArrayList<Vector3d> spawns = RefactorTool.getSpawns(mapId, mode);
+
+        if (spawns == null || spawns.isEmpty()) {
+            main.getLogger().at(Level.SEVERE).log("[Instance] No spawn points found for map: " + mapId + " mode=" + mode);
+            return;
+        }
+
+        Map<UUID, Integer> teamAssignments = Map.of();
+
+        if (mode == MapListeners.SpawnMode.FVF) {
+            if (spawns.size() < 10) {
+                main.getLogger().at(Level.SEVERE).log("[Instance] FVF map '" + mapId + "' must have 10 FVF spawn locations. Found: " + spawns.size());
+                return;
+            }
+
+            match.formTeams();
+            teamAssignments = match.getTeamAssignments();
+        }
+
+        int team1Count = 0;
+        int team2Count = 0;
+
         for (int i = 0; i < playerRefs.size(); i++) {
-            Vector3d spawnPos = spawns.get(i % spawns.size());
-            Transform spawnPoint = new Transform(spawnPos.x, spawnPos.y, spawnPos.z);
-            PlayerRef playerRef  = playerRefs.get(i);
+            PlayerRef originalRef = playerRefs.get(i);
+            if (originalRef == null) continue;
+
+            Vector3d spawnPos;
+
+            if (mode == MapListeners.SpawnMode.FVF) {
+                int team = teamAssignments.getOrDefault(originalRef.getUuid(), 1);
+
+                int spawnIndex;
+                if (team == 1) {
+                    spawnIndex = team1Count % 5;
+                    team1Count++;
+                } else {
+                    spawnIndex = 5 + (team2Count % 5);
+                    team2Count++;
+                }
+
+                spawnPos = spawns.get(spawnIndex);
+            } else {
+                spawnPos = spawns.get(i % spawns.size());
+            }
+
+            Transform spawnPoint = new Transform(spawnPos.x + 0.5f, spawnPos.y, spawnPos.z + 0.5f);
 
             try {
-                UUID playerUUID = playerRef.getUuid();
+                UUID playerUUID = originalRef.getUuid();
                 PlayerRef updatedRef = Universe.get().getPlayer(playerUUID);
 
-                if (updatedRef == null || updatedRef.getReference() == null) continue;
+                if (updatedRef == null || updatedRef.getReference() == null || updatedRef.getWorldUuid() == null) {
+                    main.getLogger().at(Level.WARNING).log("[Instance] Skipping teleport for stale player ref: " + playerUUID);
+                    continue;
+                }
 
-                Ref<EntityStore> ref   = updatedRef.getReference();
-                assert updatedRef.getWorldUuid() != null;
+                Ref<EntityStore> ref = updatedRef.getReference();
                 World currentWorld = Universe.get().getWorld(updatedRef.getWorldUuid());
 
-                if (currentWorld == null) continue;
+                if (currentWorld == null) {
+                    main.getLogger().at(Level.WARNING).log("[Instance] Skipping teleport because current world is null: " + playerUUID);
+                    continue;
+                }
 
                 updatedRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME)));
 
@@ -172,24 +258,32 @@ public class InstanceManager {
                 e.printStackTrace();
             }
         }
-    }
-    public void removeInstance() {
-        if (worldName == null) return;
 
-        Universe universe = Universe.get();
-        World instanceWorld = universe.getWorld(worldName);
-
-        if (instanceWorld != null) {
-            try {
-                universe.removeWorld(worldName);
-                main.getLogger().at(Level.INFO).log("[Instance] ✓ World removed: " + worldName);
-            } catch (Exception e) {
-                main.getLogger().at(Level.WARNING).log("[Instance] Error removing world: " + e.getMessage());
-            }
+        if (mode == MapListeners.SpawnMode.DM) {
+            com.hypixel.hytale.server.core.HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                if (match.getState() == GameMatch.MatchState.STARTING) {
+                    match.startTimer();
+                }
+            }, 3, java.util.concurrent.TimeUnit.SECONDS);
         }
-
-        isMapLoaded = false;
-        newWorld    = null;
-        worldName   = null;
     }
-}
+        public void removeInstance () {
+            if (worldName == null) return;
+
+            Universe universe = Universe.get();
+            World instanceWorld = universe.getWorld(worldName);
+
+            if (instanceWorld != null) {
+                try {
+                    universe.removeWorld(worldName);
+                    main.getLogger().at(Level.INFO).log("[Instance] ✓ World removed: " + worldName);
+                } catch (Exception e) {
+                    main.getLogger().at(Level.WARNING).log("[Instance] Error removing world: " + e.getMessage());
+                }
+            }
+
+            isMapLoaded = false;
+            newWorld = null;
+            worldName = null;
+        }
+    }

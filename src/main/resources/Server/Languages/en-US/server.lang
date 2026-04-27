@@ -59,8 +59,6 @@ items.Ore_Titanium.description=Ore that can be smelted into titanium ingots
 
 items.Frag.name=Frag Grenade
 items.Frag.description=Ammo: <color is="#ffffff">Frag Grenade</color>\nDamage: 50\nSpread: 0\nCooldown: 1\nClipsize: 1
-items.Spray_Can.name=Spray Can
-items.Spray_Can.description=Ammo: <color is="#ffffff">Torch in opposite hand</color>\nDamage: 12\nSpread: 0\nCooldown: 0.1\nClipsize: 1
 items.AssaultRifle.name=Rifle
 items.AssaultRifle.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 5\nSpread: 0.02\nCooldown: 0.112\nReload: 2.43s\nClipsize: 30
 items.Handgun.name=Handgun

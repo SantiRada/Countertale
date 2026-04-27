@@ -76,10 +76,6 @@
 @Fragoff = PatchStyle(TexturePath: "../../../Weapons/Frag.png");
 @Fragactive = PatchStyle(TexturePath: "../../../Weapons/Frag.png");
 
-@SprayCanon = PatchStyle(TexturePath: "../../../Weapons/SprayCan.png");
-@SprayCanoff = PatchStyle(TexturePath: "../../../Weapons/SprayCan.png");
-@SprayCanactive = PatchStyle(TexturePath: "../../../Weapons/SprayCan.png");
-
 @Uspon = PatchStyle(TexturePath: "../../../Weapons/USPS.png");
 @Uspoff = PatchStyle(TexturePath: "../../../Weapons/USPS.png");
 @Uspactive = PatchStyle(TexturePath: "../../../Weapons/USPS.png");

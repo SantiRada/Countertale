@@ -28,12 +28,15 @@ public class LootManager {
 
     public static ArrayList<WeaponStats> getGameLoot(Player player) {
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
-        if (playerRef == null) return null;
+        if (playerRef == null) return getStarterKit();
 
         ArrayList<WeaponStats> loot = RefactorTool.getLoot(playerRef);
-        if (loot == null) return getStarterKit();
-        if (loot.isEmpty()) return getStarterKit();
 
+        if (loot == null || loot.isEmpty()) {
+            loot = getStarterKit();
+        }
+
+        RefactorTool.setAllLoot(playerRef, loot);
         return loot;
     }
 
@@ -58,63 +61,117 @@ public class LootManager {
     }
 
     public static void giveLoot(Player player, ArrayList<WeaponStats> loot) {
+        if (player == null) return;
+
         PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
         if (playerRef == null) return;
         if (playerRef.getWorldUuid() == null) return;
 
+        boolean isDeathmatch = false;
+
+        var playerStats = RefactorTool.getPlayerStats(playerRef);
+        if (playerStats != null && playerStats.getCurrentMatch() != null) {
+            isDeathmatch = playerStats.getCurrentMatch().getMode().equalsIgnoreCase("dm");
+        }
+
+        // Do not use 9999 here. It creates loads of ammo stacks and fills the inventory.
+        // Deathmatch will be made effectively infinite by not consuming ammo on reload.
+        final int baseAmmoAmount = isDeathmatch ? 64 : 300;
+        final int rifleAmmoAmount = isDeathmatch ? 64 : 300;
+        final int shotgunAmmoAmount = isDeathmatch ? 32 : 80;
+        final int fuelTankAmount = isDeathmatch ? 32 : 100;
+        final int fireBottleAmount = isDeathmatch ? 16 : 50;
+
+        if (loot == null || loot.isEmpty()) {
+            loot = getStarterKit();
+        }
+
+        RefactorTool.setAllLoot(playerRef, loot);
+
+        final ArrayList<WeaponStats> finalLoot = new ArrayList<>(loot);
+
         World world = Universe.get().getWorld(playerRef.getWorldUuid());
         if (world == null) return;
-
-        WeaponStats utility = loot.stream()
-                .filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("utility"))
-                .findFirst()
-                .orElse(null);
 
         world.execute(() -> {
             player.getInventory().clear();
             Inventory inv = player.getInventory();
 
-            //ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
-            //inv.getStorage().addItemStack(bullets);
+            WeaponStats primary = finalLoot.stream()
+                    .filter(w -> w != null && w.typeWeapon != null && w.typeWeapon.equalsIgnoreCase("primary"))
+                    .findFirst()
+                    .orElse(null);
 
-            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Base", 300));
-            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Rifle", 300));
-            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Shotgun", 80));
-            inv.getStorage().addItemStack(new ItemStack("Ammo_Fuel_Tank", 100));
-            inv.getStorage().addItemStack(new ItemStack("Ammo_Fuel_FireBottle", 50));
+            WeaponStats secondary = finalLoot.stream()
+                    .filter(w -> w != null && w.typeWeapon != null && w.typeWeapon.equalsIgnoreCase("secondary"))
+                    .findFirst()
+                    .orElse(null);
 
-            WeaponStats primary   = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("primary")).findFirst().orElse(null);
-            WeaponStats secondary = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("secondary")).findFirst().orElse(null);
-            WeaponStats shield    = loot.stream().filter(w -> w != null && w.typeWeapon.equalsIgnoreCase("shield")).findFirst().orElse(null);
+            WeaponStats shield = finalLoot.stream()
+                    .filter(w -> w != null && w.typeWeapon != null && w.typeWeapon.equalsIgnoreCase("shield"))
+                    .findFirst()
+                    .orElse(null);
 
-            if (primary != null)
-                for (String itemId : primary.giveItems)
-                    inv.getHotbar().addItemStack(new ItemStack(itemId, 1));
+            WeaponStats utility = finalLoot.stream()
+                    .filter(w -> w != null && w.typeWeapon != null && w.typeWeapon.equalsIgnoreCase("utility"))
+                    .findFirst()
+                    .orElse(null);
 
-            if (secondary != null)
-                for (String itemId : secondary.giveItems)
-                    inv.getHotbar().setItemStackForSlot((short) 1, new ItemStack(itemId, 1));
-
-            if (shield != null)
-                for (String itemId : shield.giveItems)
-                    inv.getArmor().addItemStack(new ItemStack(itemId, 1));
-
-            inv.getHotbar().setItemStackForSlot((short) 2, new ItemStack("Weapon_Daggers_Cobalt", 1));
-            if (utility != null) {
-                for (String itemId : utility.giveItems) {
-                    inv.getHotbar().addItemStack(new ItemStack(itemId, 1));
+            // Give weapons first so ammo can never block the bought item.
+            if (primary != null) {
+                for (String itemId : primary.giveItems) {
+                    inv.getHotbar().setItemStackForSlot((short) 0, new ItemStack(itemId, 1));
+                    break;
                 }
             }
 
-            // Stats and HUD in the same execute call, no separate schedule
-            Ref<EntityStore> ref = playerRef.getReference();
-            Store<EntityStore> store = ref.getStore();
+            if (secondary != null) {
+                for (String itemId : secondary.giveItems) {
+                    inv.getHotbar().setItemStackForSlot((short) 1, new ItemStack(itemId, 1));
+                    break;
+                }
+            }
 
-            ComponentType<EntityStore, EntityStatMap> statMapType =
-                    EntityStatsModule.get().getEntityStatMapComponentType();
-            EntityStatMap statMap = store.getComponent(ref, statMapType);
-            if (statMap != null)
-                statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth());
+            inv.getHotbar().setItemStackForSlot((short) 2, new ItemStack("Weapon_Daggers_Cobalt", 1));
+
+            if (utility != null) {
+                short utilitySlot = 3;
+
+                for (String itemId : utility.giveItems) {
+                    if (utilitySlot <= 8) {
+                        inv.getHotbar().setItemStackForSlot(utilitySlot, new ItemStack(itemId, 1));
+                        utilitySlot++;
+                    } else {
+                        inv.getStorage().addItemStack(new ItemStack(itemId, 1));
+                    }
+                }
+            }
+
+            if (shield != null) {
+                for (String itemId : shield.giveItems) {
+                    inv.getArmor().addItemStack(new ItemStack(itemId, 1));
+                }
+            }
+
+            // Give ammo after weapons, using controlled amounts.
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Base", baseAmmoAmount));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Rifle", rifleAmmoAmount));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Shotgun", shotgunAmmoAmount));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Fuel_Tank", fuelTankAmount));
+            inv.getStorage().addItemStack(new ItemStack("Ammo_Fuel_FireBottle", fireBottleAmount));
+
+            Ref<EntityStore> entityRef = playerRef.getReference();
+            if (entityRef != null) {
+                Store<EntityStore> entityStore = entityRef.getStore();
+
+                ComponentType<EntityStore, EntityStatMap> statMapType =
+                        EntityStatsModule.get().getEntityStatMapComponentType();
+
+                EntityStatMap statMap = entityStore.getComponent(entityRef, statMapType);
+                if (statMap != null) {
+                    statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth());
+                }
+            }
 
             CustomUIHud customHUD = player.getHudManager().getCustomHud();
             if (customHUD instanceof GameHUD newHud) {

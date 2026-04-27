@@ -79,7 +79,6 @@ Group #DeathmatchUI {
                 Text: "Press [G] with something in hand for the Shop";
             }
         }
-    }
 
     Group #BottomSector{
         Anchor: (Width: 1920);

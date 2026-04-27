@@ -32,7 +32,6 @@ public final class OrbisOffensiveWeaponVisuals {
         put("Weapon_Flamethrower", "Flamethrower", "Weapon", "Automatic", true);
 
         put("Weapon_Frag", "Frag", "Weapon", "Single", false);
-        put("Weapon_SprayCan", "SprayCan", "Weapon", "Single", false);
 
         put("Knife", "Knife", "Knife", "Melee", false);
         put("Weapon_Daggers_Cobalt", "Knife", "Knife", "Melee", false);

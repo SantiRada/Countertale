@@ -165,7 +165,7 @@ public class OrbisOffensive extends HygunsPluginMain {
         queueHud.updatePlayerCount(match.getPlayerCount());
         queueHud.setMapsInfo(playerMaps);
 
-        int partyIndex = PartyManager.GetPartyIdForPlayer(playerRef);
+        int partyIndex = PartyManager.GetPartyIndexForPlayer(playerRef);
         if (partyIndex >= 0) { queueHud.setDataParty(PartyManager.totalParty.get(partyIndex)); }
 
         activeQueueHuds.put(playerId, queueHud);
@@ -179,7 +179,7 @@ public class OrbisOffensive extends HygunsPluginMain {
             Player player = RefactorTool.getPlayer(playerRef);
             player.getHudManager().setCustomHud(playerRef, null);
 
-            int id = PartyManager.GetPartyIdForPlayer(playerRef);
+            int id = PartyManager.GetPartyIndexForPlayer(playerRef);
             if (id >= 0) { player.getHudManager().setCustomHud(playerRef, new PartyHUD(playerRef, PartyManager.totalParty.get(id))); }
         }
         activeQueueHuds.remove(playerId);

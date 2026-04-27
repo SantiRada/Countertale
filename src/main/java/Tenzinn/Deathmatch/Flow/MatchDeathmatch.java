@@ -22,25 +22,43 @@ public class MatchDeathmatch {
     private static GameMatch myMatch;
 
     public static void startTimerMatch(GameMatch match) {
+        if (match == null || match.getState() == GameMatch.MatchState.FINISHED) return;
+
         myMatch = match;
         if (timerTask != null && !timerTask.isDone()) return;
 
         if (myMatch.getState() == GameMatch.MatchState.STARTING) {
             remainingSeconds = TIME_PER_PURCHASE;
+
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-                if (remainingSeconds <= 0) { onEndPurchase(); }
+                if (remainingSeconds <= 0) {
+                    onEndPurchase();
+                    return;
+                }
+
                 remainingSeconds--;
             }, 1, 1, TimeUnit.SECONDS);
         } else {
+            myMatch.setState(GameMatch.MatchState.IN_PROGRESS);
             remainingSeconds = TIME_PER_ROUND;
+
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-                if (remainingSeconds <= 0) { onEndMatch(); }
+                if (remainingSeconds <= 0) {
+                    onEndMatch();
+                    return;
+                }
+
                 remainingSeconds--;
             }, 1, 1, TimeUnit.SECONDS);
         }
     }
 
     public static void onEndPurchase() {
+        if (myMatch == null || myMatch.getState() == GameMatch.MatchState.FINISHED) {
+            stopTimer();
+            return;
+        }
+
         stopTimer();
         myMatch.setState(GameMatch.MatchState.IN_PROGRESS);
         startTimerMatch(myMatch);
@@ -52,14 +70,24 @@ public class MatchDeathmatch {
             return;
         }
 
+        if (myMatch.getPlayers().isEmpty()) {
+            stopTimer();
+            myMatch.setState(GameMatch.MatchState.FINISHED);
+            return;
+        }
+
         remainingSeconds = 0;
         stopTimer();
+        myMatch.setState(GameMatch.MatchState.FINISHED);
 
         World world = Universe.get().getWorld(
                 Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
-        assert world != null;
 
-        world.execute(() -> RefactorTool.finishGame(myMatch.getPlayers(), myMatch));
+        if (world == null) return;
+
+        GameMatch finishedMatch = myMatch;
+
+        world.execute(() -> RefactorTool.finishGame(finishedMatch.getPlayers(), finishedMatch));
     }
 
     public static int getTimer()  { return remainingSeconds; }

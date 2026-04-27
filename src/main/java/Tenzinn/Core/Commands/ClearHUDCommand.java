@@ -20,26 +20,26 @@ public class ClearHUDCommand extends CommandBase {
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
         Player player = commandContext.senderAs(Player.class);
+        if (player == null) return;
 
         CustomUIHud customHUD = player.getHudManager().getCustomHud();
 
-        if (customHUD != null) {
-            if (customHUD instanceof GameHUD gameHUD) {
-                gameHUD.clearHUD();
-                System.out.println("Game HUD clean.");
-            }
+        if (customHUD instanceof GameHUD gameHUD) {
+            gameHUD.clearHUD();
+        } else if (customHUD instanceof ScoreboardPage scoreboardHUD) {
+            scoreboardHUD.clearHUD();
+        } else if (customHUD instanceof ScoreboardPageFVF scoreboardHUD) {
+            scoreboardHUD.clearHUD();
+        }
 
-            if (RefactorTool.getModeForPlayer(player) == MapListeners.SpawnMode.DM) {
-                if (customHUD instanceof ScoreboardPage scoreboardHUD) {
-                    scoreboardHUD.clearHUD();
-                    System.out.println("Scoreboard clean.");
-                }
-            } else {
-                if (customHUD instanceof ScoreboardPageFVF scoreboardHUD) {
-                    scoreboardHUD.clearHUD();
-                    System.out.println("Scoreboard FVF clean.");
-                }
-            }
+        com.hypixel.hytale.server.core.universe.PlayerRef playerRef =
+                com.hypixel.hytale.server.core.universe.Universe.get().getPlayerByUsername(
+                        player.getDisplayName(),
+                        com.hypixel.hytale.server.core.NameMatching.EXACT
+                );
+
+        if (playerRef != null) {
+            player.getHudManager().setCustomHud(playerRef, null);
         }
     }
 

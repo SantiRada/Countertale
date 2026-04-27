@@ -44,14 +44,14 @@
           "price": 300
         },
         {
-          "id": [ "Weapon_SprayCan" ],
+          "id": [],
           "number": "4",
-          "name": "Spray Can",
-          "image": "SprayCan",
-          "typeWeapon": "utility",
-          "typeCross": "Weapon",
-          "firemode": "Single",
-          "price": 200
+          "name": "Coming Soon",
+          "image": "ComingSoon",
+          "typeWeapon": "Melee",
+          "typeCross": "Knife",
+          "firemode": "Melee",
+          "price": -1
         },
         {
           "id": [],

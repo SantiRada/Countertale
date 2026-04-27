@@ -51,6 +51,7 @@ public final class HudCoordinator {
 		AMMO_VISIBLE.remove(uuid);
 
 		OrbisOffensiveHudBridge.hideAmmo(player);
+		OrbisOffensiveHudBridge.resetPlayer(uuid);
 	}
 
 	public static void shutdown() {
@@ -105,12 +106,27 @@ public final class HudCoordinator {
 	}
 
 	public static boolean showScope(PlayerRef playerRef, @Nullable String overlayTexturePath) {
-		// Scope camera logic can still run through ZoomManager.
-		// For now, the old Hyguns scope UI is deliberately disabled.
+		if (playerRef == null) return false;
+
+		Player player = PLAYERS.get(playerRef.getUuid());
+		if (player == null) return false;
+
+		if (player.getHudManager().getCustomHud() instanceof Tenzinn.Core.UI.GameHUD gameHud) {
+			gameHud.showScopeOverlay(overlayTexturePath);
+			return true;
+		}
+
 		return false;
 	}
 
 	public static void hideScope(PlayerRef playerRef) {
-		// No-op because OrbisOffensive does not yet have a scope overlay.
+		if (playerRef == null) return;
+
+		Player player = PLAYERS.get(playerRef.getUuid());
+		if (player == null) return;
+
+		if (player.getHudManager().getCustomHud() instanceof Tenzinn.Core.UI.GameHUD gameHud) {
+			gameHud.hideScopeOverlay();
+		}
 	}
 }

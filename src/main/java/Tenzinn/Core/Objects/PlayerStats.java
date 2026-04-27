@@ -45,6 +45,7 @@ public class PlayerStats {
         this.playerRef = playerRef;
         this.currentMatch = match;
         this.player = player;
+        this.playerState = PlayerState.DEFAULT;
 
         moneySpent.add(-1);
         moneySpent.add(-1);
@@ -57,21 +58,17 @@ public class PlayerStats {
         score += 15;
 
         money += EconomySystem.getRevenue(EconomySystem.Revenue.KILL);
-
-        RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
+
     public void setDeaths () {
         deaths += 1;
         score = score > 10 ? score - 10 : 0;
 
         money += EconomySystem.getRevenue(EconomySystem.Revenue.DEATH);
-
-        RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
+
     public void setScore(int value) {
         score += value;
-
-        RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
     public void setHealth(int value) { maxHealth = value; }
     public void setMoney(int value) { money -= value; }

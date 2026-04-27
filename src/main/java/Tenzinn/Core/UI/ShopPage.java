@@ -11,7 +11,9 @@ import Tenzinn.Core.Listeners.MapListeners.SpawnMode;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -63,65 +65,92 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
     }
 
     @Override
-    public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, ShopEventData data) {
-        String action = data.getAction();
-        int index = Integer.parseInt(action);
-
-        WeaponStats newWeapon = RefactorTool.slots.get(index - 1);
-        if (
-                newWeapon.nameWeapon.equalsIgnoreCase("coming soon")
-                        || newWeapon.giveItems.isEmpty()
-                        || newWeapon.pricing < 0
-        ) {
+    public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref,
+                                @NonNullDecl Store<EntityStore> store,
+                                ShopEventData data) {
+        if (data == null || data.getAction() == null) {
             RefactorTool.launchSound(playerRef, "fail");
             return;
         }
 
-        RefactorTool.launchSound(playerRef, "clic");
+        String action = data.getAction();
 
-        if (mode == SpawnMode.DM) { RefactorTool.setLoot(playerRef, index); }
-        else {
-            // In FVF need verify available money
-            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        int index;
+        try {
+            index = Integer.parseInt(action);
+        } catch (NumberFormatException e) {
+            RefactorTool.launchSound(playerRef, "fail");
+            return;
+        }
 
-            if (playerStats.getMoney() >= newWeapon.pricing) {
-                // Can buy
-                if(playerStats.inShop) {
-                    int pos = -1;
-                    WeaponStats prevWeapon = null;
+        int slotIndex = index - 1;
+        if (slotIndex < 0 || slotIndex >= RefactorTool.slots.size()) {
+            RefactorTool.launchSound(playerRef, "fail");
+            return;
+        }
 
-                    for (int i = 0; i < playerStats.getLoot().size(); i++) {
-                        WeaponStats item = playerStats.getLoot().get(i);
+        WeaponStats newWeapon = RefactorTool.slots.get(slotIndex);
+        if (newWeapon == null
+                || newWeapon.nameWeapon == null
+                || newWeapon.nameWeapon.equalsIgnoreCase("coming soon")
+                || newWeapon.giveItems == null
+                || newWeapon.giveItems.isEmpty()
+                || newWeapon.pricing < 0) {
+            RefactorTool.launchSound(playerRef, "fail");
+            return;
+        }
 
-                        if (newWeapon.typeWeapon.equalsIgnoreCase(item.typeWeapon)) {
-                            prevWeapon = item;
-                            pos = i;
-                            break;
-                        }
-                    }
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if (playerStats == null || playerStats.getCurrentMatch() == null) {
+            RefactorTool.launchSound(playerRef, "fail");
+            return;
+        }
 
-                    if(pos >= 0) {
-                        playerStats.giveMoney(playerStats.moneySpent.get(pos) > 0 ? playerStats.moneySpent.get(pos) : 0); // Refund previous amount
-                        playerRef.sendMessage(Message.raw("Changed " + prevWeapon.nameWeapon + " to " + newWeapon.nameWeapon));
+        if (mode == SpawnMode.FVF) {
+            if (!playerStats.getCurrentMatch().isBuyPhase() && !playerStats.canReceivedLoot) {
+                playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)));
+                RefactorTool.launchSound(playerRef, "fail");
+                return;
+            }
 
-                        playerStats.moneySpent.set(pos, newWeapon.pricing);
-                    } else {
-                        playerRef.sendMessage(Message.raw("The system could not find the previous weapon"));
+            if (playerStats.getMoney() < newWeapon.pricing) {
+                playerRef.sendMessage(Message.raw("Insufficient money"));
+                RefactorTool.launchSound(playerRef, "fail");
+                return;
+            }
+
+            if (playerStats.inShop) {
+                int pos = -1;
+
+                for (int i = 0; i < playerStats.getLoot().size(); i++) {
+                    WeaponStats item = playerStats.getLoot().get(i);
+
+                    if (item != null
+                            && item.typeWeapon != null
+                            && newWeapon.typeWeapon != null
+                            && newWeapon.typeWeapon.equalsIgnoreCase(item.typeWeapon)) {
+                        pos = i;
+                        break;
                     }
                 }
 
-                playerStats.setMoney(newWeapon.pricing);
-                playerStats.inShop = true;
-
-                RefactorTool.setLoot(playerRef, index);
-
-                uiBuilder.set("#UserMoney.TextSpans", Message.raw("$" + Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getMoney()));
-                sendUpdate();
+                if (pos >= 0 && pos < playerStats.moneySpent.size()) {
+                    playerStats.giveMoney(playerStats.moneySpent.get(pos) > 0 ? playerStats.moneySpent.get(pos) : 0);
+                    playerStats.moneySpent.set(pos, newWeapon.pricing);
+                }
             }
-            else { playerRef.sendMessage(Message.raw("Insufficient money")); }
+
+            playerStats.setMoney(newWeapon.pricing);
+            playerStats.inShop = true;
         }
 
-        sendUpdate();
+        RefactorTool.setLoot(playerRef, index);
+        RefactorTool.launchSound(playerRef, "clic");
+
+        if (uiBuilder != null && mode == SpawnMode.FVF) {
+            uiBuilder.set("#UserMoney.TextSpans", Message.raw("$" + playerStats.getMoney()));
+            sendUpdate();
+        }
     }
 
     private void setTitleShop() {

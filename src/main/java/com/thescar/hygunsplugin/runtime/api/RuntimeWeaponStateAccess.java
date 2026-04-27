@@ -43,7 +43,7 @@ public final class RuntimeWeaponStateAccess {
 		                                  ? settings.ammo()
 		                                  : null;
 		if (!ammo.initialized() && ammoSettings != null) {
-			bootstrapAmmo(ammo, tracked.stack(), resolveMaxAmmo(ammoSettings), false);
+			bootstrapAmmo(ammo, tracked.stack(), resolveMaxAmmo(ammoSettings), true);
 		}
 
 		return new AmmoState(tracked.stack(), tracked.ref(), tracked.created(), ammo);
@@ -54,7 +54,7 @@ public final class RuntimeWeaponStateAccess {
 		TrackedItem tracked = ensureTracked(itemStack);
 		AmmoDataComponent ammo = ItemRuntimeEcs.ensureComponent(tracked.ref(), AmmoDataComponent.getComponentType());
 		if (!ammo.initialized()) {
-			bootstrapAmmo(ammo, tracked.stack(), maxAmmo, false);
+			bootstrapAmmo(ammo, tracked.stack(), maxAmmo, true);
 		}
 
 		return new AmmoState(tracked.stack(), tracked.ref(), tracked.created(), ammo);

@@ -45,9 +45,13 @@ public class QueueCommand extends AbstractPlayerCommand {
         String modeArg = mode.get(commandContext);
 
         // No mode -> open the mode/map selector (ModesPage)
-        if (modeArg.equalsIgnoreCase("null") || modeArg.isBlank() || modeArg.isEmpty()) {
+        if (modeArg == null || modeArg.equalsIgnoreCase("null") || modeArg.isBlank()) {
             Player player = commandContext.senderAs(Player.class);
             player.getPageManager().openCustomPage(ref, store, new ModesPage(playerRef));
+            return;
+        }
+        if (!modeArg.equalsIgnoreCase("dm") && !modeArg.equalsIgnoreCase("fvf")) {
+            playerRef.sendMessage(Message.raw("Invalid mode. Use dm or fvf.").color(Color.orange));
             return;
         }
 
@@ -60,7 +64,7 @@ public class QueueCommand extends AbstractPlayerCommand {
         }
 
         // Party flow
-        int partyIdx = PartyManager.GetPartyIdForPlayer(playerRef);
+        int partyIdx = PartyManager.GetPartyIndexForPlayer(playerRef);
         if (partyIdx >= 0) {
             PartyObject party = PartyManager.totalParty.get(partyIdx);
             boolean isLeader = party.players.getFirst().equals(playerRef);

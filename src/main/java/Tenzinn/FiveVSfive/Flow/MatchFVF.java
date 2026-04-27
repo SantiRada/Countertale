@@ -198,59 +198,77 @@ public class MatchFVF {
         stopTimer();
         giveRoundMoney();
 
+        if (myMatch == null || myMatch.getPlayers().isEmpty()) return;
+
         myMatch.setState(MatchState.ON_PURCHASE);
 
-        World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
+        PlayerRef firstLiveRef = Universe.get().getPlayer(myMatch.getPlayers().getFirst().getUuid());
+        if (firstLiveRef == null || firstLiveRef.getWorldUuid() == null) return;
+
+        World currentWorld = Universe.get().getWorld(firstLiveRef.getWorldUuid());
+        if (currentWorld == null) return;
+
         currentWorld.execute(() -> {
             resetPlayers(myMatch.getPlayers());
 
             String mapName = myMatch.getMapId();
-            TemporalWallSystem.buildWalls(mapName, myMatch.getPlayers().getFirst());
+            TemporalWallSystem.buildWalls(mapName, firstLiveRef);
 
-            List<PlayerRef> allPlayers = myMatch.getPlayers();
-            for (int i = 0; i < allPlayers.size(); i++) {
-                Ref<EntityStore> ref = allPlayers.get(i).getReference();
-                assert ref != null;
+            for (PlayerRef originalRef : myMatch.getPlayers()) {
+                PlayerRef liveRef = Universe.get().getPlayer(originalRef.getUuid());
+                if (liveRef == null || liveRef.getReference() == null) continue;
+
+                Ref<EntityStore> ref = liveRef.getReference();
                 Store<EntityStore> store = ref.getStore();
                 Player player = store.getComponent(ref, Player.getComponentType());
+                if (player == null) continue;
+
                 player.getPageManager().setPage(ref, store, Page.None);
             }
         });
 
-        // FIX: startTimerMatch outside execute() with a minimal delay for consistency
-        // and so resetPlayers/buildWalls are queued before starting the timer.
-        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-            startTimerMatch(myMatch);
-        }, 100, TimeUnit.MILLISECONDS);
+        HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> startTimerMatch(myMatch), 100, TimeUnit.MILLISECONDS);
     }
     public static void onEndRound() {
         inEndRound = true;
         stopTimer();
+
+        if (myMatch == null || myMatch.getPlayers().isEmpty()) return;
+
         List<PlayerRef> players = myMatch.getPlayers();
 
-        World currentWorld = Universe.get().getWorld(Objects.requireNonNull(players.getFirst().getWorldUuid()));
-        assert currentWorld != null;
+        PlayerRef firstLiveRef = Universe.get().getPlayer(players.getFirst().getUuid());
+        if (firstLiveRef == null || firstLiveRef.getWorldUuid() == null) return;
+
+        World currentWorld = Universe.get().getWorld(firstLiveRef.getWorldUuid());
+        if (currentWorld == null) return;
+
         currentWorld.execute(() -> {
-            for (int i = 0; i < players.size(); i++) {
-                Ref<EntityStore> ref = players.get(i).getReference();
-                assert ref != null;
+            for (PlayerRef originalRef : players) {
+                PlayerRef liveRef = Universe.get().getPlayer(originalRef.getUuid());
+                if (liveRef == null || liveRef.getReference() == null) continue;
+
+                Ref<EntityStore> ref = liveRef.getReference();
                 Store<EntityStore> store = ref.getStore();
                 Player player = store.getComponent(ref, Player.getComponentType());
-                player.getPageManager().openCustomPage(ref, store, new EndRoundPage(players.get(i)));
+                if (player == null) continue;
+
+                player.getPageManager().openCustomPage(ref, store, new EndRoundPage(liveRef));
             }
         });
+
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> onReloadRound(), 3, TimeUnit.SECONDS);
     }
     public static void onTimeExpired() {
-        inEndRound = true;
-
         boolean team1HasAlive = false;
         boolean team2HasAlive = false;
 
         for (PlayerRef playerRef : myMatch.getPlayers()) {
             PlayerStats ps = RefactorTool.getPlayerStats(playerRef);
             if (ps == null) continue;
+
             int team = validateTeamMembership(playerRef);
+
             if (ps.playerState == PlayerStats.PlayerState.DEFAULT) {
                 if (team == 1) team1HasAlive = true;
                 else if (team == 2) team2HasAlive = true;
@@ -263,23 +281,31 @@ public class MatchFVF {
     }
     // ================================================== //
     public static void resetPlayers(List<PlayerRef> playerRefs) {
-        for (int i = 0; i < playerRefs.size(); i++) {
-            PlayerRef playerRef = playerRefs.get(i);
-            Ref<EntityStore> ref = playerRef.getReference();
-            assert ref != null;
+        for (PlayerRef originalRef : playerRefs) {
+            if (originalRef == null) continue;
+
+            PlayerRef liveRef = Universe.get().getPlayer(originalRef.getUuid());
+            if (liveRef == null || liveRef.getReference() == null) continue;
+
+            Ref<EntityStore> ref = liveRef.getReference();
             Store<EntityStore> store = ref.getStore();
 
-            PlayerStats ps = RefactorTool.getPlayerStats(playerRef);
-            if (ps != null && ps.playerState == PlayerStats.PlayerState.SPECTATOR) {
+            PlayerStats ps = RefactorTool.getPlayerStats(liveRef);
+            if (ps != null) {
                 ps.playerState = PlayerStats.PlayerState.DEFAULT;
-                DeathComponent.respawn(store, ref);
             }
 
-            Player player = RefactorTool.getPlayer(playerRef);
-            LootManager.giveLoot(player, LootManager.getStarterKit());
+            DeathComponent.respawn(store, ref);
+
+            Player player = RefactorTool.getPlayer(liveRef);
+            if (player != null) {
+                LootManager.giveLoot(player, LootManager.getStarterKit());
+            }
 
             EntityStatMap statMap = store.getComponent(ref, EntityStatMap.getComponentType());
-            if (statMap != null) { statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth()); }
+            if (statMap != null) {
+                statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth());
+            }
         }
 
         teleportPlayers(playerRefs);
@@ -363,18 +389,30 @@ public class MatchFVF {
         return numRoundsPerTeam.get(team - 1);
     }
     public static int validateFinishRound() {
-        boolean stateTeam01 = true;
-        boolean stateTeam02 = true;
+        boolean team1Eliminated = true;
+        boolean team2Eliminated = true;
 
         for (PlayerRef playerRef : myMatch.getPlayers()) {
             PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
             if (playerStats == null) continue;
+
             int team = validateTeamMembership(playerRef);
-            if (team == 1 && playerStats.playerState == PlayerStats.PlayerState.DEFAULT) { stateTeam01 = false; }
-            else if (team == 2 && playerStats.playerState == PlayerStats.PlayerState.DEFAULT) { stateTeam02 = false; }
+
+            if (team == 1 && playerStats.playerState == PlayerStats.PlayerState.DEFAULT) {
+                team1Eliminated = false;
+            } else if (team == 2 && playerStats.playerState == PlayerStats.PlayerState.DEFAULT) {
+                team2Eliminated = false;
+            }
         }
 
-        winner = stateTeam01 ? 1 : stateTeam02 ? 2 : 0;
+        if (team1Eliminated && !team2Eliminated) {
+            winner = 2;
+        } else if (team2Eliminated && !team1Eliminated) {
+            winner = 1;
+        } else {
+            winner = 0;
+        }
+
         if (winner > 0) finishRound();
 
         return winner;
@@ -398,48 +436,40 @@ public class MatchFVF {
         }
     }
 
-    private static void finishRound () {
+    private static void finishRound() {
         prepareRoundScoresFor(myMatch);
 
+        if (myMatch == null || inEndRound) return;
         if (winner < 1 || winner > 2) return;
 
-        onEndRound();
+        inEndRound = true;
 
         numRoundsPerTeam.set(winner - 1, numRoundsPerTeam.get(winner - 1) + 1);
 
-        boolean matchFinished =
+        boolean matchOver =
                 numRoundsPerTeam.get(0) >= numRoundsPerWinner
                         || numRoundsPerTeam.get(1) >= numRoundsPerWinner;
 
-        if (!matchFinished) {
-            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-                if (myMatch != null && myMatch.getState() != MatchState.FINISHED) {
-                    onReloadRound();
-                }
-            }, 5, TimeUnit.SECONDS);
-        }
-
-        boolean matchOver = numRoundsPerTeam.getFirst() >= numRoundsPerWinner
-                || numRoundsPerTeam.get(1) >= numRoundsPerWinner;
-
         List<PlayerRef> players = myMatch.getPlayers();
 
-        for (int i = 0; i < players.size(); i++) {
-            Player player = RefactorTool.getPlayer(players.get(i));
-            GameHUD customHUD = (GameHUD) player.getHudManager().getCustomHud();
-            assert customHUD != null;
-            customHUD.setRounds(numRoundsPerTeam.getFirst(), numRoundsPerTeam.getLast());
+        for (PlayerRef playerRef : players) {
+            Player player = RefactorTool.getPlayer(playerRef);
+            if (player == null) continue;
 
-            if (matchOver) {
-                assert player.getReference() != null;
+            if (player.getHudManager().getCustomHud() instanceof GameHUD customHUD) {
+                customHUD.setRounds(numRoundsPerTeam.get(0), numRoundsPerTeam.get(1));
+            }
+
+            if (matchOver && player.getReference() != null) {
                 PlayerEntityEffect.clearAllEffects(player, player.getReference().getStore());
             }
         }
 
         if (matchOver) {
             RefactorTool.finishGame(myMatch.getPlayers(), myMatch);
-        } else {
-            onEndRound();
+            return;
         }
+
+        onEndRound();
     }
 }

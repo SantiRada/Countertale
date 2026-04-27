@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public class CancelHandler implements PlayerPacketFilter {
 
-    private boolean isOpen = false;
+    private final java.util.Map<java.util.UUID, Boolean> scoreboardOpen = new java.util.concurrent.ConcurrentHashMap<>();
 
     @Override
     public boolean test(@Nonnull PlayerRef playerRef, @Nonnull Packet packet) {
@@ -39,6 +39,7 @@ public class CancelHandler implements PlayerPacketFilter {
                         Player player = store.getComponent(entityRef, Player.getComponentType());
                         if (player != null) {
                             player.getPageManager().setPage(entityRef, store, Page.None);
+                            boolean isOpen = scoreboardOpen.getOrDefault(playerRef.getUuid(), false);
                             if (!isOpen) {
                                 GameHUD hud = (GameHUD)player.getHudManager().getCustomHud();
                                 hud.clearHUD();
@@ -65,7 +66,7 @@ public class CancelHandler implements PlayerPacketFilter {
                                 player.getHudManager().setCustomHud(playerRef, new GameHUD(playerRef));
                             }
 
-                            isOpen = !isOpen;
+                            scoreboardOpen.put(playerRef.getUuid(), !isOpen);
                         }
                     } catch (Exception e) { throw new RuntimeException(e); }
                 });

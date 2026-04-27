@@ -14,7 +14,6 @@ import com.thescar.hygunsplugin.runtime.api.RuntimeWeaponStateAccess;
 import com.thescar.hygunsplugin.runtime.components.AmmoDataComponent;
 import com.thescar.hygunsplugin.runtime.components.FireDelayComponent;
 import com.thescar.hygunsplugin.runtime.item.core.ItemRuntimeEcs;
-import com.thescar.hygunsplugin.runtime.persistence.RuntimeWeaponMetadataCommit;
 import com.thescar.hygunsplugin.support.hytale.PlayerRefAccess;
 import com.thescar.hygunsplugin.support.interaction.InteractionChain;
 import com.thescar.hygunsplugin.support.interaction.InteractionValue;
@@ -220,11 +219,9 @@ public class ShootGunInteraction extends SimpleInstantInteraction {
 			return;
 		}
 
-		ItemStack updated = itemStack;
-		if (maxDurability != 0.0D) {
-			updated = updated.withDurability(durability - 1.0D);
-		}
-
+		// Do not rewrite/sync the held ItemStack on every shot.
+		// The runtime ammo component tracks the live magazine state.
+		// Updating ItemStack metadata every bullet causes client hitching/freezing.
 		if (shouldConsumeAmmo(effectiveAmmoSaveSettings)) {
 			if (!ammoData.consume(1)) {
 				DebugLogger.debug("Shoot", "Failed: ammo.consume(1) returned false");
@@ -235,12 +232,12 @@ public class ShootGunInteraction extends SimpleInstantInteraction {
 		}
 
 		applyAmmoFireDelayOverride(ammoState.ref(), ammoData);
-		ItemStack committed = RuntimeWeaponMetadataCommit.commitHeldAmmo(interactionContext, ref, itemStack, updated, ammoData);
+
+		String heldItemIdForLog = itemStack.getItemId();
 		DebugLogger.debug(
-			"Shoot", () -> "Success: committed heldItem=" + committed.getItemId()
-				+ ", ammoNow=" + ammoData.effectiveAmmo()
-		);
-		WeaponInteractionSupport.updateAmmoHud(commandBuffer, ref, committed);
+				"Shoot", () -> "Success: heldItem=" + heldItemIdForLog
+						+ ", ammoNow=" + ammoData.effectiveAmmo());
+		WeaponInteractionSupport.updateAmmoHud(commandBuffer, ref, itemStack);
 	}
 
 	private GunSettings resolveEffectiveSettings(@Nonnull AmmoDataComponent ammoData, @Nullable GunSettings baseSettings) {

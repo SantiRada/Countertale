@@ -21,8 +21,20 @@ public class ShopCommand extends AbstractPlayerCommand {
     public ShopCommand(String name, String description) { super(name, description); }
 
     @Override
-    protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+    protected void execute(@NonNullDecl CommandContext commandContext,
+                           @NonNullDecl Store<EntityStore> store,
+                           @NonNullDecl Ref<EntityStore> ref,
+                           @NonNullDecl PlayerRef playerRef,
+                           @NonNullDecl World world) {
         Player player = commandContext.senderAs(Player.class);
+        if (player == null) return;
+
+        var stats = RefactorTool.getPlayerStats(playerRef);
+        if (stats == null || stats.getCurrentMatch() == null) {
+            playerRef.sendMessage(com.hypixel.hytale.server.core.Message.raw("You must be in a match to open the shop.").color(Color.orange));
+            return;
+        }
+
         player.getPageManager().openCustomPage(ref, store, new ShopPage(playerRef, RefactorTool.getModeForPlayer(playerRef)));
     }
 

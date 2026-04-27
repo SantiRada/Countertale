@@ -28,14 +28,18 @@ public class ThrowPartyCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(username.get(commandContext), NameMatching.EXACT);
-        if(playerRef == null) {
-            player.sendMessage(Message.raw("User '" + username.get(commandContext) + "' was not found").color(Color.orange));
+        Player sender = commandContext.senderAs(Player.class);
+
+        PlayerRef senderRef = Universe.get().getPlayerByUsername(sender.getDisplayName(), NameMatching.EXACT);
+        if (senderRef == null) return;
+
+        PlayerRef targetRef = Universe.get().getPlayerByUsername(username.get(commandContext), NameMatching.EXACT);
+        if (targetRef == null) {
+            sender.sendMessage(Message.raw("User '" + username.get(commandContext) + "' was not found").color(Color.orange));
             return;
         }
 
-        PartyManager.ThrowParty(playerRef);
+        PartyManager.ThrowParty(senderRef, targetRef);
     }
 
     @Override

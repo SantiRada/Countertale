@@ -22,6 +22,7 @@ import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
 
+import com.thescar.hygunsplugin.ui.hud.HudCoordinator;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.concurrent.CompletableFuture;
@@ -54,6 +55,13 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
         if (mainWorld == null) return;
 
         CommandManager.get().handleCommand(playerRef, "clearhud");
+        HudCoordinator.hideAmmo(playerRef);
+        HudCoordinator.hideScope(playerRef);
+
+        Player commandPlayer = commandContext.senderAs(Player.class);
+        if (commandPlayer != null) {
+            commandPlayer.getHudManager().setCustomHud(playerRef, null);
+        }
 
         world.execute(() -> {
             try {
@@ -79,6 +87,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
                                 lobbyPlayer.getInventory().getHotbar().addItemStack(new ItemStack("actions_book", 1));
 
                                 PlayerEntityEffect.clearAllEffects(lobbyPlayer, lobbyStore);
+                                lobbyPlayer.getHudManager().setCustomHud(updatedPlayerRef, null);
                             }
 
                         } catch (Exception e) {

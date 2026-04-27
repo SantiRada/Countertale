@@ -11,10 +11,10 @@
     "TerminalVelocityAir": 100,
     "TerminalVelocityWater": 15,
     "RotationMode": "VelocityRoll",
-    "Bounciness": 0.5,
-    "BounceCount": 3,
-    "AllowRolling": true,
-    "RollingFrictionFactor": 1,
+    "Bounciness": 0.35,
+    "BounceCount": 1,
+    "AllowRolling": false,
+    "RollingFrictionFactor": 0.05,
     "SticksVertically": false
   },
   "SpawnOffset": {
@@ -23,15 +23,11 @@
     "Z": 0.0
   },
   "Interactions": {
-    "ProjectileSpawn": {
+    "ProjectileHit": {
       "Cooldown": {
         "Cooldown": 0
       },
       "Interactions": [
-        {
-          "Type": "Simple",
-          "RunTime": 4.5
-        },
         "Frag_Explode",
         {
           "Type": "RemoveEntity",
@@ -39,12 +35,9 @@
         }
       ]
     },
-    "ProjectileHit": {
+    "ProjectileMiss": {
       "Cooldown": {
         "Cooldown": 0
-      },
-      "Rules": {
-        "Interrupting": ["ProjectileSpawn"]
       },
       "Interactions": [
         "Frag_Explode",

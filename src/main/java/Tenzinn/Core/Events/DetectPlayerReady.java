@@ -44,7 +44,13 @@ public class DetectPlayerReady {
         }
         else {
             openGameHud(playerRef, player);
-            RefactorTool.Respawn(playerRef);
+
+            PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
+            if (stats != null
+                    && stats.getCurrentMatch() != null
+                    && stats.getCurrentMatch().getMode().equalsIgnoreCase("dm")) {
+                RefactorTool.Respawn(playerRef);
+            }
         }
     }
 
@@ -60,10 +66,14 @@ public class DetectPlayerReady {
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
         assert thisLoot != null;
 
-        if (worldMode.equalsIgnoreCase("dm")) { RefactorTool.setAllLoot(playerRef, thisLoot); }
-        else {
-            RefactorTool.setAllLoot(playerRef, LootManager.getStarterKit());
-            thisLoot = LootManager.getStarterKit();
+        if (RefactorTool.getPlayer(playerRef) != null) {
+            PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
+            if (stats != null) {
+                GameMatch match = stats.getCurrentMatch();
+                if (match != null) {
+                    match.startTimer();
+                }
+            }
         }
 
         GameHUD newHud = new GameHUD(playerRef);
@@ -92,13 +102,6 @@ public class DetectPlayerReady {
         player.getHudManager().hideHudComponents(playerRef, HudComponent.UtilitySlotSelector);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BlockVariantSelector);
         player.getHudManager().hideHudComponents(playerRef, HudComponent.BuilderToolsMaterialSlotSelector);
-
-        if (worldMode.equalsIgnoreCase("dm")) {
-            if (RefactorTool.getPlayer(playerRef) != null) {
-                GameMatch match = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
-                if (match != null) { match.startTimer(); }
-            }
-        }
 
         LootManager.giveLoot(player, thisLoot);
         RefactorTool.launchSound(playerRef, "clic");

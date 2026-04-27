@@ -18,10 +18,30 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class OrbisOffensiveHudBridge {
 
+    private static final long RESERVE_RECOUNT_INTERVAL_MS = 750L;
+
+    private static final ConcurrentHashMap<UUID, String> LAST_VISUAL_KEY = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, String> LAST_AMMO_KEY = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, String> LAST_RESERVE_ITEM = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, Integer> LAST_RESERVE_VALUE = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, Long> LAST_RESERVE_TIME = new ConcurrentHashMap<>();
+
     private OrbisOffensiveHudBridge() {
+    }
+
+    public static void resetPlayer(UUID uuid) {
+        if (uuid == null) return;
+
+        LAST_VISUAL_KEY.remove(uuid);
+        LAST_AMMO_KEY.remove(uuid);
+        LAST_RESERVE_ITEM.remove(uuid);
+        LAST_RESERVE_VALUE.remove(uuid);
+        LAST_RESERVE_TIME.remove(uuid);
     }
 
     public static void updateAmmo(PlayerRef playerRef, @Nullable Player player, @Nullable ItemStack itemStack) {
@@ -30,8 +50,18 @@ public final class OrbisOffensiveHudBridge {
             return;
         }
 
+        UUID uuid = playerRef.getUuid();
         String itemId = itemStack.getItemId();
-        updateHeldWeaponVisual(player, itemId);
+
+        OrbisOffensiveWeaponVisuals.Visual visual = OrbisOffensiveWeaponVisuals.resolve(itemId);
+        updateHeldWeaponVisualIfChanged(uuid, player, itemId, visual);
+
+        if (visual != null && !visual.usesAmmo()) {
+            hideAmmo(player);
+            LAST_AMMO_KEY.remove(uuid);
+            return;
+        }
+
         RuntimeItemRef runtimeRef = RuntimeItemIdentity.resolve(itemStack);
         AmmoDataComponent ammoState = ItemRuntimeEcs.getComponent(runtimeRef, AmmoDataComponent.getComponentType());
 
@@ -47,6 +77,7 @@ public final class OrbisOffensiveHudBridge {
 
         if (maxAmmo == null || maxAmmo <= 0) {
             hideAmmo(player);
+            LAST_AMMO_KEY.remove(uuid);
             return;
         }
 
@@ -57,27 +88,18 @@ public final class OrbisOffensiveHudBridge {
         if (currentAmmo < 0) currentAmmo = 0;
         if (currentAmmo > maxAmmo) currentAmmo = maxAmmo;
 
-        int reserveAmmo = 0;
-
-        GunSettings gunSettings = WeaponContentApi.getSettings(itemId);
-        WeaponAmmoSettings weaponAmmo = gunSettings != null ? gunSettings.ammo() : null;
-
-        if (weaponAmmo != null) {
-            String ammoItemId = AmmoService.resolvePreferredAmmoItemId(
-                    itemStack,
-                    weaponAmmo,
-                    AmmoService.getAmmoContainer(player)
-            );
-
-            int countedAmmo = AmmoService.countAmmo(
-                    AmmoService.getAmmoContainer(player),
-                    ammoItemId
-            );
-
-            reserveAmmo = Math.max(0, countedAmmo);
-        }
+        int reserveAmmo = resolveReserveAmmo(uuid, player, itemStack);
 
         boolean reloading = ReloadManager.isReloading(playerRef);
+
+        String ammoKey = itemId + "|" + currentAmmo + "|" + reserveAmmo + "|" + reloading;
+        String previousAmmoKey = LAST_AMMO_KEY.get(uuid);
+
+        if (ammoKey.equals(previousAmmoKey)) {
+            return;
+        }
+
+        LAST_AMMO_KEY.put(uuid, ammoKey);
 
         CustomUIHud hud = player.getHudManager().getCustomHud();
 
@@ -95,25 +117,73 @@ public final class OrbisOffensiveHudBridge {
             gameHud.hideHygunsAmmo();
         }
     }
-    private static void updateHeldWeaponVisual(Player player, String itemId) {
-        CustomUIHud hud = player.getHudManager().getCustomHud();
 
-        if (!(hud instanceof GameHUD gameHud)) {
-            return;
-        }
-
-        OrbisOffensiveWeaponVisuals.Visual visual = OrbisOffensiveWeaponVisuals.resolve(itemId);
-        if (visual == null) {
-            return;
-        }
+    private static void updateHeldWeaponVisualIfChanged(UUID uuid,
+                                                        Player player,
+                                                        String itemId,
+                                                        @Nullable OrbisOffensiveWeaponVisuals.Visual visual) {
+        if (uuid == null || player == null || visual == null) return;
 
         int activeSlot = player.getInventory().getActiveHotbarSlot() + 1;
+        String visualKey = itemId + "|" + activeSlot + "|" + visual.image() + "|" + visual.crosshair() + "|" + visual.firemode();
 
-        gameHud.setHygunsWeaponVisual(
-                visual.image(),
-                visual.crosshair(),
-                visual.firemode(),
-                activeSlot
+        String previousVisualKey = LAST_VISUAL_KEY.get(uuid);
+
+        if (visualKey.equals(previousVisualKey)) {
+            return;
+        }
+
+        LAST_VISUAL_KEY.put(uuid, visualKey);
+
+        CustomUIHud hud = player.getHudManager().getCustomHud();
+
+        if (hud instanceof GameHUD gameHud) {
+            gameHud.setHygunsWeaponVisual(
+                    visual.image(),
+                    visual.crosshair(),
+                    visual.firemode(),
+                    activeSlot
+            );
+        }
+    }
+
+    private static int resolveReserveAmmo(UUID uuid, Player player, ItemStack itemStack) {
+        GunSettings gunSettings = WeaponContentApi.getSettings(itemStack.getItemId());
+        WeaponAmmoSettings weaponAmmo = gunSettings != null ? gunSettings.ammo() : null;
+
+        if (weaponAmmo == null) {
+            return 0;
+        }
+
+        var container = AmmoService.getAmmoContainer(player);
+
+        String ammoItemId = AmmoService.resolvePreferredAmmoItemId(
+                itemStack,
+                weaponAmmo,
+                container
         );
+
+        String reserveKey = itemStack.getItemId() + "|" + ammoItemId;
+        long now = System.currentTimeMillis();
+
+        String previousReserveKey = LAST_RESERVE_ITEM.get(uuid);
+        Long previousTime = LAST_RESERVE_TIME.get(uuid);
+        Integer previousValue = LAST_RESERVE_VALUE.get(uuid);
+
+        if (reserveKey.equals(previousReserveKey)
+                && previousTime != null
+                && previousValue != null
+                && now - previousTime < RESERVE_RECOUNT_INTERVAL_MS) {
+            return previousValue;
+        }
+
+        int countedAmmo = AmmoService.countAmmo(container, ammoItemId);
+        int reserveAmmo = Math.max(0, countedAmmo);
+
+        LAST_RESERVE_ITEM.put(uuid, reserveKey);
+        LAST_RESERVE_VALUE.put(uuid, reserveAmmo);
+        LAST_RESERVE_TIME.put(uuid, now);
+
+        return reserveAmmo;
     }
 }
