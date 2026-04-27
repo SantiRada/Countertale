@@ -22,6 +22,10 @@ import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
@@ -50,10 +54,29 @@ public class InstanceManager {
         return isMapLoaded;
     }
 
+    private boolean ensureWorldStorageFolders() {
+        if (worldName == null || worldName.isBlank()) return false;
+
+        try {
+            Path worldPath = Paths.get("universe", "worlds", worldName);
+            Files.createDirectories(worldPath);
+            Files.createDirectories(worldPath.resolve("chunks"));
+            return true;
+        } catch (IOException e) {
+            main.getLogger().at(Level.SEVERE).log("[Instance] Failed to create world storage folders for " + worldName + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void preloadMap(Runnable onMapReady) {
         Universe universe = Universe.get();
 
         this.worldName = mapId + "_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        if (!ensureWorldStorageFolders()) {
+            if (onMapReady != null) onMapReady.run();
+            return;
+        }
 
         universe.addWorld(this.worldName, "Flat", null).thenAccept(instanceWorld -> {
             main.getLogger().at(Level.INFO).log("[Instance] Empty arena created: " + instanceWorld.getName());
@@ -91,7 +114,6 @@ public class InstanceManager {
                 isMapLoaded = true;
 
                 main.getLogger().at(Level.INFO).log("[Instance] ✓ Instance ready [" + mapId + "]: " + worldName);
-
                 if (onMapReady != null) onMapReady.run();
             });
         });

@@ -63,7 +63,11 @@ public class InstancePool {
         if (instance != null) {
             main.getLogger().at(Level.INFO).log("[Pool] Instance delivered [" + mapId + "]. Remaining: " + poolSize(mapId));
             enqueueCreation(mapId);
-            if (whenReady != null) whenReady.run();
+
+            if (whenReady != null) {
+                HytaleServer.SCHEDULED_EXECUTOR.schedule(whenReady, 1, TimeUnit.MILLISECONDS);
+            }
+
             return instance;
         } else {
             main.getLogger().at(Level.WARNING).log("[Pool] FALLBACK on map '" + mapId + "': creating hot instance.");
@@ -136,6 +140,12 @@ public class InstancePool {
             synchronized (this) {
                 globalBeingCreated--;
                 beingCreatedPerMap.merge(mapId, -1, Integer::sum);
+
+                if (!bg.getMapLoaded()) {
+                    bg.removeInstance();
+                    main.getLogger().at(Level.WARNING).log("[Pool] Instance failed to load and was not added to pool [" + mapId + "].");
+                    return;
+                }
 
                 if (candidates.containsKey(bg)) {
                     candidates.remove(bg);

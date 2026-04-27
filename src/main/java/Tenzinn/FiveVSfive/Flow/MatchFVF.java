@@ -1,6 +1,7 @@
 package Tenzinn.FiveVSfive.Flow;
 
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Shop.EconomySystem;
 import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.LootManager;
@@ -311,8 +312,7 @@ public class MatchFVF {
         teleportPlayers(playerRefs);
     }
     public static void teleportPlayers(List<PlayerRef> playerRefs) {
-        ArrayList<Vector3d> spawns = RefactorTool.getSpawns(myMatch.getMapId(), RefactorTool.getModeForPlayer(playerRefs.getFirst()));
-        if (spawns.isEmpty()) return;
+        ArrayList<Vector3d> spawns = RefactorTool.getSpawns(myMatch.getMapId(), MapListeners.SpawnMode.FVF);        if (spawns.isEmpty()) return;
 
         assert playerRefs.getFirst().getWorldUuid() != null;
         World newWorld = Universe.get().getWorld(playerRefs.getFirst().getWorldUuid());

@@ -235,11 +235,19 @@ public class RefactorTool {
         return getModeForPlayer(playerRef);
     }
     public static SpawnMode getModeForPlayer(PlayerRef playerRef) {
-        String mode = Objects.requireNonNull(getPlayerStats(playerRef)).getCurrentMatch().getMode();
+        PlayerStats stats = getPlayerStats(playerRef);
 
-        if (mode.equalsIgnoreCase("dm")) { return SpawnMode.DM; }
+        if (stats == null || stats.getCurrentMatch() == null || stats.getCurrentMatch().getMode() == null) {
+            return SpawnMode.DM;
+        }
 
-        return SpawnMode.FVF;
+        String mode = stats.getCurrentMatch().getMode();
+
+        if (mode.equalsIgnoreCase("fvf")) {
+            return SpawnMode.FVF;
+        }
+
+        return SpawnMode.DM;
     }
     public static Player getPlayer(PlayerRef playerRef) {
         if (playerRef == null) return null;
@@ -334,16 +342,26 @@ public class RefactorTool {
     }
     // ============================================ //
     public static void setChangesInUI(GameMatch match) {
+        if (match == null) return;
+
         ArrayList<PlayerStats> playersList = new ArrayList<>(getPlayerList(match));
 
         for (PlayerStats playerStats : playersList) {
-            if(playerStats.getPlayer().getHudManager().getCustomHud() == null) continue;
+            if (playerStats == null || playerStats.getPlayerRef() == null) continue;
 
-            Object testHud = playerStats.getPlayer().getHudManager().getCustomHud();
+            Player player = getPlayer(playerStats.getPlayerRef());
+            if (player == null) continue;
 
-            if(testHud instanceof GameHUD gameHUD) { gameHUD.setData(); }
-            else if(testHud instanceof ScoreboardPage scoreboard) { scoreboard.setData(); }
-            else if(testHud instanceof ScoreboardPageFVF scoreboard) { scoreboard.setData(); }
+            Object currentHud = player.getHudManager().getCustomHud();
+            if (currentHud == null) continue;
+
+            if (currentHud instanceof GameHUD gameHUD) {
+                gameHUD.setData();
+            } else if (currentHud instanceof ScoreboardPage scoreboard) {
+                scoreboard.setData();
+            } else if (currentHud instanceof ScoreboardPageFVF scoreboard) {
+                scoreboard.setData();
+            }
         }
     }
     public static void setChangesInSlots(int value, PlayerRef playerRef) {

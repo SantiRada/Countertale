@@ -182,20 +182,19 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
                 stopErrorTimer();
                 stopCountUpdating();
                 player.getPageManager().setPage(ref, store, Page.None);
-                break;
+                return;
             case "play":
-                // Rule 2: do not start without selected maps
                 if (selected.isEmpty()) {
                     startErrorTimer();
                     return;
                 }
-                // Save player votes BEFORE queuing; QueueCommand will read them from MapVoteStore
+
                 stopErrorTimer();
                 stopCountUpdating();
                 MapVoteStore.setVotes(playerRef, new ArrayList<>(selected));
                 CommandManager.get().handleCommand(playerRef, "queue --mode=" + mode);
                 player.getPageManager().setPage(ref, store, Page.None);
-                break;
+                return;
             case "dm":
                 mode = "dm";
                 resetList();
