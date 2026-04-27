@@ -28,6 +28,8 @@ public class PlayerStats {
     public PlayerState playerState;
     public GameMatch currentMatch;
 
+    public WeaponStats utility = null;
+
     // Economy
     protected int money = 0;
     public boolean inShop = false;
@@ -44,6 +46,7 @@ public class PlayerStats {
         this.currentMatch = match;
         this.player = player;
 
+        moneySpent.add(-1);
         moneySpent.add(-1);
         moneySpent.add(-1);
         moneySpent.add(-1);
@@ -78,6 +81,7 @@ public class PlayerStats {
         moneySpent.set(0, -1);
         moneySpent.set(1, -1);
         moneySpent.set(2, -1);
+        moneySpent.set(3, -1);
     }
     // ================================================= //
     public int getKills() { return kills; }
@@ -90,6 +94,8 @@ public class PlayerStats {
         if(primaryWeapon != null) list.add(primaryWeapon);
         if(secondaryWeapon != null) list.add(secondaryWeapon);
         if(shield != null) list.add(shield);
+
+        if (utility != null) list.add(utility);
 
         return list;
     }

@@ -59,11 +59,11 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
         Vector3i blockPos = event.getTargetBlock();
         Vector3d position = new Vector3d(blockPos.x, blockPos.y, blockPos.z);
 
-        // Eliminar hologramas anteriores del mismo tipo si existen
+        // Remove previous holograms of the same type if they exist
         removeOldHolograms(pendingStatue.statueType, pendingStatue.world);
         HologramStorage.getInstance().savePosition(pendingStatue.statueType, position.x, position.y, position.z);
 
-        // Crear los dos hologramas apilados
+        // Create the two stacked holograms
         String titleLine;
         String subtitleLine;
 
@@ -82,7 +82,7 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
         createHologramLine(position, pendingStatue.world, pendingStatue.playerRef, pendingStatue.statueType, subtitleLine, 0.90);
 
         pendingStatue.playerRef.sendMessage(
-                Message.raw("[" + pendingStatue.statueType.toUpperCase() + "] asignado en ("
+                Message.raw("[" + pendingStatue.statueType.toUpperCase() + "] assigned at ("
                         + blockPos.x + ", " + blockPos.y + ", " + blockPos.z + ")").color(Color.green)
         );
     }
@@ -135,7 +135,7 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
             activeHolograms.clear();
             HologramStorage.getInstance().clearAll();
 
-            playerRef.sendMessage(Message.raw("Se eliminaron " + count + " hologramas.").color(Color.green));
+            playerRef.sendMessage(Message.raw("Removed " + count + " holograms.").color(Color.green));
         });
     }
 
@@ -164,7 +164,7 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
 
             Ref<EntityStore> newRef = world.getEntityStore().getStore().addEntity(holder, AddReason.SPAWN);
 
-            // Agregar la ref a la lista del tipo correspondiente
+            // Add the ref to the list for the corresponding type
             activeHolograms.computeIfAbsent(statueType, k -> new ArrayList<>()).add(newRef);
         });
     }

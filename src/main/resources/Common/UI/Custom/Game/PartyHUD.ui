@@ -65,11 +65,11 @@ Group #PartyHUD {
             }
             Label {
                 Style: @command;
-                Text: "/party leave: Abandonar el grupo.";
+                Text: "/party leave: Leave the party.";
             }
             Label {
                 Style: @command;
-                Text: "/party order: Pedir al lider empezar partida.";
+                Text: "/party order: Ask the leader to start the match.";
             }
         }
     }

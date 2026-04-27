@@ -323,9 +323,15 @@ public class HygunsPluginMain extends JavaPlugin {
 			var manifest = pack.getManifest();
 			String group = manifest.getGroup();
 			String name = manifest.getName();
-			boolean groupMatch = group != null && group.equalsIgnoreCase("thescar");
-			boolean nameMatch = name != null && name.equalsIgnoreCase("hyguns");
-			if (!(groupMatch && nameMatch)) {
+			boolean hyGunsPack =
+					group != null && group.equalsIgnoreCase("thescar")
+							&& name != null && name.equalsIgnoreCase("hyguns");
+
+			boolean bundledOrbisPack =
+					group != null && group.equalsIgnoreCase("Tenzinn")
+							&& name != null && name.equalsIgnoreCase("OrbisOffensive");
+
+			if (!(hyGunsPack || bundledOrbisPack)) {
 				continue;
 			}
 			if (manifest.getVersion() == null) {

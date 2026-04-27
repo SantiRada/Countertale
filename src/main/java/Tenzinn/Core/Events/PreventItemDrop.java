@@ -50,7 +50,7 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
                     CommandManager.get().handleCommand(playerRef, "shop");
                 }
                 else if(match.getState() == GameMatch.MatchState.IN_PROGRESS) {
-                    playerRef.sendMessage(Message.raw("No puedes comprar durante la ronda."));
+                    playerRef.sendMessage(Message.raw("You cannot buy during the round."));
                 }
                 else {
                     // Is in lobby in queue to FVF

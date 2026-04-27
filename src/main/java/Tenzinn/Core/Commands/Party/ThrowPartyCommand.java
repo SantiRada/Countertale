@@ -31,7 +31,7 @@ public class ThrowPartyCommand extends CommandBase {
         Player player = commandContext.senderAs(Player.class);
         PlayerRef playerRef = Universe.get().getPlayerByUsername(username.get(commandContext), NameMatching.EXACT);
         if(playerRef == null) {
-            player.sendMessage(Message.raw("No se encontró el usuario '" + username.get(commandContext) + "'").color(Color.orange));
+            player.sendMessage(Message.raw("User '" + username.get(commandContext) + "' was not found").color(Color.orange));
             return;
         }
 

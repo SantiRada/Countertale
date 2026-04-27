@@ -64,13 +64,13 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                 RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
             else {
-                // Caída, void, /kill, comando, o cualquier source anónimo
-                System.out.println("[DeathDetector] Muerte por entorno/comando, causa: " + causeId);
+                // Fall, void, /kill, command, or any anonymous source
+                System.out.println("[DeathDetector] Death by environment/command, cause: " + causeId);
                 RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
         }
 
-        // Deshabilitar la RespawnPage nativa
+        // Disable the native RespawnPage
         component.setShowDeathMenu(false);
         PlayerRef playerRef = Universe.get().getPlayerByUsername(victim.getDisplayName(),NameMatching.EXACT);
         victim.getPageManager().openCustomPage(ref, store, new DiePage(playerRef));
@@ -90,7 +90,7 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
 
             if (playerComponent.getWorld() != Universe.get().getDefaultWorld()) { RefactorTool.Respawn(playerRef); }
         } else {
-            // MODO ESPECTADOR FVF (estilo CS) PENDIENTE
+            // FVF SPECTATOR MODE (CS style) PENDING
             if(MatchFVF.validateFinishRound() <= 0) return;
 
             ArrayList<WeaponStats> loot = LootManager.getStarterKit();

@@ -35,7 +35,7 @@ public class SetStatueTypeCommand extends AbstractPlayerCommand {
         UUID playerId = playerRef.getUuid();
         StatueBlockListener.getInstance().activateFor(playerId, playerRef, world, statueType);
         playerRef.sendMessage(
-                Message.raw("Golpeá un bloque para asignarlo como [" + statueType.toUpperCase() + "].").color(Color.cyan)
+                Message.raw("Hit a block to assign it as [" + statueType.toUpperCase() + "].").color(Color.cyan)
         );
     }
 }

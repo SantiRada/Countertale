@@ -59,17 +59,24 @@ public class RefactorTool {
 
         WeaponStats newWeapon = slots.get(index - 1);
 
-        if (newWeapon.nameWeapon.equalsIgnoreCase("comingsoon")) return;
+        if (
+                newWeapon.nameWeapon.equalsIgnoreCase("coming soon")
+                        || newWeapon.giveItems.isEmpty()
+                        || newWeapon.pricing < 0
+        ) {
+            return;
+        }
 
         String message = MessageListeners.get(MessageListeners.MessageKey.CHAT_WHEN_BUYING);
         playerRef.sendMessage(Message.raw(message + newWeapon.nameWeapon).color(Color.cyan));
 
         for (PlayerStats stats : playerStatsList) {
-            if(stats.getPlayerRef() == playerRef) {
+            if (stats.getPlayerRef() != null && stats.getPlayerRef().getUuid().equals(playerRef.getUuid())) {
                 switch (newWeapon.typeWeapon.toLowerCase()) {
                     case "primary":     stats.primaryWeapon = newWeapon;    break;
                     case "secondary":   stats.secondaryWeapon = newWeapon;  break;
                     case "shield":      stats.shield = newWeapon;           break;
+                    case "utility": stats.utility = newWeapon; break;
                 }
 
                 if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) {
@@ -93,6 +100,7 @@ public class RefactorTool {
             if(item.typeWeapon.equalsIgnoreCase("primary")) playerStats.primaryWeapon = item;
             if(item.typeWeapon.equalsIgnoreCase("secondary")) { playerStats.secondaryWeapon = item; }
             if(item.typeWeapon.equalsIgnoreCase("shield")) playerStats.shield = item;
+            if (item.typeWeapon.equalsIgnoreCase("utility")) playerStats.utility = item;
         }
     }
     public static void setHealthPlayer (Player player, float value) {
@@ -113,15 +121,22 @@ public class RefactorTool {
 
         if(playerStats.shield != null) list.add(playerStats.shield);
 
+        if (playerStats.utility != null) list.add(playerStats.utility);
+
         return !list.isEmpty() ? list : null;
     }
     public static int getSizeSlots () { return slots.size(); }
     public static PlayerStats getPlayerStats(PlayerRef playerRef) {
-        if (playerStatsList.isEmpty()) return null;
+        if (playerRef == null) return null;
 
         for (PlayerStats playerStats : playerStatsList) {
-            if (playerStats.getPlayerRef().equals(playerRef)) { return playerStats; }
+            if (playerStats == null || playerStats.getPlayerRef() == null) continue;
+
+            if (playerStats.getPlayerRef().getUuid().equals(playerRef.getUuid())) {
+                return playerStats;
+            }
         }
+
         return null;
     }
     public static List<PlayerStats> getPlayerList(GameMatch match) {
@@ -144,6 +159,10 @@ public class RefactorTool {
     public static Vector3d getRandomSpawn(String nameMap) {
         ArrayList<Vector3d> spawns = new ArrayList<>(getSpawns(nameMap, SpawnMode.DM));
 
+        if (spawns.size() < 10) {
+            throw new IllegalStateException("Deathmatch map '" + nameMap + "' must have exactly 10 DM spawn locations. Found: " + spawns.size());
+        }
+
         Random random = new Random();
         int randomPosition = random.nextInt(10);
 
@@ -153,15 +172,28 @@ public class RefactorTool {
         PlayerStats playerStats = getPlayerStats(playerRef);
         assert playerStats != null;
 
-        // El mapa viene del match al que pertenece el jugador
+        // The map comes from the match the player belongs to
         String mapId = playerStats.getCurrentMatch().getMapId();
 
         ArrayList<Vector3d> spawns = getSpawns(mapId, SpawnMode.FVF);
+        if (spawns.isEmpty()) {
+            throw new IllegalStateException("No FVF spawns found for map: " + mapId);
+        }
 
         List<PlayerStats> playerList = getPlayerList(playerStats.getCurrentMatch());
-        int index = playerList.indexOf(playerStats);
+        int playerIndex = playerList.indexOf(playerStats);
+        if (playerIndex < 0) playerIndex = 0;
 
-        return spawns.get(index);
+        int team = Tenzinn.FiveVSfive.Flow.MatchFVF.validateTeamMembership(playerRef);
+
+        int split = Math.max(1, spawns.size() / 2);
+
+        if (team == 1) {
+            return spawns.get(playerIndex % split);
+        }
+
+        int secondTeamCount = Math.max(1, spawns.size() - split);
+        return spawns.get(split + (playerIndex % secondTeamCount));
     }
     // ============================================ //
     public static SpawnMode getModeForPlayer(Player player) {
@@ -236,14 +268,22 @@ public class RefactorTool {
             playerStats.isInvulnerable = true;
             newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
 
-            if (!playerStats.getCurrentMatch().isBuyPhase()) {
-                HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
-                    currentWorld.execute(() -> {
-                        playerStats.isInvulnerable = false;
-                        newHud.setEffect(PlayerStats.Effects.NULL);
-                    });
-                }, 3, TimeUnit.SECONDS);
-            }
+            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                currentWorld.execute(() -> {
+                    PlayerStats latestStats = getPlayerStats(playerRef);
+                    if (latestStats == null) return;
+
+                    latestStats.isInvulnerable = false;
+
+                    Player latestPlayer = getPlayer(playerRef);
+                    if (latestPlayer == null) return;
+
+                    CustomUIHud latestHud = latestPlayer.getHudManager().getCustomHud();
+                    if (latestHud instanceof GameHUD hud) {
+                        hud.setEffect(PlayerStats.Effects.NULL);
+                    }
+                });
+            }, 3, TimeUnit.SECONDS);
 
             playerStats.canReceivedLoot = true;
             playerStats.timerCanReceivedLoot = 15;
@@ -278,9 +318,9 @@ public class RefactorTool {
         if(testHud == null) return;
 
         if (testHud instanceof GameHUD currentHUD) {
-            if (value > 3) return;
-
-            currentHUD.setWeapons(value);
+            if (value <= 3) {
+                currentHUD.setWeapons(value);
+            }
 
             ItemStack held = PlayerInventoryAccess.getItemInHand(player);
             if (held == null) {
@@ -318,7 +358,7 @@ public class RefactorTool {
             if (getModeForPlayer(playerRef) == SpawnMode.DM) {
                 player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef));
             } else {
-                /* TODO: pantalla de fin de ronda FVF */
+                /* TODO: FVF end-of-round screen */
             }
         }
     }
@@ -327,7 +367,7 @@ public class RefactorTool {
         int playersReady = 0;
 
         for (PlayerRef ref : playerRefs) {
-            if (RefactorTool.getPlayerStats(ref) == null) { // null = en lobby, disponible
+            if (RefactorTool.getPlayerStats(ref) == null) { // null = in lobby, available
                 playersReady++;
             }
         }

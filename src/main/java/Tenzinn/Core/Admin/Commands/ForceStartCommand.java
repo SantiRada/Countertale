@@ -1,6 +1,6 @@
 package Tenzinn.Core.Admin.Commands;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.GameMatch;
 
 import Tenzinn.Core.Tools.RefactorTool;
@@ -16,9 +16,9 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 public class ForceStartCommand extends AbstractPlayerCommand {
 
-    private final Countertale plugin;
+    private final OrbisOffensive plugin;
 
-    public ForceStartCommand(String name, String description, Countertale plugin) { super(name, description); this.plugin = plugin; }
+    public ForceStartCommand(String name, String description, OrbisOffensive plugin) { super(name, description); this.plugin = plugin; }
 
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
@@ -32,7 +32,7 @@ public class ForceStartCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    public String getPermission() { return "countertale.forcestart"; }
+    public String getPermission() { return "orbisoffensive.forcestart"; }
 
     @Override
     public String getName() { return "forcestart"; }

@@ -52,6 +52,10 @@ items.Ammo_Box_Tier_II.name=Ammo Box Tier II
 items.Ammo_Box_Tier_II.description=A portable ammo chest with 5 internal slots for carrying extra ammunition
 items.Ammo_Box_Tier_III.name=Ammo Box Tier III
 items.Ammo_Box_Tier_III.description=A portable ammo chest with 7 internal slots for carrying extra ammunition
+items.Flamethrower_Goblin.name=Goblin Flamethrower
+items.Ore_Lead.description=Ore that can be smelted into lead ingots
+items.Ore_Tin.description=Ore that can be smelted into tin ingots
+items.Ore_Titanium.description=Ore that can be smelted into titanium ingots
 
 items.Frag.name=Frag Grenade
 items.Frag.description=Ammo: <color is="#ffffff">Frag Grenade</color>\nDamage: 50\nSpread: 0\nCooldown: 1\nClipsize: 1

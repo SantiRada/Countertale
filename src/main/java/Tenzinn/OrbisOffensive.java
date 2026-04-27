@@ -48,19 +48,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Countertale extends HygunsPluginMain {
+public class OrbisOffensive extends HygunsPluginMain {
 
-    // Sistema de Partidas
+    // Match system
     private MatchManager matchManager;
     private ScheduledFuture<?> matchCheckTask;
 
     private PacketFilter hotbarFilter;
     private PacketFilter detectFilter;
 
-    // Sistema de HUD de Cola
+    // Queue HUD system
     private final Map<String, QueueHud> activeQueueHuds = new ConcurrentHashMap<>();
 
-    public Countertale(@Nonnull JavaPluginInit init) { super(init); }
+    public OrbisOffensive(@Nonnull JavaPluginInit init) { super(init); }
 
     @Override
     protected void setup() {
@@ -75,7 +75,7 @@ public class Countertale extends HygunsPluginMain {
         matchManager = new MatchManager(this);
 
         // Admin Commands
-        getCommandRegistry().registerCommand(new AdminCommands("admin", "View list of commands for Countertale"));
+        getCommandRegistry().registerCommand(new AdminCommands("admin", "View list of commands for OrbisOffensive"));
         getCommandRegistry().registerCommand(new StatueCommand("statue", "Manage statue configurations."));
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
@@ -122,7 +122,7 @@ public class Countertale extends HygunsPluginMain {
 
         this.getEventRegistry().registerGlobal(AllWorldsLoadedEvent.class, event -> {
             matchManager.getInstancePool().markReady();
-            getLogger().at(Level.INFO).log("[Countertale] Universe listo, pool inicializado.");
+            getLogger().at(Level.INFO).log("[OrbisOffensive] Universe ready, pool initialized.");
         });
     }
 
@@ -226,7 +226,7 @@ public class Countertale extends HygunsPluginMain {
                 if (mapId == null) mapId = eligible.getFirst();
                 match.setMapId(mapId);
 
-                getLogger().at(Level.INFO).log("[Countertale] Mapa seleccionado para match: " + mapId + " (candidatos: " + eligible + ")");
+                getLogger().at(Level.INFO).log("[OrbisOffensive] Selected map for match: " + mapId + " (candidates: " + eligible + ")");
             }
 
             final List<PlayerRef> playersSnapshot = match.getPlayers();
@@ -251,7 +251,7 @@ public class Countertale extends HygunsPluginMain {
 
         } catch (Exception e) {
             match.setState(GameMatch.MatchState.WAITING);
-            getLogger().at(Level.SEVERE).log("[Countertale] Error al iniciar partida: " + e.getMessage());
+            getLogger().at(Level.SEVERE).log("[OrbisOffensive] Error starting match: " + e.getMessage());
         }
     }
 }

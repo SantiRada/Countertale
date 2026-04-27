@@ -82,12 +82,12 @@ Group #Modes {
             Label #DescSector1 {
                 Anchor: (Width: 800);
                 Style: (FontSize: 14, Alignment: Center, TextColor: #FFFFFF(0.5));
-                Text: "Puedes destildar los mapas que no quieres que salgan en la partida.";
+                Text: "You can uncheck maps that you do not want in the match.";
             }
             Label #DescSector2 {
                 Anchor: (Width: 800);
                 Style: (FontSize: 14, Alignment: Center, TextColor: #FFFFFF(0.5));
-                Text: "Mientras más mapas tengas tildados más rápido encontrarás partida.";
+                Text: "The more maps you keep checked, the faster you will find a match.";
             }
         }
 

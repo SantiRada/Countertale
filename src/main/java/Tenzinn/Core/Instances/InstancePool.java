@@ -1,6 +1,6 @@
 package Tenzinn.Core.Instances;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Listeners.MapListeners;
 
@@ -21,7 +21,7 @@ public class InstancePool {
     private static final long LISTENER_INTERVAL_S    = 15;
     private static final long LISTENER_INITIAL_S     = 10;
 
-    private final Countertale main;
+    private final OrbisOffensive main;
     private final MapPopularityTracker popularity;
 
     private final Map<String, Deque<InstanceManager>> pool = new ConcurrentHashMap<>();
@@ -35,7 +35,7 @@ public class InstancePool {
     private boolean universeReady    = false;
     private boolean deepCleanPending = false;
 
-    public InstancePool(Countertale main) {
+    public InstancePool(OrbisOffensive main) {
         this.main       = main;
         this.popularity = new MapPopularityTracker();
 
@@ -52,7 +52,7 @@ public class InstancePool {
         for (String mapId : MapListeners.getMapNames()) { enqueueCreation(mapId.toLowerCase()); }
 
         listenerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(this::runListenerCycle, LISTENER_INITIAL_S, LISTENER_INTERVAL_S, TimeUnit.SECONDS);
-        main.getLogger().at(Level.INFO).log("[Pool] Inicializado con mapas: " + MapListeners.getMapNames());
+        main.getLogger().at(Level.INFO).log("[Pool] Initialized with maps: " + MapListeners.getMapNames());
     }
     public void setCounter(MatchManagerInstanceCounter counter) { this.counter = counter; }
     public MapPopularityTracker getPopularity() { return popularity; }
@@ -61,12 +61,12 @@ public class InstancePool {
         InstanceManager instance = (mapPool != null) ? mapPool.pollFirst() : null;
 
         if (instance != null) {
-            main.getLogger().at(Level.INFO).log("[Pool] Instancia entregada [" + mapId + "]. Restantes: " + poolSize(mapId));
+            main.getLogger().at(Level.INFO).log("[Pool] Instance delivered [" + mapId + "]. Remaining: " + poolSize(mapId));
             enqueueCreation(mapId);
             if (whenReady != null) whenReady.run();
             return instance;
         } else {
-            main.getLogger().at(Level.WARNING).log("[Pool] FALLBACK en mapa '" + mapId + "': creando instancia en caliente.");
+            main.getLogger().at(Level.WARNING).log("[Pool] FALLBACK on map '" + mapId + "': creating hot instance.");
             popularity.recordFallback(mapId);
             instance = new InstanceManager(main, mapId);
             instance.preloadMap(whenReady);
@@ -86,7 +86,7 @@ public class InstancePool {
 
         int ceiling = calcCeiling();
 
-        main.getLogger().at(Level.INFO).log("[Pool] Ciclo listener | techo=" + ceiling + " playersReady=" + RefactorTool.getPlayersReady()
+        main.getLogger().at(Level.INFO).log("[Pool] Listener cycle | ceiling=" + ceiling + " playersReady=" + RefactorTool.getPlayersReady()
                 + " imminent=" + RefactorTool.getPlayersReadyInOneMinute());
 
         if (ceiling == 0 && RefactorTool.getPlayersReadyInOneMinute() < 10) {
@@ -119,7 +119,7 @@ public class InstancePool {
         if (!universeReady) return;
         if (!canCreateInstance())  return;
         if (globalBeingCreated >= MAX_CREATION_RATE) {
-            main.getLogger().at(Level.FINE).log("[Pool] Rate limit alcanzado (" + MAX_CREATION_RATE + "). Se creará en el próximo ciclo.");
+            main.getLogger().at(Level.FINE).log("[Pool] Rate limit reached (" + MAX_CREATION_RATE + "). It will be created in the next cycle.");
             return;
         }
 
@@ -129,7 +129,7 @@ public class InstancePool {
         globalBeingCreated++;
         beingCreatedPerMap.merge(mapId, 1, Integer::sum);
 
-        main.getLogger().at(Level.INFO).log("[Pool] Iniciando preload [" + mapId + "]. En creación global: " + globalBeingCreated);
+        main.getLogger().at(Level.INFO).log("[Pool] Starting preload [" + mapId + "]. Global creating: " + globalBeingCreated);
 
         InstanceManager bg = new InstanceManager(main, mapId);
         bg.preloadMap(() -> {
@@ -140,11 +140,11 @@ public class InstancePool {
                 if (candidates.containsKey(bg)) {
                     candidates.remove(bg);
                     bg.removeInstance();
-                    main.getLogger().at(Level.INFO).log("[Pool] Instancia creada pero ya no necesaria [" + mapId + "]. Destruida.");
+                    main.getLogger().at(Level.INFO).log("[Pool] Instance created but no longer needed [" + mapId + "]. Destroyed.");
                 } else {
                     Deque<InstanceManager> mapPool = pool.computeIfAbsent(mapId, k -> new ArrayDeque<>());
                     mapPool.addLast(bg);
-                    main.getLogger().at(Level.INFO).log("[Pool] ✓ Instancia lista [" + mapId + "]. Pool=" + mapPool.size() + " en creación global=" + globalBeingCreated);
+                    main.getLogger().at(Level.INFO).log("[Pool] Instance ready [" + mapId + "]. Pool=" + mapPool.size() + " global creating=" + globalBeingCreated);
                 }
             }
         });
@@ -162,7 +162,7 @@ public class InstancePool {
                 it.remove();
                 marked++;
                 main.getLogger().at(Level.INFO).log(
-                        "[Pool] Instancia marcada candidata [" + mapId + "]. TTL=5min");
+                        "[Pool] Instance marked as candidate [" + mapId + "]. TTL=5min");
             }
         }
     }
@@ -175,12 +175,12 @@ public class InstancePool {
             if (now - entry.getValue() >= CANDIDATE_TTL_MS) {
                 entry.getKey().removeInstance();
                 it.remove();
-                main.getLogger().at(Level.INFO).log("[Pool] Candidata destruida por TTL vencido.");
+                main.getLogger().at(Level.INFO).log("[Pool] Candidate destroyed due to expired TTL.");
             }
         }
     }
     private void scheduleDeepClean() {
-        main.getLogger().at(Level.INFO).log("[Pool] Servidor libre. Programando limpieza profunda.");
+        main.getLogger().at(Level.INFO).log("[Pool] Server idle. Scheduling deep cleanup.");
 
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
             synchronized (this) {
@@ -189,7 +189,7 @@ public class InstancePool {
                     return;
                 }
 
-                main.getLogger().at(Level.INFO).log("[Pool] Ejecutando limpieza profunda.");
+                main.getLogger().at(Level.INFO).log("[Pool] Running deep cleanup.");
 
                 for (InstanceManager inst : new ArrayList<>(candidates.keySet())) {
                     inst.removeInstance();
@@ -203,7 +203,7 @@ public class InstancePool {
 
                 cleanOrphanedWorlds();
 
-                main.getLogger().at(Level.INFO).log("[Pool] Limpieza profunda completada.");
+                main.getLogger().at(Level.INFO).log("[Pool] Deep cleanup completed.");
                 deepCleanPending = false;
             }
         }, 30, TimeUnit.SECONDS);
@@ -220,7 +220,7 @@ public class InstancePool {
         boolean ceilingRose = (newReadyCount / 10) > (prevCount / 10);
 
         if (ceilingRose || newReadyCount == 10) {
-            main.getLogger().at(Level.FINE).log("[Pool] Techo subió por jugador disponible. Encolando precarga.");
+            main.getLogger().at(Level.FINE).log("[Pool] Ceiling increased due to available player. Enqueuing preload.");
 
             String priorityMap = popularity.getMapsSortedByPriority().stream().findFirst().orElse(null);
             if (priorityMap != null) enqueueCreation(priorityMap);
@@ -231,7 +231,7 @@ public class InstancePool {
         boolean ceilingFell = (prevCount / 10) > (newReadyCount / 10);
 
         if (ceilingFell) {
-            main.getLogger().at(Level.FINE).log("[Pool] Techo bajó por desconexión. Marcando candidata.");
+            main.getLogger().at(Level.FINE).log("[Pool] Ceiling dropped due to disconnect. Marking candidate.");
             String priorityMap = popularity.getMapsSortedByPriority().stream().findFirst().orElse(null);
             if (priorityMap != null) markExcess(priorityMap, 1);
         }
@@ -242,7 +242,7 @@ public class InstancePool {
         int inCand = candidates.size();
 
         if ((inUse + inPool + inCand + globalBeingCreated) >= MAX_TOTAL_INSTANCES) {
-            main.getLogger().at(Level.WARNING).log("[Pool] Límite global alcanzado (" + MAX_TOTAL_INSTANCES + ").");
+            main.getLogger().at(Level.WARNING).log("[Pool] Global limit reached (" + MAX_TOTAL_INSTANCES + ").");
             return false;
         }
         return true;
@@ -265,13 +265,13 @@ public class InstancePool {
                         String name = dir.getFileName().toString();
                         if (universe.getWorld(name) == null) {
                             com.hypixel.hytale.server.core.util.io.FileUtil.deleteDirectory(dir);
-                            main.getLogger().at(Level.INFO).log("[Pool] Mundo huérfano eliminado: " + name);
+                            main.getLogger().at(Level.INFO).log("[Pool] Orphan world removed: " + name);
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            main.getLogger().at(Level.WARNING).log("[Pool] Error limpiando mundos huérfanos: " + e.getMessage());
+            main.getLogger().at(Level.WARNING).log("[Pool] Error cleaning orphan worlds: " + e.getMessage());
         }
     }
     public synchronized void shutdown() {
@@ -285,16 +285,16 @@ public class InstancePool {
         candidates.clear();
     }
     public synchronized String getStatusSummary() {
-        StringBuilder sb = new StringBuilder("[Pool] Estado:\n");
+        StringBuilder sb = new StringBuilder("[Pool] Status:\n");
         for (String mapId : MapListeners.getMapNames()) {
             sb.append("  ").append(mapId)
               .append(" | pool=").append(poolSize(mapId))
-              .append(" creando=").append(beingCreatedPerMap.getOrDefault(mapId, 0))
+              .append(" | creating=").append(beingCreatedPerMap.getOrDefault(mapId, 0))
               .append("\n");
         }
-        sb.append("  candidatas=").append(candidates.size())
-          .append(" | techo=").append(calcCeiling())
-          .append(" | globalCreando=").append(globalBeingCreated);
+        sb.append("  candidates=").append(candidates.size())
+          .append(" | ceiling=").append(calcCeiling())
+          .append(" | globalCreating=").append(globalBeingCreated);
         return sb.toString();
     }
     public synchronized int size()           { return pool.values().stream().mapToInt(Deque::size).sum(); }

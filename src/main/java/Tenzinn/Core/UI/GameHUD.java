@@ -1,5 +1,6 @@
 package Tenzinn.Core.UI;
 
+import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Objects.PlayerStats;
@@ -87,7 +88,7 @@ public class GameHUD extends CustomUIHud {
 
         WeaponStats shield = loot.stream().filter(ps -> ps.typeWeapon.equalsIgnoreCase("shield")).findFirst().orElse(null);
         if (shield == null) {
-            playerRef.sendMessage(Message.raw("No se encuentra escudo en este jugador."));
+            playerRef.sendMessage(Message.raw("No shield found for this player."));
             return;
         }
 
@@ -97,13 +98,13 @@ public class GameHUD extends CustomUIHud {
     public void setWeapons(int value) {
         if (uiBuilder == null) return;
         if (RefactorTool.getSizeSlots() <= 0) {
-            playerRef.sendMessage(Message.raw("No cargaron los slots.").color(Color.red));
+            playerRef.sendMessage(Message.raw("Slots did not load.").color(Color.red));
             return;
         }
 
         ArrayList<WeaponStats> loot = playerStats.getLoot();
         if (loot.isEmpty()) {
-            playerRef.sendMessage(Message.raw("No cargó el loot.").color(Color.red));
+            playerRef.sendMessage(Message.raw("Loot did not load.").color(Color.red));
             return;
         }
 
@@ -176,9 +177,13 @@ public class GameHUD extends CustomUIHud {
         UUID uuid = playerRef.getUuid();
 
         float current = PlayerHealthTracker.getCurrentHealth(uuid);
-        float max = PlayerHealthTracker.getCurrentHealth(uuid);
+        float max = PlayerHealthTracker.getMaxHealth(uuid);
 
-        setHealth((int)current, (int)max);
+        if (max <= 0) {
+            max = 100f;
+        }
+
+        setHealth((int) current, (int) max);
     }
     public void setShopTimer() {
         uiBuilder.set("#ShopSectorTimer.Visible", true);
@@ -209,6 +214,11 @@ public class GameHUD extends CustomUIHud {
     }
     public void setInvulnerability() {
         if (mode.equalsIgnoreCase("fvf")) return;
+
+        if (invTask != null && !invTask.isDone()) {
+            invTask.cancel(false);
+            invTask = null;
+        }
 
         uiBuilder.set("#InvulnerabilitySector.Visible", true);
         invTimer = 3;
@@ -288,7 +298,15 @@ public class GameHUD extends CustomUIHud {
                 int seconds = remainingSeconds % 60;
                 String timerText = String.format("%02d:%02d", minutes, seconds);
 
-                if(remainingSeconds > 0) { uiBuilder.set("#TextTimer.TextSpans", Message.raw(timerText)); update(true, uiBuilder); }
+                uiBuilder.set("#TextTimer.TextSpans", Message.raw(timerText));
+                update(true, uiBuilder);
+
+                if (remainingSeconds <= 0 || stats.getCurrentMatch().getState() == GameMatch.MatchState.FINISHED) {
+                    if (timerTask != null && !timerTask.isDone()) {
+                        timerTask.cancel(false);
+                        timerTask = null;
+                    }
+                }
             } catch (Exception e) { if (timerTask != null) timerTask.cancel(false); }
         }, 0, 1, TimeUnit.SECONDS);
     }
@@ -349,7 +367,7 @@ public class GameHUD extends CustomUIHud {
                 uiBuilder.set("#Weapon01.Background", Value.ref("Game/images/weapons/Weapons.ui", image + "on"));
             } else if (activeSlot == 2) {
                 uiBuilder.set("#Weapon02.Background", Value.ref("Game/images/weapons/Weapons.ui", image + "on"));
-            } else if (activeSlot >= 3) {
+            } else if (activeSlot == 3) {
                 uiBuilder.set("#Weapon03.Background", Value.ref("Game/images/weapons/Weapons.ui", image + "on"));
             }
         }

@@ -47,16 +47,27 @@ public class MatchDeathmatch {
     }
 
     public static void onEndMatch() {
+        if (myMatch == null || myMatch.getState() == GameMatch.MatchState.FINISHED) {
+            stopTimer();
+            return;
+        }
+
+        remainingSeconds = 0;
+        stopTimer();
+
         World world = Universe.get().getWorld(
                 Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
         assert world != null;
 
-        // Marcar la partida como FINISHED y mostrar pantallas de fin de juego
         world.execute(() -> RefactorTool.finishGame(myMatch.getPlayers(), myMatch));
     }
 
     public static int getTimer()  { return remainingSeconds; }
     public static void stopTimer() {
-        if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false);
+        if (timerTask != null && !timerTask.isDone()) {
+            timerTask.cancel(false);
+        }
+
+        timerTask = null;
     }
 }

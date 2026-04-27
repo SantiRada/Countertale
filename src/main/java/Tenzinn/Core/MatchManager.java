@@ -1,6 +1,6 @@
 package Tenzinn.Core;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.Instances.MapVoteStore;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MessageListeners;
@@ -24,9 +24,9 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
     private final List<GameMatch>            activeMatches;
     private final Map<PlayerStats, GameMatch> playerMatches;
     private final InstancePool               instancePool;
-    private final Countertale                main;
+    private final OrbisOffensive                main;
 
-    public MatchManager(Countertale main) {
+    public MatchManager(OrbisOffensive main) {
         this.main          = main;
         this.activeMatches = new ArrayList<>();
         this.playerMatches = new ConcurrentHashMap<>();
@@ -54,12 +54,12 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
             return null;
         }
 
-        // Si el jugador no trajo votos (acceso directo sin ModesPage), acepta todos los mapas
+        // If the player brought no votes (direct access without ModesPage), accept all maps.
         List<String> effectiveAllowed = (allowedMaps == null || allowedMaps.isEmpty())
                 ? new ArrayList<>(MapListeners.getMapNames())
                 : allowedMaps;
 
-        // Buscar partida compatible: mismo modo Y al menos un mapa en común
+        // Find a compatible match: same mode and at least one map in common.
         Optional<GameMatch> availableMatch = activeMatches.stream()
                 .filter(m -> m.getState() == GameMatch.MatchState.WAITING)
                 .filter(m -> !m.isFull())
@@ -74,14 +74,14 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
             if (!match.getPlayers().contains(playerRef)) {
                 match.addPlayer(playerRef);
             }
-            // Reducir los mapas elegibles a la intersección con los del nuevo jugador
+            // Reduce eligible maps to the intersection with the new player's maps.
             match.intersectEligibleMaps(effectiveAllowed);
 
             main.getLogger().at(Level.INFO).log(
-                    "[MatchManager] Jugador unido a match existente. Mapas elegibles restantes: "
+                    "[MatchManager] Player joined existing match. Remaining eligible maps: "
                     + match.getEligibleMaps());
         } else {
-            // Nueva partida; la instancia se asigna cuando se complete en startMatch
+            // New match; the instance is assigned when startMatch completes.
             match = new GameMatch();
             match.addPlayer(playerRef);
             match.setMode(mode);
@@ -89,7 +89,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
             activeMatches.add(match);
 
             main.getLogger().at(Level.INFO).log(
-                    "[MatchManager] Nueva partida creada. Mapas elegibles: " + effectiveAllowed);
+                    "[MatchManager] New match created. Eligible maps: " + effectiveAllowed);
         }
 
         PlayerStats playerStats = new PlayerStats(playerRef, RefactorTool.getPlayer(playerRef), match);
@@ -103,14 +103,14 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
 
         if (playerStats == null) {
             main.getLogger().at(Level.WARNING).log(
-                    "removePlayerFromMatch: PlayerStats no encontrado para " + playerRef.getUuid());
+                    "removePlayerFromMatch: PlayerStats not found for " + playerRef.getUuid());
             return false;
         }
 
         GameMatch match = playerMatches.get(playerStats);
         RefactorTool.setQuitPlayerStats(playerStats);
 
-        // Limpiar votos pendientes del jugador (por si salió sin consumirlos del todo)
+        // Clear pending player votes (in case they left before consuming all of them).
         MapVoteStore.clearVotes(playerRef);
 
         if (match == null) return false;
@@ -126,12 +126,12 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
                 if (match.getMapId() != null && match.getInstance() != null) {
                     instancePool.onMatchFinished(match.getMapId(), match.getInstance());
                 } else if (match.getInstance() != null) {
-                    // Partida que nunca empezó pero ya tenía instancia asignada
+                    // Match that never started but already had an assigned instance.
                     match.removeInstance();
                 }
 
                 activeMatches.remove(match);
-                main.getLogger().at(Level.INFO).log("[MatchManager] Match vacío finalizado y removido.");
+                main.getLogger().at(Level.INFO).log("[MatchManager] Empty match finished and removed.");
             });
         }
 
@@ -162,7 +162,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
                 .filter(m -> m.getState() == GameMatch.MatchState.WAITING).count();
         int inProgress = (int) activeMatches.stream()
                 .filter(m -> m.getState() == GameMatch.MatchState.IN_PROGRESS).count();
-        return String.format("Partida en espera: %d | En curso: %d | Totales: %d",
+        return String.format("Waiting matches: %d | In progress: %d | Total: %d",
                 waiting, inProgress, total);
     }
 
@@ -175,7 +175,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
                     m.getState() == GameMatch.MatchState.STARTING)
                 inGame += m.getPlayerCount();
         }
-        return String.format("Jugadores en cola: %d | En partida: %d | Totales: %d",
+        return String.format("Players in queue: %d | In match: %d | Total: %d",
                 waiting, inGame, playerMatches.size());
     }
 
@@ -184,7 +184,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
                 .filter(m -> m.getInstance() != null && m.getInstance().getMapLoaded()).count();
         long preloading = activeMatches.stream()
                 .filter(m -> m.getInstance() != null && !m.getInstance().getMapLoaded()).count();
-        return String.format("Pool listo: %d | Pool en creación: %d | En uso: %d | Precargando para match: %d",
+        return String.format("Pool ready: %d | Pool creating: %d | In use: %d | Preloading for match: %d",
                 instancePool.size(), instancePool.getBeingCreated(), loaded, preloading);
     }
 }

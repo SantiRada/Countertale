@@ -21,7 +21,7 @@ public class PartyManager {
     public static void CreateParty(PlayerRef playerRef) {
         for (PartyObject partyObject : totalParty) {
             if (partyObject.players.stream().anyMatch(player -> player == playerRef)) {
-                playerRef.sendMessage(Message.raw("No puedes crear otro grupo si formas parte de uno. Puedes abandonarlo con /party leave"));
+                playerRef.sendMessage(Message.raw("You cannot create another party if you are already in one. You can leave it with /party leave"));
                 return;
             }
         }
@@ -36,19 +36,19 @@ public class PartyManager {
         String leader = GetLeaderById(id);
         if(leader == null) return;
 
-        // Revisar si el usuario ya tiene una invitación
+        // Check whether the user already has an invitation
         int testInvitation = GetInvitationByPlayer(playerRef);
         if(testInvitation >= 0) {
-            playerRef.sendMessage(Message.raw("Tienes una invitación pendiente. Otros grupos no pueden invitarte hasta que la respondas.").color(Color.orange));
+            playerRef.sendMessage(Message.raw("You have a pending invitation. Other parties cannot invite you until you respond.").color(Color.orange));
             return;
         }
 
-        SendMessageToLeader(id, "Se envió la invitación al jugador " + playerRef.getUsername());
+        SendMessageToLeader(id, "Invitation sent to player " + playerRef.getUsername());
 
-        // Enviar el mensaje de la invitación
-        playerRef.sendMessage(Message.raw("Has sido invitado a unirte al grupo de " + leader + " para aceptar escribe /party join").color(Color.cyan));
+        // Send the invitation message
+        playerRef.sendMessage(Message.raw("You were invited to join " + leader + "'s party. Type /party join to accept.").color(Color.cyan));
 
-        // Crear invitación en memoria
+        // Store invitation in memory
         InvitationParty newIntivation = new InvitationParty(id, playerRef);
         totalInvitations.add(newIntivation);
     }
@@ -59,7 +59,7 @@ public class PartyManager {
         int indexParty = GetIndexPartyById(totalInvitations.get(index).id);
         if (indexParty < 0) return;
 
-        playerRef.sendMessage(Message.raw("Has entrado al grupo de " + totalParty.get(indexParty).leaderUsername).color(Color.orange));
+        playerRef.sendMessage(Message.raw("You joined " + totalParty.get(indexParty).leaderUsername + "'s party").color(Color.orange));
         totalParty.get(indexParty).AddPlayer(playerRef);
     }
     public static void DeclineParty(PlayerRef playerRef) {
@@ -69,10 +69,10 @@ public class PartyManager {
         int id = GetIndexPartyById(totalInvitations.get(index).id);
         if (id < 0) return;
 
-        totalParty.get(id).players.getFirst().sendMessage(Message.raw("El jugador" + playerRef.getUsername() + " rechazó tu invitación.").color(Color.orange));
+        totalParty.get(id).players.getFirst().sendMessage(Message.raw("Player " + playerRef.getUsername() + " declined your invitation.").color(Color.orange));
         String leader = totalParty.get(id).leaderUsername;
 
-        playerRef.sendMessage(Message.raw("Rechazaste la invitación al grupo de " + leader));
+        playerRef.sendMessage(Message.raw("You declined the invitation to " + leader + "'s party"));
         totalInvitations.remove(index);
     }
     public static void LeaveParty(PlayerRef playerRef) {
@@ -102,7 +102,7 @@ public class PartyManager {
         int index = GetIndexPartyById(id);
         if (index < 0) return;
 
-        totalParty.get(index).players.getFirst().sendMessage(Message.raw(playerRef.getUsername() + ", ¡pide que inicies la partida!").color(Color.yellow));
+        totalParty.get(index).players.getFirst().sendMessage(Message.raw(playerRef.getUsername() + ", ask to start the match!").color(Color.yellow));
     }
     public static void ThrowParty(PlayerRef playerRef) {
         int id = GetPartyIdForPlayer(playerRef);
@@ -113,7 +113,7 @@ public class PartyManager {
 
         totalParty.get(index).RemovePlayer(playerRef);
 
-        totalParty.get(index).players.getFirst().sendMessage(Message.raw("Has eliminado al jugador " + playerRef.getUsername() + " del grupo.").color(Color.yellow));
+        totalParty.get(index).players.getFirst().sendMessage(Message.raw("You removed player " + playerRef.getUsername() + " from the party.").color(Color.yellow));
     }
     // ============================================= //
     private static int GetInvitationByPlayer(PlayerRef playerRef) {

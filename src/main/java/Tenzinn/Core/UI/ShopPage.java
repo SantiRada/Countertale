@@ -68,8 +68,16 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
         int index = Integer.parseInt(action);
 
         WeaponStats newWeapon = RefactorTool.slots.get(index - 1);
-        if (newWeapon.nameWeapon.equalsIgnoreCase("coming soon")) { RefactorTool.launchSound(playerRef, "fail"); }
-        else { RefactorTool.launchSound(playerRef, "clic"); }
+        if (
+                newWeapon.nameWeapon.equalsIgnoreCase("coming soon")
+                        || newWeapon.giveItems.isEmpty()
+                        || newWeapon.pricing < 0
+        ) {
+            RefactorTool.launchSound(playerRef, "fail");
+            return;
+        }
+
+        RefactorTool.launchSound(playerRef, "clic");
 
         if (mode == SpawnMode.DM) { RefactorTool.setLoot(playerRef, index); }
         else {
@@ -93,12 +101,12 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
                     }
 
                     if(pos >= 0) {
-                        playerStats.giveMoney(playerStats.moneySpent.get(pos) > 0 ? playerStats.moneySpent.get(pos) : 0); // Devolver dinero previo
+                        playerStats.giveMoney(playerStats.moneySpent.get(pos) > 0 ? playerStats.moneySpent.get(pos) : 0); // Refund previous amount
                         playerRef.sendMessage(Message.raw("Changed " + prevWeapon.nameWeapon + " to " + newWeapon.nameWeapon));
 
                         playerStats.moneySpent.set(pos, newWeapon.pricing);
                     } else {
-                        playerRef.sendMessage(Message.raw("El sistema no encontró el arma previa"));
+                        playerRef.sendMessage(Message.raw("The system could not find the previous weapon"));
                     }
                 }
 
@@ -164,7 +172,9 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
     }
 
     private void hideEconomy() {
-        for (int numberSlot = 1; numberSlot < (ShopData.getSizeNames()); numberSlot++) { uiBuilder.set("#Economic" + numberSlot + ".Visible", false); }
+        for (int numberSlot = 1; numberSlot <= ShopData.getSizeNames(); numberSlot++) {
+            uiBuilder.set("#Economic" + numberSlot + ".Visible", false);
+        }
         uiBuilder.set("#Money.Visible", false);
         sendUpdate();
     }

@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class CountertaleWeaponVisuals {
+public final class OrbisOffensiveWeaponVisuals {
 
     public record Visual(String image, String crosshair, String firemode, boolean usesAmmo) {
     }
@@ -12,27 +12,33 @@ public final class CountertaleWeaponVisuals {
     private static final Map<String, Visual> VISUALS = new HashMap<>();
 
     static {
-        put("Weapon_AK47", "Ak47", "Weapon", "Automatic", true);
-        put("Weapon_M4A1s", "M4a1s", "Weapon", "Automatic", true);
+        put("Weapon_Glock18", "Glock18", "Weapon", "Single", true);
+        put("Weapon_USPS", "USPS", "Weapon", "Single", true);
+        put("Weapon_FiveSeven", "FiveSeven", "Weapon", "Single", true);
+        put("Weapon_ColtRevolver", "ColtRevolver", "Weapon", "Single", true);
+        put("Weapon_DesertEagle", "DesertEagle", "Weapon", "Single", true);
+
         put("Weapon_Mac10", "Mac10", "Weapon", "Automatic", true);
         put("Weapon_MP9", "Mp9", "Weapon", "Automatic", true);
         put("Weapon_P90", "P90", "Weapon", "Automatic", true);
+        put("Weapon_Thompson", "Thompson", "Weapon", "Automatic", true);
 
-        put("Weapon_DesertEagle", "DesertEagle", "Weapon", "Single", true);
-        put("Weapon_Glock18", "Usp", "Weapon", "Single", true);
-        put("Weapon_USPS", "Usp", "Weapon", "Single", true);
-        put("Weapon_FiveSeven", "DesertEagle", "Weapon", "Single", true);
+        put("Weapon_AK47", "Ak47", "Weapon", "Automatic", true);
+        put("Weapon_M4A1s", "M4a1s", "Weapon", "Automatic", true);
 
         put("Weapon_AWP", "Awp", "Weapon", "Single", true);
-        put("Weapon_Barret50", "Awp", "Weapon", "Single", true);
+        put("Weapon_Barret50", "Barret50", "Weapon", "Single", true);
+        put("Weapon_DoubleBarrel", "DoubleBarrel", "Shotgun", "Single", true);
+        put("Weapon_Flamethrower", "Flamethrower", "Weapon", "Automatic", true);
 
-        put("Weapon_Flamethrower", "Mac10", "Weapon", "Automatic", true);
+        put("Weapon_Frag", "Frag", "Weapon", "Single", false);
+        put("Weapon_SprayCan", "SprayCan", "Weapon", "Single", false);
 
-        put("Weapon_Daggers_Cobalt", "Knife", "Knife", "Melee", false);
         put("Knife", "Knife", "Knife", "Melee", false);
+        put("Weapon_Daggers_Cobalt", "Knife", "Knife", "Melee", false);
     }
 
-    private CountertaleWeaponVisuals() {
+    private OrbisOffensiveWeaponVisuals() {
     }
 
     private static void put(String itemId, String image, String crosshair, String firemode, boolean usesAmmo) {

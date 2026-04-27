@@ -18,16 +18,16 @@ public class RevenuesConfig {
                     .getLocation()
                     .toURI());
 
-            File configFile = new File(jar.getParentFile(), "Countertale/revenues.json");
+            File configFile = new File(jar.getParentFile(), "OrbisOffensive/revenues.json");
             return configFile.getAbsolutePath();
 
         } catch (Exception e) {
-            System.err.println("Error obteniendo path: " + e.getMessage());
+            System.err.println("Error getting path: " + e.getMessage());
             return null;
         }
     }
 
-    // 📖 Leer JSON
+    // Read JSON
     public static JsonObject load() {
         try {
             Path path = Paths.get(getConfigPath());
@@ -35,12 +35,12 @@ public class RevenuesConfig {
             return gson.fromJson(content, JsonObject.class);
 
         } catch (Exception e) {
-            System.err.println("Error leyendo JSON: " + e.getMessage());
+            System.err.println("Error reading JSON: " + e.getMessage());
             return null;
         }
     }
 
-    // ✏️ Editar valor directo dentro de "revenues"
+    // Edit a direct value inside "revenues"
     public static void updateValue(String key, int newValue) {
         try {
             Path path = Paths.get(getConfigPath());
@@ -49,13 +49,13 @@ public class RevenuesConfig {
             JsonObject root = gson.fromJson(content, JsonObject.class);
             JsonObject revenues = root.getAsJsonObject("revenues");
 
-            if (revenues == null) { System.err.println("No existe 'revenues'"); return; }
+            if (revenues == null) { System.err.println("'revenues' does not exist"); return; }
             revenues.addProperty(key, newValue);
 
             Files.write(path, gson.toJson(root).getBytes());
 
         } catch (Exception e) {
-            System.err.println("Error actualizando JSON: " + e.getMessage());
+            System.err.println("Error updating JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -70,7 +70,7 @@ public class RevenuesConfig {
             JsonObject root = gson.fromJson(content, JsonObject.class);
             JsonObject revenues = root.getAsJsonObject("revenues");
 
-            if (revenues == null) { System.err.println("No existe 'revenues'"); return new ArrayList<>(); }
+            if (revenues == null) { System.err.println("'revenues' does not exist"); return new ArrayList<>(); }
 
             for (var entry : revenues.entrySet()) {
                 String key = entry.getKey();
@@ -93,7 +93,7 @@ public class RevenuesConfig {
             JsonObject root = gson.fromJson(content, JsonObject.class);
             JsonObject revenues = root.getAsJsonObject("revenues");
 
-            if (revenues == null) { System.err.println("No existe 'revenues'"); return -1; }
+            if (revenues == null) { System.err.println("'revenues' does not exist"); return -1; }
 
             for (var entry : revenues.entrySet()) {
                 if(entry.getKey().equals(key)) {

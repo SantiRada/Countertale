@@ -1,6 +1,6 @@
 package Tenzinn.Core.Commands;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.UI.ModesPage;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Instances.MapVoteStore;
@@ -26,10 +26,10 @@ import java.util.List;
 
 public class QueueCommand extends AbstractPlayerCommand {
 
-    private final Countertale plugin;
+    private final OrbisOffensive plugin;
     private final OptionalArg<String> mode;
 
-    public QueueCommand(String name, String description, Countertale plugin) {
+    public QueueCommand(String name, String description, OrbisOffensive plugin) {
         super(name, description);
         this.plugin = plugin;
         mode = withOptionalArg("mode", "Select mode for add to queue", ArgTypes.STRING);
@@ -41,7 +41,7 @@ public class QueueCommand extends AbstractPlayerCommand {
         RefactorTool.launchSound(playerRef, "clic");
         String modeArg = mode.get(commandContext);
 
-        // Sin modo → abrir el selector de modo/mapa (ModesPage)
+        // No mode -> open the mode/map selector (ModesPage)
         if (modeArg.equalsIgnoreCase("null") || modeArg.isBlank() || modeArg.isEmpty()) {
             Player player = commandContext.senderAs(Player.class);
             player.getPageManager().openCustomPage(ref, store, new ModesPage(playerRef));
@@ -59,7 +59,7 @@ public class QueueCommand extends AbstractPlayerCommand {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
 
-        // Leer los votos guardados por ModesPage (o todos los mapas si acceso directo)
+        // Read votes saved by ModesPage (or all maps when accessed directly)
         List<String> votes = MapVoteStore.getVotes(playerRef);
         MapVoteStore.clearVotes(playerRef);
 
@@ -69,7 +69,7 @@ public class QueueCommand extends AbstractPlayerCommand {
         player.sendMessage(Message.raw(String.format(MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
                 + " [%s] (%d/10 players)", match.getMatchId().toString().substring(0, 8), match.getPlayerCount())).color(Color.orange));
 
-        // Mostrar QueueHud con la selección de mapas del jugador
+        // Show QueueHud with the player's selected maps
         plugin.showQueueHud(playerRef, player, match, votes);
         plugin.notifyMatchPlayersAndUpdateHuds(match);
 
@@ -82,7 +82,7 @@ public class QueueCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    public String getPermission() { return "countertale.queue"; }
+    public String getPermission() { return "orbisoffensive.queue"; }
 
     @Override
     public String getName() { return "queue"; }

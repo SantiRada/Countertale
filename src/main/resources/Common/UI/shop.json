@@ -16,7 +16,7 @@
           "typeWeapon": "shield",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": 650
         },
         {
           "id": [
@@ -31,27 +31,27 @@
           "typeWeapon": "shield",
           "typeCross": "Knife",
           "firemode": "Melee",
-          "price": 100
+          "price": 1000
         },
         {
-          "id": [],
+          "id": [ "Weapon_Frag" ],
           "number": "3",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Frag Grenade",
+          "image": "Frag",
+          "typeWeapon": "utility",
+          "typeCross": "Weapon",
+          "firemode": "Single",
+          "price": 300
         },
         {
-          "id": [],
+          "id": [ "Weapon_SprayCan" ],
           "number": "4",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Spray Can",
+          "image": "SprayCan",
+          "typeWeapon": "utility",
+          "typeCross": "Weapon",
+          "firemode": "Single",
+          "price": 200
         },
         {
           "id": [],
@@ -69,44 +69,44 @@
       "name": "Pistols",
       "content": [
         {
-          "id": [ "Weapon_Sword_Mithril" ],
+          "id": [ "Weapon_Glock18" ],
           "number": "1",
-          "name": "Glock 18",
-          "image": "Usp",
+          "name": "Glock-18",
+          "image": "Glock18",
           "typeWeapon": "Secondary",
           "typeCross": "Weapon",
           "firemode": "Single",
-          "price": 100
+          "price": 200
         },
         {
-          "id": [ "Weapon_Sword_Adamantite" ],
+          "id": [ "Weapon_USPS" ],
           "number": "2",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "USP-S",
+          "image": "USPS",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single",
+          "price": 200
         },
         {
-          "id": [ "Weapon_Sword_Cobalt" ],
+          "id": [ "Weapon_FiveSeven" ],
           "number": "3",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Five-SeveN",
+          "image": "FiveSeven",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single",
+          "price": 500
         },
         {
-          "id": [ "Weapon_Sword_Thorium" ],
+          "id": [ "Weapon_ColtRevolver" ],
           "number": "4",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Colt Revolver",
+          "image": "ColtRevolver",
+          "typeWeapon": "Secondary",
+          "typeCross": "Weapon",
+          "firemode": "Single",
+          "price": 600
         },
         {
           "id": [ "Weapon_DesertEagle" ],
@@ -116,55 +116,55 @@
           "typeWeapon": "Secondary",
           "typeCross": "Weapon",
           "firemode": "Single",
-          "price": 100
+          "price": 700
         }
       ]
     },
     {
-      "name": "Mid-Tier",
+      "name": "SMGs",
       "content": [
         {
           "id": [ "Weapon_Mac10" ],
           "number": "1",
-          "name": "Mac-10",
+          "name": "MAC-10",
           "image": "Mac10",
-          "typeWeapon": "primary",
+          "typeWeapon": "Primary",
           "typeCross": "Weapon",
           "firemode": "Automatic",
-          "price": 100
+          "price": 1050
         },
         {
           "id": [ "Weapon_MP9" ],
           "number": "2",
           "name": "MP9",
           "image": "Mp9",
-          "typeWeapon": "primary",
+          "typeWeapon": "Primary",
           "typeCross": "Weapon",
           "firemode": "Automatic",
-          "price": 100
+          "price": 1250
         },
         {
-          "id": [ "Weapon_Battleaxe_Mithril" ],
+          "id": [ "Weapon_P90" ],
           "number": "3",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "P90",
+          "image": "P90",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "Automatic",
+          "price": 2350
         },
         {
-          "id": [ "Weapon_Battleaxe_Adamantite" ],
+          "id": [ "Weapon_Thompson" ],
           "number": "4",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Thompson",
+          "image": "Thompson",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "Automatic",
+          "price": 2000
         },
         {
-          "id": [ "Weapon_Battleaxe_Cobalt" ],
+          "id": [],
           "number": "5",
           "name": "Coming Soon",
           "image": "ComingSoon",
@@ -181,12 +181,12 @@
         {
           "id": [ "Weapon_AK47" ],
           "number": "1",
-          "name": "Ak-47",
+          "name": "AK-47",
           "image": "Ak47",
           "typeWeapon": "Primary",
           "typeCross": "Weapon",
-          "firemode": "Burst",
-          "price": 100
+          "firemode": "Automatic",
+          "price": 2700
         },
         {
           "id": [ "Weapon_M4A1s" ],
@@ -195,11 +195,11 @@
           "image": "M4a1s",
           "typeWeapon": "Primary",
           "typeCross": "Weapon",
-          "firemode": "Burst",
-          "price": 100
+          "firemode": "Automatic",
+          "price": 2900
         },
         {
-          "id": [ "Weapon_Battleaxe_Copper" ],
+          "id": [],
           "number": "3",
           "name": "Coming Soon",
           "image": "ComingSoon",
@@ -231,47 +231,47 @@
       ]
     },
     {
-      "name": "Grenades",
+      "name": "Heavy",
       "content": [
         {
-          "id": [],
+          "id": [ "Weapon_AWP" ],
           "number": "1",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "AWP",
+          "image": "Awp",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "Single",
+          "price": 4750
         },
         {
-          "id": [],
+          "id": [ "Weapon_Barret50" ],
           "number": "2",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Barrett .50",
+          "image": "Barret50",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "Single",
+          "price": 5000
         },
         {
-          "id": [],
+          "id": [ "Weapon_DoubleBarrel" ],
           "number": "3",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Double Barrel",
+          "image": "DoubleBarrel",
+          "typeWeapon": "Primary",
+          "typeCross": "Shotgun",
+          "firemode": "Single",
+          "price": 1200
         },
         {
-          "id": [],
+          "id": [ "Weapon_Flamethrower" ],
           "number": "4",
-          "name": "Coming Soon",
-          "image": "ComingSoon",
-          "typeWeapon": "Melee",
-          "typeCross": "Knife",
-          "firemode": "Melee",
-          "price": -1
+          "name": "Flamethrower",
+          "image": "Flamethrower",
+          "typeWeapon": "Primary",
+          "typeCross": "Weapon",
+          "firemode": "Automatic",
+          "price": 3000
         },
         {
           "id": [],

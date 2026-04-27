@@ -19,9 +19,9 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nullable;
 
-public final class CountertaleHudBridge {
+public final class OrbisOffensiveHudBridge {
 
-    private CountertaleHudBridge() {
+    private OrbisOffensiveHudBridge() {
     }
 
     public static void updateAmmo(PlayerRef playerRef, @Nullable Player player, @Nullable ItemStack itemStack) {
@@ -102,7 +102,7 @@ public final class CountertaleHudBridge {
             return;
         }
 
-        CountertaleWeaponVisuals.Visual visual = CountertaleWeaponVisuals.resolve(itemId);
+        OrbisOffensiveWeaponVisuals.Visual visual = OrbisOffensiveWeaponVisuals.resolve(itemId);
         if (visual == null) {
             return;
         }

@@ -49,7 +49,7 @@ public class SetWallCommand extends AbstractAsyncCommand {
 
             for (int i = 0; i < xyz.length; i++) {
                 if (xyz[i].isEmpty() || !xyz[i].matches("[0-9,-]+")) {
-                    player.sendMessage(Message.raw("Start points inválidos").color(Color.cyan));
+                    player.sendMessage(Message.raw("Invalid start points").color(Color.cyan));
                     break;
                 }
 
@@ -62,7 +62,7 @@ public class SetWallCommand extends AbstractAsyncCommand {
 
             for (int i = 0; i < xyz.length; i++) {
                 if (xyz[i].isEmpty() || !xyz[i].matches("[0-9,-]+")) {
-                    player.sendMessage(Message.raw("End points inválidos").color(Color.cyan));
+                    player.sendMessage(Message.raw("Invalid end points").color(Color.cyan));
                     break;
                 }
 
@@ -71,18 +71,18 @@ public class SetWallCommand extends AbstractAsyncCommand {
         }
 
         if(startArg.get(context) == null && endArg.get(context) == null && fromArg.get(context) == null && toArg.get(context) == null) {
-            player.sendMessage(Message.raw("Los valores (--start o --from) y (--end o --to) son obligatorios"));
+            player.sendMessage(Message.raw("Values (--start or --from) and (--end or --to) are required"));
             return null;
         }
 
         if(mapArg.get(context) != null) {
             if (!MapListeners.exists(mapArg.get(context))) {
-                player.sendMessage(Message.raw("El mapa que intentas editar no existe o tiene otro nombre").color(Color.cyan));
+                player.sendMessage(Message.raw("The map you are trying to edit does not exist or has a different name").color(Color.cyan));
                 return null;
             }
         }
         else {
-            player.sendMessage(Message.raw("Debes definir un mapa para poder guardar las TemporalWall").color(Color.cyan));
+            player.sendMessage(Message.raw("You must define a map to save TemporalWall").color(Color.cyan));
             return null;
         }
 

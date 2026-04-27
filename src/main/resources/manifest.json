@@ -1,16 +1,51 @@
 {
   "Group": "Tenzinn",
-  "Name": "Countertale",
-  "Version": "0.7.0",
-  "Description": "Is a plugin for Countertale server.",
+  "Name": "OrbisOffensive",
+  "Version": "1.0.0",
+  "Description": "Is a plugin for OrbisOffensive server.",
   "Authors": [
     {
       "Name": "Tenzinn",
       "Email": "santynrada+hytl@gmail.com",
       "Url": "https://santiagorada.com/hytale"
+    },
+    {
+      "Name": "TheScar",
+      "Email": "",
+      "Url": ""
+    },
+    {
+      "Name": "_FX",
+      "Email": "",
+      "Url": ""
+    },
+    {
+      "Name": "Kirami",
+      "Email": "",
+      "Url": ""
+    },
+    {
+      "Name": "Ant",
+      "Email": "",
+      "Url": ""
+    },
+    {
+      "Name": "Penybut",
+      "Email": "",
+      "Url": ""
+    },
+    {
+      "Name": "Poly",
+      "Email": "",
+      "Url": ""
+    },
+    {
+      "Name": "EnsoX",
+      "Email": "",
+      "Url": ""
     }
   ],
-  "Website": "https://santiagorada.com/hytale/plugins/countertale",
+  "Website": "https://santiagorada.com/hytale/plugins/orbisoffensive",
   "ServerVersion": "2026.03.26-89796e57b",
   "Dependencies": {
     "Hytale:EntityModule": "*",
@@ -19,5 +54,5 @@
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,
-  "Main": "Tenzinn.Countertale"
+  "Main": "Tenzinn.OrbisOffensive"
 }

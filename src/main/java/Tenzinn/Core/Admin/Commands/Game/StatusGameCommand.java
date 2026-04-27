@@ -1,6 +1,6 @@
 package Tenzinn.Core.Admin.Commands.Game;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.GameMatch;
 
 import com.hypixel.hytale.component.Ref;
@@ -19,9 +19,9 @@ import java.util.List;
 
 public class StatusGameCommand extends AbstractPlayerCommand {
 
-    private final Countertale main;
+    private final OrbisOffensive main;
 
-    public StatusGameCommand(String name, String description, Countertale main) { super(name, description); this.main = main; }
+    public StatusGameCommand(String name, String description, OrbisOffensive main) { super(name, description); this.main = main; }
 
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
@@ -62,7 +62,7 @@ public class StatusGameCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    public String getPermission() { return "countertale.game.status"; }
+    public String getPermission() { return "orbisoffensive.game.status"; }
 
     @Override
     public String getName() { return "status"; }

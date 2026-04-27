@@ -23,7 +23,7 @@ Group {
 
             Label #NumRound {
                 Style: (FontSize: 12, RenderBold: false, Alignment: Center, TextColor: (#999999));
-                Text: "Ronda XX";
+                Text: "Round XX";
             }
             Group {
                 LayoutMode: Center;

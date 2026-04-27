@@ -50,7 +50,12 @@ public class DetectPlayerReady {
 
     public static void openGameHud(PlayerRef playerRef, Player player) {
         assert player.getWorld() != null;
-        String worldMode = player.getWorld().getName().startsWith("fvf") ? "fvf" : "dm";
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if (playerStats == null || playerStats.getCurrentMatch() == null) {
+            return;
+        }
+
+        String worldMode = playerStats.getCurrentMatch().getMode();
 
         ArrayList<WeaponStats> thisLoot = LootManager.getGameLoot(player);
         assert thisLoot != null;
@@ -63,9 +68,7 @@ public class DetectPlayerReady {
 
         GameHUD newHud = new GameHUD(playerRef);
         player.getHudManager().setCustomHud(playerRef, newHud);
-
-        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
-
+        
         if(worldMode.equalsIgnoreCase("dm")) {
             newHud.setEffect(PlayerStats.Effects.INVULNERABILITY);
             if (playerStats != null) { playerStats.isInvulnerable = true; }

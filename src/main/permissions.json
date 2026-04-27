@@ -6,22 +6,20 @@
   },
   "groups": {
     "Default": [
-      "countertale.queue",
-      "countertale.leave",
-      "countertale.lobby",
-      "countertale.loot",
-      "countertale.loot.give",
-      "countertale.loot.reset",
-      "countertale.shop"
+      "orbisoffensive.queue",
+      "orbisoffensive.leave",
+      "orbisoffensive.lobby",
+      "orbisoffensive.loot",
+      "orbisoffensive.shop"
     ],
     "Adventure": [
-      "countertale.queue",
-      "countertale.leave",
-      "countertale.lobby",
-      "countertale.loot",
-      "countertale.loot.give",
-      "countertale.loot.reset",
-      "countertale.shop"
+      "orbisoffensive.queue",
+      "orbisoffensive.leave",
+      "orbisoffensive.lobby",
+      "orbisoffensive.loot",
+      "orbisoffensive.loot.give",
+      "orbisoffensive.loot.reset",
+      "orbisoffensive.shop"
     ],
     "Moderator": [
       "*"

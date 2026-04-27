@@ -50,12 +50,12 @@ public final class HudCoordinator {
 		PLAYER_REFS.remove(uuid);
 		AMMO_VISIBLE.remove(uuid);
 
-		CountertaleHudBridge.hideAmmo(player);
+		OrbisOffensiveHudBridge.hideAmmo(player);
 	}
 
 	public static void shutdown() {
 		for (Player player : PLAYERS.values()) {
-			CountertaleHudBridge.hideAmmo(player);
+			OrbisOffensiveHudBridge.hideAmmo(player);
 		}
 
 		PLAYER_REFS.clear();
@@ -88,7 +88,7 @@ public final class HudCoordinator {
 		}
 
 		AMMO_VISIBLE.add(playerRef.getUuid());
-		CountertaleHudBridge.updateAmmo(playerRef, player, itemStack);
+		OrbisOffensiveHudBridge.updateAmmo(playerRef, player, itemStack);
 	}
 
 	public static void hideAmmo(PlayerRef playerRef) {
@@ -97,7 +97,7 @@ public final class HudCoordinator {
 		AMMO_VISIBLE.remove(playerRef.getUuid());
 
 		Player player = PLAYERS.get(playerRef.getUuid());
-		CountertaleHudBridge.hideAmmo(player);
+		OrbisOffensiveHudBridge.hideAmmo(player);
 	}
 
 	public static boolean isAmmoVisible(@Nullable PlayerRef playerRef) {
@@ -111,6 +111,6 @@ public final class HudCoordinator {
 	}
 
 	public static void hideScope(PlayerRef playerRef) {
-		// No-op because Countertale does not yet have a scope overlay.
+		// No-op because OrbisOffensive does not yet have a scope overlay.
 	}
 }

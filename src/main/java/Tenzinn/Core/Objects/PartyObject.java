@@ -34,7 +34,7 @@ public class PartyObject {
         players.add(playerRef);
         UpdateHUD();
 
-        SendMessageToAllPlayers(playerRef.getUsername() + " ha entrado al grupo.");
+        SendMessageToAllPlayers(playerRef.getUsername() + " joined the party.");
     }
     public void UpdateHUD() {
         for (PlayerRef playerRef : players) {

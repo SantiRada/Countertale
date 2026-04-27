@@ -34,6 +34,10 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
     private static final Map<UUID, Float> maxHealthMap        = new ConcurrentHashMap<>();
     private static final Map<UUID, Float> lastUpdatedHealthMap = new ConcurrentHashMap<>();
 
+    public static float getMaxHealth(UUID uuid) {
+        return maxHealthMap.getOrDefault(uuid, 100f);
+    }
+
     public PlayerHealthTracker() { super(0.2f); }
 
     @Override

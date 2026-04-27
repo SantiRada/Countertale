@@ -36,6 +36,8 @@ import java.util.concurrent.ScheduledFuture;
 
 public class MatchFVF {
 
+    private static UUID activeMatchId = null;
+
     private static ScheduledFuture<?> timerTask;
     private static int remainingSeconds = 150;
 
@@ -49,6 +51,22 @@ public class MatchFVF {
     private static boolean inEndPurchase = false;
 
     private static GameMatch myMatch;
+
+    private static void prepareRoundScoresFor(GameMatch match) {
+        if (match == null) return;
+
+        if (activeMatchId == null || !activeMatchId.equals(match.getMatchId())) {
+            activeMatchId = match.getMatchId();
+            numRoundsPerTeam.clear();
+            winner = -1;
+            inEndRound = false;
+            inEndPurchase = false;
+        }
+
+        while (numRoundsPerTeam.size() < 2) {
+            numRoundsPerTeam.add(0);
+        }
+    }
 
     public static void startMatch() {
         List<PlayerRef> playerRefs = myMatch.getPlayers();
@@ -77,6 +95,7 @@ public class MatchFVF {
     }
     // ================================================== //
     public static void startTimerMatch(GameMatch match) {
+        prepareRoundScoresFor(match);
         myMatch = match;
         startMatch();
 
@@ -86,7 +105,7 @@ public class MatchFVF {
             remainingSeconds = timePerRound;
             inEndRound = false;
 
-            String mapName = "Dust2";
+            String mapName = myMatch.getMapId();
             TemporalWallSystem.removeWalls(mapName, myMatch.getPlayers().getFirst());
 
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
@@ -109,7 +128,7 @@ public class MatchFVF {
                 }
             });
 
-            String mapName = "Dust2";
+            String mapName = myMatch.getMapId();
             TemporalWallSystem.buildWalls(mapName, myMatch.getPlayers().getFirst());
 
             timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
@@ -127,9 +146,9 @@ public class MatchFVF {
             World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
             assert currentWorld != null;
 
-            // FIX: setState y setup de players en el world thread, pero startTimerMatch
-            // se llama FUERA del execute() con un pequeño delay para evitar execute() anidados
-            // y para garantizar que el setState ya fue procesado antes de arrancar el timer.
+            // FIX: setState and player setup on the world thread, but startTimerMatch
+            // called OUTSIDE execute() with a short delay to avoid nested execute() calls
+            // to ensure setState is processed before starting the timer.
             currentWorld.execute(() -> {
                 for (int i = 0; i < myMatch.getPlayers().size(); i++) {
                     PlayerStats playerStats = RefactorTool.getPlayerStats(myMatch.getPlayers().get(i));
@@ -138,26 +157,31 @@ public class MatchFVF {
 
                     playerStats.setFinishBuyZone();
 
-                    Ref<EntityStore> ref = playerStats.getPlayerRef().getReference();
-                    assert ref != null;
+                    PlayerRef liveRef = Universe.get().getPlayer(playerStats.getPlayerRef().getUuid());
+                    if (liveRef == null || liveRef.getReference() == null) continue;
+
+                    Ref<EntityStore> ref = liveRef.getReference();
                     Store<EntityStore> store = ref.getStore();
 
-                    playerStats.getPlayer().getPageManager().setPage(ref, store, Page.None);
+                    Player player = store.getComponent(ref, Player.getComponentType());
+                    if (player == null) continue;
 
-                    PlayerEntityEffect.clearAllEffects(playerStats.getPlayer(), store);
+                    player.getPageManager().setPage(ref, store, Page.None);
 
-                    String effect = validateTeamMembership(myMatch.getPlayers().get(i)) == 1 ? "Ally" : "Enemy";
-                    PlayerEntityEffect.applyEffect(playerStats.getPlayer(), effect, store);
+                    PlayerEntityEffect.clearAllEffects(player, store);
+
+                    String effect = validateTeamMembership(liveRef) == 1 ? "Ally" : "Enemy";
+                    PlayerEntityEffect.applyEffect(player, effect, store);
                 }
 
-                String mapName = "Dust2";
+                String mapName = myMatch.getMapId();
                 TemporalWallSystem.removeWalls(mapName, myMatch.getPlayers().getFirst());
 
                 myMatch.setState(GameMatch.MatchState.IN_PROGRESS);
             });
 
-            // FIX: startTimerMatch fuera del execute() con delay mínimo para que
-            // el setState anterior ya esté aplicado cuando arranque el nuevo timer.
+            // FIX: startTimerMatch outside execute() with a minimal delay so
+            // the previous setState is applied when the new timer starts.
             HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
                 startTimerMatch(myMatch);
             }, 100, TimeUnit.MILLISECONDS);
@@ -166,14 +190,14 @@ public class MatchFVF {
     public static void onReloadRound() {
         stopTimer();
 
-        // FIX: setState antes del execute() — correcto, sin cambios necesarios acá.
+        // FIX: setState before execute() - correct, no changes needed here.
         myMatch.setState(MatchState.ON_PURCHASE);
 
         World currentWorld = Universe.get().getWorld(Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
         currentWorld.execute(() -> {
             resetPlayers(myMatch.getPlayers());
 
-            String mapName = "Dust2";
+            String mapName = myMatch.getMapId();
             TemporalWallSystem.buildWalls(mapName, myMatch.getPlayers().getFirst());
 
             List<PlayerRef> allPlayers = myMatch.getPlayers();
@@ -186,8 +210,8 @@ public class MatchFVF {
             }
         });
 
-        // FIX: startTimerMatch fuera del execute() con delay mínimo para consistencia
-        // y para que el resetPlayers/buildWalls ya estén encolados antes de arrancar el timer.
+        // FIX: startTimerMatch outside execute() with a minimal delay for consistency
+        // and so resetPlayers/buildWalls are queued before starting the timer.
         HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
             startTimerMatch(myMatch);
         }, 100, TimeUnit.MILLISECONDS);
@@ -263,7 +287,13 @@ public class MatchFVF {
     public static List<PlayerRef> getPlayers() { return myMatch != null ? myMatch.getPlayers() : new ArrayList<>(); }
     // ================================================== //
     public static int getTimer() { return remainingSeconds; }
-    public static void stopTimer() { if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false); }
+    public static void stopTimer() {
+        if (timerTask != null && !timerTask.isDone()) {
+            timerTask.cancel(false);
+        }
+
+        timerTask = null;
+    }
     // ================================================== //
     public static int getNumberRound(int team) {
         if(numRoundsPerTeam.isEmpty()) {
@@ -303,7 +333,10 @@ public class MatchFVF {
         int value = -1;
 
         for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).equals(playerRef)) { value = i; break; }
+            if (players.get(i).getUuid().equals(playerRef.getUuid())) {
+                value = i;
+                break;
+            }
         }
 
         int halfAmount;
@@ -317,9 +350,25 @@ public class MatchFVF {
     }
     // ================================================== //
     private static void finishRound () {
+        prepareRoundScoresFor(myMatch);
+
+        if (winner < 1 || winner > 2) return;
+
         onEndRound();
 
         numRoundsPerTeam.set(winner - 1, numRoundsPerTeam.get(winner - 1) + 1);
+
+        boolean matchFinished =
+                numRoundsPerTeam.get(0) >= numRoundsPerWinner
+                        || numRoundsPerTeam.get(1) >= numRoundsPerWinner;
+
+        if (!matchFinished) {
+            HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                if (myMatch != null && myMatch.getState() != GameMatch.MatchState.FINISHED) {
+                    onReloadRound();
+                }
+            }, 5, TimeUnit.SECONDS);
+        }
 
         List<PlayerRef> players = myMatch.getPlayers();
 
@@ -335,6 +384,8 @@ public class MatchFVF {
             }
         }
 
-        if (numRoundsPerTeam.getFirst() >= numRoundsPerWinner || numRoundsPerTeam.get(1) >= numRoundsPerWinner) { RefactorTool.finishGame(myMatch.getPlayers(), myMatch); }
+        if (matchFinished) {
+            RefactorTool.finishGame(myMatch.getPlayers(), myMatch);
+        }
     }
 }

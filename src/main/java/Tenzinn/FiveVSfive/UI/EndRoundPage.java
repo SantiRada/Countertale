@@ -42,7 +42,7 @@ public class EndRoundPage extends InteractiveCustomUIPage<ShopEventData> {
             uiBuilder.set("#Title.Style.TextColor", "#FF0000");
         }
 
-        uiBuilder.set("#NumRound.TextSpans", Message.raw("Ronda " + MatchFVF.getNumberRound(teamPlayer)));
+        uiBuilder.set("#NumRound.TextSpans", Message.raw("Round " + MatchFVF.getNumberRound(teamPlayer)));
 
         sendUpdate();
     }

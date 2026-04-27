@@ -56,7 +56,7 @@ public class DiePage extends InteractiveCustomUIPage<DiePage.DiePageEventData> {
         timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
             timeToRespawn -= 1;
 
-            // Nuevo builder limpio en cada tick
+            // New clean builder on each tick
             UICommandBuilder tickBuilder = new UICommandBuilder();
 
             int minutes = timeToRespawn / 60;
