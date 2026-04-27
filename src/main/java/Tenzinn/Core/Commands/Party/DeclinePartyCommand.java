@@ -24,4 +24,10 @@ public class DeclinePartyCommand extends CommandBase {
 
         PartyManager.DeclineParty(playerRef);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party.decline"; }
+
+    @Override
+    public String getName() { return "party.decline"; }
 }

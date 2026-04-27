@@ -42,4 +42,10 @@ public class GiveRevenueCommand extends CommandBase {
         player.sendMessage(Message.raw("Active command: Money sent to" + username));
         playerRef.sendMessage(Message.raw("You have received +" + amount.get(commandContext) + " contribution to your economy"));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.revenue.give"; }
+
+    @Override
+    public String getName() { return "revenue.give"; }
 }

@@ -61,4 +61,10 @@ public final class GetWallCommand extends AbstractAsyncCommand {
         player.sendMessage(Message.raw(sb.toString()));
         return CompletableFuture.completedFuture(null);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.Wall.get"; }
+
+    @Override
+    public String getName() { return "wall.get"; }
 }

@@ -53,6 +53,11 @@ Group #PartyHUD {
                     Style: @titleSmall;
                     Text: "Party Members";
                 }
+                Label #Member1 { Style: @member; Text: ""; }
+                Label #Member2 { Style: @member; Text: ""; }
+                Label #Member3 { Style: @member; Text: ""; }
+                Label #Member4 { Style: @member; Text: ""; }
+                Label #Member5 { Style: @member; Text: ""; }
             }
         }
 

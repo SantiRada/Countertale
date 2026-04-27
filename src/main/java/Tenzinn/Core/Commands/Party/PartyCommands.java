@@ -17,4 +17,10 @@ public class PartyCommands extends AbstractCommandCollection {
         addSubCommand(new OrderPartyCommand("order", "Order of leader group to initial queue."));
         addSubCommand(new ThrowPartyCommand("throw", "Throw player to party with --user=[STRING]."));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party"; }
+
+    @Override
+    public String getName() { return "party"; }
 }

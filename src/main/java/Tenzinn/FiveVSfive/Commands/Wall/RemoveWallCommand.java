@@ -51,4 +51,10 @@ public final class RemoveWallCommand extends AbstractAsyncCommand {
 
         return CompletableFuture.completedFuture(null);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.Wall.remove"; }
+
+    @Override
+    public String getName() { return "wall.remove"; }
 }

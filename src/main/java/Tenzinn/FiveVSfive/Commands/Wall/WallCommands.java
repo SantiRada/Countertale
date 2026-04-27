@@ -14,4 +14,10 @@ public class WallCommands extends AbstractCommandCollection {
         addSubCommand(new BuildWallCommand("build", "Build TemporalWalls of a map"));
         addSubCommand(new RemoveWallCommand("remove", "Remove an existing TemporalWall by index"));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.Wall"; }
+
+    @Override
+    public String getName() { return "wall"; }
 }

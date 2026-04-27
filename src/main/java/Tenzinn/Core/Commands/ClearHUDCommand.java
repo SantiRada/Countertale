@@ -26,20 +26,26 @@ public class ClearHUDCommand extends CommandBase {
         if (customHUD != null) {
             if (customHUD instanceof GameHUD gameHUD) {
                 gameHUD.clearHUD();
-                System.out.println("Game HUD limpio.");
+                System.out.println("Game HUD clean.");
             }
 
             if (RefactorTool.getModeForPlayer(player) == MapListeners.SpawnMode.DM) {
                 if (customHUD instanceof ScoreboardPage scoreboardHUD) {
                     scoreboardHUD.clearHUD();
-                    System.out.println("Scoreboard limpio.");
+                    System.out.println("Scoreboard clean.");
                 }
             } else {
                 if (customHUD instanceof ScoreboardPageFVF scoreboardHUD) {
                     scoreboardHUD.clearHUD();
-                    System.out.println("Scoreboard FVF limpio.");
+                    System.out.println("Scoreboard FVF clean.");
                 }
             }
         }
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.clean"; }
+
+    @Override
+    public String getName() { return "clean"; }
 }

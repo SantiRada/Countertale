@@ -24,4 +24,10 @@ public class OrderPartyCommand extends CommandBase {
 
         PartyManager.OrderParty(playerRef);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party.order"; }
+
+    @Override
+    public String getName() { return "party.order"; }
 }

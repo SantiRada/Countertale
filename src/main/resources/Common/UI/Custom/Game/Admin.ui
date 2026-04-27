@@ -54,7 +54,7 @@ Group {
 
         Label #Title {
             Style: (TextColor: #FFFFFF, RenderBold: true, FontSize: 48);
-            Text: "Admin Dasboard";
+            Text: "Admin Dashboard";
         }
 
         Group #Content {

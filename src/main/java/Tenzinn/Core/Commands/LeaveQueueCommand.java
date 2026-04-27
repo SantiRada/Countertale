@@ -49,7 +49,7 @@ public class LeaveQueueCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    public String getPermission() { return "orbisoffensive.leave"; }
+    public String getPermission() { return "OrbisOffensive.leave"; }
 
     @Override
     public String getName() { return "leave"; }

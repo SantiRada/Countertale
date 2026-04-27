@@ -30,7 +30,7 @@ public final class MapListeners {
         public String toString() { return "SpawnPoint{x=" + x + ", y=" + y + ", z=" + z + "}"; }
     }
 
-    // Parse TemporalWall (optional: may not exist in JSON)
+    // ── NUEVO: TemporalWall ──────────────────────────────────────────────────
     public static final class TemporalWall {
         public final double fromX, fromY, fromZ;
         public final double toX,   toY,   toZ;
@@ -47,19 +47,19 @@ public final class MapListeners {
                     ", to=(" + toX + "," + toY + "," + toZ + ")}";
         }
     }
-    // ------------------------------------------------------------
+    // ────────────────────────────────────────────────────────────────────────
 
     public enum SpawnMode { DM, FVF }
 
     private static final class MapData {
         final List<SpawnPoint>   dm;
         final List<SpawnPoint>   fvf;
-        final List<TemporalWall> walls; // New
+        final List<TemporalWall> walls; // NUEVO
 
         MapData(List<SpawnPoint> dm, List<SpawnPoint> fvf, List<TemporalWall> walls) {
             this.dm    = Collections.unmodifiableList(dm);
             this.fvf   = Collections.unmodifiableList(fvf);
-            this.walls = Collections.unmodifiableList(walls); // New
+            this.walls = Collections.unmodifiableList(walls); // NUEVO
         }
 
         List<SpawnPoint> get(SpawnMode mode) {
@@ -83,7 +83,7 @@ public final class MapListeners {
             jsonFileRef = jsonFile;
             return load(jsonFile);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[OrbisOffensive] Could not resolve the .jar path.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] The .jar path could not be resolved.", e);
             return false;
         }
     }
@@ -111,7 +111,7 @@ public final class MapListeners {
                 List<SpawnPoint>   dmSpawns  = parseSpawnArray(spawnsObj.getAsJsonArray("dm"));
                 List<SpawnPoint>   fvfSpawns = parseSpawnArray(spawnsObj.getAsJsonArray("fvf"));
 
-                // Parse TemporalWall (optional: may not exist in JSON)
+                // New: TemporalWall (opcional: not exist JSON)
                 List<TemporalWall> walls = mapObj.has("TemporalWall")
                         ? parseWallArray(mapObj.getAsJsonArray("TemporalWall"))
                         : new ArrayList<>();
@@ -139,7 +139,8 @@ public final class MapListeners {
 
         return loaded;
     }
-    // ------------------------------------------------------------
+
+    // Helpers of parsed
     private static List<SpawnPoint> parseSpawnArray(JsonArray array) {
         List<SpawnPoint> list = new ArrayList<>();
         if (array == null) return list;
@@ -154,7 +155,7 @@ public final class MapListeners {
         return list;
     }
 
-    // New
+    // NUEVO
     private static List<TemporalWall> parseWallArray(JsonArray array) {
         List<TemporalWall> list = new ArrayList<>();
         if (array == null) return list;
@@ -169,7 +170,8 @@ public final class MapListeners {
         }
         return list;
     }
-    // ------------------------------------------------------------
+
+    // Public API
     public static List<SpawnPoint> get(String mapName, SpawnMode mode) {
         MapData data = MAPS.get(mapName.toLowerCase());
         if (data == null) {
@@ -181,7 +183,7 @@ public final class MapListeners {
     public static List<SpawnPoint>   getDM(String mapName)  { return get(mapName, SpawnMode.DM);  }
     public static List<SpawnPoint>   getFVF(String mapName) { return get(mapName, SpawnMode.FVF); }
 
-    // New
+    // NUEVO
     public static List<TemporalWall> getWalls(String mapName) {
         MapData data = MAPS.get(mapName.toLowerCase());
         if (data == null) {
@@ -195,7 +197,6 @@ public final class MapListeners {
         MapData data = MAPS.get(mapName.toLowerCase());
         if (data == null) return false;
 
-        // We need a mutable list; replace MapData
         List<TemporalWall> mutable = new ArrayList<>(data.walls);
         mutable.add(wall);
         MAPS.put(mapName.toLowerCase(), new MapData(data.dm, data.fvf, mutable));
@@ -259,7 +260,7 @@ public final class MapListeners {
                 spawnsObj.add("fvf", spawnListToJson(data.fvf));
                 mapObj.add("spawns", spawnsObj);
 
-                // TemporalWall (only if present)
+                // TemporalWall
                 if (!data.walls.isEmpty()) {
                     mapObj.add("TemporalWall", wallListToJson(data.walls));
                 }
@@ -268,18 +269,15 @@ public final class MapListeners {
             }
             root.add("Maps", mapsArray);
 
-            // Write file using pretty print
             String json = new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root);
 
-            try (java.io.FileWriter writer = new java.io.FileWriter(jsonFileRef)) {
-                writer.write(json);
-            }
+            try (java.io.FileWriter writer = new java.io.FileWriter(jsonFileRef)) { writer.write(json); }
 
-            LOGGER.info("[OrbisOffensive] maps.json saved successfully.");
+            LOGGER.info("[OrbisOffensive] maps.json saved.");
             return true;
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[OrbisOffensive] Error saving maps.json.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] Error to save maps.json.", e);
             return false;
         }
     }

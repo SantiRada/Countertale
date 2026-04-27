@@ -19,7 +19,7 @@ public class EndRoundPage extends InteractiveCustomUIPage<ShopEventData> {
 
     private UICommandBuilder uiBuilder;
 
-    public EndRoundPage(PlayerRef playerRef) { super(playerRef, CustomPageLifetime.CanDismiss, ShopEventData.CODEC); }
+    public EndRoundPage(PlayerRef playerRef) { super(playerRef, CustomPageLifetime.CantClose, ShopEventData.CODEC); }
 
     @Override
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder uiCommandBuilder, @NonNullDecl UIEventBuilder uiEventBuilder, @NonNullDecl Store<EntityStore> store) {

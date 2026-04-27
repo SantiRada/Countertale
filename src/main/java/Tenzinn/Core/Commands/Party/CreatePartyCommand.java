@@ -21,4 +21,10 @@ public class CreatePartyCommand extends CommandBase {
 
         PartyManager.CreateParty(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party.create"; }
+
+    @Override
+    public String getName() { return "party.create"; }
 }

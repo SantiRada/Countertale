@@ -33,7 +33,7 @@ public class AdminCommands extends CommandBase {
     }
 
     @Override
-    public String getPermission() { return "orbisoffensive.admin"; }
+    public String getPermission() { return "countertale.admin"; }
 
     @Override
     public String getName() { return "admin"; }

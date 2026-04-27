@@ -28,4 +28,10 @@ public class ResetLootCommand extends CommandBase {
 
         LootManager.giveLoot(player, currentLoot);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.loot.reset"; }
+
+    @Override
+    public String getName() { return "loot.reset"; }
 }

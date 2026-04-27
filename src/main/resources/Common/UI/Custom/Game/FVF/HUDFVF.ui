@@ -65,6 +65,18 @@ Group #DeathmatchUI {
                 Anchor: (Width: 50, Height: 50, Left: 1);
             }
         }
+
+        Group { FlexWeight: 1; }
+
+        Group {
+            LayoutMode: Center;
+            Anchor: (Width: 1920, Bottom: 8);
+
+            Label #ShopHint {
+                Style: (TextColor: #FFFFFF(0.5), FontSize: 13, Alignment: Center, RenderBold: false);
+                Text: "Press [G] with something in hand for the Shop";
+            }
+        }
     }
 
     Group #BottomSector{
