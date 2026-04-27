@@ -24,4 +24,10 @@ public class JoinPartyCommand extends CommandBase {
 
         PartyManager.JoinToParty(playerRef);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party.join"; }
+
+    @Override
+    public String getName() { return "party.join"; }
 }

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class PlayerEntityEffect extends JavaPlugin {
 
-    private static final Logger LOGGER = Logger.getLogger("Countertale");
+    private static final Logger LOGGER = Logger.getLogger("OrbisOffensive");
 
     public PlayerEntityEffect(@Nonnull JavaPluginInit init) { super(init); }
 
@@ -25,25 +25,22 @@ public class PlayerEntityEffect extends JavaPlugin {
 
         assert entityRef != null;
         EffectControllerComponent controller = accessor.getComponent(entityRef, EffectControllerComponent.getComponentType());
-        player.sendMessage(Message.raw("Se aplica el efecto " + effectString + " al jugador " + player.getDisplayName()));
+        player.sendMessage(Message.raw("The " + effectString + " effect is applied to the player " + player.getDisplayName()));
 
         if (controller == null) {
-            LOGGER.log(Level.WARNING, "EffectControllerComponent no encontrado en: " + player.getDisplayName());
+            LOGGER.log(Level.WARNING, "EffectControllerComponent not be found: " + player.getDisplayName());
             return;
         }
 
         EntityEffect effect = EntityEffect.getAssetMap().getAsset(effectString);
 
-        if (effect == null) {
-            LOGGER.log(Level.WARNING, "EntityEffect 'Countertale:' " + effectString + " no encontrado en los assets");
+        if (effect == null) { LOGGER.log(Level.WARNING, "EntityEffect 'OrbisOffensive:' " + effectString + " not be found in assets");
             return;
         }
 
         // También pasá el índice explícitamente — es la sobrecarga más robusta
         int effectIndex = EntityEffect.getAssetMap().getIndex(effectString);
         controller.addEffect(entityRef, effectIndex, effect, accessor);
-
-        LOGGER.log(Level.INFO, "Efecto aplicado a " + player.getDisplayName());
     }
     public static void clearAllEffects(Player player, ComponentAccessor<EntityStore> accessor) {
         Ref<EntityStore> entityRef = player.getReference();
@@ -51,11 +48,11 @@ public class PlayerEntityEffect extends JavaPlugin {
         assert entityRef != null;
         EffectControllerComponent controller = accessor.getComponent(entityRef, EffectControllerComponent.getComponentType());
         if (controller == null) {
-            LOGGER.log(Level.WARNING, "EffectControllerComponent no encontrado en: " + player.getDisplayName());
+            LOGGER.log(Level.WARNING, "EffectControllerComponent not be found: " + player.getDisplayName());
             return;
         }
 
         controller.clearEffects(entityRef, accessor);
-        LOGGER.log(Level.INFO, "SE LIMPIARON LOS EFECTOS a " + player.getDisplayName());
+        LOGGER.log(Level.INFO, "THE EFFECTS WERE CLEANED FROM " + player.getDisplayName());
     }
 }

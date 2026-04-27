@@ -1,0 +1,60 @@
+
+@background = PatchStyle(TexturePath: "images/back-endround.png");
+@logo = PatchStyle(TexturePath: "images/logo.png");
+
+Group {
+    FlexWeight: 1;
+    LayoutMode: Middle;
+    Background: (Color: #000000(0.75));
+
+    Group {
+        LayoutMode: Top;
+
+        Group #Logo {
+            Background: @logo;
+            Anchor: (Width: 85, Height: 85, Bottom: -5);
+        }
+
+        Group #Content {
+            LayoutMode: Top;
+            Padding: (Top: 28, Bottom: 36, Horizontal: 60);
+            Background: @background;
+            Anchor: (Width: 540);
+
+            Group {
+                LayoutMode: Center;
+                Padding: (Vertical: 10);
+
+                Label #Title {
+                    Style: (FontSize: 52, RenderBold: true, Alignment: Center, TextColor: #00FF00);
+                    Text: "VICTORY";
+                }
+            }
+
+            Label #Score {
+                Style: (FontSize: 20, Alignment: Center, TextColor: #999999);
+                Text: "0 - 0";
+            }
+
+            Group {
+                Anchor: (Height: 2, Top: 20, Bottom: 20);
+                Background: (Color: #FFFFFF(0.08));
+            }
+
+            Button #LobbyButton {
+                LayoutMode: Center;
+                Anchor: (Width: 280, Height: 48);
+                Background: (Color: #FFFFFF(0.08));
+                Style: (
+                    Hovered: (Background: (Color: #FFFFFF(0.18))),
+                    Pressed: (Background: (Color: #FFFFFF(0.28)))
+                );
+
+                Label {
+                    Style: (FontSize: 17, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
+                    Text: "Back to Lobby";
+                }
+            }
+        }
+    }
+}

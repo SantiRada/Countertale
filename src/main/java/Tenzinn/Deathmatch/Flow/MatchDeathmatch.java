@@ -51,7 +51,7 @@ public class MatchDeathmatch {
                 Objects.requireNonNull(myMatch.getPlayers().getFirst().getWorldUuid()));
         assert world != null;
 
-        // Marcar la partida como FINISHED y mostrar pantallas de fin de juego
+        // Mark the game as FINISHED and display end-of-game screens
         world.execute(() -> RefactorTool.finishGame(myMatch.getPlayers(), myMatch));
     }
 

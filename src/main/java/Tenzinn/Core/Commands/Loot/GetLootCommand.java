@@ -35,4 +35,10 @@ public class GetLootCommand extends CommandBase {
             i += 1;
         }
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.loot.get"; }
+
+    @Override
+    public String getName() { return "loot.get"; }
 }

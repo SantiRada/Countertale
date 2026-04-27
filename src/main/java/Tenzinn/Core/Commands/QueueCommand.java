@@ -1,8 +1,10 @@
 package Tenzinn.Core.Commands;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.UI.ModesPage;
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.PartyManager;
+import Tenzinn.Core.Objects.PartyObject;
 import Tenzinn.Core.Instances.MapVoteStore;
 import Tenzinn.Core.Listeners.MessageListeners;
 import Tenzinn.Core.Tools.RefactorTool;
@@ -23,13 +25,14 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class QueueCommand extends AbstractPlayerCommand {
 
-    private final Countertale plugin;
+    private final OrbisOffensive plugin;
     private final OptionalArg<String> mode;
 
-    public QueueCommand(String name, String description, Countertale plugin) {
+    public QueueCommand(String name, String description, OrbisOffensive plugin) {
         super(name, description);
         this.plugin = plugin;
         mode = withOptionalArg("mode", "Select mode for add to queue", ArgTypes.STRING);
@@ -41,13 +44,62 @@ public class QueueCommand extends AbstractPlayerCommand {
         RefactorTool.launchSound(playerRef, "clic");
         String modeArg = mode.get(commandContext);
 
-        // Sin modo → abrir el selector de modo/mapa (ModesPage)
+        // No mode → open the mode/map selector (ModesPage)
         if (modeArg.equalsIgnoreCase("null") || modeArg.isBlank() || modeArg.isEmpty()) {
             Player player = commandContext.senderAs(Player.class);
             player.getPageManager().openCustomPage(ref, store, new ModesPage(playerRef));
             return;
         }
 
+        // Party flow
+        int partyIdx = PartyManager.GetPartyIdForPlayer(playerRef);
+        if (partyIdx >= 0) {
+            PartyObject party = PartyManager.totalParty.get(partyIdx);
+            boolean isLeader = party.players.getFirst().equals(playerRef);
+
+            if (!isLeader) {
+                playerRef.sendMessage(Message.raw("Only the party leader can join the queue. Use /party order to request it.").color(Color.orange));
+                return;
+            }
+
+            // Verify that no member is already in the queue or game
+            for (PlayerRef member : party.players) {
+                if (plugin.getMatchManager().isPlayerInMatch(member)) {
+                    playerRef.sendMessage(Message.raw(member.getUsername() + " is already in the queue or in a match. The group cannot join.").color(Color.red));
+                    return;
+                }
+            }
+
+            List<PlayerRef> partyMembers = new ArrayList<>(party.players);
+            List<String> votes = MapVoteStore.getVotes(playerRef);
+            MapVoteStore.clearVotes(playerRef);
+
+            GameMatch match = plugin.getMatchManager().addGroupToQueue(partyMembers, modeArg, votes);
+            if (match == null) return;
+
+            String matchShortId = match.getMatchId().toString().substring(0, 8);
+            for (PlayerRef member : partyMembers) {
+                Player memberPlayer = RefactorTool.getPlayer(member);
+                if (memberPlayer == null) continue;
+                member.sendMessage(Message.raw(String.format(
+                                MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
+                                        + " [%s] (%d/10 players)", matchShortId, match.getPlayerCount()))
+                        .color(Color.orange));
+                plugin.showQueueHud(member, memberPlayer, match, votes);
+            }
+
+            plugin.notifyMatchPlayersAndUpdateHuds(match);
+
+            if (match.isFull()) {
+                playerRef.sendMessage(Message.raw(
+                        MessageListeners.get(MessageListeners.MessageKey.CHAT_STARTING_GAME)).color(Color.green));
+                plugin.hideAllQueueHuds(match);
+                plugin.startMatch(match);
+            }
+            return;
+        }
+
+        // Single Flow
         if (plugin.getMatchManager().isPlayerInMatch(playerRef)) {
             GameMatch currentMatch = plugin.getMatchManager().getPlayerMatch(playerRef);
             commandContext.sendMessage(Message.raw(String.format(
@@ -59,7 +111,6 @@ public class QueueCommand extends AbstractPlayerCommand {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
 
-        // Leer los votos guardados por ModesPage (o todos los mapas si acceso directo)
         List<String> votes = MapVoteStore.getVotes(playerRef);
         MapVoteStore.clearVotes(playerRef);
 
@@ -69,7 +120,6 @@ public class QueueCommand extends AbstractPlayerCommand {
         player.sendMessage(Message.raw(String.format(MessageListeners.get(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
                 + " [%s] (%d/10 players)", match.getMatchId().toString().substring(0, 8), match.getPlayerCount())).color(Color.orange));
 
-        // Mostrar QueueHud con la selección de mapas del jugador
         plugin.showQueueHud(playerRef, player, match, votes);
         plugin.notifyMatchPlayersAndUpdateHuds(match);
 
@@ -82,7 +132,7 @@ public class QueueCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    public String getPermission() { return "countertale.queue"; }
+    public String getPermission() { return "OrbisOffensive.queue"; }
 
     @Override
     public String getName() { return "queue"; }

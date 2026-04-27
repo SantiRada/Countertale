@@ -28,4 +28,10 @@ public class GetRevenueCommand extends CommandBase {
 
         player.sendMessage(Message.raw("----------------------------"));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.revenue.get"; }
+
+    @Override
+    public String getName() { return "revenue.get"; }
 }

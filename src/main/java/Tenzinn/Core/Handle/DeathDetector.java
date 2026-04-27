@@ -64,15 +64,24 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                 RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
             else {
-                // Caída, void, /kill, comando, o cualquier source anónimo
-                System.out.println("[DeathDetector] Muerte por entorno/comando, causa: " + causeId);
+                System.out.println("[DeathDetector] Death by environment/command, cause: " + causeId);
                 RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
             }
         }
 
-        // Deshabilitar la RespawnPage nativa
+        // RespawnPage disabled
         component.setShowDeathMenu(false);
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(victim.getDisplayName(),NameMatching.EXACT);
+        PlayerRef playerRef = Universe.get().getPlayerByUsername(victim.getDisplayName(), NameMatching.EXACT);
+
+        // In FvF, mark the player as SPECTATOR so validateFinishRound() counts them as dead.
+        // The round system (resetPlayers) will revive them — no manual respawn allowed.
+        if (victim.getWorld() != Universe.get().getDefaultWorld()) {
+            var ps = RefactorTool.getPlayerStats(playerRef);
+            if (ps != null && RefactorTool.getModeForPlayer(playerRef) == MapListeners.SpawnMode.FVF) {
+                ps.playerState = Tenzinn.Core.Objects.PlayerStats.PlayerState.SPECTATOR;
+            }
+        }
+
         victim.getPageManager().openCustomPage(ref, store, new DiePage(playerRef));
     }
 
@@ -90,7 +99,7 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
 
             if (playerComponent.getWorld() != Universe.get().getDefaultWorld()) { RefactorTool.Respawn(playerRef); }
         } else {
-            // MODO ESPECTADOR FVF (estilo CS) PENDIENTE
+            // Spectator mode pending
             if(MatchFVF.validateFinishRound() <= 0) return;
 
             ArrayList<WeaponStats> loot = LootManager.getStarterKit();

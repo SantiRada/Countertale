@@ -69,9 +69,6 @@ public class LootManager {
             player.getInventory().clear();
             Inventory inv = player.getInventory();
 
-            //ItemStack bullets = new ItemStack("Weapon_Arrow_Crude", 3600);
-            //inv.getStorage().addItemStack(bullets);
-
             inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Base", 300));
             inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Rifle", 300));
             inv.getStorage().addItemStack(new ItemStack("Ammo_Bullet_Shotgun", 80));
@@ -94,7 +91,7 @@ public class LootManager {
 
             inv.getHotbar().setItemStackForSlot((short) 2, new ItemStack("Weapon_Daggers_Cobalt", 1));
 
-            // Stats y HUD en el mismo execute, sin schedule separado
+            // Stats and HUD in the same execute, without a separate schedule
             Ref<EntityStore> ref = playerRef.getReference();
             Store<EntityStore> store = ref.getStore();
 

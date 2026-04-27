@@ -7,7 +7,7 @@ import com.google.gson.*;
 
 public class HologramStorage {
 
-    private static final String FILE_PATH = "plugins/Countertale/holograms.json";
+    private static final String FILE_PATH = "plugins/OrbisOffensive/holograms.json";
     private static final HologramStorage INSTANCE = new HologramStorage();
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -17,7 +17,7 @@ public class HologramStorage {
 
     public void savePosition(String statueType, double x, double y, double z) {
         List<HologramEntry> entries = loadAll();
-        // Reemplazar entradas del mismo tipo
+        // Replace entries of the same type
         entries.removeIf(e -> e.statueType.equals(statueType));
         entries.add(new HologramEntry(statueType, x, y, z));
         writeFile(entries);

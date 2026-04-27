@@ -5,6 +5,8 @@ import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.LootManager;
 import Tenzinn.Deathmatch.UI.MvpPage;
 import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.FiveVSfive.Flow.MatchFVF;
+import Tenzinn.FiveVSfive.UI.EndMatchPage;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
@@ -20,7 +22,6 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.NameMatching;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -31,14 +32,10 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.thescar.hygunsplugin.support.hytale.PlayerInventoryAccess;
-import com.thescar.hygunsplugin.ui.hud.HudCoordinator;
 
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
@@ -153,7 +150,7 @@ public class RefactorTool {
         PlayerStats playerStats = getPlayerStats(playerRef);
         assert playerStats != null;
 
-        // El mapa viene del match al que pertenece el jugador
+        // The map comes from the match the player belongs to
         String mapId = playerStats.getCurrentMatch().getMapId();
 
         ArrayList<Vector3d> spawns = getSpawns(mapId, SpawnMode.FVF);
@@ -277,18 +274,10 @@ public class RefactorTool {
 
         if(testHud == null) return;
 
-        if (testHud instanceof GameHUD currentHUD) {
-            if (value > 3) return;
+        if(testHud instanceof GameHUD currentHUD) {
+            if(value > 3) return;
 
             currentHUD.setWeapons(value);
-
-            ItemStack held = PlayerInventoryAccess.getItemInHand(player);
-            if (held == null) {
-                HudCoordinator.hideAmmo(playerRef);
-                return;
-            }
-
-            HudCoordinator.updateAmmo(playerRef, held);
         }
     }
     public static void setDataScore(Player player, TypeData typeData, float value) {
@@ -305,7 +294,12 @@ public class RefactorTool {
     }
     // ============================================ //
     public static void finishGame(List<PlayerRef> players, Tenzinn.Core.GameMatch match) {
-        if (match != null) match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
+        if (match != null) {
+            match.stopTimer();
+            match.setState(Tenzinn.Core.GameMatch.MatchState.FINISHED);
+        }
+
+        int winningTeam = MatchFVF.winner;
 
         for (PlayerRef playerRef : players) {
             Ref<EntityStore> ref = playerRef.getReference();
@@ -318,7 +312,13 @@ public class RefactorTool {
             if (getModeForPlayer(playerRef) == SpawnMode.DM) {
                 player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef));
             } else {
-                /* TODO: pantalla de fin de ronda FVF */
+                UUID worldId = playerRef.getWorldUuid();
+                if (worldId == null) continue;
+                World world = Universe.get().getWorld(worldId);
+                if (world == null) continue;
+                final int fWinningTeam = winningTeam;
+                world.execute(() -> player.getPageManager().openCustomPage(ref, store,
+                        new EndMatchPage(playerRef, fWinningTeam)));
             }
         }
     }
@@ -327,7 +327,7 @@ public class RefactorTool {
         int playersReady = 0;
 
         for (PlayerRef ref : playerRefs) {
-            if (RefactorTool.getPlayerStats(ref) == null) { // null = en lobby, disponible
+            if (RefactorTool.getPlayerStats(ref) == null) { // null = in lobby, available
                 playersReady++;
             }
         }

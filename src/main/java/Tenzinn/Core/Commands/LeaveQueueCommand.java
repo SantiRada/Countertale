@@ -1,6 +1,6 @@
 package Tenzinn.Core.Commands;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Listeners.MessageListeners;
@@ -20,9 +20,9 @@ import java.awt.*;
 
 public class LeaveQueueCommand extends AbstractPlayerCommand {
 
-    private final Countertale plugin;
+    private final OrbisOffensive plugin;
 
-    public LeaveQueueCommand(String name, String description, Countertale plugin) { super(name, description); this.plugin = plugin; }
+    public LeaveQueueCommand(String name, String description, OrbisOffensive plugin) { super(name, description); this.plugin = plugin; }
 
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
@@ -49,7 +49,7 @@ public class LeaveQueueCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    public String getPermission() { return "countertale.leave"; }
+    public String getPermission() { return "OrbisOffensive.leave"; }
 
     @Override
     public String getName() { return "leave"; }

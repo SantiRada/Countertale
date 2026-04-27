@@ -24,4 +24,10 @@ public class LeavePartyCommand extends CommandBase {
 
         PartyManager.LeaveParty(playerRef);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party.leave"; }
+
+    @Override
+    public String getName() { return "party.leave"; }
 }

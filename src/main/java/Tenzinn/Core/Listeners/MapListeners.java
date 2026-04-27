@@ -67,8 +67,8 @@ public final class MapListeners {
         }
     }
 
-    private static final Logger LOGGER    = Logger.getLogger("Countertale");
-    private static final String JSON_PATH = "Countertale/maps.json";
+    private static final Logger LOGGER    = Logger.getLogger("OrbisOffensive");
+    private static final String JSON_PATH = "OrbisOffensive/maps.json";
 
     private static final Map<String, MapData> MAPS = new HashMap<>();
     private static Vector3f lobbyPosition = null;
@@ -83,7 +83,7 @@ public final class MapListeners {
             jsonFileRef = jsonFile;
             return load(jsonFile);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] No se pudo resolver la ruta del .jar.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] The .jar path could not be resolved.", e);
             return false;
         }
     }
@@ -94,7 +94,7 @@ public final class MapListeners {
         loaded = false;
 
         if (!jsonFile.exists()) {
-            LOGGER.warning("[Countertale] maps.json not found at: " + jsonFile.getAbsolutePath());
+            LOGGER.warning("[OrbisOffensive] maps.json not found at: " + jsonFile.getAbsolutePath());
             return false;
         }
 
@@ -111,7 +111,7 @@ public final class MapListeners {
                 List<SpawnPoint>   dmSpawns  = parseSpawnArray(spawnsObj.getAsJsonArray("dm"));
                 List<SpawnPoint>   fvfSpawns = parseSpawnArray(spawnsObj.getAsJsonArray("fvf"));
 
-                // NUEVO: parsear TemporalWall (opcional: puede no existir en el JSON)
+                // New: TemporalWall (opcional: not exist JSON)
                 List<TemporalWall> walls = mapObj.has("TemporalWall")
                         ? parseWallArray(mapObj.getAsJsonArray("TemporalWall"))
                         : new ArrayList<>();
@@ -129,18 +129,18 @@ public final class MapListeners {
             }
 
             loaded = true;
-            LOGGER.info("[Countertale] Loaded " + MAPS.size() + " maps from maps.json");
+            LOGGER.info("[OrbisOffensive] Loaded " + MAPS.size() + " maps from maps.json");
 
         } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] maps.json not found.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] maps.json not found.", e);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] Failed to parse maps.json.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] Failed to parse maps.json.", e);
         }
 
         return loaded;
     }
 
-    // ── Helpers de parseo ────────────────────────────────────────────────────
+    // Helpers of parsed
     private static List<SpawnPoint> parseSpawnArray(JsonArray array) {
         List<SpawnPoint> list = new ArrayList<>();
         if (array == null) return list;
@@ -171,11 +171,11 @@ public final class MapListeners {
         return list;
     }
 
-    // ── API pública ──────────────────────────────────────────────────────────
+    // Public API
     public static List<SpawnPoint> get(String mapName, SpawnMode mode) {
         MapData data = MAPS.get(mapName.toLowerCase());
         if (data == null) {
-            LOGGER.warning("[Countertale] Map not found: " + mapName);
+            LOGGER.warning("[OrbisOffensive] Map not found: " + mapName);
             return Collections.emptyList();
         }
         return data.get(mode);
@@ -187,7 +187,7 @@ public final class MapListeners {
     public static List<TemporalWall> getWalls(String mapName) {
         MapData data = MAPS.get(mapName.toLowerCase());
         if (data == null) {
-            LOGGER.warning("[Countertale] Map not found: " + mapName);
+            LOGGER.warning("[OrbisOffensive] Map not found: " + mapName);
             return Collections.emptyList();
         }
         return data.walls;
@@ -197,7 +197,6 @@ public final class MapListeners {
         MapData data = MAPS.get(mapName.toLowerCase());
         if (data == null) return false;
 
-        // Necesitamos una lista mutable; reemplazamos MapData
         List<TemporalWall> mutable = new ArrayList<>(data.walls);
         mutable.add(wall);
         MAPS.put(mapName.toLowerCase(), new MapData(data.dm, data.fvf, mutable));
@@ -261,7 +260,7 @@ public final class MapListeners {
                 spawnsObj.add("fvf", spawnListToJson(data.fvf));
                 mapObj.add("spawns", spawnsObj);
 
-                // TemporalWall (solo si hay)
+                // TemporalWall
                 if (!data.walls.isEmpty()) {
                     mapObj.add("TemporalWall", wallListToJson(data.walls));
                 }
@@ -270,18 +269,15 @@ public final class MapListeners {
             }
             root.add("Maps", mapsArray);
 
-            // Escribir al archivo con pretty print
             String json = new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root);
 
-            try (java.io.FileWriter writer = new java.io.FileWriter(jsonFileRef)) {
-                writer.write(json);
-            }
+            try (java.io.FileWriter writer = new java.io.FileWriter(jsonFileRef)) { writer.write(json); }
 
-            LOGGER.info("[Countertale] maps.json guardado correctamente.");
+            LOGGER.info("[OrbisOffensive] maps.json saved.");
             return true;
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] Error al guardar maps.json.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] Error to save maps.json.", e);
             return false;
         }
     }

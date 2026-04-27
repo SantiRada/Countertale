@@ -25,4 +25,10 @@ public class ShopCommand extends AbstractPlayerCommand {
         Player player = commandContext.senderAs(Player.class);
         player.getPageManager().openCustomPage(ref, store, new ShopPage(playerRef, RefactorTool.getModeForPlayer(playerRef)));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.shop"; }
+
+    @Override
+    public String getName() { return "shop"; }
 }

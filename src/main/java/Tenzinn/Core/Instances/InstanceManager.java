@@ -1,6 +1,6 @@
 package Tenzinn.Core.Instances;
 
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Listeners.MessageListeners;
 
@@ -27,13 +27,13 @@ import java.util.logging.Level;
 public class InstanceManager {
 
     private boolean isMapLoaded = false;
-    private final Countertale main;
+    private final OrbisOffensive main;
     private World newWorld;
     private String worldName;
 
     private final String mapId;
 
-    public InstanceManager(Countertale main, String mapId) {
+    public InstanceManager(OrbisOffensive main, String mapId) {
         this.main  = main;
         this.mapId = mapId.toLowerCase();
     }
@@ -45,7 +45,7 @@ public class InstanceManager {
         this.worldName = mapId + "_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
 
         universe.addWorld(this.worldName, "Flat", null).thenAccept(instanceWorld -> {
-            main.getLogger().at(Level.INFO).log("[Instance] Arena vacía creada: " + instanceWorld.getName());
+            main.getLogger().at(Level.INFO).log("[Instance] Empty arena created: " + instanceWorld.getName());
 
             WorldConfig config = instanceWorld.getWorldConfig();
             config.setDeleteOnRemove(true);
@@ -53,7 +53,7 @@ public class InstanceManager {
             config.setGameTimePaused(true);
 
             try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
-            catch (Exception e) { main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage()); }
+            catch (Exception e) { main.getLogger().at(Level.SEVERE).log("Error setting GameTime: " + e.getMessage()); }
 
             config.setBlockTicking(true);
             config.setTicking(true);
@@ -67,7 +67,7 @@ public class InstanceManager {
                 newWorld     = instanceWorld;
                 isMapLoaded  = true;
 
-                main.getLogger().at(Level.INFO).log("[Instance] ✓ Instancia lista [" + mapId + "]: " + worldName);
+                main.getLogger().at(Level.INFO).log("[Instance] ✓ Instance ready [" + mapId + "]: " + worldName);
 
                 if (onMapReady != null) onMapReady.run();
             });
@@ -91,7 +91,7 @@ public class InstanceManager {
             String prefabName = resolvePrefabName();
 
             BlockSelection prefab = store.getAssetPrefabFromAnyPack(prefabName);
-            if (prefab == null) { throw new RuntimeException("Prefab '" + prefabName + "' no encontrado"); }
+            if (prefab == null) { throw new RuntimeException("Prefab '" + prefabName + "' not be found"); }
 
             BlockSelection cleanPrefab = new BlockSelection();
             cleanPrefab.setPosition(0, 52, 0);
@@ -114,18 +114,18 @@ public class InstanceManager {
             config.setBlockTicking(true);
             config.setTicking(true);
 
-            main.getLogger().at(Level.INFO).log("[Instance] ✓ Prefab '" + prefabName + "' colocado en " + elapsed + "ms");
+            main.getLogger().at(Level.INFO).log("[Instance] ✓ Prefab '" + prefabName + "' created in " + elapsed + "ms");
 
         } catch (Exception e) {
-            main.getLogger().at(Level.SEVERE).log("[Instance] Error al colocar prefab: " + e.getMessage());
+            main.getLogger().at(Level.SEVERE).log("[Instance] Error placing prefab: " + e.getMessage());
             e.printStackTrace();
         }
     }
     public void teleportPlayers(List<PlayerRef> playerRefs) {
-        main.getLogger().at(Level.INFO).log("[Instance] === INICIO TELEPORT [" + mapId + "] ===");
+        main.getLogger().at(Level.INFO).log("[Instance] === STARTING TELEPORT [" + mapId + "] ===");
 
         if (newWorld == null || !isMapLoaded) {
-            main.getLogger().at(Level.WARNING).log("[Instance] No se puede teletransportar: mapa no cargado");
+            main.getLogger().at(Level.WARNING).log("[Instance] Unable to teleport: map not loaded");
             return;
         }
 
@@ -155,15 +155,15 @@ public class InstanceManager {
                         Store<EntityStore> store = currentWorld.getEntityStore().getStore();
                         Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
-                        main.getLogger().at(Level.INFO).log("[Instance] ✓ Jugador teletransportado: " + playerUUID);
+                        main.getLogger().at(Level.INFO).log("[Instance] ✓ Teleported player: " + playerUUID);
                     } catch (Exception e) {
-                        main.getLogger().at(Level.SEVERE).log("[Instance] Error al teletransportar: " + e.getMessage());
+                        main.getLogger().at(Level.SEVERE).log("[Instance] Teleportation error: " + e.getMessage());
                         e.printStackTrace();
                     }
                 });
 
             } catch (Exception e) {
-                main.getLogger().at(Level.SEVERE).log("[Instance] Error en teleportPlayers: " + e.getMessage());
+                main.getLogger().at(Level.SEVERE).log("[Instance] Error in teleportPlayers: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -177,9 +177,9 @@ public class InstanceManager {
         if (instanceWorld != null) {
             try {
                 universe.removeWorld(worldName);
-                main.getLogger().at(Level.INFO).log("[Instance] ✓ Mundo eliminado: " + worldName);
+                main.getLogger().at(Level.INFO).log("[Instance] ✓ Deleted world: " + worldName);
             } catch (Exception e) {
-                main.getLogger().at(Level.WARNING).log("[Instance] Error eliminando mundo: " + e.getMessage());
+                main.getLogger().at(Level.WARNING).log("[Instance] Error deleting World: " + e.getMessage());
             }
         }
 

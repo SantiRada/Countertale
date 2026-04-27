@@ -34,10 +34,16 @@ public class InvitePartyCommand extends CommandBase {
 
         PlayerRef playerRef = Universe.get().getPlayerByUsername(username.get(commandContext), NameMatching.EXACT);
         if(playerRef == null) {
-            player.sendMessage(Message.raw("No se encontró el usuario '" + username.get(commandContext) + "'").color(Color.orange));
+            player.sendMessage(Message.raw("The user could not be found: '" + username.get(commandContext) + "'").color(Color.orange));
             return;
         }
 
         PartyManager.InviteToParty(id, playerRef);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.party.invite"; }
+
+    @Override
+    public String getName() { return "party.invite"; }
 }

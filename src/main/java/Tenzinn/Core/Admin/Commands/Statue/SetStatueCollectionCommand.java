@@ -10,4 +10,10 @@ public class SetStatueCollectionCommand extends AbstractCommandCollection {
         addSubCommand(new SetStatueTypeCommand("queue", "Set the queue statue block."));
         addSubCommand(new SetStatueTypeCommand("shop",  "Set the shop statue block."));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.statue.set"; }
+
+    @Override
+    public String getName() { return "statue.set"; }
 }

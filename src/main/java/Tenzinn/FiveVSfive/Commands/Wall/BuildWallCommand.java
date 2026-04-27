@@ -34,7 +34,7 @@ public class BuildWallCommand extends AbstractAsyncCommand {
         Player player = context.senderAs(Player.class);
 
         if (!MapListeners.exists(mapArg.get(context))) {
-            player.sendMessage(Message.raw("No se encontró el mapa seleccionado").color(Color.cyan));
+            player.sendMessage(Message.raw("The selected map was not found.").color(Color.cyan));
             return null;
         }
 
@@ -43,4 +43,10 @@ public class BuildWallCommand extends AbstractAsyncCommand {
 
         return CompletableFuture.completedFuture(null);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.Wall.build"; }
+
+    @Override
+    public String getName() { return "wall.build"; }
 }

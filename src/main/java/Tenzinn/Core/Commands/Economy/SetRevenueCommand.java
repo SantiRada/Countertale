@@ -49,4 +49,10 @@ public class SetRevenueCommand extends AbstractPlayerCommand {
         RevenuesConfig.updateValue(typeAlias, valueAlias);
         sender.sendMessage(Message.raw("Type | " + typeAlias + " | correctly modified").color(Color.GREEN));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.revenue.set"; }
+
+    @Override
+    public String getName() { return "revenue.set"; }
 }

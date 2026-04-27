@@ -59,9 +59,9 @@ public final class MessageListeners {
         @Override public String toString() { return key; }
     }
 
-    private static final Logger LOGGER = Logger.getLogger("Countertale");
+    private static final Logger LOGGER = Logger.getLogger("OrbisOffensive");
 
-    private static final String JSON_PATH = "Countertale/messages.json";
+    private static final String JSON_PATH = "OrbisOffensive/messages.json";
     private static final String MISSING_KEY_FORMAT = "[MISSING: %s]";
 
     private static final Map<String, String> MESSAGES = new HashMap<>();
@@ -74,7 +74,7 @@ public final class MessageListeners {
             File jsonFile = new File(jar.getParentFile(), JSON_PATH);
             return load(jsonFile);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] No se pudo resolver la ruta del .jar.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] The .jar path could not be resolved.", e);
             return false;
         }
     }
@@ -84,7 +84,7 @@ public final class MessageListeners {
         loaded = false;
 
         if (!jsonFile.exists()) {
-            LOGGER.warning("[Countertale] messages.json not found at: " + jsonFile.getAbsolutePath());
+            LOGGER.warning("[OrbisOffensive] messages.json not found at: " + jsonFile.getAbsolutePath());
             return false;
         }
 
@@ -93,12 +93,12 @@ public final class MessageListeners {
             JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
             flatten(root, "");
             loaded = true;
-            LOGGER.info("[Countertale] Loaded " + MESSAGES.size() + " messages from messages.json");
+            LOGGER.info("[OrbisOffensive] Loaded " + MESSAGES.size() + " messages from messages.json");
 
         } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] messages.json not found.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] messages.json not found.", e);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] Failed to parse messages.json.", e);
+            LOGGER.log(Level.SEVERE, "[OrbisOffensive] Failed to parse messages.json.", e);
         }
 
         return loaded;
@@ -122,7 +122,7 @@ public final class MessageListeners {
     public static String get(String key) {
         String value = MESSAGES.get(key);
         if (value == null) {
-            LOGGER.warning("[Countertale] Missing message key: " + key);
+            LOGGER.warning("[OrbisOffensive] Missing message key: " + key);
             return String.format(MISSING_KEY_FORMAT, key);
         }
         return value;

@@ -22,4 +22,10 @@ public class DeleteStatuesCommand extends AbstractPlayerCommand {
 
         StatueBlockListener.getInstance().deleteAllHolograms(world, playerRef);
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.statue.delete"; }
+
+    @Override
+    public String getName() { return "delete"; }
 }

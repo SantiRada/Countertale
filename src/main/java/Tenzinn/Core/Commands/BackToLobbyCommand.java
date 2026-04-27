@@ -1,7 +1,7 @@
 package Tenzinn.Core.Commands;
 
 import Tenzinn.Core.Effects.PlayerEntityEffect;
-import Tenzinn.Countertale;
+import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MessageListeners;
@@ -30,9 +30,9 @@ import java.util.logging.Level;
 
 public class BackToLobbyCommand extends AbstractPlayerCommand {
 
-    protected Countertale main;
+    protected OrbisOffensive main;
 
-    public BackToLobbyCommand(@NonNullDecl String name, @NonNullDecl String description, Countertale main) {
+    public BackToLobbyCommand(@NonNullDecl String name, @NonNullDecl String description, OrbisOffensive main) {
         super(name, description);
         this.main = main;
     }
@@ -95,7 +95,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
     }
 
     @Override
-    public String getPermission() { return "countertale.lobby"; }
+    public String getPermission() { return "OrbisOffensive.lobby"; }
 
     @Override
     public String getName() { return "lobby"; }

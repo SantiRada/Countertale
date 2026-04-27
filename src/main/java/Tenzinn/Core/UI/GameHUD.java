@@ -66,6 +66,11 @@ public class GameHUD extends CustomUIHud {
         hideHygunsAmmo();
 
         uiBuilder.set("#DeathmatchUI.Background", "#ffffff00");
+
+        if (mode.equalsIgnoreCase("fvf")) {
+            uiBuilder.set("#ShopHint.Visible", true);
+        }
+
         update(true, uiBuilder);
     }
     // ================================================== //
@@ -87,7 +92,7 @@ public class GameHUD extends CustomUIHud {
 
         WeaponStats shield = loot.stream().filter(ps -> ps.typeWeapon.equalsIgnoreCase("shield")).findFirst().orElse(null);
         if (shield == null) {
-            playerRef.sendMessage(Message.raw("No se encuentra escudo en este jugador."));
+            playerRef.sendMessage(Message.raw("No shield is found on this player."));
             return;
         }
 
@@ -97,7 +102,7 @@ public class GameHUD extends CustomUIHud {
     public void setWeapons(int value) {
         if (uiBuilder == null) return;
         if (RefactorTool.getSizeSlots() <= 0) {
-            playerRef.sendMessage(Message.raw("No cargaron los slots.").color(Color.red));
+            playerRef.sendMessage(Message.raw("The slots didn't load.").color(Color.red));
             return;
         }
 
@@ -268,6 +273,11 @@ public class GameHUD extends CustomUIHud {
         uiBuilder.set("#TextRound.TextSpans", Message.raw(team1 + " | " + team2));
         updateHealth();
 
+        update(true, uiBuilder);
+    }
+    public void setShopHintVisible(boolean visible) {
+        if (!mode.equalsIgnoreCase("fvf") || uiBuilder == null) return;
+        uiBuilder.set("#ShopHint.Visible", visible);
         update(true, uiBuilder);
     }
     // ================================================== //

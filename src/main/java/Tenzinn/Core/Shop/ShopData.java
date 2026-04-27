@@ -29,7 +29,7 @@ public class ShopData {
         try {
             InputStream inputStream = ShopData.class.getResourceAsStream("/Common/UI/shop.json");
 
-            System.out.println("SHOPDATA.JAVA: Cargando data de Shop.json");
+            System.out.println("SHOPDATA.JAVA: Loading data of Shop.json");
 
             if (inputStream == null) return;
 
@@ -80,9 +80,9 @@ public class ShopData {
 
             RefactorTool.setSlots(slots);
 
-            System.out.println("SHOPDATA.JAVA: Información cargada en Shop.json");
+            System.out.println("SHOPDATA.JAVA: data loaded in Shop.json");
         } catch (Exception e) {
-            System.err.println("Error al cargar shop.json: " + e.getMessage());
+            System.err.println("Error to load shop.json: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -13,4 +13,10 @@ public class RevenueCommands extends AbstractCommandCollection {
         addSubCommand(new GetRevenueCommand("get", "Get list revenues"));
         addSubCommand(new GiveRevenueCommand("give", "Give money to any player"));
     }
+
+    @Override
+    public String getPermission() { return "OrbisOffensive.revenue"; }
+
+    @Override
+    public String getName() { return "revenue"; }
 }

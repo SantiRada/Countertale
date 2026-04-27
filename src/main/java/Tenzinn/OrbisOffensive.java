@@ -1,5 +1,6 @@
 package Tenzinn;
 
+import Tenzinn.FiveVSfive.Commands.Round.RoundCommands;
 import com.thescar.hygunsplugin.HygunsPluginMain;
 import Tenzinn.Core.Commands.Party.PartyCommands;
 import Tenzinn.Core.Events.*;
@@ -48,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Countertale extends HygunsPluginMain {
+public class OrbisOffensive extends HygunsPluginMain {
 
     // Sistema de Partidas
     private MatchManager matchManager;
@@ -60,7 +61,7 @@ public class Countertale extends HygunsPluginMain {
     // Sistema de HUD de Cola
     private final Map<String, QueueHud> activeQueueHuds = new ConcurrentHashMap<>();
 
-    public Countertale(@Nonnull JavaPluginInit init) { super(init); }
+    public OrbisOffensive(@Nonnull JavaPluginInit init) { super(init); }
 
     @Override
     protected void setup() {
@@ -89,6 +90,7 @@ public class Countertale extends HygunsPluginMain {
         getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
         getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
         getCommandRegistry().registerCommand(new PartyCommands("party", "All commands to custom groups"));
+        getCommandRegistry().registerCommand(new RoundCommands("round", "Admin round control commands"));
 
         // FVF Commands
         getCommandRegistry().registerCommand(new WallCommands("wall", "Manage TemporalWalls for maps"));

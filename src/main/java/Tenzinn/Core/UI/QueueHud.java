@@ -76,13 +76,8 @@ public class QueueHud extends CustomUIHud {
     public void showLoadingMap() {
         if (uiBuilder == null) return;
 
-        // Actualizar contador a lleno
         uiBuilder.set("#PlayerCountLabel.TextSpans", Message.raw("10/10 Players"));
-
-        // Mostrar estado de carga en lugar de los mapas seleccionados
-        uiBuilder.set("#MapsLabel.TextSpans", Message.raw("Cargando escenario..."));
-
-        // Ocultar el mensaje de /leave: la partida ya va a empezar
+        uiBuilder.set("#MapsLabel.TextSpans", Message.raw("Loading map..."));
         uiBuilder.set("#LeaveMessage.TextSpans", Message.raw(""));
 
         update(true, uiBuilder);

@@ -12,7 +12,7 @@ public class StatueCommand extends AbstractCommandCollection {
     }
 
     @Override
-    public String getPermission() { return "countertale.statue"; }
+    public String getPermission() { return "OrbisOffensive.statue"; }
 
     @Override
     public String getName() { return "statue"; }

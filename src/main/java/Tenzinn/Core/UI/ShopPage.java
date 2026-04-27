@@ -98,7 +98,7 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
                         playerStats.moneySpent.set(pos, newWeapon.pricing);
                     } else {
-                        playerRef.sendMessage(Message.raw("El sistema no encontró el arma previa"));
+                        playerRef.sendMessage(Message.raw("The system did not find the previous weapon."));
                     }
                 }
 
