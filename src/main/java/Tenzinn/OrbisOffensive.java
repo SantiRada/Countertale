@@ -17,9 +17,13 @@ import Tenzinn.Core.Instances.InstanceManager;
 import Tenzinn.Core.Shop.RevenuesConfig;
 import Tenzinn.Core.Commands.Loot.LootCommands;
 import Tenzinn.Core.Admin.Commands.AdminCommands;
+import Tenzinn.Core.Admin.Commands.Bots.BotsCommands;
 import Tenzinn.FiveVSfive.Systems.TeamChatSystem;
 import Tenzinn.Core.Commands.Economy.RevenueCommands;
 import Tenzinn.FiveVSfive.Commands.Wall.WallCommands;
+import Tenzinn.Deathmatch.Bots.DeathmatchBotManager;
+import Tenzinn.Deathmatch.Bots.DeathmatchBotDeathDetector;
+import Tenzinn.Deathmatch.Bots.DeathmatchBotProjectileSystem;
 import Tenzinn.Core.Admin.Commands.Game.GameCommands;
 import Tenzinn.Core.Admin.Commands.ForceStartCommand;
 import Tenzinn.Core.Admin.Commands.Statue.StatueCommand;
@@ -70,6 +74,7 @@ public class OrbisOffensive extends HygunsPluginMain {
         MapListeners.load();
         RevenuesConfig.load();
         MessageListeners.load();
+        DeathmatchBotManager.initialize();
 
         // Interactions
         this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
@@ -80,6 +85,7 @@ public class OrbisOffensive extends HygunsPluginMain {
         getCommandRegistry().registerCommand(new StatueCommand("statue", "Manage statue configurations."));
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
+        getCommandRegistry().registerCommand(new BotsCommands("bots", "Deathmatch bot admin controls."));
         getCommandRegistry().registerCommand(new ClearHUDCommand("clearhud", "Clear HUD to change instance"));
         getCommandRegistry().registerCommand(new RevenueCommands("revenue", "All content to Revenues List"));
 
@@ -110,6 +116,8 @@ public class OrbisOffensive extends HygunsPluginMain {
         this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
         this.getEntityStoreRegistry().registerSystem(new InvulnerabilitySystem());
         this.getEntityStoreRegistry().registerSystem(new DeathDetector());
+        this.getEntityStoreRegistry().registerSystem(new DeathmatchBotDeathDetector());
+        this.getEntityStoreRegistry().registerSystem(new DeathmatchBotProjectileSystem());
 
         this.getEventRegistry().<String, PlayerChatEvent>registerAsyncGlobal(PlayerChatEvent.class, future -> future.thenApply(event -> {
                     TeamChatSystem.onPlayerChat(event); return event; })
@@ -133,6 +141,7 @@ public class OrbisOffensive extends HygunsPluginMain {
         if (detectFilter != null) { PacketAdapters.deregisterInbound(detectFilter); }
         if (hotbarFilter != null) { PacketAdapters.deregisterInbound(hotbarFilter); }
 
+        DeathmatchBotManager.removeAllBots();
         matchManager.getInstancePool().shutdown();
 
         super.shutdown();

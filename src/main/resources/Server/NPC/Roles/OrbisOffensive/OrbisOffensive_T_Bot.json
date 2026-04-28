@@ -1,0 +1,30 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Animal_Neutral",
+  "Modify": {
+    "Appearance": "T_DefaultAgent",
+    "FlockArray": [],
+    "DropList": "Empty",
+    "MaxHealth": 100,
+    "MaxSpeed": 4,
+    "ViewRange": 24,
+    "ViewSector": 360,
+    "HearingRange": 8,
+    "AlertedRange": 28,
+    "AlertedActionRange": 12,
+    "AbsoluteDetectionRange": 2,
+    "AttitudeGroup": "Empty",
+    "PlayerDefaultAttitude": "Ignore",
+    "IsTameable": false,
+    "IsMemory": false,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.OrbisOffensive_T_Bot.name",
+      "Description": "Translation key for the Orbis Offensive terrorist bot"
+    }
+  }
+}

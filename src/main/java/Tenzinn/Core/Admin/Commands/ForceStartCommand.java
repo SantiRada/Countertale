@@ -4,6 +4,7 @@ import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.GameMatch;
 
 import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Deathmatch.Bots.DeathmatchBotManager;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -39,7 +40,8 @@ public class ForceStartCommand extends AbstractPlayerCommand {
         }
 
         if (match.getMode().equalsIgnoreCase("dm")) {
-            int bots = Math.max(0, 10 - match.getPlayerCount());
+            int target = Math.max(0, Math.min(DeathmatchBotManager.MAX_DM_PARTICIPANTS, DeathmatchBotManager.getConfiguredFillDeathmatchTo()));
+            int bots = Math.max(0, target - match.getPlayerCount());
             commandContext.sendMessage(Message.raw("Starting deathmatch with " + bots + " bot(s)."));
         }
 

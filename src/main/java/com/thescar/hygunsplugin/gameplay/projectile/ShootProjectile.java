@@ -521,21 +521,97 @@ public class ShootProjectile {
 		Transform look = TargetUtil.getLook(shooter, commandBuffer);
 		Vector3d rawPosition = look.getPosition();
 		Vector3d rawForward = look.getDirection();
-		double fx = rawForward.x;
-		double fy = rawForward.y;
-		double fz = rawForward.z;
-		double fl = Math.sqrt(fx * fx + fy * fy + fz * fz);
-		if (fl <= 1.0E-12D) {
+		Vector3d forward = normalizeDirection(rawForward);
+		if (forward == null) {
+			return Collections.emptyList();
+		}
+		Vector3d origin = new Vector3d(rawPosition).add(
+			forward.x * PROJECTILE_SPAWN_FORWARD_OFFSET,
+			forward.y * PROJECTILE_SPAWN_FORWARD_OFFSET,
+			forward.z * PROJECTILE_SPAWN_FORWARD_OFFSET
+		);
+		return spawnBulletsFromAim(
+			pelletCount,
+			damage,
+			spreadAngle,
+			config,
+			ammoInteractions,
+			hitDamageModifiers,
+			dealLethalDamage,
+			wallPenetrationSettings,
+			autoGuidanceSettings,
+			shooter,
+			commandBuffer,
+			origin,
+			forward
+		);
+	}
+
+	@Nonnull
+	public static List<Ref<EntityStore>> shootBulletsFrom(int pelletCount, int damage, double spreadAngle, String projectileConfigID,
+	                                                       @Nullable AmmoItemInteractions ammoInteractions, @Nonnull HitDamageModifiers hitDamageModifiers, boolean dealLethalDamage,
+	                                                       @Nonnull WallPenetrationSettings wallPenetrationSettings, @Nonnull AutoGuidanceSettings autoGuidanceSettings,
+	                                                       @Nonnull Ref<EntityStore> shooter, @Nonnull CommandBuffer<EntityStore> commandBuffer,
+	                                                       @Nonnull Vector3d origin, @Nonnull Vector3d direction) {
+		ProjectileConfig config = resolveProjectileConfig(projectileConfigID);
+		if (config == null) {
+			if (WARNED_CONFIG_IDS.add(String.valueOf(projectileConfigID))) {
+				LOGGER
+					.atWarning()
+					.log("Failed to resolve projectile config: %s (falling back to default)", projectileConfigID);
+			}
+
+			config = resolveProjectileConfig(DEFAULT_PROJECTILE_CONFIG_ID);
+		}
+
+		if (config == null) {
+			if (WARNED_CONFIG_IDS.add(DEFAULT_PROJECTILE_CONFIG_ID)) {
+				LOGGER.atWarning().log("Default projectile config missing too: %s", DEFAULT_PROJECTILE_CONFIG_ID);
+			}
+
 			return Collections.emptyList();
 		}
 
-		double finv = 1.0D / fl;
-		fx *= finv;
-		fy *= finv;
-		fz *= finv;
-		double px = rawPosition.x + fx * PROJECTILE_SPAWN_FORWARD_OFFSET;
-		double py = rawPosition.y + fy * PROJECTILE_SPAWN_FORWARD_OFFSET;
-		double pz = rawPosition.z + fz * PROJECTILE_SPAWN_FORWARD_OFFSET;
+		Vector3d normalizedDirection = normalizeDirection(direction);
+		if (normalizedDirection == null) {
+			return Collections.emptyList();
+		}
+
+		return spawnBulletsFromAim(
+			pelletCount,
+			damage,
+			spreadAngle,
+			config,
+			ammoInteractions,
+			hitDamageModifiers,
+			dealLethalDamage,
+			wallPenetrationSettings,
+			autoGuidanceSettings,
+			shooter,
+			commandBuffer,
+			new Vector3d(origin),
+			normalizedDirection
+		);
+	}
+
+	@Nonnull
+	private static List<Ref<EntityStore>> spawnBulletsFromAim(int pelletCount, int damage, double spreadAngle,
+	                                                          @Nonnull ProjectileConfig config,
+	                                                          @Nullable AmmoItemInteractions ammoInteractions,
+	                                                          @Nonnull HitDamageModifiers hitDamageModifiers,
+	                                                          boolean dealLethalDamage,
+	                                                          @Nonnull WallPenetrationSettings wallPenetrationSettings,
+	                                                          @Nonnull AutoGuidanceSettings autoGuidanceSettings,
+	                                                          @Nonnull Ref<EntityStore> shooter,
+	                                                          @Nonnull CommandBuffer<EntityStore> commandBuffer,
+	                                                          @Nonnull Vector3d origin,
+	                                                          @Nonnull Vector3d forward) {
+		double fx = forward.x;
+		double fy = forward.y;
+		double fz = forward.z;
+		double px = origin.x;
+		double py = origin.y;
+		double pz = origin.z;
 		double rx = -fz;
 		double ry = 0.0D;
 		double rz = fx;
@@ -561,6 +637,9 @@ public class ShootProjectile {
 			uy *= uinv;
 			uz *= uinv;
 		}
+
+		UUIDComponent shooterUuidComponent = commandBuffer.getComponent(shooter, UUIDComponent.getComponentType());
+		UUID shooterUuid = shooterUuidComponent != null ? shooterUuidComponent.getUuid() : null;
 
 		ThreadLocalRandom rng = ThreadLocalRandom.current();
 		List<Ref<EntityStore>> projectiles = new ArrayList<>(Math.max(1, pelletCount));
@@ -599,7 +678,23 @@ public class ShootProjectile {
 			commandBuffer, projectiles, damage, shooter, ammoInteractions, hitDamageModifiers, dealLethalDamage,
 			wallPenetrationSettings, autoGuidanceSettings
 		);
+		applyVisibilityBoundingBox(commandBuffer, projectiles);
 		return projectiles;
+	}
+
+	@Nullable
+	private static Vector3d normalizeDirection(@Nullable Vector3d direction) {
+		if (direction == null) {
+			return null;
+		}
+
+		double length = Math.sqrt((direction.x * direction.x) + (direction.y * direction.y) + (direction.z * direction.z));
+		if (length <= 1.0E-12D) {
+			return null;
+		}
+
+		double inv = 1.0D / length;
+		return new Vector3d(direction.x * inv, direction.y * inv, direction.z * inv);
 	}
 
 	private static void applyCustomProjectileBehavior(@Nonnull CommandBuffer<EntityStore> commandBuffer,

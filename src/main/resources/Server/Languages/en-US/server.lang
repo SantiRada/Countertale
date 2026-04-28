@@ -7,10 +7,7 @@ items.Weapon_Repair_Kit.name=Weapon Repair Kit
 items.Weapon_Repair_Kit.description=A kit what allow repair weapons without durability penalty
 items.Ammo_Box.name=Ammo Box
 items.Ammo_Box.description=A portable ammo chest with 9 internal slots for carrying extra ammunition
-
-
 interactionHints.ammoBoxRefill = Hold [{key}] to refill {name}
-
 # === Hyguns ===
 items.Ammo_Bullet_Base.name=Bullet Ammo
 items.Ammo_Bullet_Base.description=Standard handgun ammunition\nCan be used in the <color is="#ffffff">Builders Workbench</color> to craft ammo piles
@@ -56,7 +53,6 @@ items.Flamethrower_Goblin.name=Goblin Flamethrower
 items.Ore_Lead.description=Ore that can be smelted into lead ingots
 items.Ore_Tin.description=Ore that can be smelted into tin ingots
 items.Ore_Titanium.description=Ore that can be smelted into titanium ingots
-
 items.Frag.name=Frag Grenade
 items.Frag.description=Ammo: <color is="#ffffff">Frag Grenade</color>\nDamage: 50\nSpread: 0\nCooldown: 1\nClipsize: 1
 items.AssaultRifle.name=Rifle
@@ -94,17 +90,14 @@ items.DesertEagle.name=Desert Eagle
 items.DesertEagle.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 25\nSpread: 0\nCooldown: 1\nReload: 2.133s\nClipsize: 7
 items.Thompson.name=Thompson
 items.Thompson.description=Ammo: <color is="#ffffff">Bullet Ammo</color>\nDamage: 3\nSpread: 0.05\nCooldown: 0.075\nReload: 2.133s\nClipsize: 50
-
 items.Bench_Gunsmith.name=Gunsmith Bench
 items.Bench_Gunsmith.description=A workstation used to create firearms and explosives
-
 benchCategories.rifles=Rifles
 benchCategories.shotguns=Shotguns
 benchCategories.smgs=SMGs
 benchCategories.pistols=Pistols
 benchCategories.utility=Utility
 benchCategories.ammo=Ammunition
-
 items.Ingredient_Bar_Bronze.name=Bronze Ingot
 items.Ingredient_Bar_Bronze.description=Made in a <color is="#ffffff">Furnace Tier 2</color> using three Copper Bars and one Iron Bar
 items.Ingredient_Bar_Steel.name=Steel Ingot
@@ -126,7 +119,6 @@ items.Ore_Tin_Shale.name=Tin Ore - Shale
 items.Ore_Titanium.name=Titanium Ore
 items.Ore_Titanium_Volcanic.name=Titanium Ore - Volcanic
 items.Ore_Titanium_Basalt.name=Titanium Ore - Basalt
-
 ui.itemcategory.hyguns=HyGuns
 ui.hyguns.category.guns=Guns
 ui.hyguns.category.ammo=Ammo
@@ -134,3 +126,8 @@ ui.hyguns.category.blocks=Blocks
 ui.hyguns.category.furniture=Furniture
 ui.hyguns.category.items=Items
 ui.hyguns.category.tools=Tools
+
+server.npcRoles.OrbisOffensive_T_Bot.name=T Bot
+server.npcRoles.OrbisOffensive_CT_Bot.name=CT Bot
+server.npcroles.orbisoffensive_t_bot.name=T Bot
+server.npcroles.orbisoffensive_ct_bot.name=CT Bot

@@ -7,6 +7,7 @@ import Tenzinn.Core.Listeners.MessageListeners;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Instances.InstancePool;
+import Tenzinn.Deathmatch.Bots.DeathmatchBotManager;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -179,6 +180,11 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
 
         if (match.getPlayers().isEmpty()) {
             CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS).execute(() -> {
+                if (!match.getPlayers().isEmpty()) {
+                    return;
+                }
+
+                DeathmatchBotManager.removeBots(match);
                 match.stopTimer();
 
                 // onMatchFinished registra popularidad, destruye la instancia y rebalancea el pool

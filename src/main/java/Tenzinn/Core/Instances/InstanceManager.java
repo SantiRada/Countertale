@@ -6,6 +6,7 @@ import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.OrbisOffensive;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.Deathmatch.Bots.DeathmatchBotManager;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -282,6 +283,16 @@ public class InstanceManager {
         }
 
         if (mode == MapListeners.SpawnMode.DM) {
+            main.getLogger().at(Level.INFO).log("[Instance] Scheduling Deathmatch bot fill for match=" + match.getMatchId() + " map=" + mapId);
+            com.hypixel.hytale.server.core.HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+                try {
+                    main.getLogger().at(Level.INFO).log("[Instance] Calling DeathmatchBotManager.spawnFillBots for match=" + match.getMatchId());
+                    DeathmatchBotManager.spawnFillBots(match, newWorld, mapId);
+                } catch (Exception e) {
+                    main.getLogger().at(Level.WARNING).log("[Instance] Failed to spawn DM bots: " + e.getMessage());
+                }
+            }, 1, java.util.concurrent.TimeUnit.SECONDS);
+
             com.hypixel.hytale.server.core.HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
                 if (match.getState() == GameMatch.MatchState.STARTING) {
                     match.startTimer();

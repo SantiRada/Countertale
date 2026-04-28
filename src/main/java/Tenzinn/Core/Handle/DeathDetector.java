@@ -5,6 +5,7 @@ import Tenzinn.Core.LootManager;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Deathmatch.Bots.DeathmatchBotManager;
 import Tenzinn.FiveVSfive.Flow.MatchFVF;
 
 import com.hypixel.hytale.component.CommandBuffer;
@@ -80,19 +81,20 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                                  String causeId) {
         float damage = 0;
         Player killer = null;
+        Ref<EntityStore> killerEntityRef = null;
 
         if (deathInfo != null) {
             damage = deathInfo.getInitialAmount();
 
             if (deathInfo.getSource() instanceof Damage.EntitySource entitySource) {
-                Ref<EntityStore> killerRef = entitySource.getRef();
-                if (killerRef != null) {
-                    killer = (Player) store.getComponent(killerRef, Player.getComponentType());
+                killerEntityRef = entitySource.getRef();
+                if (killerEntityRef != null) {
+                    killer = (Player) store.getComponent(killerEntityRef, Player.getComponentType());
                 }
             } else if (deathInfo.getSource() instanceof Damage.ProjectileSource projectileSource) {
-                Ref<EntityStore> shooterRef = projectileSource.getRef();
-                if (shooterRef != null) {
-                    killer = (Player) store.getComponent(shooterRef, Player.getComponentType());
+                killerEntityRef = projectileSource.getRef();
+                if (killerEntityRef != null) {
+                    killer = (Player) store.getComponent(killerEntityRef, Player.getComponentType());
                 }
             } else {
                 System.out.println("[DeathDetector] Death by environment/command, cause: " + causeId);
@@ -115,6 +117,8 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
                     matchToRefresh = killerStats.getCurrentMatch();
                 }
             }
+        } else if (killerEntityRef != null && DeathmatchBotManager.isBot(killerEntityRef)) {
+            DeathmatchBotManager.recordBotKill(killerEntityRef);
         }
 
         PlayerRef victimPlayerRef = Universe.get().getPlayerByUsername(victim.getDisplayName(), NameMatching.EXACT);

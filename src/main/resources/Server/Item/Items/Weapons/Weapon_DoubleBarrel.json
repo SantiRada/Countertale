@@ -160,7 +160,7 @@
         "ConfigId": "Hyguns_Projectile_Config_Bullet",
         "Spread": 0.12,
         "Count": 20,
-        "Damage": 3
+        "Damage": 5
       }
     }
   }

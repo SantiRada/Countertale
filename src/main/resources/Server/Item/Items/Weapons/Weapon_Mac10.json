@@ -145,15 +145,15 @@
         "WeaponClass": ["SMG", "Pistol"],
         "Capacity": 30,
         "Reload": {
-          "Time": 1.5,
+          "Time": 3.2,
           "Amount": 30
         }
       },
       "Projectiles": {
         "ConfigId": "Hyguns_Projectile_Config_Bullet",
-        "Spread": 0.05,
+        "Spread": 0.08,
         "Count": 1,
-        "Damage": 2
+        "Damage": 28
       }
     }
   }

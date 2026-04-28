@@ -151,7 +151,7 @@
         "WeaponClass": ["Rifle"],
         "Capacity": 25,
         "Reload": {
-          "Time": 2.5,
+          "Time": 3,
           "Amount": 25
         }
       },
@@ -159,7 +159,7 @@
         "ConfigId": "Hyguns_Projectile_Config_Bullet",
         "Spread": 0.005,
         "Count": 1,
-        "Damage": 14
+        "Damage": 3
       }
     }
   }
