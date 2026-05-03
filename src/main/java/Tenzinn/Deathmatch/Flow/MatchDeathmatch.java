@@ -59,4 +59,11 @@ public class MatchDeathmatch {
     public static void stopTimer() {
         if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false);
     }
+
+    public static void clearRuntimeState() {
+        stopTimer();
+        timerTask = null;
+        remainingSeconds = 150;
+        myMatch = null;
+    }
 }

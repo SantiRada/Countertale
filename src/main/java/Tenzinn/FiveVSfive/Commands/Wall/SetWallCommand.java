@@ -1,6 +1,7 @@
 package Tenzinn.FiveVSfive.Commands.Wall;
 
 import Tenzinn.Core.Listeners.MapListeners;
+import Tenzinn.Core.Localization.Lang;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
@@ -49,7 +50,7 @@ public class SetWallCommand extends AbstractAsyncCommand {
 
             for (int i = 0; i < xyz.length; i++) {
                 if (xyz[i].isEmpty() || !xyz[i].matches("[0-9,-]+")) {
-                    player.sendMessage(Message.raw("Start points inválidos").color(Color.cyan));
+                    player.sendMessage(Lang.msg("wall.invalid-start").color(Color.cyan));
                     break;
                 }
 
@@ -62,7 +63,7 @@ public class SetWallCommand extends AbstractAsyncCommand {
 
             for (int i = 0; i < xyz.length; i++) {
                 if (xyz[i].isEmpty() || !xyz[i].matches("[0-9,-]+")) {
-                    player.sendMessage(Message.raw("End points inválidos").color(Color.cyan));
+                    player.sendMessage(Lang.msg("wall.invalid-end").color(Color.cyan));
                     break;
                 }
 
@@ -71,24 +72,24 @@ public class SetWallCommand extends AbstractAsyncCommand {
         }
 
         if(startArg.get(context) == null && endArg.get(context) == null && fromArg.get(context) == null && toArg.get(context) == null) {
-            player.sendMessage(Message.raw("Los valores (--start o --from) y (--end o --to) son obligatorios"));
+            player.sendMessage(Lang.msg("wall.missing-points"));
             return null;
         }
 
         if(mapArg.get(context) != null) {
             if (!MapListeners.exists(mapArg.get(context))) {
-                player.sendMessage(Message.raw("El mapa que intentas editar no existe o tiene otro nombre").color(Color.cyan));
+                player.sendMessage(Lang.msg("wall.map-not-found").color(Color.cyan));
                 return null;
             }
         }
         else {
-            player.sendMessage(Message.raw("Debes definir un mapa para poder guardar las TemporalWall").color(Color.cyan));
+            player.sendMessage(Lang.msg("wall.map-required").color(Color.cyan));
             return null;
         }
 
         MapListeners.TemporalWall newTemporalWall = new MapListeners.TemporalWall(from[0], from[1], from[2], to[0], to[1], to[2]);
         MapListeners.addWall(mapArg.get(context), newTemporalWall);
-        player.sendMessage(Message.raw("[Wall:Set] new Wall in '" + mapArg.get(context) + "'"));
+        player.sendMessage(Lang.msg("wall.created", "map", mapArg.get(context)));
 
         return CompletableFuture.completedFuture(null);
     }

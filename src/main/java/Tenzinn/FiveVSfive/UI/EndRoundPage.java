@@ -1,6 +1,7 @@
 package Tenzinn.FiveVSfive.UI;
 
 import Tenzinn.Core.UI.ShopEventData;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.FiveVSfive.Flow.MatchFVF;
 
 import com.hypixel.hytale.component.Ref;
@@ -34,15 +35,15 @@ public class EndRoundPage extends InteractiveCustomUIPage<ShopEventData> {
         int teamPlayer = MatchFVF.validateTeamMembership(playerRef);
 
         if (winner == teamPlayer) {
-            uiBuilder.set("#Title.TextSpans", Message.raw("VICTORY"));
+            uiBuilder.set("#Title.TextSpans", Lang.msg("ui.round.victory"));
             uiBuilder.set("#Title.Style.TextColor", "#00FF00");
         }
         else {
-            uiBuilder.set("#Title.TextSpans", Message.raw("DEFEAT"));
+            uiBuilder.set("#Title.TextSpans", Lang.msg("ui.round.defeat"));
             uiBuilder.set("#Title.Style.TextColor", "#FF0000");
         }
 
-        uiBuilder.set("#NumRound.TextSpans", Message.raw("Ronda " + MatchFVF.getNumberRound(teamPlayer)));
+        uiBuilder.set("#NumRound.TextSpans", Lang.msg("ui.round.number", "round", MatchFVF.getNumberRound(teamPlayer)));
 
         sendUpdate();
     }

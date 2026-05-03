@@ -1,6 +1,7 @@
 package Tenzinn.Core;
 
 import Tenzinn.Core.Instances.InstanceManager;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Deathmatch.Flow.MatchDeathmatch;
 import Tenzinn.FiveVSfive.Flow.MatchFVF;
 
@@ -52,7 +53,7 @@ public class GameMatch {
         if (mode.equalsIgnoreCase("dm")) {
             MatchDeathmatch.startTimerMatch(this);
         } else {
-            players.getFirst().sendMessage(Message.raw("Cargando timer de 5v5"));
+            players.getFirst().sendMessage(Lang.msg("match.fvf.timer-loading"));
             MatchFVF.startTimerMatch(this);
         }
     }

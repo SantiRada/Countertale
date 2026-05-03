@@ -94,4 +94,13 @@ public class ShopData {
 
     public static ArrayList<String> getArrayTitle () { return titles; }
     public static int getSizeNames () { return names.isEmpty() ? -1 : names.size(); }
+
+    public static void clearRuntimeState() {
+        shopData = null;
+        titles.clear();
+        numbers.clear();
+        images.clear();
+        names.clear();
+        pricing.clear();
+    }
 }

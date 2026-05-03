@@ -1,5 +1,6 @@
 package Tenzinn.FiveVSfive.UI;
 
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.FiveVSfive.Flow.MatchFVF;
@@ -24,7 +25,6 @@ public class ScoreboardPageFVF extends CustomUIHud {
     private PlayerRef playerRef;
 
     public ScheduledFuture<?> timerTask;
-    private int remainingSeconds = 600;
 
     public ScoreboardPageFVF(PlayerRef playerRef) { super(playerRef); this.playerRef = playerRef; }
 
@@ -66,7 +66,7 @@ public class ScoreboardPageFVF extends CustomUIHud {
         String worldNameWithSpaces = String.join(" ", nameWorld);
         int withInstance = worldNameWithSpaces.toLowerCase().indexOf("instance");
         if (withInstance != -1) { worldNameWithSpaces = worldNameWithSpaces.substring(0, withInstance).trim(); }
-        uiBuilder.set("#NameMap.TextSpans", Message.raw("Competitive | " + worldNameWithSpaces));
+        uiBuilder.set("#NameMap.TextSpans", Lang.msg("ui.scoreboard.competitive-map", "map", worldNameWithSpaces));
 
         update(true, uiBuilder);
     }
@@ -99,7 +99,7 @@ public class ScoreboardPageFVF extends CustomUIHud {
 
     public void setTimer() {
         timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            remainingSeconds = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch().getTimer();
+            int remainingSeconds = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch().getTimer();
 
             int minutes = remainingSeconds / 60;
             int seconds = remainingSeconds % 60;

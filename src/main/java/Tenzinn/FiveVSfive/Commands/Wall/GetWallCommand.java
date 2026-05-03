@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncC
 
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MapListeners.TemporalWall;
+import Tenzinn.Core.Localization.Lang;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 
 import java.util.List;
@@ -32,19 +33,19 @@ public final class GetWallCommand extends AbstractAsyncCommand {
         String mapName = mapArg.provided(context) ? mapArg.get(context) : WallSessionState.currentMap();
 
         if (mapName == null || mapName.isBlank()) {
-            player.sendMessage(Message.raw("[Wall:get] No map specified. Use --map=" + mapName));
+            player.sendMessage(Lang.msg("wall.map-required"));
             return CompletableFuture.completedFuture(null);
         }
 
         if (!MapListeners.exists(mapName)) {
-            player.sendMessage(Message.raw("[Wall:get] Map not found: " + mapName));
+            player.sendMessage(Lang.msg("wall.map-not-found-named", "map", mapName));
             return CompletableFuture.completedFuture(null);
         }
 
         List<TemporalWall> walls = MapListeners.getWalls(mapName);
 
         if (walls.isEmpty()) {
-            player.sendMessage(Message.raw("[Wall:get] No TemporalWalls defined for map '" + mapName + "'"));
+            player.sendMessage(Lang.msg("wall.none-defined", "map", mapName));
             return CompletableFuture.completedFuture(null);
         }
 

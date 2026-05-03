@@ -1,8 +1,8 @@
 package Tenzinn.Core.Commands.Party;
 
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.PartyManager;
 
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -30,8 +30,8 @@ public class ThrowPartyCommand extends CommandBase {
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
         Player player = commandContext.senderAs(Player.class);
         PlayerRef playerRef = Universe.get().getPlayerByUsername(username.get(commandContext), NameMatching.EXACT);
-        if(playerRef == null) {
-            player.sendMessage(Message.raw("No se encontró el usuario '" + username.get(commandContext) + "'").color(Color.orange));
+        if (playerRef == null) {
+            player.sendMessage(Lang.msg("party.user-not-found", "player", username.get(commandContext)).color(Color.orange));
             return;
         }
 

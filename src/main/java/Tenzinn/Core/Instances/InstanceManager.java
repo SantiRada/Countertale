@@ -55,8 +55,8 @@ public class InstanceManager {
             try { config.setGameTime(java.time.Instant.parse("0001-01-01T12:00:00Z")); }
             catch (Exception e) { main.getLogger().at(Level.SEVERE).log("Error al establecer GameTime: " + e.getMessage()); }
 
-            config.setBlockTicking(true);
-            config.setTicking(true);
+            config.setBlockTicking(false);
+            config.setTicking(false);
             config.setIsAllNPCFrozen(true);
             config.setSpawningNPC(false);
             config.setPvpEnabled(true);
@@ -111,8 +111,9 @@ public class InstanceManager {
             cleanPrefab.placeNoReturn(instanceWorld, pos, null);
             long elapsed = System.currentTimeMillis() - start;
 
-            config.setBlockTicking(true);
-            config.setTicking(true);
+            config.setBlockTicking(false);
+            config.setTicking(false);
+            config.markChanged();
 
             main.getLogger().at(Level.INFO).log("[Instance] ✓ Prefab '" + prefabName + "' colocado en " + elapsed + "ms");
 
@@ -128,6 +129,8 @@ public class InstanceManager {
             main.getLogger().at(Level.WARNING).log("[Instance] No se puede teletransportar: mapa no cargado");
             return;
         }
+
+        activateWorld();
 
         ArrayList<Vector3d> spawns = RefactorTool.getSpawns(mapId, RefactorTool.getModeForPlayer(playerRefs.getFirst()));
 
@@ -148,7 +151,7 @@ public class InstanceManager {
 
                 if (currentWorld == null) continue;
 
-                updatedRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME)));
+                updatedRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME));
 
                 currentWorld.execute(() -> {
                     try {
@@ -186,5 +189,14 @@ public class InstanceManager {
         isMapLoaded = false;
         newWorld    = null;
         worldName   = null;
+    }
+
+    public void activateWorld() {
+        if (newWorld == null) return;
+
+        WorldConfig config = newWorld.getWorldConfig();
+        config.setBlockTicking(true);
+        config.setTicking(true);
+        config.markChanged();
     }
 }

@@ -4,6 +4,7 @@ import Tenzinn.Countertale;
 import Tenzinn.Core.Instances.MapVoteStore;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Instances.InstancePool;
@@ -17,18 +18,19 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
 public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
 
     private final List<GameMatch>            activeMatches;
-    private final Map<PlayerStats, GameMatch> playerMatches;
+    private final Map<UUID, GameMatch>       playerMatches;
     private final InstancePool               instancePool;
     private final Countertale                main;
 
     public MatchManager(Countertale main) {
         this.main          = main;
-        this.activeMatches = new ArrayList<>();
+        this.activeMatches = new CopyOnWriteArrayList<>();
         this.playerMatches = new ConcurrentHashMap<>();
         this.instancePool  = new InstancePool(main);
         this.instancePool.setCounter(this);
@@ -45,12 +47,10 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
 
     public GameMatch addPlayerToQueue(PlayerRef playerRef, String mode, List<String> allowedMaps) {
 
-        boolean isInList = playerMatches.keySet().stream()
-                .anyMatch(s -> s.getPlayerRef().equals(playerRef));
+        boolean isInList = playerMatches.containsKey(playerRef.getUuid());
 
         if (isInList) {
-            playerRef.sendMessage(Message.raw(
-                    MessageListeners.get(MessageListeners.MessageKey.CHAT_IN_QUEUE_X2)).color(Color.pink));
+            playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_IN_QUEUE_X2).color(Color.pink));
             return null;
         }
 
@@ -93,7 +93,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
         }
 
         PlayerStats playerStats = new PlayerStats(playerRef, RefactorTool.getPlayer(playerRef), match);
-        playerMatches.put(playerStats, match);
+        playerMatches.put(playerRef.getUuid(), match);
         RefactorTool.setPlayerStats(playerStats);
 
         // Register solo player as a single-member group for team formation
@@ -110,12 +110,9 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
     public GameMatch addGroupToQueue(List<PlayerRef> group, String mode, List<String> allowedMaps) {
         // Verify no member is already queued / in game
         for (PlayerRef playerRef : group) {
-            boolean inMatch = playerMatches.keySet().stream()
-                    .anyMatch(s -> s.getPlayerRef().equals(playerRef));
+            boolean inMatch = playerMatches.containsKey(playerRef.getUuid());
             if (inMatch) {
-                group.get(0).sendMessage(Message.raw(
-                        playerRef.getUsername() + " ya está en cola o en partida. El grupo no puede unirse.")
-                        .color(Color.pink));
+                group.get(0).sendMessage(Lang.msg("party.member-already-in-match", "player", playerRef.getUsername()).color(Color.pink));
                 return null;
             }
         }
@@ -151,7 +148,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
         for (PlayerRef playerRef : group) {
             match.addPlayer(playerRef);
             PlayerStats playerStats = new PlayerStats(playerRef, RefactorTool.getPlayer(playerRef), match);
-            playerMatches.put(playerStats, match);
+            playerMatches.put(playerRef.getUuid(), match);
             RefactorTool.setPlayerStats(playerStats);
         }
 
@@ -170,7 +167,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
             return false;
         }
 
-        GameMatch match = playerMatches.get(playerStats);
+        GameMatch match = playerMatches.get(playerRef.getUuid());
         RefactorTool.setQuitPlayerStats(playerStats);
 
         // Limpiar votos pendientes del jugador (por si salió sin consumirlos del todo)
@@ -179,7 +176,7 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
         if (match == null) return false;
 
         match.removePlayer(playerRef);
-        playerMatches.remove(playerStats);
+        playerMatches.remove(playerRef.getUuid());
 
         if (match.getPlayers().isEmpty()) {
             CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS).execute(() -> {
@@ -202,12 +199,11 @@ public class MatchManager implements InstancePool.MatchManagerInstanceCounter {
     }
 
     public GameMatch getPlayerMatch(PlayerRef playerRef) {
-        PlayerStats ps = RefactorTool.getPlayerStats(playerRef);
-        return ps != null ? ps.getCurrentMatch() : null;
+        return playerMatches.get(playerRef.getUuid());
     }
 
     public boolean isPlayerInMatch(PlayerRef playerRef) {
-        return RefactorTool.getPlayerStats(playerRef) != null;
+        return playerMatches.containsKey(playerRef.getUuid());
     }
 
     public List<GameMatch> getActiveMatches() { return new ArrayList<>(activeMatches); }

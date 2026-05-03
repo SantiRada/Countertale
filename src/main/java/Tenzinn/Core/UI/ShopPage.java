@@ -7,6 +7,7 @@ import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Listeners.MapListeners.SpawnMode;
 
 import com.hypixel.hytale.component.Ref;
@@ -43,8 +44,8 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
         RefactorTool.launchSound(playerRef, "clic");
 
-        uiBuilder.set("#SelectLoot.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_SELECT_LOOT)));
-        uiBuilder.set("#CloseShop.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_CLOSE_SHOP)));
+        uiBuilder.set("#SelectLoot.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_SELECT_LOOT));
+        uiBuilder.set("#CloseShop.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_CLOSE_SHOP));
 
         setListeners(uiEventBuilder);
         setTitleShop();
@@ -94,11 +95,11 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
 
                     if(pos >= 0) {
                         playerStats.giveMoney(playerStats.moneySpent.get(pos) > 0 ? playerStats.moneySpent.get(pos) : 0); // Devolver dinero previo
-                        playerRef.sendMessage(Message.raw("Changed " + prevWeapon.nameWeapon + " to " + newWeapon.nameWeapon));
+                        playerRef.sendMessage(Lang.msg("shop.changed-weapon", "old", prevWeapon.nameWeapon, "new", newWeapon.nameWeapon));
 
                         playerStats.moneySpent.set(pos, newWeapon.pricing);
                     } else {
-                        playerRef.sendMessage(Message.raw("El sistema no encontró el arma previa"));
+                        playerRef.sendMessage(Lang.msg("shop.previous-weapon-not-found"));
                     }
                 }
 
@@ -110,7 +111,7 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
                 uiBuilder.set("#UserMoney.TextSpans", Message.raw("$" + Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getMoney()));
                 sendUpdate();
             }
-            else { playerRef.sendMessage(Message.raw("Insufficient money")); }
+            else { playerRef.sendMessage(Lang.msg("shop.insufficient-money")); }
         }
 
         sendUpdate();
@@ -119,20 +120,20 @@ public class ShopPage extends InteractiveCustomUIPage<ShopEventData> {
     private void setTitleShop() {
         if (uiBuilder == null) return;
 
-        uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_NOT_BUYING_PHASE)));
-        uiBuilder.set("#Timer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)));
+        uiBuilder.set("#DescriptionTimer.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_NOT_BUYING_PHASE));
+        uiBuilder.set("#Timer.TextSpans", MessageListeners.message(MessageListeners.MessageKey.CHAT_BUYING_LATE));
 
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
         if (playerStats == null) return;
 
         if (playerStats.getCurrentMatch().getState() == GameMatch.MatchState.WAITING) {
-            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_LOOT_START_GAME)));
+            uiBuilder.set("#DescriptionTimer.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_LOOT_START_GAME));
             uiBuilder.set("#Timer.TextSpans", Message.raw(""));
         }
 
         if (playerStats.getCurrentMatch().isBuyPhase() || playerStats.canReceivedLoot) {
-            uiBuilder.set("#DescriptionTimer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_IN_BUYING_PHASE)));
-            uiBuilder.set("#Timer.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_WHEN_RECEIVES_LOOT)));
+            uiBuilder.set("#DescriptionTimer.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_IN_BUYING_PHASE));
+            uiBuilder.set("#Timer.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_WHEN_RECEIVES_LOOT));
         }
 
         sendUpdate();

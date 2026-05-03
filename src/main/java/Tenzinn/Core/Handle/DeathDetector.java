@@ -15,6 +15,7 @@ import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -72,7 +73,7 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
 
         // Deshabilitar la RespawnPage nativa
         component.setShowDeathMenu(false);
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(victim.getDisplayName(),NameMatching.EXACT);
+        PlayerRef playerRef = getPlayerRef(ref, store);
         victim.getPageManager().openCustomPage(ref, store, new DiePage(playerRef));
     }
 
@@ -81,7 +82,7 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
         Player playerComponent = store.getComponent(ref, Player.getComponentType());
         if (playerComponent == null) return;
 
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(playerComponent.getDisplayName(), NameMatching.EXACT);
+        PlayerRef playerRef = getPlayerRef(ref, store);
         if (playerRef == null) return;
 
         if (RefactorTool.getModeForPlayer(playerRef) == MapListeners.SpawnMode.DM) {
@@ -100,4 +101,9 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
 
     @Nonnull @Override
     public Set<Dependency<EntityStore>> getDependencies() { return Set.of(new SystemDependency<>(Order.BEFORE, DeathSystems.PlayerDeathScreen.class)); }
+
+    private PlayerRef getPlayerRef(Ref<EntityStore> ref, Store<EntityStore> store) {
+        UUIDComponent uuidComponent = store.getComponent(ref, UUIDComponent.getComponentType());
+        return uuidComponent != null ? Universe.get().getPlayer(uuidComponent.getUuid()) : null;
+    }
 }

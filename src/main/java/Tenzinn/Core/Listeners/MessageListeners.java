@@ -1,16 +1,8 @@
 package Tenzinn.Core.Listeners;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import Tenzinn.Core.Localization.Lang;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.hypixel.hytale.server.core.Message;
 
 public final class MessageListeners {
 
@@ -59,74 +51,17 @@ public final class MessageListeners {
         @Override public String toString() { return key; }
     }
 
-    private static final Logger LOGGER = Logger.getLogger("Countertale");
-
-    private static final String JSON_PATH = "Countertale/messages.json";
-    private static final String MISSING_KEY_FORMAT = "[MISSING: %s]";
-
-    private static final Map<String, String> MESSAGES = new HashMap<>();
-    private static boolean loaded = false;
-
     private MessageListeners () { }
-    public static boolean load() {
-        try {
-            File jar      = new File(MessageListeners.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            File jsonFile = new File(jar.getParentFile(), JSON_PATH);
-            return load(jsonFile);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] No se pudo resolver la ruta del .jar.", e);
-            return false;
-        }
-    }
 
-    public static boolean load(File jsonFile) {
-        MESSAGES.clear();
-        loaded = false;
+    public static boolean load() { return true; }
 
-        if (!jsonFile.exists()) {
-            LOGGER.warning("[Countertale] messages.json not found at: " + jsonFile.getAbsolutePath());
-            return false;
-        }
+    public static Message message(MessageKey key) { return Lang.msg(key.getKey()); }
 
-        try (FileReader reader = new FileReader(jsonFile)) {
+    public static Message message(String key) { return Lang.msg(key); }
 
-            JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-            flatten(root, "");
-            loaded = true;
-            LOGGER.info("[Countertale] Loaded " + MESSAGES.size() + " messages from messages.json");
+    public static String get(MessageKey key) { return "%" + "server.countertale." + key.getKey(); }
 
-        } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] messages.json not found.", e);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "[Countertale] Failed to parse messages.json.", e);
-        }
+    public static String get(String key) { return "%" + "server.countertale." + key; }
 
-        return loaded;
-    }
-
-    private static void flatten(JsonObject obj, String prefix) {
-        for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
-            String fullKey = prefix.isEmpty() ? entry.getKey() : prefix + "." + entry.getKey();
-            JsonElement value = entry.getValue();
-
-            if (value.isJsonObject()) {
-                flatten(value.getAsJsonObject(), fullKey);
-            } else {
-                MESSAGES.put(fullKey, value.getAsString());
-            }
-        }
-    }
-
-    public static String get(MessageKey key) { return get(key.getKey()); }
-
-    public static String get(String key) {
-        String value = MESSAGES.get(key);
-        if (value == null) {
-            LOGGER.warning("[Countertale] Missing message key: " + key);
-            return String.format(MISSING_KEY_FORMAT, key);
-        }
-        return value;
-    }
-
-    public static int size() { return MESSAGES.size(); }
+    public static int size() { return MessageKey.values().length; }
 }

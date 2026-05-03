@@ -4,6 +4,7 @@ import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Events.PlayerHealthTracker;
+import Tenzinn.Core.Localization.Lang;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.Value;
@@ -22,8 +23,13 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameHUD extends CustomUIHud {
+
+    private static final Set<GameHUD> ACTIVE_HUDS = ConcurrentHashMap.newKeySet();
+    private static ScheduledFuture<?> sharedTimerTask;
 
     private UICommandBuilder uiBuilder;
 
@@ -31,14 +37,9 @@ public class GameHUD extends CustomUIHud {
     private final PlayerStats playerStats;
     private String mode;
 
-    public ScheduledFuture<?> timerTask;
-    private int remainingSeconds = 600;
-
-    public ScheduledFuture<?> shopTask;
-    private int shopTimer;
-
-    public ScheduledFuture<?> invTask;
-    private int invTimer;
+    private final HudTimer matchTimer = new HudTimer();
+    private final HudTimer shopTimer = new HudTimer();
+    private final HudTimer invulnerabilityTimer = new HudTimer();
 
     public GameHUD(@NonNullDecl PlayerRef playerRef) {
         super(playerRef);
@@ -86,7 +87,7 @@ public class GameHUD extends CustomUIHud {
 
         WeaponStats shield = loot.stream().filter(ps -> ps.typeWeapon.equalsIgnoreCase("shield")).findFirst().orElse(null);
         if (shield == null) {
-            playerRef.sendMessage(Message.raw("No se encuentra escudo en este jugador."));
+            playerRef.sendMessage(Lang.msg("hud.shield-not-found"));
             return;
         }
 
@@ -96,13 +97,13 @@ public class GameHUD extends CustomUIHud {
     public void setWeapons(int value) {
         if (uiBuilder == null) return;
         if (RefactorTool.getSizeSlots() <= 0) {
-            playerRef.sendMessage(Message.raw("No cargaron los slots.").color(Color.red));
+            playerRef.sendMessage(Lang.msg("hud.slots-not-loaded").color(Color.red));
             return;
         }
 
         ArrayList<WeaponStats> loot = playerStats.getLoot();
         if (loot.isEmpty()) {
-            playerRef.sendMessage(Message.raw("No cargó el loot.").color(Color.red));
+            playerRef.sendMessage(Lang.msg("hud.loot-not-loaded").color(Color.red));
             return;
         }
 
@@ -151,6 +152,7 @@ public class GameHUD extends CustomUIHud {
     }
     public void setHealth(int value, int max) {
         if (uiBuilder == null) return;
+        if (max <= 0) return;
 
         int newHealth = value * 61 / max;
 
@@ -175,62 +177,21 @@ public class GameHUD extends CustomUIHud {
         UUID uuid = playerRef.getUuid();
 
         float current = PlayerHealthTracker.getCurrentHealth(uuid);
-        float max = PlayerHealthTracker.getCurrentHealth(uuid);
+        float max = PlayerHealthTracker.getMaxHealth(uuid);
 
         setHealth((int)current, (int)max);
     }
     public void setShopTimer() {
         uiBuilder.set("#ShopSectorTimer.Visible", true);
-        shopTimer = 15;
-
-        shopTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            try {
-                if (shopTimer > 0) {
-                    String visualTimer = shopTimer > 9 ? String.valueOf(shopTimer) : "0" + shopTimer;
-                    uiBuilder.set("#ShopTimer.TextSpans", Message.raw(visualTimer + "s"));
-
-                    update(true, uiBuilder);
-
-                    shopTimer -= 1;
-                } else {
-                    if (shopTask != null && !shopTask.isDone()) {
-                        shopTask.cancel(false);
-                        shopTask = null;
-                    }
-
-                    uiBuilder.set("#ShopSectorTimer.Visible", false);
-                    update(true, uiBuilder);
-                }
-            } catch (Exception e) { if (shopTask != null) shopTask.cancel(false); }
-        }, 0, 1, TimeUnit.SECONDS);
-
-        shopTimer = 15;
+        shopTimer.start(15);
+        registerTicker(this);
     }
     public void setInvulnerability() {
         if (mode.equalsIgnoreCase("fvf")) return;
 
         uiBuilder.set("#InvulnerabilitySector.Visible", true);
-        invTimer = 3;
-
-        invTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            try {
-                if (invTimer > 0) {
-                    uiBuilder.set("#InvulnerabilityTimer.TextSpans", Message.raw("0" + invTimer + "s"));
-
-                    update(true, uiBuilder);
-
-                    invTimer -= 1;
-                } else {
-                    if (invTask != null && !invTask.isDone()) {
-                        invTask.cancel(false);
-                        invTask = null;
-                    }
-
-                    uiBuilder.set("#InvulnerabilitySector.Visible", false);
-                    update(true, uiBuilder);
-                }
-            } catch (Exception e) { if (invTask != null) invTask.cancel(false); }
-        }, 0, 1, TimeUnit.SECONDS);
+        invulnerabilityTimer.start(3);
+        registerTicker(this);
     }
     public void setData() {
         if (uiBuilder == null) return;
@@ -273,41 +234,14 @@ public class GameHUD extends CustomUIHud {
     public void setTimer() {
         if (uiBuilder == null) return;
         stopTimer();
-
-        timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            try {
-                PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
-                if (stats == null || stats.getCurrentMatch() == null) {
-                    if (timerTask != null) timerTask.cancel(false);
-                    return;
-                }
-
-                remainingSeconds = stats.getCurrentMatch().getTimer();
-                int minutes = remainingSeconds / 60;
-                int seconds = remainingSeconds % 60;
-                String timerText = String.format("%02d:%02d", minutes, seconds);
-
-                if(remainingSeconds > 0) { uiBuilder.set("#TextTimer.TextSpans", Message.raw(timerText)); update(true, uiBuilder); }
-            } catch (Exception e) { if (timerTask != null) timerTask.cancel(false); }
-        }, 0, 1, TimeUnit.SECONDS);
+        matchTimer.start();
+        registerTicker(this);
     }
     public void stopTimer() {
-        if (timerTask != null && !timerTask.isDone()) {
-            timerTask.cancel(false);
-            timerTask = null;
-        }
-
-        if (shopTask != null && !shopTask.isDone()) {
-            shopTask.cancel(false);
-            shopTask = null;
-        }
-
-        if (invTask != null && !invTask.isDone()) {
-            invTask.cancel(false);
-            invTask = null;
-        }
-
-
+        matchTimer.stop();
+        shopTimer.stop();
+        invulnerabilityTimer.stop();
+        unregisterTicker(this);
     }
     public void clearHUD() {
         if (uiBuilder == null) return;
@@ -321,4 +255,139 @@ public class GameHUD extends CustomUIHud {
         uiBuilder = null;
     }
     // ================================================== //
+    private static synchronized void registerTicker(GameHUD hud) {
+        ACTIVE_HUDS.add(hud);
+        if (sharedTimerTask == null || sharedTimerTask.isDone()) {
+            sharedTimerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(GameHUD::tickAll, 0, 1, TimeUnit.SECONDS);
+        }
+    }
+
+    private static synchronized void unregisterTicker(GameHUD hud) {
+        ACTIVE_HUDS.remove(hud);
+        if (ACTIVE_HUDS.isEmpty() && sharedTimerTask != null && !sharedTimerTask.isDone()) {
+            sharedTimerTask.cancel(false);
+            sharedTimerTask = null;
+        }
+    }
+
+    private static void tickAll() {
+        for (GameHUD hud : ACTIVE_HUDS) {
+            try {
+                hud.tickTimers();
+            } catch (Exception e) {
+                unregisterTicker(hud);
+            }
+        }
+    }
+
+    private void tickTimers() {
+        if (uiBuilder == null) {
+            stopTimer();
+            return;
+        }
+
+        boolean hasWork = false;
+
+        if (matchTimer.isActive()) {
+            hasWork = true;
+            PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
+            if (stats == null || stats.getCurrentMatch() == null) {
+                stopTimer();
+                return;
+            }
+
+            int remainingSeconds = stats.getCurrentMatch().getTimer();
+            if (remainingSeconds > 0) {
+                int minutes = remainingSeconds / 60;
+                int seconds = remainingSeconds % 60;
+                String timerText = String.format("%02d:%02d", minutes, seconds);
+                if (matchTimer.shouldRender(timerText)) {
+                    uiBuilder.set("#TextTimer.TextSpans", Message.raw(timerText));
+                    update(true, uiBuilder);
+                }
+            }
+        }
+
+        if (shopTimer.isActive()) {
+            hasWork = true;
+            if (shopTimer.hasTimeLeft()) {
+                String timerText = shopTimer.formatTwoDigits() + "s";
+                if (shopTimer.shouldRender(timerText)) {
+                    uiBuilder.set("#ShopTimer.TextSpans", Message.raw(timerText));
+                    update(true, uiBuilder);
+                }
+                shopTimer.decrement();
+            } else {
+                shopTimer.stop();
+                uiBuilder.set("#ShopSectorTimer.Visible", false);
+                update(true, uiBuilder);
+            }
+        }
+
+        if (invulnerabilityTimer.isActive()) {
+            hasWork = true;
+            if (invulnerabilityTimer.hasTimeLeft()) {
+                String timerText = invulnerabilityTimer.formatTwoDigits() + "s";
+                if (invulnerabilityTimer.shouldRender(timerText)) {
+                    uiBuilder.set("#InvulnerabilityTimer.TextSpans", Message.raw(timerText));
+                    update(true, uiBuilder);
+                }
+                invulnerabilityTimer.decrement();
+            } else {
+                invulnerabilityTimer.stop();
+                uiBuilder.set("#InvulnerabilitySector.Visible", false);
+                update(true, uiBuilder);
+            }
+        }
+
+        if (!hasWork) unregisterTicker(this);
+    }
+
+    public static synchronized void clearRuntimeState() {
+        for (GameHUD hud : new ArrayList<>(ACTIVE_HUDS)) {
+            hud.matchTimer.stop();
+            hud.shopTimer.stop();
+            hud.invulnerabilityTimer.stop();
+        }
+        ACTIVE_HUDS.clear();
+        if (sharedTimerTask != null && !sharedTimerTask.isDone()) {
+            sharedTimerTask.cancel(false);
+        }
+        sharedTimerTask = null;
+    }
+
+    private static final class HudTimer {
+        private int remainingSeconds;
+        private boolean active;
+        private String lastText = "";
+
+        void start() {
+            active = true;
+            lastText = "";
+        }
+
+        void start(int remainingSeconds) {
+            this.remainingSeconds = remainingSeconds;
+            start();
+        }
+
+        void stop() {
+            active = false;
+            lastText = "";
+        }
+
+        boolean isActive() { return active; }
+
+        boolean hasTimeLeft() { return remainingSeconds > 0; }
+
+        void decrement() { remainingSeconds -= 1; }
+
+        String formatTwoDigits() { return remainingSeconds > 9 ? String.valueOf(remainingSeconds) : "0" + remainingSeconds; }
+
+        boolean shouldRender(String text) {
+            if (text.equals(lastText)) return false;
+            lastText = text;
+            return true;
+        }
+    }
 }

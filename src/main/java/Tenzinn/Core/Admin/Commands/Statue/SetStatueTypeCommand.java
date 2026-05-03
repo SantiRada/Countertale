@@ -1,10 +1,10 @@
 package Tenzinn.Core.Admin.Commands.Statue;
 
 import Tenzinn.Core.Listeners.StatueBlockListener;
+import Tenzinn.Core.Localization.Lang;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -34,8 +34,6 @@ public class SetStatueTypeCommand extends AbstractPlayerCommand {
 
         UUID playerId = playerRef.getUuid();
         StatueBlockListener.getInstance().activateFor(playerId, playerRef, world, statueType);
-        playerRef.sendMessage(
-                Message.raw("Golpeá un bloque para asignarlo como [" + statueType.toUpperCase() + "].").color(Color.cyan)
-        );
+        playerRef.sendMessage(Lang.msg("admin.statue.select-block", "type", statueType.toUpperCase()).color(Color.cyan));
     }
 }

@@ -2,6 +2,7 @@ package Tenzinn.Core.Events;
 
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.UI.GameHUD;
+import Tenzinn.Core.Objects.PlayerStats;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -10,6 +11,7 @@ import com.hypixel.hytale.component.SystemGroup;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -73,7 +75,9 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
         World world = Universe.get().getWorld(player.getWorld().getWorldConfig().getUuid());
         if (world == Universe.get().getDefaultWorld()) return;
 
-        RefactorTool.setHealthPlayer(player, current);
+        PlayerRef playerRef = Universe.get().getPlayer(uuid);
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if (playerStats != null) playerStats.setHealth((int) current);
     }
 
     @Nullable @Override
@@ -83,4 +87,11 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
     public Query<EntityStore> getQuery() { return Query.and(Player.getComponentType()); }
 
     public static float getCurrentHealth(UUID uuid) { return currentHealthMap.getOrDefault(uuid, 0f); }
+    public static float getMaxHealth(UUID uuid) { return maxHealthMap.getOrDefault(uuid, 0f); }
+
+    public static void clearRuntimeState() {
+        currentHealthMap.clear();
+        maxHealthMap.clear();
+        lastUpdatedHealthMap.clear();
+    }
 }

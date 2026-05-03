@@ -1,5 +1,6 @@
 package Tenzinn.Deathmatch.UI;
 
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.PlayerStats;
 
@@ -22,7 +23,6 @@ public class ScoreboardPage extends CustomUIHud {
     private PlayerRef playerRef;
 
     public ScheduledFuture<?> timerTask;
-    private int remainingSeconds = 600;
 
     public ScoreboardPage(PlayerRef playerRef) { super(playerRef); this.playerRef = playerRef; }
 
@@ -68,14 +68,14 @@ public class ScoreboardPage extends CustomUIHud {
         int withInstance = worldNameWithSpaces.toLowerCase().indexOf("instance");
         if (withInstance != -1) { worldNameWithSpaces = worldNameWithSpaces.substring(0, withInstance).trim(); }
 
-        uiBuilder.set("#NameMap.TextSpans", Message.raw("Casual | " + worldNameWithSpaces));
+        uiBuilder.set("#NameMap.TextSpans", Lang.msg("ui.scoreboard.casual-map", "map", worldNameWithSpaces));
 
         update(true, uiBuilder);
     }
 
     public void setTimer() {
         timerTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
-            remainingSeconds = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch().getTimer();
+            int remainingSeconds = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch().getTimer();
 
             int minutes = remainingSeconds / 60;
             int seconds = remainingSeconds % 60;

@@ -1,5 +1,6 @@
 package Tenzinn.FiveVSfive.Commands.Round;
 
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.FiveVSfive.Flow.MatchFVF;
 
 import com.hypixel.hytale.component.Ref;
@@ -48,11 +49,11 @@ public class RoundCommands extends AbstractCommandCollection {
                                @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef,
                                @NonNullDecl World world) {
             if (!MatchFVF.isMatchActive()) {
-                playerRef.sendMessage(Message.raw("No hay ninguna partida activa.").color(Color.red));
+                playerRef.sendMessage(Lang.msg("round.no-active-match").color(Color.red));
                 return;
             }
             MatchFVF.forceAddRound(team);
-            playerRef.sendMessage(Message.raw("Ronda otorgada al equipo " + team + ".").color(Color.green));
+            playerRef.sendMessage(Lang.msg("round.given", "team", team).color(Color.green));
         }
 
         @Override
@@ -72,11 +73,11 @@ public class RoundCommands extends AbstractCommandCollection {
                                @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef,
                                @NonNullDecl World world) {
             if (!MatchFVF.isMatchActive()) {
-                playerRef.sendMessage(Message.raw("No hay ninguna partida activa.").color(Color.red));
+                playerRef.sendMessage(Lang.msg("round.no-active-match").color(Color.red));
                 return;
             }
             MatchFVF.forceWinMatch(team);
-            playerRef.sendMessage(Message.raw("Equipo " + team + " gana la partida.").color(Color.green));
+            playerRef.sendMessage(Lang.msg("round.match-won", "team", team).color(Color.green));
         }
 
         @Override

@@ -1,3 +1,110 @@
 # === items ===
 items.action_book.name = Actions Book
 items.action_book.description = Right-click to enter the queue for Deathmatch mode
+
+# === Countertale chat ===
+server.countertale.chat.when-buying = Purchased {weapon}
+server.countertale.chat.buying-late = Purchases are only available during the buy phase.
+server.countertale.chat.shop-in-lobby = Join a match to open the shop.
+server.countertale.chat.shop-in-lobby-fvf = The shop is only available during the 5v5 buy phase.
+server.countertale.chat.damage-lobby = You cannot take damage in the lobby.
+server.countertale.chat.in-queue-x2 = You are already in a queue.
+server.countertale.chat.command-lobby-inlobby = You are already in the lobby.
+server.countertale.chat.back-to-lobby = Returning to lobby.
+server.countertale.chat.command-leave-without-queue = You are not in a queue.
+server.countertale.chat.command-leave-in-game = You cannot leave the queue after the match has started.
+server.countertale.chat.leave-queue = You left the queue.
+server.countertale.chat.already-in-game = You are already queued or in a match ({players}/10 players). State: {state}
+server.countertale.chat.added-queue = Added to queue [{match}] ({players}/10 players)
+server.countertale.chat.starting-game = Starting match.
+server.countertale.chat.teleporting-game = Teleporting to match.
+server.countertale.chat.team = [TEAM] {player}: {message}
+
+# === Countertale UI ===
+server.countertale.ui.not-buying-phase = The buy phase is closed.
+server.countertale.ui.loot-start-game = Your loadout will be available when the match starts.
+server.countertale.ui.in-buying-phase = Buy phase.
+server.countertale.ui.when-receives-loot = You can receive your loadout now.
+server.countertale.ui.select-loot = Select loadout
+server.countertale.ui.close-shop = Close shop
+server.countertale.ui.btn-lobby = Lobby
+server.countertale.ui.btn-play = Play again
+server.countertale.ui.title-summary = Summary
+server.countertale.ui.damage-caused = Damage dealt
+server.countertale.ui.damage-received = Damage received
+server.countertale.ui.melee-damage = Melee damage
+server.countertale.ui.message-command-leave = Use /leave to leave the queue.
+server.countertale.ui.title-queue = Queue
+server.countertale.ui.desc-queue = Join a match queue.
+server.countertale.ui.title-shop = Shop
+server.countertale.ui.desc-shop = Open the equipment shop.
+server.countertale.ui.queue.maps = Maps: {maps}
+server.countertale.ui.queue.players-full = 10/10 Players
+server.countertale.ui.queue.loading-map = Loading map...
+server.countertale.ui.modes.maps-selected = [{selected}/{total} Maps selected]
+server.countertale.ui.modes.select-maps-first = Select maps before joining the queue.
+server.countertale.ui.round.victory = VICTORY
+server.countertale.ui.round.defeat = DEFEAT
+server.countertale.ui.round.number = Round {round}
+server.countertale.ui.map.label = MAP - {map}
+server.countertale.ui.scoreboard.casual-map = Casual | {map}
+server.countertale.ui.scoreboard.competitive-map = Competitive | {map}
+
+# === Countertale party ===
+server.countertale.party.only-leader-queue = Only the party leader can join the queue. Use /party order to ask them.
+server.countertale.party.member-already-in-match = {player} is already queued or in a match. The party cannot join.
+server.countertale.party.already-in-party = You are already in a party. Leave it with /party leave.
+server.countertale.party.created = Party created.
+server.countertale.party.full = The party is full (maximum 5 players).
+server.countertale.party.invite-pending = You already have a pending invitation. Other parties cannot invite you until you respond.
+server.countertale.party.invite-sent = Invitation sent to {player}.
+server.countertale.party.invited = You were invited to join {leader}'s party. Type /party join to accept.
+server.countertale.party.joined = You joined {leader}'s party.
+server.countertale.party.invite-declined-leader = {player} declined your party invitation.
+server.countertale.party.invite-declined = You declined {leader}'s party invitation.
+server.countertale.party.start-request = {player} asks you to start the match.
+server.countertale.party.kicked = Removed {player} from the party.
+server.countertale.party.member-joined = {player} joined the party.
+server.countertale.party.user-not-found = Player '{player}' was not found.
+
+# === Countertale shop and loot ===
+server.countertale.shop.buying-round-closed = You cannot buy during the round.
+server.countertale.shop.changed-weapon = Changed {old} to {new}
+server.countertale.shop.previous-weapon-not-found = Previous weapon was not found.
+server.countertale.shop.insufficient-money = Insufficient money.
+server.countertale.loot.slot-item = Slot ({slot}) - Item: {item}
+server.countertale.loot.select-weapons-first = Select weapons in the store to obtain them with this command.
+
+# === Countertale economy and admin ===
+server.countertale.economy.give.sent = Money sent to {player}.
+server.countertale.economy.give.received = You have received +{amount} contribution to your economy.
+server.countertale.economy.revenue.list-title = Revenues list
+server.countertale.economy.revenue.missing-args = Required arguments: --type and --value.
+server.countertale.economy.revenue.updated = Type {type} correctly modified.
+server.countertale.admin.game.status.header = ========== STATEMENT OF GAMES ==========
+server.countertale.admin.game.status.no-active = There are no active games.
+server.countertale.admin.game.status.active = Active games:
+server.countertale.admin.statue.select-block = Hit a block to assign it as [{type}].
+server.countertale.admin.statue.assigned = [{type}] assigned at ({x}, {y}, {z}).
+server.countertale.admin.statue.deleted-holograms = Removed {count} holograms.
+server.countertale.admin.forcestart.not-in-queue = You are not in any queue.
+server.countertale.admin.forcestart.already-started = The match is already running (state: {state}).
+server.countertale.match.fvf.timer-loading = Loading 5v5 timer.
+server.countertale.hud.shield-not-found = Shield not found for this player.
+server.countertale.hud.slots-not-loaded = Slots were not loaded.
+server.countertale.hud.loot-not-loaded = Loot was not loaded.
+server.countertale.effect.applied = Applied effect {effect} to {player}.
+server.countertale.round.no-active-match = There is no active match.
+server.countertale.round.given = Round awarded to team {team}.
+server.countertale.round.match-won = Team {team} wins the match.
+server.countertale.wall.map-not-found = Selected map was not found.
+server.countertale.wall.map-not-found-named = Map not found: {map}
+server.countertale.wall.map-required = Define a map first.
+server.countertale.wall.building = Building TemporalWalls for {map}.
+server.countertale.wall.invalid-start = Invalid start points.
+server.countertale.wall.invalid-end = Invalid end points.
+server.countertale.wall.missing-points = Required values: (--start or --from) and (--end or --to).
+server.countertale.wall.created = New wall created in '{map}'.
+server.countertale.wall.none-defined = No TemporalWalls defined for map '{map}'.
+server.countertale.wall.index-out-of-range = Wall index {index} is out of range.
+server.countertale.wall.removed = Removed wall [{index}] in '{map}'.
