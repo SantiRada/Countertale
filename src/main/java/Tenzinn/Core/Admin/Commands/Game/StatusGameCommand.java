@@ -2,6 +2,7 @@ package Tenzinn.Core.Admin.Commands.Game;
 
 import Tenzinn.Countertale;
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Localization.Lang;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -26,7 +27,7 @@ public class StatusGameCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
 
-        commandContext.sendMessage(Message.raw("========== STATEMENT OF GAMES =========="));
+        commandContext.sendMessage(Lang.msg("admin.game.status.header"));
 
         commandContext.sendMessage(Message.raw(main.getMatchManager().getStats()).color(Color.ORANGE));
         commandContext.sendMessage(Message.raw(main.getMatchManager().getPlayers()).color(Color.ORANGE));
@@ -35,9 +36,9 @@ public class StatusGameCommand extends AbstractPlayerCommand {
 
         List<GameMatch> matches = main.getMatchManager().getActiveMatches();
 
-        if (matches.isEmpty()) { commandContext.sendMessage(Message.raw("There are no active games.").color(Color.MAGENTA)); }
+        if (matches.isEmpty()) { commandContext.sendMessage(Lang.msg("admin.game.status.no-active").color(Color.MAGENTA)); }
         else {
-            commandContext.sendMessage(Message.raw("Active games:"));
+            commandContext.sendMessage(Lang.msg("admin.game.status.active"));
 
             for (int i = 0; i < matches.size(); i++) {
                 GameMatch match = matches.get(i);

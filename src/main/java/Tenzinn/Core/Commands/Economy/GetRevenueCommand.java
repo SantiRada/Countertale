@@ -1,6 +1,7 @@
 package Tenzinn.Core.Commands.Economy;
 
 import Tenzinn.Core.Shop.RevenuesConfig;
+import Tenzinn.Core.Localization.Lang;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
@@ -20,7 +21,7 @@ public class GetRevenueCommand extends CommandBase {
         Player player = commandContext.senderAs(Player.class);
 
         player.sendMessage(Message.raw("----------------------------"));
-        player.sendMessage(Message.raw("Revenues list"));
+        player.sendMessage(Lang.msg("economy.revenue.list-title"));
 
         ArrayList<String> allData = RevenuesConfig.getList();
 

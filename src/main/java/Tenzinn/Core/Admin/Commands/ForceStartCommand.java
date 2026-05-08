@@ -2,11 +2,10 @@ package Tenzinn.Core.Admin.Commands;
 
 import Tenzinn.Countertale;
 import Tenzinn.Core.GameMatch;
-
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -26,15 +25,14 @@ public class ForceStartCommand extends AbstractPlayerCommand {
 
         var stats = RefactorTool.getPlayerStats(playerRef);
         if (stats == null) {
-            commandContext.sendMessage(Message.raw("No estás en ninguna cola."));
+            commandContext.sendMessage(Lang.msg("admin.forcestart.not-in-queue"));
             return;
         }
 
         GameMatch match = stats.getCurrentMatch();
         if (match == null) return;
         if (match.getState() != GameMatch.MatchState.WAITING) {
-            commandContext.sendMessage(Message.raw(
-                    "La partida ya está en curso (estado: " + match.getState() + ")."));
+            commandContext.sendMessage(Lang.msg("admin.forcestart.already-started", "state", match.getState().toString()));
             return;
         }
 

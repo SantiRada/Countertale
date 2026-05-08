@@ -1,5 +1,6 @@
 package Tenzinn.Core.Effects;
 
+import Tenzinn.Core.Localization.Lang;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.component.ComponentAccessor;
@@ -25,7 +26,7 @@ public class PlayerEntityEffect extends JavaPlugin {
 
         assert entityRef != null;
         EffectControllerComponent controller = accessor.getComponent(entityRef, EffectControllerComponent.getComponentType());
-        player.sendMessage(Message.raw("Se aplica el efecto " + effectString + " al jugador " + player.getDisplayName()));
+        player.sendMessage(Lang.msg("effect.applied", "effect", effectString, "player", player.getDisplayName()));
 
         if (controller == null) {
             LOGGER.log(Level.WARNING, "EffectControllerComponent no encontrado en: " + player.getDisplayName());

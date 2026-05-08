@@ -38,15 +38,25 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RefactorTool {
 
     public enum TypeData { SCORE, DEATH, KILL }
-    public static List<PlayerStats> playerStatsList = new ArrayList<>();
-    public static ArrayList<WeaponStats> slots = new ArrayList<>();
+    public static List<PlayerStats> playerStatsList = new CopyOnWriteArrayList<>();
+    public static List<WeaponStats> slots = new CopyOnWriteArrayList<>();
+    private static final Map<UUID, PlayerStats> playerStatsByUuid = new ConcurrentHashMap<>();
 
-    public static void setPlayerStats (PlayerStats playerStats) { playerStatsList.add(playerStats); }
-    public static void setQuitPlayerStats (PlayerStats playerStats) { playerStatsList.remove(playerStats); }
+    public static void setPlayerStats (PlayerStats playerStats) {
+        playerStatsList.add(playerStats);
+        playerStatsByUuid.put(playerStats.getPlayerRef().getUuid(), playerStats);
+    }
+    public static void setQuitPlayerStats (PlayerStats playerStats) {
+        playerStatsList.remove(playerStats);
+        playerStatsByUuid.remove(playerStats.getPlayerRef().getUuid());
+    }
     public static void setSlots (ArrayList<WeaponStats> newSlots){
         slots.clear();
         slots.addAll(newSlots);
@@ -58,32 +68,30 @@ public class RefactorTool {
 
         if (newWeapon.nameWeapon.equalsIgnoreCase("comingsoon")) return;
 
-        String message = MessageListeners.get(MessageListeners.MessageKey.CHAT_WHEN_BUYING);
-        playerRef.sendMessage(Message.raw(message + newWeapon.nameWeapon).color(Color.cyan));
+        playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_WHEN_BUYING)
+                .param("weapon", newWeapon.nameWeapon)
+                .color(Color.cyan));
 
-        for (PlayerStats stats : playerStatsList) {
-            if(stats.getPlayerRef() == playerRef) {
-                switch (newWeapon.typeWeapon.toLowerCase()) {
-                    case "primary":     stats.primaryWeapon = newWeapon;    break;
-                    case "secondary":   stats.secondaryWeapon = newWeapon;  break;
-                    case "shield":      stats.shield = newWeapon;           break;
-                }
+        PlayerStats stats = getPlayerStats(playerRef);
+        if (stats == null) return;
 
-                if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) {
-                    playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BUYING_LATE)).color(Color.yellow));
-                }
-                else { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
-
-                break;
-            }
+        switch (newWeapon.typeWeapon.toLowerCase()) {
+            case "primary":     stats.primaryWeapon = newWeapon;    break;
+            case "secondary":   stats.secondaryWeapon = newWeapon;  break;
+            case "shield":      stats.shield = newWeapon;           break;
         }
+
+        if (!stats.canReceivedLoot && !stats.getCurrentMatch().isBuyPhase()) {
+            playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_BUYING_LATE).color(Color.yellow));
+        }
+        else { LootManager.giveLoot(stats.getPlayer(), getLoot(stats.getPlayerRef())); }
     }
     public static void setAllLoot(PlayerRef playerRef, ArrayList<WeaponStats> list) {
 
         if (list == null) { list = LootManager.getStarterKit(); }
         if (list.isEmpty()) { list = LootManager.getStarterKit(); }
 
-        PlayerStats playerStats = playerStatsList.stream().filter(ps -> ps.getPlayerRef().equals(playerRef)).findFirst().orElse(null);
+        PlayerStats playerStats = getPlayerStats(playerRef);
         if (playerStats == null) return;
 
         for (WeaponStats item : list) {
@@ -114,12 +122,7 @@ public class RefactorTool {
     }
     public static int getSizeSlots () { return slots.size(); }
     public static PlayerStats getPlayerStats(PlayerRef playerRef) {
-        if (playerStatsList.isEmpty()) return null;
-
-        for (PlayerStats playerStats : playerStatsList) {
-            if (playerStats.getPlayerRef().equals(playerRef)) { return playerStats; }
-        }
-        return null;
+        return playerRef == null ? null : playerStatsByUuid.get(playerRef.getUuid());
     }
     public static List<PlayerStats> getPlayerList(GameMatch match) {
         return playerStatsList.stream()
@@ -141,8 +144,7 @@ public class RefactorTool {
     public static Vector3d getRandomSpawn(String nameMap) {
         ArrayList<Vector3d> spawns = new ArrayList<>(getSpawns(nameMap, SpawnMode.DM));
 
-        Random random = new Random();
-        int randomPosition = random.nextInt(10);
+        int randomPosition = ThreadLocalRandom.current().nextInt(spawns.size());
 
         return spawns.get(randomPosition);
     }
@@ -378,5 +380,11 @@ public class RefactorTool {
 
             SoundUtil.playSoundEvent3dToPlayer(playerRef, index, SoundCategory.SFX, transform.getPosition(), store);
         });
+    }
+
+    public static void clearRuntimeState() {
+        playerStatsList.clear();
+        playerStatsByUuid.clear();
+        slots.clear();
     }
 }

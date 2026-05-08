@@ -9,13 +9,17 @@ import Tenzinn.Core.Listeners.*;
 import Tenzinn.Core.PartyManager;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.UI.PartyHUD;
+import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.UI.QueueHud;
 import Tenzinn.Core.MatchManager;
 import Tenzinn.Core.Instances.InstanceManager;
 import Tenzinn.Core.Shop.RevenuesConfig;
+import Tenzinn.Core.Shop.ShopData;
 import Tenzinn.Core.Commands.Loot.LootCommands;
 import Tenzinn.Core.Admin.Commands.AdminCommands;
+import Tenzinn.Deathmatch.Flow.MatchDeathmatch;
 import Tenzinn.FiveVSfive.Systems.TeamChatSystem;
+import Tenzinn.FiveVSfive.Flow.MatchFVF;
 import Tenzinn.Core.Commands.Economy.RevenueCommands;
 import Tenzinn.FiveVSfive.Commands.Wall.WallCommands;
 import Tenzinn.FiveVSfive.Commands.Round.RoundCommands;
@@ -128,9 +132,18 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void shutdown() {
+        if (matchCheckTask != null && !matchCheckTask.isDone()) { matchCheckTask.cancel(false); }
         if (detectFilter != null) { PacketAdapters.deregisterInbound(detectFilter); }
         if (hotbarFilter != null) { PacketAdapters.deregisterInbound(hotbarFilter); }
         matchManager.getInstancePool().shutdown();
+        GameHUD.clearRuntimeState();
+        QueueHud.clearRuntimeState();
+        PlayerHealthTracker.clearRuntimeState();
+        MatchDeathmatch.clearRuntimeState();
+        MatchFVF.clearRuntimeState();
+        PartyManager.clearRuntimeState();
+        ShopData.clearRuntimeState();
+        RefactorTool.clearRuntimeState();
     }
 
     @Override

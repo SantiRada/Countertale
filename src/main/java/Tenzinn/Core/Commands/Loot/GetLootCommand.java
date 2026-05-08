@@ -2,6 +2,7 @@ package Tenzinn.Core.Commands.Loot;
 
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Objects.WeaponStats;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
@@ -31,7 +32,7 @@ public class GetLootCommand extends CommandBase {
         ArrayList<WeaponStats> loot = playerStats.getLoot();
         int i = 1;
         for (WeaponStats item : loot) {
-            playerRef.sendMessage(Message.raw("Slot (" + i + ") - Item: " + (item != null ? item.nameWeapon : "NULL")).color(Color.yellow));
+            playerRef.sendMessage(Lang.msg("loot.slot-item", "slot", i, "item", item != null ? item.nameWeapon : "NULL").color(Color.yellow));
             i += 1;
         }
     }

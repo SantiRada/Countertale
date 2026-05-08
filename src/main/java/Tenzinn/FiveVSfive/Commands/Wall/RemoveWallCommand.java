@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.Message;
 
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MapListeners.TemporalWall;
+import Tenzinn.Core.Localization.Lang;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 
 import javax.annotation.Nonnull;
@@ -37,17 +38,17 @@ public final class RemoveWallCommand extends AbstractAsyncCommand {
 
         List<TemporalWall> walls = MapListeners.getWalls(mapName);
         if (walls.isEmpty() && !MapListeners.exists(mapName)) {
-            player.sendMessage(Message.raw("[Wall:removed] Map not found: " + mapName));
+            player.sendMessage(Lang.msg("wall.map-not-found-named", "map", mapName));
             return CompletableFuture.completedFuture(null);
         }
 
         if (id < 0 || id >= walls.size()) {
-            player.sendMessage(Message.raw("[Wall:removed] Index " + id + " out of range."));
+            player.sendMessage(Lang.msg("wall.index-out-of-range", "index", id));
             return CompletableFuture.completedFuture(null);
         }
 
         MapListeners.removeWall(mapName, id);
-        player.sendMessage(Message.raw("[Wall:removed] Wall [" + id + "] in '" + mapName + "'"));
+        player.sendMessage(Lang.msg("wall.removed", "index", id, "map", mapName));
 
         return CompletableFuture.completedFuture(null);
     }

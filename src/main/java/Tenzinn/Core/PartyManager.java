@@ -1,7 +1,8 @@
 package Tenzinn.Core;
 
-import Tenzinn.Core.Objects.PartyObject;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Objects.InvitationParty;
+import Tenzinn.Core.Objects.PartyObject;
 
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
@@ -9,19 +10,19 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.awt.*;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class PartyManager {
 
-    public static List<PartyObject> totalParty = new ArrayList<>();
-    public static List<InvitationParty> totalInvitations = new ArrayList<>();
+    public static List<PartyObject> totalParty = new CopyOnWriteArrayList<>();
+    public static List<InvitationParty> totalInvitations = new CopyOnWriteArrayList<>();
     private static int partyIdCounter = 0;
 
     public static void CreateParty(PlayerRef playerRef) {
         for (PartyObject partyObject : totalParty) {
             if (partyObject.players.stream().anyMatch(player -> player == playerRef)) {
-                playerRef.sendMessage(Message.raw("No puedes crear otro grupo si formas parte de uno. Puedes abandonarlo con /party leave"));
+                playerRef.sendMessage(Lang.msg("party.already-in-party"));
                 return;
             }
         }
@@ -30,35 +31,32 @@ public class PartyManager {
         totalParty.add(newParty);
 
         HytaleServer.SCHEDULED_EXECUTOR.schedule(newParty::TransferLeadership, 100, TimeUnit.MILLISECONDS);
-        playerRef.sendMessage(Message.raw("Created party!").color(Color.cyan));
+        playerRef.sendMessage(Lang.msg("party.created").color(Color.cyan));
     }
+
     public static void InviteToParty(int id, PlayerRef playerRef) {
         String leader = GetLeaderById(id);
-        if(leader == null) return;
+        if (leader == null) return;
 
-        // Revisar si el grupo ya está lleno
         int partyIndex = GetIndexPartyById(id);
         if (partyIndex >= 0 && totalParty.get(partyIndex).players.size() >= 5) {
-            SendMessageToLeader(id, "No puedes invitar más jugadores. El grupo está lleno (máximo 5).");
+            SendMessageToLeader(id, Lang.msg("party.full"));
             return;
         }
 
-        // Revisar si el usuario ya tiene una invitación
         int testInvitation = GetInvitationByPlayer(playerRef);
-        if(testInvitation >= 0) {
-            playerRef.sendMessage(Message.raw("Tienes una invitación pendiente. Otros grupos no pueden invitarte hasta que la respondas.").color(Color.orange));
+        if (testInvitation >= 0) {
+            playerRef.sendMessage(Lang.msg("party.invite-pending").color(Color.orange));
             return;
         }
 
-        SendMessageToLeader(id, "Se envió la invitación al jugador " + playerRef.getUsername());
+        SendMessageToLeader(id, Lang.msg("party.invite-sent", "player", playerRef.getUsername()));
+        playerRef.sendMessage(Lang.msg("party.invited", "leader", leader).color(Color.cyan));
 
-        // Enviar el mensaje de la invitación
-        playerRef.sendMessage(Message.raw("Has sido invitado a unirte al grupo de " + leader + " para aceptar escribe /party join").color(Color.cyan));
-
-        // Crear invitación en memoria
         InvitationParty newIntivation = new InvitationParty(id, playerRef);
         totalInvitations.add(newIntivation);
     }
+
     public static void JoinToParty(PlayerRef playerRef) {
         int index = ValidateInvitationToPlayer(playerRef);
         if (index < 0) return;
@@ -66,9 +64,11 @@ public class PartyManager {
         int indexParty = GetIndexPartyById(totalInvitations.get(index).id);
         if (indexParty < 0) return;
 
-        playerRef.sendMessage(Message.raw("Has entrado al grupo de " + totalParty.get(indexParty).leaderUsername).color(Color.orange));
+        playerRef.sendMessage(Lang.msg("party.joined", "leader", totalParty.get(indexParty).leaderUsername)
+                .color(Color.orange));
         totalParty.get(indexParty).AddPlayer(playerRef);
     }
+
     public static void DeclineParty(PlayerRef playerRef) {
         int index = ValidateInvitationToPlayer(playerRef);
         if (index < 0) return;
@@ -76,12 +76,14 @@ public class PartyManager {
         int id = GetIndexPartyById(totalInvitations.get(index).id);
         if (id < 0) return;
 
-        totalParty.get(id).players.getFirst().sendMessage(Message.raw("El jugador" + playerRef.getUsername() + " rechazó tu invitación.").color(Color.orange));
+        totalParty.get(id).players.getFirst().sendMessage(
+                Lang.msg("party.invite-declined-leader", "player", playerRef.getUsername()).color(Color.orange));
         String leader = totalParty.get(id).leaderUsername;
 
-        playerRef.sendMessage(Message.raw("Rechazaste la invitación al grupo de " + leader));
+        playerRef.sendMessage(Lang.msg("party.invite-declined", "leader", leader));
         totalInvitations.remove(index);
     }
+
     public static void LeaveParty(PlayerRef playerRef) {
         int index = GetPartyIdForPlayer(playerRef);
         if (index < 0) return;
@@ -102,9 +104,10 @@ public class PartyManager {
             }
         } else {
             totalParty.get(index).RemoveHUD(playerRef);
-            totalParty.get(index).TransferLeadership(); // refresh remaining members' HUD
+            totalParty.get(index).TransferLeadership();
         }
     }
+
     public static void OrderParty(PlayerRef playerRef) {
         int id = GetPartyIdForPlayer(playerRef);
         if (id < 0) return;
@@ -112,8 +115,10 @@ public class PartyManager {
         int index = GetIndexPartyById(id);
         if (index < 0) return;
 
-        totalParty.get(index).players.getFirst().sendMessage(Message.raw(playerRef.getUsername() + ", ¡pide que inicies la partida!").color(Color.yellow));
+        totalParty.get(index).players.getFirst().sendMessage(
+                Lang.msg("party.start-request", "player", playerRef.getUsername()).color(Color.yellow));
     }
+
     public static void ThrowParty(PlayerRef playerRef) {
         int id = GetPartyIdForPlayer(playerRef);
         if (id < 0) return;
@@ -122,10 +127,11 @@ public class PartyManager {
         if (index < 0) return;
 
         totalParty.get(index).RemovePlayer(playerRef);
-        totalParty.get(index).players.getFirst().sendMessage(Message.raw("Has eliminado al jugador " + playerRef.getUsername() + " del grupo.").color(Color.yellow));
-        totalParty.get(index).TransferLeadership(); // refresh remaining members' HUD
+        totalParty.get(index).players.getFirst().sendMessage(
+                Lang.msg("party.kicked", "player", playerRef.getUsername()).color(Color.yellow));
+        totalParty.get(index).TransferLeadership();
     }
-    // ============================================= //
+
     private static int GetInvitationByPlayer(PlayerRef playerRef) {
         int index = -1;
 
@@ -138,6 +144,7 @@ public class PartyManager {
 
         return index;
     }
+
     private static String GetLeaderById(int id) {
         String leader = "";
 
@@ -148,10 +155,11 @@ public class PartyManager {
             }
         }
 
-        if(leader.isEmpty()) return null;
+        if (leader.isEmpty()) return null;
 
         return leader;
     }
+
     private static int GetIndexPartyById(int id) {
         int index = -1;
         for (int i = 0; i < totalParty.size(); i++) {
@@ -163,23 +171,37 @@ public class PartyManager {
 
         return index;
     }
-    private static void SendMessageToLeader(int id, String message) {
+
+    private static void SendMessageToLeader(int id, Message message) {
         int index = GetIndexPartyById(id);
         if (index < 0) return;
 
-        totalParty.get(index).players.getFirst().sendMessage(Message.raw(message).color(Color.orange));
+        totalParty.get(index).players.getFirst().sendMessage(message.color(Color.orange));
     }
+
     public static int GetPartyIdForPlayer(PlayerRef playerRef) {
         for (int i = 0; i < totalParty.size(); i++) {
-            if (totalParty.get(i).players.stream().anyMatch(player -> player == playerRef)) { return i; }
+            if (totalParty.get(i).players.stream().anyMatch(player -> player == playerRef)) return i;
         }
 
         return -1;
     }
+
     private static int ValidateInvitationToPlayer(PlayerRef playerRef) {
         int index = -1;
-        for (int i = 0; i < totalInvitations.size(); i++) { if(totalInvitations.get(i).invited == playerRef) { index = i; break; } }
+        for (int i = 0; i < totalInvitations.size(); i++) {
+            if (totalInvitations.get(i).invited == playerRef) {
+                index = i;
+                break;
+            }
+        }
 
         return index;
+    }
+
+    public static void clearRuntimeState() {
+        totalParty.clear();
+        totalInvitations.clear();
+        partyIdCounter = 0;
     }
 }

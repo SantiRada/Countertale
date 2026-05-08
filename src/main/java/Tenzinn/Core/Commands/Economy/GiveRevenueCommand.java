@@ -1,6 +1,7 @@
 package Tenzinn.Core.Commands.Economy;
 
 import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
@@ -39,7 +40,7 @@ public class GiveRevenueCommand extends CommandBase {
 
         playerStats.giveMoney(amount.get(commandContext));
 
-        player.sendMessage(Message.raw("Active command: Money sent to" + username));
-        playerRef.sendMessage(Message.raw("You have received +" + amount.get(commandContext) + " contribution to your economy"));
+        player.sendMessage(Lang.msg("economy.give.sent", "player", username));
+        playerRef.sendMessage(Lang.msg("economy.give.received", "amount", amount.get(commandContext)));
     }
 }

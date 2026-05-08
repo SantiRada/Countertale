@@ -3,6 +3,7 @@ package Tenzinn.Core.Commands;
 import Tenzinn.Core.Effects.PlayerEntityEffect;
 import Tenzinn.Countertale;
 import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.LootManager;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MessageListeners;
 
@@ -13,7 +14,6 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -44,11 +44,11 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
         RefactorTool.launchSound(playerRef, "fail");
 
         if (world.getName().equals(Universe.get().getDefaultWorld().getName())) {
-            commandContext.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_COMMAND_LOBBY_INLOBBY)));
+            commandContext.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_COMMAND_LOBBY_INLOBBY));
             return;
         }
 
-        playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_BACK_TO_LOBBY)));
+        playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_BACK_TO_LOBBY));
         World mainWorld = Universe.get().getDefaultWorld();
 
         if (mainWorld == null) return;
@@ -75,8 +75,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
                             Player lobbyPlayer = lobbyStore.getComponent(updatedPlayerRef.getReference(), Player.getComponentType());
 
                             if (lobbyPlayer != null) {
-                                lobbyPlayer.getInventory().clear();
-                                lobbyPlayer.getInventory().getHotbar().addItemStack(new ItemStack("actions_book", 1));
+                                LootManager.getLobbyLoot(lobbyPlayer);
 
                                 PlayerEntityEffect.clearAllEffects(lobbyPlayer, lobbyStore);
                             }

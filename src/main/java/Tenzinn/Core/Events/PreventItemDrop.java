@@ -2,12 +2,13 @@ package Tenzinn.Core.Events;
 
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.NameMatching;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -32,13 +33,13 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
         Player player = store.getComponent(ref, Player.getComponentType());
         assert player != null;
 
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+        UUIDComponent uuidComponent = store.getComponent(ref, UUIDComponent.getComponentType());
+        PlayerRef playerRef = uuidComponent != null ? Universe.get().getPlayer(uuidComponent.getUuid()) : null;
         assert playerRef != null;
 
         // Is in queue or match
-        if (RefactorTool.getPlayerStats(playerRef) != null) {
-            PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
-            assert playerStats != null;
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        if (playerStats != null) {
             GameMatch match = playerStats.getCurrentMatch();
             String mode = match.getMode();
 
@@ -50,16 +51,16 @@ public class PreventItemDrop extends EntityEventSystem<EntityStore, DropItemEven
                     CommandManager.get().handleCommand(playerRef, "shop");
                 }
                 else if(match.getState() == GameMatch.MatchState.IN_PROGRESS) {
-                    playerRef.sendMessage(Message.raw("No puedes comprar durante la ronda."));
+                    playerRef.sendMessage(Lang.msg("shop.buying-round-closed"));
                 }
                 else {
                     // Is in lobby in queue to FVF
-                    playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY_FVF)).color(Color.cyan));
+                    playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY_FVF).color(Color.cyan));
                 }
             }
         }
         else {
-            playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY)).color(Color.cyan));
+            playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY).color(Color.cyan));
         }
     }
 

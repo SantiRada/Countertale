@@ -2,6 +2,7 @@ package Tenzinn.Core.Listeners;
 
 import com.hypixel.hytale.component.*;
 import Tenzinn.Core.Storage.HologramStorage;
+import Tenzinn.Core.Localization.Lang;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
@@ -81,10 +82,11 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
         createHologramLine(position, pendingStatue.world, pendingStatue.playerRef, pendingStatue.statueType, titleLine, 1.25);
         createHologramLine(position, pendingStatue.world, pendingStatue.playerRef, pendingStatue.statueType, subtitleLine, 0.90);
 
-        pendingStatue.playerRef.sendMessage(
-                Message.raw("[" + pendingStatue.statueType.toUpperCase() + "] asignado en ("
-                        + blockPos.x + ", " + blockPos.y + ", " + blockPos.z + ")").color(Color.green)
-        );
+        pendingStatue.playerRef.sendMessage(Lang.msg("admin.statue.assigned",
+                "type", pendingStatue.statueType.toUpperCase(),
+                "x", blockPos.x,
+                "y", blockPos.y,
+                "z", blockPos.z).color(Color.green));
     }
 
     private void removeOldHolograms(String statueType, World world) {
@@ -135,7 +137,7 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
             activeHolograms.clear();
             HologramStorage.getInstance().clearAll();
 
-            playerRef.sendMessage(Message.raw("Se eliminaron " + count + " hologramas.").color(Color.green));
+            playerRef.sendMessage(Lang.msg("admin.statue.deleted-holograms", "count", count).color(Color.green));
         });
     }
 

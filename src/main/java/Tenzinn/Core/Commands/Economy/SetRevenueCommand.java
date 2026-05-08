@@ -1,6 +1,7 @@
 package Tenzinn.Core.Commands.Economy;
 
 import Tenzinn.Core.Shop.RevenuesConfig;
+import Tenzinn.Core.Localization.Lang;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -35,7 +36,7 @@ public class SetRevenueCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext context, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         if (!type.provided(context)) {
-            playerRef.sendMessage(Message.raw("Not is optional --type and --value").color(Color.RED));
+            playerRef.sendMessage(Lang.msg("economy.revenue.missing-args").color(Color.RED));
             return;
         }
 
@@ -47,6 +48,6 @@ public class SetRevenueCommand extends AbstractPlayerCommand {
 
     private void applyGlobal(PlayerRef sender) {
         RevenuesConfig.updateValue(typeAlias, valueAlias);
-        sender.sendMessage(Message.raw("Type | " + typeAlias + " | correctly modified").color(Color.GREEN));
+        sender.sendMessage(Lang.msg("economy.revenue.updated", "type", typeAlias).color(Color.GREEN));
     }
 }

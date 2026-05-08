@@ -3,6 +3,7 @@ package Tenzinn.Core.Commands.Loot;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.LootManager;
 import Tenzinn.Core.Objects.WeaponStats;
+import Tenzinn.Core.Localization.Lang;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.NameMatching;
@@ -29,12 +30,12 @@ public class GiveLootCommand extends CommandBase {
 
         ArrayList<WeaponStats> currentLoot = RefactorTool.getLoot(playerRef);
         if (currentLoot == null || currentLoot.isEmpty()) {
-            playerRef.sendMessage(Message.raw("Select weapons in the store to obtain them with this command.").color(Color.yellow));
+            playerRef.sendMessage(Lang.msg("loot.select-weapons-first").color(Color.yellow));
             return;
         }
 
         if (currentLoot.size() < 2) {
-            playerRef.sendMessage(Message.raw("Select weapons in the store to obtain them with this command.").color(Color.yellow));
+            playerRef.sendMessage(Lang.msg("loot.select-weapons-first").color(Color.yellow));
             return;
         }
 

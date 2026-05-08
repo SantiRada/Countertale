@@ -3,6 +3,7 @@ package Tenzinn.Deathmatch.UI;
 import Tenzinn.Core.GameMatch;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -33,10 +34,10 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         uiCommandBuilder.append("Game/DM/MVP.ui");
         uiBuilder = uiCommandBuilder;
 
-        uiBuilder.set("#Summary.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_SUMMARY)));
+        uiBuilder.set("#Summary.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_TITLE_SUMMARY));
 
-        uiBuilder.set("#PlayGame.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_BTN_PLAY)));
-        uiBuilder.set("#BackLobby.TextSpans", Message.raw(MessageListeners.get(MessageListeners.MessageKey.UI_BTN_LOBBY)));
+        uiBuilder.set("#PlayGame.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_BTN_PLAY));
+        uiBuilder.set("#BackLobby.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_BTN_LOBBY));
 
         setListeners(uiEventBuilder);
 
@@ -52,7 +53,7 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         int withInstance = worldNameWithSpaces.toLowerCase().indexOf("instance");
         if (withInstance != -1) { worldNameWithSpaces = worldNameWithSpaces.substring(0, withInstance).trim(); }
 
-        uiBuilder.set("#MapText.TextSpans", Message.raw("MAP - " + worldNameWithSpaces));
+        uiBuilder.set("#MapText.TextSpans", Lang.msg("ui.map.label", "map", worldNameWithSpaces));
         sendUpdate();
     }
     public void setSummary() {

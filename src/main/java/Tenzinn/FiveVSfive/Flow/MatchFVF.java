@@ -306,7 +306,7 @@ public class MatchFVF {
                 World currentWorld = Universe.get().getWorld(updatedPlayerRef.getWorldUuid());
                 if (currentWorld == null) continue;
 
-                updatedPlayerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME)));
+                updatedPlayerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_TELEPORTING_GAME));
 
                 currentWorld.execute(() -> {
                     try {
@@ -340,6 +340,16 @@ public class MatchFVF {
     // ================================================== //
     public static int getTimer() { return remainingSeconds; }
     public static void stopTimer() { if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false); }
+    public static void clearRuntimeState() {
+        stopTimer();
+        timerTask = null;
+        remainingSeconds = 150;
+        winner = -1;
+        numRoundsPerTeam.clear();
+        inEndRound = false;
+        inEndPurchase = false;
+        myMatch = null;
+    }
     // ================================================== //
     public static int getNumberRound(int team) {
         if(numRoundsPerTeam.isEmpty()) {

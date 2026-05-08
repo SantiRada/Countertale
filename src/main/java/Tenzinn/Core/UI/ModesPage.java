@@ -2,6 +2,7 @@ package Tenzinn.Core.UI;
 
 import Tenzinn.Core.Instances.MapVoteStore;
 import Tenzinn.Core.Listeners.MapListeners;
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.FiveVSfive.UI.Events.ModesEventData;
 
 import com.hypixel.hytale.component.Ref;
@@ -117,7 +118,7 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
         UICommandBuilder builder = new UICommandBuilder();
 
         // Contador
-        builder.set("#CountSelected.TextSpans", Message.raw("[" + selected.size() + "/" + mapList.size() + " Maps selected]"));
+        builder.set("#CountSelected.TextSpans", Lang.msg("ui.modes.maps-selected", "selected", selected.size(), "total", mapList.size()));
 
         // Outlines de mapas según selección
         for (int i = 0; i < mapList.size(); i++) {
@@ -211,7 +212,7 @@ public class ModesPage extends InteractiveCustomUIPage<ModesEventData> {
             if (errorSeconds == 1) {
                 // Primer tick: mostrar mensaje de error en rojo
                 UICommandBuilder builder = buildCommandBuilder();
-                builder.set("#CountSelected.TextSpans", Message.raw("Selecciona mapas para iniciar la cola").color(Color.red));
+                builder.set("#CountSelected.TextSpans", Lang.msg("ui.modes.select-maps-first").color(Color.red));
                 sendUpdate(builder, false);
             }
 

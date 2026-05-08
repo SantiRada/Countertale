@@ -49,7 +49,7 @@ public class ShopStatueListener extends EntityEventSystem<EntityStore, DamageBlo
         if (playerRef == null || player == null) return;
 
         if (RefactorTool.getPlayerStats(playerRef) != null) { CommandManager.get().handleCommand(playerRef, "shop"); }
-        else { playerRef.sendMessage(Message.raw(MessageListeners.get(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY)).color(Color.cyan)); }
+            else { playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_SHOP_IN_LOBBY).color(Color.cyan)); }
     }
 
     @Override
