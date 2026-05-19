@@ -3,20 +3,17 @@ package Tenzinn.FiveVSfive.Commands.Wall;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Localization.Lang;
 import Tenzinn.FiveVSfive.Systems.TemporalWallSystem;
-import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncCommand;
 
-import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class BuildWallCommand extends AbstractAsyncCommand {
@@ -31,15 +28,15 @@ public class BuildWallCommand extends AbstractAsyncCommand {
 
     @NullableDecl @Override
     protected CompletableFuture<Void> executeAsync(@Nonnull CommandContext context) {
-        Player player = context.senderAs(Player.class);
+        PlayerRef playerRef = context.senderAs(PlayerRef.class);
 
         if (!MapListeners.exists(mapArg.get(context))) {
-            player.sendMessage(Lang.msg("wall.map-not-found").color(Color.cyan));
+            playerRef.sendMessage(Lang.msg("wall.map-not-found").color(Color.cyan));
             return null;
         }
 
-        TemporalWallSystem.buildWalls(mapArg.get(context), Objects.requireNonNull(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT)));
-        player.sendMessage(Lang.msg("wall.building", "map", mapArg.get(context)));
+        TemporalWallSystem.buildWalls(mapArg.get(context), playerRef);
+        playerRef.sendMessage(Lang.msg("wall.building", "map", mapArg.get(context)));
 
         return CompletableFuture.completedFuture(null);
     }

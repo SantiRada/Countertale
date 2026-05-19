@@ -14,7 +14,6 @@ import com.hypixel.hytale.component.dependency.Order;
 import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -44,30 +43,31 @@ public class DeathDetector extends DeathSystems.OnDeathSystem {
             assert deathInfo != null;
             float damage = deathInfo.getInitialAmount();
 
+            PlayerRef victimRef = getPlayerRef(ref, store);
+
             if (deathInfo != null && deathInfo.getSource() instanceof Damage.EntitySource entitySource) {
                 Ref<EntityStore> killerRef = entitySource.getRef();
-                Player killer = (Player) store.getComponent(killerRef, Player.getComponentType());
+                PlayerRef killerPlayerRef = getPlayerRef(killerRef, store);
 
-                if (killer != null) {
-                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
-                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, damage);
+                if (killerPlayerRef != null) {
+                    RefactorTool.setDataScore(killerPlayerRef, RefactorTool.TypeData.KILL, 0);
+                    RefactorTool.setDataScore(killerPlayerRef, RefactorTool.TypeData.SCORE, damage);
                 }
-                RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+                if (victimRef != null) RefactorTool.setDataScore(victimRef, RefactorTool.TypeData.DEATH, 0);
             }
             else if (deathInfo.getSource() instanceof Damage.ProjectileSource projectileSource) {
                 Ref<EntityStore> shooterRef = projectileSource.getRef();
-                Player killer = (Player) store.getComponent(shooterRef, Player.getComponentType());
+                PlayerRef killerPlayerRef = getPlayerRef(shooterRef, store);
 
-                if (killer != null) {
-                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.KILL, 0);
-                    RefactorTool.setDataScore(killer, RefactorTool.TypeData.SCORE, damage);
+                if (killerPlayerRef != null) {
+                    RefactorTool.setDataScore(killerPlayerRef, RefactorTool.TypeData.KILL, 0);
+                    RefactorTool.setDataScore(killerPlayerRef, RefactorTool.TypeData.SCORE, damage);
                 }
-                RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+                if (victimRef != null) RefactorTool.setDataScore(victimRef, RefactorTool.TypeData.DEATH, 0);
             }
             else {
-                // Caída, void, /kill, comando, o cualquier source anónimo
                 System.out.println("[DeathDetector] Muerte por entorno/comando, causa: " + causeId);
-                RefactorTool.setDataScore(victim, RefactorTool.TypeData.DEATH, 0);
+                if (victimRef != null) RefactorTool.setDataScore(victimRef, RefactorTool.TypeData.DEATH, 0);
             }
         }
 

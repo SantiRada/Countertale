@@ -41,7 +41,7 @@ public class ScoreboardPage extends CustomUIHud {
         playersList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
 
         for(PlayerStats player : playersList) {
-            uiBuilder.set("#Name0" + index + ".TextSpans", Message.raw(player.getPlayer().getDisplayName()));
+            uiBuilder.set("#Name0" + index + ".TextSpans", Message.raw(player.getPlayerRef().getUsername()));
             uiBuilder.set("#Kill0" + index + ".TextSpans", Message.raw(String.valueOf(player.getKills())));
             uiBuilder.set("#Death0" + index + ".TextSpans", Message.raw(String.valueOf(player.getDeaths())));
             uiBuilder.set("#Score0" + index + ".TextSpans", Message.raw(String.valueOf(player.getScore())));

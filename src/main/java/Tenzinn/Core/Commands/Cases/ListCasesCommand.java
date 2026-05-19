@@ -1,28 +1,28 @@
-package Tenzinn.Core.Admin.Commands;
+package Tenzinn.Core.Commands.Cases;
 
-import Tenzinn.Core.UI.AdminPage;
+import Tenzinn.Core.UI.CaseInventoryPage;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.UUID;
 
-public class AdminCommands extends CommandBase {
+public class ListCasesCommand extends CommandBase {
 
-    public AdminCommands(@NonNullDecl String name, @NonNullDecl String description) { super(name, description); }
+    public ListCasesCommand(@NonNullDecl String name, @NonNullDecl String description) { super(name, description); }
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
         PlayerRef playerRef = commandContext.senderAs(PlayerRef.class);
-        if (playerRef == null) return;
 
         UUID worldId = playerRef.getWorldUuid();
         if (worldId == null) return;
@@ -35,13 +35,7 @@ public class AdminCommands extends CommandBase {
             Store<EntityStore> store = ref.getStore();
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player == null) return;
-            player.getPageManager().openCustomPage(ref, store, new AdminPage(playerRef));
+            player.getPageManager().openCustomPage(ref, store, new CaseInventoryPage(playerRef));
         });
     }
-
-    @Override
-    public String getPermission() { return "countertale.admin"; }
-
-    @Override
-    public String getName() { return "admin"; }
 }

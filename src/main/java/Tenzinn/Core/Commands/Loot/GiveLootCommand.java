@@ -6,8 +6,6 @@ import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Localization.Lang;
 
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.NameMatching;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -24,9 +22,8 @@ public class GiveLootCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
-        assert playerRef != null;
+        PlayerRef playerRef = commandContext.senderAs(PlayerRef.class);
+        Player player = RefactorTool.getPlayer(playerRef);
 
         ArrayList<WeaponStats> currentLoot = RefactorTool.getLoot(playerRef);
         if (currentLoot == null || currentLoot.isEmpty()) {

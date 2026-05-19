@@ -15,7 +15,7 @@ import Tenzinn.FiveVSfive.Systems.TemporalWallSystem;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;

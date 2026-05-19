@@ -49,7 +49,7 @@ Group {
         Background: @background;
         Padding: (Full: 24);
         LayoutMode: Top;
-        ContentHeight: 1150;
+        ContentHeight: 1420;
         ScrollbarStyle: (Size: 10);
 
         Label #Title {
@@ -67,7 +67,7 @@ Group {
 
                 Group #Admin {
                     LayoutMode: Top;
-                    Anchor: (Height: 820, Bottom: 16);
+                    Anchor: (Height: 1090, Bottom: 16);
                     Padding: (Full: 12);
                     Background: (Color: #000000(0.25));
 
@@ -289,6 +289,102 @@ Group {
                         Label {
                             Style: @itemDesc;
                             Text: "Remove an existing TemporalWall by index.";
+                        }
+                    }
+
+                    Label {
+                        Style: @titleSector;
+                        Anchor: (Top: 4, Bottom: 8);
+                        Text: "/Case";
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/case open";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Open a case roulette (optional --skin=id to force a skin).";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/case give";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Add a skin directly to your inventory (optional --skin=id).";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/case inventory";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "View your skin inventory UI.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/case clear";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Clear your entire skin inventory.";
+                        }
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 40, Bottom: 4);
+                        Padding: (Full: 8);
+                        Background: (Color: #000000(0.2));
+
+                        Label {
+                            Anchor: (Width: 200);
+                            Style: @itemName;
+                            Text: "/case chance";
+                        }
+
+                        Label {
+                            Style: @itemDesc;
+                            Text: "Set the post-match case drop chance (--value=0-100).";
                         }
                     }
 

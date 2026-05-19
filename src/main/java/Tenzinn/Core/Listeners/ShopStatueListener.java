@@ -4,7 +4,7 @@ import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Storage.HologramStorage;
 
 import com.hypixel.hytale.component.*;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3i;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;

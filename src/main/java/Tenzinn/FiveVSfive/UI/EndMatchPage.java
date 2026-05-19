@@ -1,5 +1,8 @@
 package Tenzinn.FiveVSfive.UI;
 
+import Tenzinn.Core.Objects.PlayerStats;
+import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.UI.CaseDropPage;
 import Tenzinn.FiveVSfive.Flow.MatchFVF;
 
 import com.hypixel.hytale.codec.Codec;
@@ -54,14 +57,23 @@ public class EndMatchPage extends InteractiveCustomUIPage<EndMatchPage.EndMatchE
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store,
                                 @Nonnull EndMatchEventData data) {
         if ("Lobby".equals(data.action)) {
-            // Dismiss the page server-side first — CantClose only blocks ESC on the client,
-            // but a programmatic setPage(None) always works. Without this the page stays
-            // pinned after the world transition and Hytale gets stuck on a loading screen.
+            PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
             Player player = store.getComponent(ref, Player.getComponentType());
-            if (player != null) {
-                player.getPageManager().setPage(ref, store, Page.None);
+
+            if (stats != null && stats.hasPendingCase) {
+                stats.hasPendingCase = false;
+                if (player != null) {
+                    player.getPageManager().openCustomPage(ref, store, new CaseDropPage(playerRef));
+                }
+            } else {
+                // Dismiss the page server-side first — CantClose only blocks ESC on the client,
+                // but a programmatic setPage(None) always works. Without this the page stays
+                // pinned after the world transition and Hytale gets stuck on a loading screen.
+                if (player != null) {
+                    player.getPageManager().setPage(ref, store, Page.None);
+                }
+                CommandManager.get().handleCommand(playerRef, "lobby");
             }
-            CommandManager.get().handleCommand(playerRef, "lobby");
         }
     }
 

@@ -22,7 +22,8 @@ public class ShopCommand extends AbstractPlayerCommand {
 
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
-        Player player = commandContext.senderAs(Player.class);
+        Player player = store.getComponent(ref, Player.getComponentType());
+        if (player == null) return;
         player.getPageManager().openCustomPage(ref, store, new ShopPage(playerRef, RefactorTool.getModeForPlayer(playerRef)));
     }
 }

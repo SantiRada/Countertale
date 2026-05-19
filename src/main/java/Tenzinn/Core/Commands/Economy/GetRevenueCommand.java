@@ -6,7 +6,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.ArrayList;
@@ -18,15 +18,15 @@ public class GetRevenueCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
+        PlayerRef playerRef = commandContext.senderAs(PlayerRef.class);
 
-        player.sendMessage(Message.raw("----------------------------"));
-        player.sendMessage(Lang.msg("economy.revenue.list-title"));
+        playerRef.sendMessage(Message.raw("----------------------------"));
+        playerRef.sendMessage(Lang.msg("economy.revenue.list-title"));
 
         ArrayList<String> allData = RevenuesConfig.getList();
 
-        for (int i = 0; i < allData.size(); i++) { player.sendMessage(Message.raw(allData.get(i))); }
+        for (int i = 0; i < allData.size(); i++) { playerRef.sendMessage(Message.raw(allData.get(i))); }
 
-        player.sendMessage(Message.raw("----------------------------"));
+        playerRef.sendMessage(Message.raw("----------------------------"));
     }
 }

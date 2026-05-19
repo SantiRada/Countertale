@@ -1,0 +1,286 @@
+
+@BtnDefault = PatchStyle(TexturePath: "../images/mvp/btn-default.png");
+@BtnHover   = PatchStyle(TexturePath: "../images/mvp/btn-hover.png");
+@BtnPressed = PatchStyle(TexturePath: "../images/mvp/btn-pressed.png");
+
+Group {
+    FlexWeight: 1;
+    LayoutMode: Middle;
+    Background: (Color: #000000(0.94));
+
+    Group {
+    LayoutMode: Top;
+
+    Group { Anchor: (Height: 30); }
+
+    Label {
+        Style: (FontSize: 26, RenderBold: true, Alignment: Center, TextColor: #FFFFFF(0.88));
+        Text: "OPENING CASE";
+    }
+
+    Group { Anchor: (Height: 22); }
+
+    // ── Roulette strip ───────────────────────────────────────────────────────
+
+    Group {
+        LayoutMode: Center;
+
+        Group {
+            LayoutMode: Left;
+
+            // Slot 1
+            Group #Slot1 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 158, Right: 5);
+                Background: (Color: #1A1A1A);
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group {
+                    FlexWeight: 4;
+                    LayoutMode: Middle;
+
+                    Group #Slot1Icon {
+                        Anchor: (Width: 96, Height: 54);
+                    }
+                }
+                Group {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+
+                    Label #Slot1Name {
+                        Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #AAAAAA);
+                        Text: "";
+                    }
+                }
+            }
+
+            // Slot 2
+            Group #Slot2 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 158, Right: 5);
+                Background: (Color: #1A1A1A);
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group {
+                    FlexWeight: 4;
+                    LayoutMode: Middle;
+
+                    Group #Slot2Icon {
+                        Anchor: (Width: 96, Height: 54);
+                    }
+                }
+                Group {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+
+                    Label #Slot2Name {
+                        Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #AAAAAA);
+                        Text: "";
+                    }
+                }
+            }
+
+            // Slot 3
+            Group #Slot3 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 158, Right: 5);
+                Background: (Color: #1A1A1A);
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group {
+                    FlexWeight: 4;
+                    LayoutMode: Middle;
+
+                    Group #Slot3Icon {
+                        Anchor: (Width: 96, Height: 54);
+                    }
+                }
+                Group {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+
+                    Label #Slot3Name {
+                        Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #AAAAAA);
+                        Text: "";
+                    }
+                }
+            }
+
+            // Slot 4 — center, larger, always gold outline (rarity color applied at runtime)
+            Group #Slot4 {
+                LayoutMode: Top;
+                Anchor: (Width: 136, Height: 174, Right: 5);
+                Background: (Color: #111111);
+                OutlineColor: #E0B448;
+                OutlineSize: 2;
+                Padding: (Full: 8);
+
+                Group {
+                    FlexWeight: 4;
+                    LayoutMode: Middle;
+
+                    Group #Slot4Icon {
+                        Anchor: (Width: 110, Height: 64);
+                    }
+                }
+                Group {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+
+                    Label #Slot4Name {
+                        Style: (FontSize: 10, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
+                        Text: "";
+                    }
+                }
+            }
+
+            // Slot 5
+            Group #Slot5 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 158, Right: 5);
+                Background: (Color: #1A1A1A);
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group {
+                    FlexWeight: 4;
+                    LayoutMode: Middle;
+
+                    Group #Slot5Icon {
+                        Anchor: (Width: 96, Height: 54);
+                    }
+                }
+                Group {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+
+                    Label #Slot5Name {
+                        Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #AAAAAA);
+                        Text: "";
+                    }
+                }
+            }
+
+            // Slot 6
+            Group #Slot6 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 158, Right: 5);
+                Background: (Color: #1A1A1A);
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group {
+                    FlexWeight: 4;
+                    LayoutMode: Middle;
+
+                    Group #Slot6Icon {
+                        Anchor: (Width: 96, Height: 54);
+                    }
+                }
+                Group {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+
+                    Label #Slot6Name {
+                        Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #AAAAAA);
+                        Text: "";
+                    }
+                }
+            }
+
+            // Slot 7
+            Group #Slot7 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 158);
+                Background: (Color: #1A1A1A);
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group {
+                    FlexWeight: 4;
+                    LayoutMode: Middle;
+
+                    Group #Slot7Icon {
+                        Anchor: (Width: 96, Height: 54);
+                    }
+                }
+                Group {
+                    FlexWeight: 1;
+                    LayoutMode: Middle;
+
+                    Label #Slot7Name {
+                        Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #AAAAAA);
+                        Text: "";
+                    }
+                }
+            }
+        }
+    }
+
+    Group { Anchor: (Height: 28); }
+
+    // ── Winner display ────────────────────────────────────────────────────────
+    // Always present; content is filled after animation ends.
+
+    Group {
+        LayoutMode: Center;
+
+        Group #WinnerIconContainer {
+            LayoutMode: Top;
+            Anchor: (Width: 290, Height: 138);
+            Background: (Color: #111111);
+            OutlineColor: #111111;
+            OutlineSize: 0;
+            Padding: (Full: 10);
+
+            Group {
+                FlexWeight: 1;
+                LayoutMode: Middle;
+
+                Group #WinnerIcon {
+                    Anchor: (Width: 240, Height: 100);
+                }
+            }
+        }
+    }
+
+    Group { Anchor: (Height: 10); }
+
+    Label #WinnerRarity {
+        Style: (FontSize: 13, Alignment: Center, TextColor: #444444);
+        Text: "";
+    }
+
+    Label #WinnerName {
+        Style: (FontSize: 22, RenderBold: true, Alignment: Center, TextColor: #444444);
+        Text: "";
+    }
+
+    Group { Anchor: (Height: 22); }
+
+    // ── Collect button ────────────────────────────────────────────────────────
+
+    Button #CollectButton {
+        LayoutMode: Center;
+        Anchor: (Width: 260, Height: 50);
+        Background: @BtnDefault;
+        Style: (
+            Default:  (Background: @BtnDefault),
+            Hovered:  (Background: @BtnHover),
+            Pressed:  (Background: @BtnPressed),
+            Disabled: (Background: (Color: #1A1A1A(0.60)))
+        );
+
+        Label {
+            Style: (FontSize: 18, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
+            Text: "Collect";
+        }
+    }
+
+    Group { Anchor: (Height: 20); }
+
+    } // end inner Top group
+}

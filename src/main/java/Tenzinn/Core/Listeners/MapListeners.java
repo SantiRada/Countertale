@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
 
 import java.io.File;
 import java.util.Map;
@@ -71,7 +71,7 @@ public final class MapListeners {
     private static final String JSON_PATH = "Countertale/maps.json";
 
     private static final Map<String, MapData> MAPS = new HashMap<>();
-    private static Vector3f lobbyPosition = null;
+    private static Vector3d lobbyPosition = null;
     private static boolean loaded = false;
 
     private MapListeners() { }
@@ -121,10 +121,10 @@ public final class MapListeners {
 
             if (root.has("Lobby")) {
                 JsonArray lobby = root.getAsJsonArray("Lobby");
-                lobbyPosition = new Vector3f(
-                        lobby.get(0).getAsFloat(),
-                        lobby.get(1).getAsFloat(),
-                        lobby.get(2).getAsFloat()
+                lobbyPosition = new Vector3d(
+                        lobby.get(0).getAsDouble(),
+                        lobby.get(1).getAsDouble(),
+                        lobby.get(2).getAsDouble()
                 );
             }
 
@@ -228,8 +228,8 @@ public final class MapListeners {
     }
     public static boolean isLoaded() { return loaded; }
     public static boolean exists(String mapName) { return MAPS.containsKey(mapName.toLowerCase()); }
-    public static Vector3f getLobby() {
-        return lobbyPosition != null ? lobbyPosition : new Vector3f(0f, 80f, 0f);
+    public static Vector3d getLobby() {
+        return lobbyPosition != null ? lobbyPosition : new Vector3d(0, 80, 0);
     }
     public static java.util.Set<String> getMapNames() { return Collections.unmodifiableSet(MAPS.keySet()); }
     public static int size() { return MAPS.size(); }
@@ -242,9 +242,9 @@ public final class MapListeners {
             // Lobby
             if (lobbyPosition != null) {
                 JsonArray lobby = new JsonArray();
-                lobby.add(lobbyPosition.getX());
-                lobby.add(lobbyPosition.getY());
-                lobby.add(lobbyPosition.getZ());
+                lobby.add(lobbyPosition.x);
+                lobby.add(lobbyPosition.y);
+                lobby.add(lobbyPosition.z);
                 root.add("Lobby", lobby);
             }
 

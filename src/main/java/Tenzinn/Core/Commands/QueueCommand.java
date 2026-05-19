@@ -46,7 +46,7 @@ public class QueueCommand extends AbstractPlayerCommand {
         String modeArg = mode.get(commandContext);
 
         if (modeArg.equalsIgnoreCase("null") || modeArg.isBlank() || modeArg.isEmpty()) {
-            Player player = commandContext.senderAs(Player.class);
+            Player player = store.getComponent(ref, Player.getComponentType());
             player.getPageManager().openCustomPage(ref, store, new ModesPage(playerRef));
             return;
         }
@@ -116,7 +116,7 @@ public class QueueCommand extends AbstractPlayerCommand {
         GameMatch match = plugin.getMatchManager().addPlayerToQueue(playerRef, modeArg, votes);
         if (match == null) return;
 
-        player.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
+        playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_ADDED_QUEUE)
                 .param("match", match.getMatchId().toString().substring(0, 8))
                 .param("players", match.getPlayerCount())
                 .color(Color.orange));
@@ -125,7 +125,7 @@ public class QueueCommand extends AbstractPlayerCommand {
         plugin.notifyMatchPlayersAndUpdateHuds(match);
 
         if (match.isFull()) {
-            player.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_STARTING_GAME)
+            playerRef.sendMessage(MessageListeners.message(MessageListeners.MessageKey.CHAT_STARTING_GAME)
                     .color(Color.green));
             plugin.hideAllQueueHuds(match);
             plugin.startMatch(match);

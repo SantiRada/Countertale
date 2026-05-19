@@ -76,7 +76,7 @@ public class ScoreboardPageFVF extends CustomUIHud {
             String slot = String.format("%02d", i + 1);
             if (i < team.size()) {
                 PlayerStats ps = team.get(i);
-                uiBuilder.set("#" + prefix + "Name" + slot + ".TextSpans",  Message.raw(ps.getPlayer().getDisplayName()));
+                uiBuilder.set("#" + prefix + "Name" + slot + ".TextSpans",  Message.raw(ps.getPlayerRef().getUsername()));
                 uiBuilder.set("#" + prefix + "Kill" + slot + ".TextSpans",  Message.raw(String.valueOf(ps.getKills())));
                 uiBuilder.set("#" + prefix + "Death" + slot + ".TextSpans", Message.raw(String.valueOf(ps.getDeaths())));
                 uiBuilder.set("#" + prefix + "Score" + slot + ".TextSpans", Message.raw(String.valueOf(ps.getScore())));

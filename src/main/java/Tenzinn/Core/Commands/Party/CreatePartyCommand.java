@@ -1,12 +1,10 @@
 package Tenzinn.Core.Commands.Party;
 
 import Tenzinn.Core.PartyManager;
-import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 
-import com.hypixel.hytale.server.core.universe.Universe;
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.awt.*;
@@ -17,8 +15,8 @@ public class CreatePartyCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
+        PlayerRef playerRef = commandContext.senderAs(PlayerRef.class);
 
-        PartyManager.CreateParty(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+        PartyManager.CreateParty(playerRef);
     }
 }

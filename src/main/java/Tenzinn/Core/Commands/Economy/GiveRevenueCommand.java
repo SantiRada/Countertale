@@ -10,7 +10,6 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
@@ -29,10 +28,10 @@ public class GiveRevenueCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
+        PlayerRef senderRef = commandContext.senderAs(PlayerRef.class);
         String username;
         if (target.get(commandContext) != null) { username = target.get(commandContext); }
-        else { username = player.getDisplayName(); }
+        else { username = senderRef.getUsername(); }
 
         PlayerRef playerRef = Universe.get().getPlayerByUsername(username, NameMatching.EXACT);
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
@@ -40,7 +39,7 @@ public class GiveRevenueCommand extends CommandBase {
 
         playerStats.giveMoney(amount.get(commandContext));
 
-        player.sendMessage(Lang.msg("economy.give.sent", "player", username));
+        senderRef.sendMessage(Lang.msg("economy.give.sent", "player", username));
         playerRef.sendMessage(Lang.msg("economy.give.received", "amount", amount.get(commandContext)));
     }
 }

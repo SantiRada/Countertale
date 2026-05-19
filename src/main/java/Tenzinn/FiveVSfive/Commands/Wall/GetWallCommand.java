@@ -9,7 +9,7 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncC
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MapListeners.TemporalWall;
 import Tenzinn.Core.Localization.Lang;
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ public final class GetWallCommand extends AbstractAsyncCommand {
 
     @Override @Nullable
     protected CompletableFuture<Void> executeAsync(@Nonnull CommandContext context) {
-        Player player = context.senderAs(Player.class);
+        PlayerRef player = context.senderAs(PlayerRef.class);
 
         String mapName = mapArg.provided(context) ? mapArg.get(context) : WallSessionState.currentMap();
 

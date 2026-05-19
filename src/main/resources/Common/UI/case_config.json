@@ -1,0 +1,10 @@
+{
+  "dropChance": 0.30,
+  "rarityWeights": {
+    "MIL_SPEC":   7990,
+    "RESTRICTED": 1595,
+    "CLASSIFIED":  325,
+    "COVERT":       65,
+    "SPECIAL":      25
+  }
+}

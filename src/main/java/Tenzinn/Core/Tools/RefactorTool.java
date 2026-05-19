@@ -17,11 +17,10 @@ import Tenzinn.Core.Listeners.MapListeners.SpawnMode;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -100,10 +99,9 @@ public class RefactorTool {
             if(item.typeWeapon.equalsIgnoreCase("shield")) playerStats.shield = item;
         }
     }
-    public static void setHealthPlayer (Player player, float value) {
-        PlayerStats playerStats = getPlayerStats(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
-
-        playerStats.setHealth((int)value);
+    public static void setHealthPlayer(PlayerRef playerRef, float value) {
+        PlayerStats playerStats = getPlayerStats(playerRef);
+        playerStats.setHealth((int) value);
     }
     // ============================================ //
     public static ArrayList<WeaponStats> getLoot(PlayerRef playerRef) {
@@ -163,10 +161,6 @@ public class RefactorTool {
         return spawns.get(index);
     }
     // ============================================ //
-    public static SpawnMode getModeForPlayer(Player player) {
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
-        return getModeForPlayer(playerRef);
-    }
     public static SpawnMode getModeForPlayer(PlayerRef playerRef) {
         String mode = Objects.requireNonNull(getPlayerStats(playerRef)).getCurrentMatch().getMode();
 
@@ -204,14 +198,8 @@ public class RefactorTool {
                     Ref<EntityStore> ref = playerRef.getReference();
                     Store<EntityStore> store = ref.getStore();
 
-                    Vector3f rotation       = new Vector3f(0f, 0f, 0f);
-                    Vector3f targetPosition = new Vector3f(
-                            (float) finalSpawnPos.getX(),
-                            (float) finalSpawnPos.getY(),
-                            (float) finalSpawnPos.getZ()
-                    );
-
-                    Teleport teleport = new Teleport(targetPosition.toVector3d(), rotation);
+                    Rotation3f rotation = new Rotation3f(0f, 0f, 0f);
+                    Teleport teleport = new Teleport(finalSpawnPos, rotation);
                     store.putComponent(ref, Teleport.getComponentType(), teleport);
                 } catch (Exception e) { e.printStackTrace(); }
             });
@@ -282,8 +270,7 @@ public class RefactorTool {
             currentHUD.setWeapons(value);
         }
     }
-    public static void setDataScore(Player player, TypeData typeData, float value) {
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+    public static void setDataScore(PlayerRef playerRef, TypeData typeData, float value) {
 
         PlayerStats playerStats = getPlayerStats(playerRef);
         assert playerStats != null;
@@ -311,6 +298,13 @@ public class RefactorTool {
             Player player = getPlayer(playerRef);
             if (player == null) continue;
 
+            // Roll for a case drop before opening the end screen
+            PlayerStats stats = getPlayerStats(playerRef);
+            if (stats != null && Tenzinn.Core.Cases.CaseManager.rollForCase()) {
+                Tenzinn.Core.Cases.CaseManager.addCase(playerRef.getUuid());
+                stats.hasPendingCase = true;
+            }
+
             if (getModeForPlayer(playerRef) == SpawnMode.DM) {
                 player.getPageManager().openCustomPage(ref, store, new MvpPage(playerRef));
             } else {
@@ -325,7 +319,7 @@ public class RefactorTool {
         }
     }
     public static int getPlayersReady() {
-        List<PlayerRef> playerRefs = Universe.get().getPlayers();
+        List<PlayerRef> playerRefs = new ArrayList<>(Universe.get().getPlayers());
         int playersReady = 0;
 
         for (PlayerRef ref : playerRefs) {
@@ -337,7 +331,7 @@ public class RefactorTool {
         return playersReady;
     }
     public static int getPlayersReadyInOneMinute() {
-        List<PlayerRef> playerRefs = Universe.get().getPlayers();
+        List<PlayerRef> playerRefs = new ArrayList<>(Universe.get().getPlayers());
         int playersReadyInOneMinute = 0;
 
         for (int i = 0; i < playerRefs.size(); i++) {

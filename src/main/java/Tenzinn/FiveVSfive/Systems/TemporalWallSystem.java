@@ -2,7 +2,7 @@ package Tenzinn.FiveVSfive.Systems;
 
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MapListeners.TemporalWall;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;

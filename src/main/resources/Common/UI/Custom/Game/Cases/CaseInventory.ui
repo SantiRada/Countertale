@@ -1,0 +1,684 @@
+
+@Background = PatchStyle(TexturePath: "../../Common/Background.png");
+@BtnDefault = PatchStyle(TexturePath: "../images/mvp/btn-default.png");
+@BtnHover   = PatchStyle(TexturePath: "../images/mvp/btn-hover.png");
+@BtnPressed = PatchStyle(TexturePath: "../images/mvp/btn-pressed.png");
+
+@FilterBase = (
+    Default: (Background: @BtnDefault),
+    Hovered: (Background: @BtnHover),
+    Pressed: (Background: @BtnPressed)
+);
+
+Group {
+    FlexWeight: 1;
+    LayoutMode: Middle;
+    Background: (Color: #000000(0.78));
+
+    Group {
+        Anchor: (Width: 860, Height: 740);
+        Background: @Background;
+        LayoutMode: Top;
+        ContentHeight: 1520;
+        ScrollbarStyle: (Size: 8);
+        Padding: (Left: 40, Right: 32, Top: 40, Bottom: 40);
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 48, Bottom: 12);
+
+            Label {
+                FlexWeight: 1;
+                Style: (FontSize: 22, RenderBold: true, TextColor: #FFFFFF(0.90), VerticalAlignment: Center);
+                Text: "CASE INVENTORY";
+            }
+            Label #InventoryCount {
+                Anchor: (Width: 150, Height: 48);
+                Style: (FontSize: 13, TextColor: #888888, Alignment: End, VerticalAlignment: Center);
+                Text: "0 skins · 0 cases";
+            }
+
+            Group { Anchor: (Width: 12, Height: 48); }
+
+            Button #HeaderClose {
+                Anchor: (Width: 38, Height: 38);
+                Background: (Color: #2A0000);
+                OutlineColor: #FF4444;
+                OutlineSize: 1;
+                Style: (
+                    Default: (Background: (Color: #2A0000)),
+                    Hovered: (Background: (Color: #3D0000)),
+                    Pressed: (Background: (Color: #1A0000))
+                );
+                Label { Style: (FontSize: 20, RenderBold: true, Alignment: Center, VerticalAlignment: Center, TextColor: #FF4444); Text: "×"; }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28, Bottom: 6);
+
+            Label {
+                Anchor: (Width: 60, Height: 28, Right: 8);
+                Style: (FontSize: 12, TextColor: #888888, VerticalAlignment: Center);
+                Text: "Rarity:";
+            }
+
+            Button #FrAll {
+                Anchor: (Width: 46, Height: 26, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #FFFFFF;
+                OutlineSize: 2;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFFFFF); Text: "All"; }
+            }
+            Button #FrMilSpec {
+                Anchor: (Width: 82, Height: 26, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #2BB0B5;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #2BB0B5); Text: "Mil-Spec"; }
+            }
+            Button #FrRestricted {
+                Anchor: (Width: 88, Height: 26, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #5D00FF;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #5D00FF); Text: "Restricted"; }
+            }
+            Button #FrClassified {
+                Anchor: (Width: 86, Height: 26, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #FF00D9;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FF00D9); Text: "Classified"; }
+            }
+            Button #FrCovert {
+                Anchor: (Width: 70, Height: 26, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #FF0000;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FF0000); Text: "Covert"; }
+            }
+            Button #FrSpecial {
+                Anchor: (Width: 68, Height: 26);
+                Background: @BtnDefault;
+                OutlineColor: #FFE100;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFE100); Text: "Special"; }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 26, Bottom: 4);
+
+            Label {
+                Anchor: (Width: 68, Height: 26, Right: 8);
+                Style: (FontSize: 12, TextColor: #888888, VerticalAlignment: Center);
+                Text: "Weapon:";
+            }
+            Button #FwAll {
+                Anchor: (Width: 44, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #FFFFFF;
+                OutlineSize: 2;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, RenderBold: true, Alignment: Center, TextColor: #FFFFFF); Text: "All"; }
+            }
+            Button #FwAk47 {
+                Anchor: (Width: 52, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "AK-47"; }
+            }
+            Button #FwAwp {
+                Anchor: (Width: 44, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "AWP"; }
+            }
+            Button #FwDesertEagle {
+                Anchor: (Width: 58, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "Deagle"; }
+            }
+            Button #FwDualBerettas {
+                Anchor: (Width: 58, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "Dual BB"; }
+            }
+            Button #FwFiveSeven {
+                Anchor: (Width: 52, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "Five-7"; }
+            }
+            Button #FwM4a1s {
+                Anchor: (Width: 56, Height: 24);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "M4A1-S"; }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 26, Bottom: 6);
+
+            Group { Anchor: (Width: 76, Height: 26); }
+
+            Button #FwMac10 {
+                Anchor: (Width: 58, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "MAC-10"; }
+            }
+            Button #FwMag7 {
+                Anchor: (Width: 52, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "MAG-7"; }
+            }
+            Button #FwMp9 {
+                Anchor: (Width: 40, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "MP9"; }
+            }
+            Button #FwP250 {
+                Anchor: (Width: 44, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "P250"; }
+            }
+            Button #FwSawedOff {
+                Anchor: (Width: 58, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "Saw-Off"; }
+            }
+            Button #FwUsp {
+                Anchor: (Width: 50, Height: 24, Right: 4);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "USP-S"; }
+            }
+            Button #FwKnife {
+                Anchor: (Width: 46, Height: 24);
+                Background: @BtnDefault;
+                OutlineColor: #444444;
+                OutlineSize: 0;
+                Style: @FilterBase;
+                Label { Style: (FontSize: 10, Alignment: Center, TextColor: #CCCCCC); Text: "Knife"; }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 26, Bottom: 14);
+
+            Group { FlexWeight: 1; }
+            Button #ClearFilters {
+                Anchor: (Width: 130, Height: 24);
+                Background: @BtnDefault;
+                Style: (Default: (Background: @BtnDefault), Hovered: (Background: @BtnHover), Pressed: (Background: @BtnPressed));
+                Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFFFFF); Text: "Clear Filters"; }
+            }
+        }
+
+        Label #CasesLabel {
+            Anchor: (Bottom: 6);
+            Style: (FontSize: 14, RenderBold: true, TextColor: #FFE100);
+            Text: "CASES (0)";
+        }
+
+        Group #CasesRow {
+            LayoutMode: Left;
+            Anchor: (Bottom: 14);
+
+            Button #CaseSlot1 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 148, Right: 6);
+                Background: (Color: #0A1200);
+                OutlineColor: #FFE100;
+                OutlineSize: 2;
+                Padding: (Full: 8);
+                Style: (Default: (Background: (Color: #0A1200)), Hovered: (Background: (Color: #0F1C00)), Pressed: (Background: (Color: #050A00)));
+
+                Group { FlexWeight: 3; LayoutMode: Middle;
+                    Label { Style: (FontSize: 40, Alignment: Center, TextColor: #FFE100(0.70)); Text: "?"; }
+                }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFE100(0.80)); Text: "Open"; }
+                }
+            }
+
+            Button #CaseSlot2 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 148, Right: 6);
+                Background: (Color: #0A1200);
+                OutlineColor: #FFE100;
+                OutlineSize: 2;
+                Padding: (Full: 8);
+                Style: (Default: (Background: (Color: #0A1200)), Hovered: (Background: (Color: #0F1C00)), Pressed: (Background: (Color: #050A00)));
+
+                Group { FlexWeight: 3; LayoutMode: Middle;
+                    Label { Style: (FontSize: 40, Alignment: Center, TextColor: #FFE100(0.70)); Text: "?"; }
+                }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFE100(0.80)); Text: "Open"; }
+                }
+            }
+
+            Button #CaseSlot3 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 148, Right: 6);
+                Background: (Color: #0A1200);
+                OutlineColor: #FFE100;
+                OutlineSize: 2;
+                Padding: (Full: 8);
+                Style: (Default: (Background: (Color: #0A1200)), Hovered: (Background: (Color: #0F1C00)), Pressed: (Background: (Color: #050A00)));
+
+                Group { FlexWeight: 3; LayoutMode: Middle;
+                    Label { Style: (FontSize: 40, Alignment: Center, TextColor: #FFE100(0.70)); Text: "?"; }
+                }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFE100(0.80)); Text: "Open"; }
+                }
+            }
+
+            Button #CaseSlot4 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 148, Right: 6);
+                Background: (Color: #0A1200);
+                OutlineColor: #FFE100;
+                OutlineSize: 2;
+                Padding: (Full: 8);
+                Style: (Default: (Background: (Color: #0A1200)), Hovered: (Background: (Color: #0F1C00)), Pressed: (Background: (Color: #050A00)));
+
+                Group { FlexWeight: 3; LayoutMode: Middle;
+                    Label { Style: (FontSize: 40, Alignment: Center, TextColor: #FFE100(0.70)); Text: "?"; }
+                }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFE100(0.80)); Text: "Open"; }
+                }
+            }
+
+            Button #CaseSlot5 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 148, Right: 6);
+                Background: (Color: #0A1200);
+                OutlineColor: #FFE100;
+                OutlineSize: 2;
+                Padding: (Full: 8);
+                Style: (Default: (Background: (Color: #0A1200)), Hovered: (Background: (Color: #0F1C00)), Pressed: (Background: (Color: #050A00)));
+
+                Group { FlexWeight: 3; LayoutMode: Middle;
+                    Label { Style: (FontSize: 40, Alignment: Center, TextColor: #FFE100(0.70)); Text: "?"; }
+                }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFE100(0.80)); Text: "Open"; }
+                }
+            }
+
+            Button #CaseSlot6 {
+                LayoutMode: Top;
+                Anchor: (Width: 118, Height: 148);
+                Background: (Color: #0A1200);
+                OutlineColor: #FFE100;
+                OutlineSize: 2;
+                Padding: (Full: 8);
+                Style: (Default: (Background: (Color: #0A1200)), Hovered: (Background: (Color: #0F1C00)), Pressed: (Background: (Color: #050A00)));
+
+                Group { FlexWeight: 3; LayoutMode: Middle;
+                    Label { Style: (FontSize: 40, Alignment: Center, TextColor: #FFE100(0.70)); Text: "?"; }
+                }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label { Style: (FontSize: 11, RenderBold: true, Alignment: Center, TextColor: #FFE100(0.80)); Text: "Open"; }
+                }
+            }
+        }
+
+        Label #MoreCasesLabel {
+            Anchor: (Bottom: 14);
+            Style: (FontSize: 12, TextColor: #FFE100(0.70));
+            Text: "";
+        }
+
+        Label #SkinsLabel {
+            Anchor: (Bottom: 8);
+            Style: (FontSize: 14, RenderBold: true, TextColor: #CCCCCC);
+            Text: "SKINS";
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 155, Bottom: 6);
+
+            Group #GridItem1 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon1 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity1 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName1 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem2 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon2 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity2 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName2 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem3 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon3 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity3 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName3 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 155, Bottom: 6);
+
+            Group #GridItem4 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon4 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity4 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName4 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem5 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon5 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity5 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName5 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem6 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon6 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity6 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName6 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 155, Bottom: 6);
+
+            Group #GridItem7 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon7 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity7 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName7 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem8 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon8 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity8 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName8 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem9 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon9 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity9 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName9 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 155, Bottom: 6);
+
+            Group #GridItem10 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon10 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity10 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName10 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem11 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon11 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity11 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName11 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem12 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon12 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity12 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName12 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 155, Bottom: 6);
+
+            Group #GridItem13 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon13 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity13 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName13 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem14 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155, Right: 6);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon14 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity14 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName14 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+
+            Group #GridItem15 {
+                LayoutMode: Top;
+                Anchor: (Width: 256, Height: 155);
+                Background: (Color: #111111);
+                OutlineColor: #333333;
+                OutlineSize: 1;
+                Padding: (Full: 6);
+
+                Group { FlexWeight: 4; LayoutMode: Middle; Group #GridIcon15 { Anchor: (Width: 148, Height: 84); } }
+                Group { FlexWeight: 1; LayoutMode: Middle;
+                    Label #GridRarity15 { Style: (FontSize: 10, Alignment: Center, TextColor: #888888); Text: ""; }
+                }
+                Group { FlexWeight: 2; LayoutMode: Middle;
+                    Label #GridName15 { Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #CCCCCC); Text: ""; }
+                }
+            }
+        }
+
+        Label #EmptyLabel {
+            Anchor: (Bottom: 12);
+            Style: (FontSize: 15, TextColor: #666666, Alignment: Center);
+            Text: "No items match the current filters.";
+        }
+
+        Group { Anchor: (Height: 16); }
+
+        Button #CloseButton {
+            LayoutMode: Center;
+            Anchor: (Width: 220, Height: 46);
+            Background: @BtnDefault;
+            Style: (Default: (Background: @BtnDefault), Hovered: (Background: @BtnHover), Pressed: (Background: @BtnPressed));
+            Label { Style: (FontSize: 16, RenderBold: true, Alignment: Center, TextColor: #FFFFFF); Text: "Close"; }
+        }
+
+        Group { Anchor: (Height: 16); }
+    }
+}

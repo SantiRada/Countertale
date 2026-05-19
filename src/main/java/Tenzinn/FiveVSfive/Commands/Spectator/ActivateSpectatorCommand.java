@@ -5,7 +5,6 @@ import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
@@ -25,12 +24,12 @@ public class ActivateSpectatorCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
+        PlayerRef sender = commandContext.senderAs(PlayerRef.class);
+        if (sender == null) return;
 
         if (target.get(commandContext) != null) {
             PlayerRef playerRef = Universe.get().getPlayerByUsername(target.get(commandContext), NameMatching.EXACT);
             assert playerRef != null;
-            Player playerObj = RefactorTool.getPlayer(playerRef);
         }
     }
 }

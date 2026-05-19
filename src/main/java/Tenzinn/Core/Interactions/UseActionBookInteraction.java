@@ -27,8 +27,8 @@ public class UseActionBookInteraction extends SimpleInstantInteraction {
 
         if (player == null) {context.getState().state = InteractionState.Failed; return; }
 
-        if(inQueue) CommandManager.get().handleCommand(player, "leave");
-        else CommandManager.get().handleCommand(player, "queue --mode=null");
+        if(inQueue) CommandManager.get().handleCommand(playerRef, "leave");
+        else CommandManager.get().handleCommand(playerRef, "queue --mode=null");
 
         context.getState().state = InteractionState.Finished;
     }

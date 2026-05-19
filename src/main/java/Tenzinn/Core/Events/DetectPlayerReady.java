@@ -9,12 +9,14 @@ import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Objects.WeaponStats;
 import Tenzinn.Core.Effects.PlayerEntityEffect;
 
-import com.hypixel.hytale.server.core.NameMatching;
-import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.Objects;
 import java.util.ArrayList;
@@ -23,10 +25,12 @@ public class DetectPlayerReady {
 
     public static void onPlayerReady(PlayerReadyEvent event) {
         Player player = event.getPlayer();
-        PlayerRef playerRef = Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT);
+        Ref<EntityStore> entityRef = Objects.requireNonNull(player.getReference());
+        UUIDComponent uuidComp = entityRef.getStore().getComponent(entityRef, UUIDComponent.getComponentType());
+        PlayerRef playerRef = (uuidComp != null) ? Universe.get().getPlayer(uuidComp.getUuid()) : null;
 
         assert playerRef != null;
-        PlayerEntityEffect.clearAllEffects(player, Objects.requireNonNull(playerRef.getReference()).getStore());
+        PlayerEntityEffect.clearAllEffects(player, entityRef.getStore());
 
         ShopData.loadContent();
         assert player.getWorld() != null;

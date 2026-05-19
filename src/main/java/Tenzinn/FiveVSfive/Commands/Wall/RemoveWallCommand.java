@@ -10,7 +10,7 @@ import com.hypixel.hytale.server.core.Message;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MapListeners.TemporalWall;
 import Tenzinn.Core.Localization.Lang;
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public final class RemoveWallCommand extends AbstractAsyncCommand {
 
     @Override @Nullable
     protected CompletableFuture<Void> executeAsync(@Nonnull CommandContext context) {
-        Player player = context.senderAs(Player.class);
+        PlayerRef player = context.senderAs(PlayerRef.class);
 
         int id = Integer.parseInt(idArg.get(context));
         String mapName = mapArg.get(context);

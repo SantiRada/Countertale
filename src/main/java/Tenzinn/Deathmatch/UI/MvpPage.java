@@ -5,6 +5,7 @@ import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Listeners.MessageListeners;
 import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
+import Tenzinn.Core.UI.CaseDropPage;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
@@ -70,7 +71,7 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         playersList.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
 
         for(PlayerStats player : playersList) {
-            uiBuilder.set("#Name0" + index + ".TextSpans", Message.raw(player.getPlayer().getDisplayName()));
+            uiBuilder.set("#Name0" + index + ".TextSpans", Message.raw(player.getPlayerRef().getUsername()));
             uiBuilder.set("#Kill0" + index + ".TextSpans", Message.raw(String.valueOf(player.getKills())));
             uiBuilder.set("#Death0" + index + ".TextSpans", Message.raw(String.valueOf(player.getDeaths())));
             uiBuilder.set("#Score0" + index + ".TextSpans", Message.raw(String.valueOf(player.getScore())));
@@ -109,7 +110,17 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
                 GameMatch gameMatch = Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch();
                 gameMatch.stopTimer();
 
-                CommandManager.get().handleCommand(playerRef, "lobby");
+                PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
+                if (stats != null && stats.hasPendingCase) {
+                    stats.hasPendingCase = false;
+                    com.hypixel.hytale.server.core.entity.entities.Player player =
+                            store.getComponent(ref, com.hypixel.hytale.server.core.entity.entities.Player.getComponentType());
+                    if (player != null) {
+                        player.getPageManager().openCustomPage(ref, store, new CaseDropPage(playerRef));
+                    }
+                } else {
+                    CommandManager.get().handleCommand(playerRef, "lobby");
+                }
             break;
         }
 

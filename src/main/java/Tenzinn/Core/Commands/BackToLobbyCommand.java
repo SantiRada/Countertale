@@ -10,7 +10,7 @@ import Tenzinn.Core.Listeners.MessageListeners;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -59,7 +59,7 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
             try {
                 main.getMatchManager().removePlayerFromMatch(playerRef);
 
-                Vector3d spawnLobby = MapListeners.getLobby().toVector3d();
+                Vector3d spawnLobby = MapListeners.getLobby();
 
                 Transform spawnPoint = new Transform(spawnLobby.x, spawnLobby.y, spawnLobby.z);
                 Teleport teleport = Teleport.createForPlayer(mainWorld, spawnPoint);

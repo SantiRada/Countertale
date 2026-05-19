@@ -6,7 +6,6 @@ import Tenzinn.Core.PartyManager;
 import com.hypixel.hytale.server.core.NameMatching;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
@@ -28,13 +27,13 @@ public class InvitePartyCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
-        int id = PartyManager.GetPartyIdForPlayer(Universe.get().getPlayerByUsername(player.getDisplayName(), NameMatching.EXACT));
+        PlayerRef senderRef = commandContext.senderAs(PlayerRef.class);
+        int id = PartyManager.GetPartyIdForPlayer(senderRef);
         if (id < 0) return;
 
         PlayerRef playerRef = Universe.get().getPlayerByUsername(username.get(commandContext), NameMatching.EXACT);
         if (playerRef == null) {
-            player.sendMessage(Lang.msg("party.user-not-found", "player", username.get(commandContext)).color(Color.orange));
+            senderRef.sendMessage(Lang.msg("party.user-not-found", "player", username.get(commandContext)).color(Color.orange));
             return;
         }
 

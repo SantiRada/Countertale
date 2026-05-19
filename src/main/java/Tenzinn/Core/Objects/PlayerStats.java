@@ -33,6 +33,9 @@ public class PlayerStats {
     public boolean inShop = false;
     public ArrayList<Integer> moneySpent = new ArrayList<Integer>();
 
+    // Set to true when a case drops at end of match; cleared by MvpPage/EndMatchPage
+    public boolean hasPendingCase = false;
+
     public PlayerRef playerRef;
     public Player player;
 

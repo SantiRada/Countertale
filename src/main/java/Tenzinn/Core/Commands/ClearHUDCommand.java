@@ -6,7 +6,11 @@ import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Deathmatch.UI.ScoreboardPage;
 import Tenzinn.FiveVSfive.UI.ScoreboardPageFVF;
 
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
@@ -19,7 +23,10 @@ public class ClearHUDCommand extends CommandBase {
 
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        Player player = commandContext.senderAs(Player.class);
+        Ref<EntityStore> ref = commandContext.senderAsPlayerRef();
+        Store<EntityStore> store = ref.getStore();
+        Player player = store.getComponent(ref, Player.getComponentType());
+        PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
 
         CustomUIHud customHUD = player.getHudManager().getCustomHud();
 
@@ -29,7 +36,7 @@ public class ClearHUDCommand extends CommandBase {
                 System.out.println("Game HUD limpio.");
             }
 
-            if (RefactorTool.getModeForPlayer(player) == MapListeners.SpawnMode.DM) {
+            if (RefactorTool.getModeForPlayer(playerRef) == MapListeners.SpawnMode.DM) {
                 if (customHUD instanceof ScoreboardPage scoreboardHUD) {
                     scoreboardHUD.clearHUD();
                     System.out.println("Scoreboard limpio.");

@@ -1,0 +1,71 @@
+
+Group {
+    FlexWeight: 1;
+    LayoutMode: Middle;
+    Background: (Color: #000000(0.80));
+
+    Group #Card {
+        LayoutMode: Top;
+        Anchor: (Width: 420);
+        Background: (Color: #111111);
+        Padding: (Top: 32, Bottom: 32, Horizontal: 40);
+
+        Label #CaseTitle {
+            Style: (FontSize: 36, RenderBold: true, Alignment: Center, TextColor: #E0B448);
+            Text: "CASE DROP!";
+        }
+
+        Group {
+            Anchor: (Height: 16);
+        }
+
+        Label {
+            Style: (FontSize: 16, Alignment: Center, TextColor: #AAAAAA);
+            Text: "You received a case after the match.";
+        }
+
+        Label {
+            Style: (FontSize: 14, Alignment: Center, TextColor: #666666);
+            Text: "Open it now or skip.";
+        }
+
+        Group {
+            Anchor: (Height: 28);
+        }
+
+        Button #OpenButton {
+            LayoutMode: Center;
+            Anchor: (Width: 280, Height: 50);
+            Background: (Color: #1A6A1A);
+            Style: (
+                Hovered:  (Background: (Color: #22882A)),
+                Pressed:  (Background: (Color: #0E4A0E)),
+                Disabled: (Background: (Color: #333333))
+            );
+
+            Label {
+                Style: (FontSize: 18, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
+                Text: "Open Case";
+            }
+        }
+
+        Group {
+            Anchor: (Height: 10);
+        }
+
+        Button #SkipButton {
+            LayoutMode: Center;
+            Anchor: (Width: 280, Height: 42);
+            Background: (Color: #FFFFFF(0.06));
+            Style: (
+                Hovered: (Background: (Color: #FFFFFF(0.14))),
+                Pressed: (Background: (Color: #FFFFFF(0.22)))
+            );
+
+            Label {
+                Style: (FontSize: 16, Alignment: Center, TextColor: #888888);
+                Text: "Skip";
+            }
+        }
+    }
+}

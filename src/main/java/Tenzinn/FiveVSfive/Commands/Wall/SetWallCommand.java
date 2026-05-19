@@ -8,7 +8,7 @@ import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncCommand;
 
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
@@ -40,7 +40,7 @@ public class SetWallCommand extends AbstractAsyncCommand {
 
     @NullableDecl @Override
     protected CompletableFuture<Void> executeAsync(@Nonnull CommandContext context) {
-        Player player = context.senderAs(Player.class);
+        PlayerRef player = context.senderAs(PlayerRef.class);
         double[] from = new double[3];
         double[] to = new double[3];
 
