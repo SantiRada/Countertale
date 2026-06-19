@@ -1,8 +1,8 @@
 package Tenzinn.FiveVSfive.UI;
 
+import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Tools.RefactorTool;
-import Tenzinn.Core.UI.CaseDropPage;
 import Tenzinn.FiveVSfive.Flow.MatchFVF;
 
 import com.hypixel.hytale.codec.Codec;
@@ -42,15 +42,31 @@ public class EndMatchPage extends InteractiveCustomUIPage<EndMatchPage.EndMatchE
         int playerTeam = MatchFVF.validateTeamMembership(playerRef);
         boolean isWinner = playerTeam == winningTeam;
 
-        commandBuilder.set("#Title.TextSpans", Message.raw(isWinner ? "VICTORY" : "DEFEAT"));
+        commandBuilder.set("#Title.TextSpans", isWinner ? Lang.msg("ui.round.victory") : Lang.msg("ui.round.defeat"));
         commandBuilder.set("#Title.Style.TextColor", isWinner ? "#00FF00" : "#FF0000");
 
         int rounds1 = MatchFVF.numRoundsPerTeam.isEmpty() ? 0 : MatchFVF.numRoundsPerTeam.get(0);
         int rounds2 = MatchFVF.numRoundsPerTeam.size() < 2 ? 0 : MatchFVF.numRoundsPerTeam.get(1);
         commandBuilder.set("#Score.TextSpans", Message.raw(rounds1 + " - " + rounds2));
 
+        setCaseReward(commandBuilder);
+        commandBuilder.set("#BackLobby.TextSpans", Lang.msg("ui.btn-lobby"));
+
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#LobbyButton",
                 EventData.of("Action", "Lobby"));
+    }
+
+    private void setCaseReward(UICommandBuilder commandBuilder) {
+        PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
+        boolean hasCaseDrop = stats != null && stats.hasPendingCase;
+
+        commandBuilder.set("#CaseRewardIcon.Visible", hasCaseDrop);
+        commandBuilder.set("#CaseRewardTitle.TextSpans", hasCaseDrop
+                ? Lang.msg("ui.case.reward-title")
+                : Lang.msg("ui.case.no-reward-title"));
+        commandBuilder.set("#CaseRewardDescription.TextSpans", hasCaseDrop
+                ? Lang.msg("ui.case.reward-description")
+                : Lang.msg("ui.case.no-reward-description"));
     }
 
     @Override
@@ -60,24 +76,16 @@ public class EndMatchPage extends InteractiveCustomUIPage<EndMatchPage.EndMatchE
             PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
             Player player = store.getComponent(ref, Player.getComponentType());
 
-            if (stats != null && stats.hasPendingCase) {
-                stats.hasPendingCase = false;
-                if (player != null) {
-                    player.getPageManager().openCustomPage(ref, store, new CaseDropPage(playerRef));
-                }
-            } else {
-                // Dismiss the page server-side first — CantClose only blocks ESC on the client,
-                // but a programmatic setPage(None) always works. Without this the page stays
-                // pinned after the world transition and Hytale gets stuck on a loading screen.
-                if (player != null) {
-                    player.getPageManager().setPage(ref, store, Page.None);
-                }
-                CommandManager.get().handleCommand(playerRef, "lobby");
+            if (stats != null) stats.hasPendingCase = false;
+
+            if (player != null) {
+                player.getPageManager().setPage(ref, store, Page.None);
             }
+
+            CommandManager.get().handleCommand(playerRef, "lobby");
         }
     }
 
-    // ── Event codec ───────────────────────────────────────────────────────────
     public static class EndMatchEventData {
         public static final BuilderCodec CODEC = BuilderCodec
                 .builder(EndMatchEventData.class, EndMatchEventData::new)

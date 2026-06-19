@@ -5,12 +5,13 @@ import Tenzinn.Core.Objects.PlayerStats;
 import Tenzinn.Core.Listeners.MessageListeners;
 import Tenzinn.Core.Localization.Lang;
 import Tenzinn.Core.Tools.RefactorTool;
-import Tenzinn.Core.UI.CaseDropPage;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -45,6 +46,7 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         setLeftData();
         setSummary();
         setScoreboard();
+        setCaseReward();
 
         sendUpdate();
     }
@@ -62,7 +64,28 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
         assert playerStats != null;
 
+        uiBuilder.set("#DamageCaused.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_DAMAGE_CAUSED));
+        uiBuilder.set("#DamageReceived.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_DAMAGE_RECEIVED));
+        uiBuilder.set("#MeleeDamage.TextSpans", MessageListeners.message(MessageListeners.MessageKey.UI_MELEE_DAMAGE));
+
+        uiBuilder.set("#DamageCausedText.TextSpans", Message.raw(String.valueOf(playerStats.getDamageCaused())));
+        uiBuilder.set("#DamageReceivedText.TextSpans", Message.raw(String.valueOf(playerStats.getDamageReceived())));
+        uiBuilder.set("#MeleeDamageValue.TextSpans", Message.raw(String.valueOf(playerStats.getMeleeDamage())));
+
         sendUpdate();
+    }
+
+    private void setCaseReward() {
+        PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
+        boolean hasCaseDrop = playerStats != null && playerStats.hasPendingCase;
+
+        uiBuilder.set("#CaseRewardIcon.Visible", hasCaseDrop);
+        uiBuilder.set("#CaseRewardTitle.TextSpans", hasCaseDrop
+                ? Lang.msg("ui.case.reward-title")
+                : Lang.msg("ui.case.no-reward-title"));
+        uiBuilder.set("#CaseRewardDescription.TextSpans", hasCaseDrop
+                ? Lang.msg("ui.case.reward-description")
+                : Lang.msg("ui.case.no-reward-description"));
     }
     public void setScoreboard() {
         List<PlayerStats> playersList = RefactorTool.getPlayerList(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
@@ -111,17 +134,13 @@ public class MvpPage extends InteractiveCustomUIPage<MvpEventData> {
                 gameMatch.stopTimer();
 
                 PlayerStats stats = RefactorTool.getPlayerStats(playerRef);
-                if (stats != null && stats.hasPendingCase) {
-                    stats.hasPendingCase = false;
-                    com.hypixel.hytale.server.core.entity.entities.Player player =
-                            store.getComponent(ref, com.hypixel.hytale.server.core.entity.entities.Player.getComponentType());
-                    if (player != null) {
-                        player.getPageManager().openCustomPage(ref, store, new CaseDropPage(playerRef));
-                    }
-                } else {
-                    CommandManager.get().handleCommand(playerRef, "lobby");
-                }
-            break;
+                if (stats != null) stats.hasPendingCase = false;
+
+                Player player = store.getComponent(ref, Player.getComponentType());
+                if (player != null) player.getPageManager().setPage(ref, store, Page.None);
+
+                CommandManager.get().handleCommand(playerRef, "lobby");
+                return;
         }
 
         sendUpdate();

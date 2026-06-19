@@ -7,7 +7,7 @@ import com.hypixel.hytale.server.core.Message;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.component.query.Query;
-import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.math.vector.Rotation3fc;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -70,8 +70,12 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
 
         switch(pendingStatue.statueType.toLowerCase()) {
             case "queue":
-                titleLine = MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_QUEUE);
+                titleLine    = MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_QUEUE);
                 subtitleLine = MessageListeners.get(MessageListeners.MessageKey.UI_DESC_QUEUE);
+                break;
+            case "armory":
+                titleLine    = MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_ARMORY);
+                subtitleLine = MessageListeners.get(MessageListeners.MessageKey.UI_DESC_ARMORY);
                 break;
             default:
                 titleLine    = MessageListeners.get(MessageListeners.MessageKey.UI_TITLE_SHOP);
@@ -142,7 +146,7 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
     }
 
     public void createHologramLine(Vector3d position, World world, PlayerRef playerRef, String statueType, String label, double yOffset) {
-        Transform playerTransform = playerRef.getTransform();
+        Rotation3fc playerRotation = playerRef.getHeadRotation();
         world.execute(() -> {
             Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
             ProjectileComponent projectileComponent = new ProjectileComponent("Projectile");
@@ -151,7 +155,7 @@ public class StatueBlockListener extends EntityEventSystem<EntityStore, DamageBl
             Vector3d holoPos = new Vector3d(position.x + 0.5, position.y + yOffset, position.z + 0.5);
 
             holder.putComponent(TransformComponent.getComponentType(),
-                    new TransformComponent(holoPos, playerTransform.getRotation().clone()));
+                    new TransformComponent(holoPos, playerRotation));
             holder.ensureComponent(UUIDComponent.getComponentType());
 
             if (projectileComponent.getProjectile() == null) {

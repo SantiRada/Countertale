@@ -15,8 +15,15 @@ import Tenzinn.Core.MatchManager;
 import Tenzinn.Core.Instances.InstanceManager;
 import Tenzinn.Core.Shop.RevenuesConfig;
 import Tenzinn.Core.Shop.ShopData;
+import Tenzinn.Core.Commands.ArmoryCommand;
 import Tenzinn.Core.Commands.Cases.CaseCommands;
 import Tenzinn.Core.Commands.Loot.LootCommands;
+import Tenzinn.Core.Admin.Commands.ToggleBuildCommand;
+import Tenzinn.Core.Admin.Commands.EndGameCommand;
+import Tenzinn.Core.Listeners.ArmoryBenchListener;
+import Tenzinn.Core.Listeners.ArmoryStatueListener;
+import Tenzinn.Core.Listeners.ArmoryStatueUseListener;
+import Tenzinn.Core.Storage.DatabaseManager;
 import Tenzinn.Core.Admin.Commands.AdminCommands;
 import Tenzinn.Deathmatch.Flow.MatchDeathmatch;
 import Tenzinn.FiveVSfive.Systems.TeamChatSystem;
@@ -70,6 +77,7 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void setup() {
+        DatabaseManager.init();
         MapListeners.load();
         RevenuesConfig.load();
         MessageListeners.load();
@@ -82,6 +90,8 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new AdminCommands("admin", "View list of commands for Countertale"));
         getCommandRegistry().registerCommand(new StatueCommand("statue", "Manage statue configurations."));
         getCommandRegistry().registerCommand(new ForceStartCommand("forcestart", "Force start current match (DEBUG)", this));
+        getCommandRegistry().registerCommand(new EndGameCommand("endgame", "Set current match timer to 00:05 (DEBUG)"));
+        getCommandRegistry().registerCommand(new ToggleBuildCommand("togglebuild", "Toggle block placement blocking on/off"));
         getCommandRegistry().registerCommand(new GameCommands("game", "list of command to instance manager.", this));
         getCommandRegistry().registerCommand(new ClearHUDCommand("clearhud", "Clear HUD to change instance"));
         getCommandRegistry().registerCommand(new RevenueCommands("revenue", "All content to Revenues List"));
@@ -92,6 +102,7 @@ public class Countertale extends JavaPlugin {
         getCommandRegistry().registerCommand(new BackToLobbyCommand("lobby", "Back to lobby in game", this));
         getCommandRegistry().registerCommand(new LootCommands("loot", "Control loot for this player"));
         getCommandRegistry().registerCommand(new CaseCommands("case", "Debug commands for the case/skin system"));
+        getCommandRegistry().registerCommand(new ArmoryCommand("armory", "Open the Armory to choose skins"));
         getCommandRegistry().registerCommand(new ShopCommand("shop", "Open Custom page of shop"));
         getCommandRegistry().registerCommand(new PartyCommands("party", "All commands to custom groups"));
 
@@ -104,6 +115,9 @@ public class Countertale extends JavaPlugin {
 
         // Listeners
         this.getEntityStoreRegistry().registerSystem(new ShopStatueListener());
+        this.getEntityStoreRegistry().registerSystem(new ArmoryStatueListener());
+        this.getEntityStoreRegistry().registerSystem(new ArmoryStatueUseListener());
+        this.getEntityStoreRegistry().registerSystem(new ArmoryBenchListener());
         this.getEntityStoreRegistry().registerSystem(new QueueStatueListener());
         this.getEntityStoreRegistry().registerSystem(StatueBlockListener.getInstance());
 
@@ -111,6 +125,7 @@ public class Countertale extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PreventItemDrop());
         this.getEntityStoreRegistry().registerSystem(new BlockPlaceSystem());
         this.getEntityStoreRegistry().registerSystem(new DetectBlockDamage());
+        this.getEntityStoreRegistry().registerSystem(new DamageStatsTracker());
         this.getEntityStoreRegistry().registerSystem(new PlayerHealthTracker());
         this.getEntityStoreRegistry().registerSystem(new InvulnerabilitySystem());
         this.getEntityStoreRegistry().registerSystem(new DeathDetector());
@@ -134,6 +149,7 @@ public class Countertale extends JavaPlugin {
 
     @Override
     protected void shutdown() {
+        DatabaseManager.close();
         if (matchCheckTask != null && !matchCheckTask.isDone()) { matchCheckTask.cancel(false); }
         if (detectFilter != null) { PacketAdapters.deregisterInbound(detectFilter); }
         if (hotbarFilter != null) { PacketAdapters.deregisterInbound(hotbarFilter); }
@@ -168,7 +184,7 @@ public class Countertale extends JavaPlugin {
         }
 
         QueueHud queueHud = new QueueHud(playerRef);
-        player.getHudManager().setCustomHud(playerRef, queueHud);
+        player.getHudManager().addCustomHud(playerRef, queueHud);
 
         queueHud.updatePlayerCount(match.getPlayerCount());
         queueHud.setMapsInfo(playerMaps);
@@ -185,10 +201,10 @@ public class Countertale extends JavaPlugin {
             hud.stopUpdating();
 
             Player player = RefactorTool.getPlayer(playerRef);
-            player.getHudManager().setCustomHud(playerRef, null);
+            player.getHudManager().removeCustomHud(playerRef, playerId);
 
             int id = PartyManager.GetPartyIdForPlayer(playerRef);
-            if (id >= 0) { player.getHudManager().setCustomHud(playerRef, new PartyHUD(playerRef, PartyManager.totalParty.get(id))); }
+            if (id >= 0) { player.getHudManager().addCustomHud(playerRef, new PartyHUD(playerRef, PartyManager.totalParty.get(id))); }
         }
         activeQueueHuds.remove(playerId);
     }
@@ -241,22 +257,32 @@ public class Countertale extends JavaPlugin {
 
             final List<PlayerRef> playersSnapshot = match.getPlayers();
             final String finalMapId = match.getMapId();
-            final InstanceManager[] instanceRef = new InstanceManager[1];
 
-            instanceRef[0] = matchManager.getInstancePool().take(finalMapId, () -> {
-                match.setInstance(instanceRef[0]);
+            matchManager.getInstancePool().take(finalMapId, instance -> {
+                try {
+                    if (instance == null) {
+                        match.setState(GameMatch.MatchState.WAITING);
+                        getLogger().at(Level.SEVERE).log("[Countertale] Error al iniciar partida: instancia nula para mapa " + finalMapId);
+                        return;
+                    }
 
-                for (PlayerRef playerRef : playersSnapshot) {
-                    UUID worldUuid = playerRef.getWorldUuid();
-                    if (worldUuid == null) continue;
+                    match.setInstance(instance);
 
-                    World world = Universe.get().getWorld(worldUuid);
-                    if (world == null) continue;
+                    for (PlayerRef playerRef : playersSnapshot) {
+                        UUID worldUuid = playerRef.getWorldUuid();
+                        if (worldUuid == null) continue;
 
-                    world.execute(() -> hideQueueHud(playerRef));
+                        World world = Universe.get().getWorld(worldUuid);
+                        if (world == null) continue;
+
+                        world.execute(() -> hideQueueHud(playerRef));
+                    }
+
+                    instance.teleportPlayers(playersSnapshot);
+                } catch (Exception callbackError) {
+                    match.setState(GameMatch.MatchState.WAITING);
+                    getLogger().at(Level.SEVERE).log("[Countertale] Error al preparar instancia de partida: " + callbackError.getMessage());
                 }
-
-                match.getInstance().teleportPlayers(playersSnapshot);
             });
 
         } catch (Exception e) {

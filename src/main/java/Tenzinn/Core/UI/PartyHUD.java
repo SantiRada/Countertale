@@ -16,7 +16,7 @@ public class PartyHUD extends CustomUIHud {
     private UICommandBuilder uiBuilder;
     public PartyObject myParty;
 
-    public PartyHUD(@NonNullDecl PlayerRef playerRef, PartyObject myParty) { super(playerRef); this.myParty = myParty; }
+    public PartyHUD(@NonNullDecl PlayerRef playerRef, PartyObject myParty) { super(playerRef, playerRef.getUuid().toString()); this.myParty = myParty; }
 
     @Override
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {

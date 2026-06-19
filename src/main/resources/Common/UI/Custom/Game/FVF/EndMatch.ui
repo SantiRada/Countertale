@@ -1,6 +1,7 @@
 
 @background = PatchStyle(TexturePath: "images/back-endround.png");
 @logo = PatchStyle(TexturePath: "images/logo.png");
+@CaseBox = PatchStyle(TexturePath: "../images/icons/box.png");
 
 Group {
     FlexWeight: 1;
@@ -36,6 +37,36 @@ Group {
                 Text: "0 - 0";
             }
 
+            Group #CaseReward {
+                LayoutMode: Left;
+                Anchor: (Top: 22, Width: 380);
+                Padding: (Full: 14);
+                Background: (Color: #000000(0.26));
+                OutlineColor: #FFFFFF(0.08);
+                OutlineSize: 1;
+
+                Group #CaseRewardIcon {
+                    Anchor: (Width: 58, Height: 58, Right: 14);
+                    Background: @CaseBox;
+                }
+
+                Group {
+                    LayoutMode: Top;
+                    FlexWeight: 1;
+
+                    Label #CaseRewardTitle {
+                        Style: (FontSize: 17, RenderBold: true, TextColor: #FFFFFF, VerticalAlignment: Center);
+                        Text: "";
+                    }
+
+                    Label #CaseRewardDescription {
+                        Anchor: (Top: 4);
+                        Style: (FontSize: 13, TextColor: #FFFFFF(0.48), VerticalAlignment: Center);
+                        Text: "";
+                    }
+                }
+            }
+
             Group {
                 Anchor: (Height: 2, Top: 20, Bottom: 20);
                 Background: (Color: #FFFFFF(0.08));
@@ -50,9 +81,9 @@ Group {
                     Pressed: (Background: (Color: #FFFFFF(0.28)))
                 );
 
-                Label {
+                Label #BackLobby {
                     Style: (FontSize: 17, RenderBold: true, Alignment: Center, TextColor: #FFFFFF);
-                    Text: "Back to Lobby";
+                    Text: "";
                 }
             }
         }

@@ -38,4 +38,7 @@ public class ListCasesCommand extends CommandBase {
             player.getPageManager().openCustomPage(ref, store, new CaseInventoryPage(playerRef));
         });
     }
+
+    @Override
+    public String getPermission() { return "countertale.case"; }
 }

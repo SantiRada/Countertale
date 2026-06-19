@@ -4,22 +4,26 @@ import Tenzinn.Core.Effects.PlayerEntityEffect;
 import Tenzinn.Countertale;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.LootManager;
+import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.Listeners.MapListeners;
 import Tenzinn.Core.Listeners.MessageListeners;
+import Tenzinn.Deathmatch.UI.ScoreboardPage;
+import Tenzinn.FiveVSfive.UI.ScoreboardPageFVF;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import org.joml.Vector3d;
-import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
-import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
 
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
@@ -53,16 +57,19 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
 
         if (mainWorld == null) return;
 
-        CommandManager.get().handleCommand(playerRef, "clearhud");
-
         world.execute(() -> {
             try {
+                Player player = store.getComponent(ref, Player.getComponentType());
+                if (player != null) {
+                    player.getPageManager().setPage(ref, store, Page.None);
+                    clearMatchHud(playerRef, player);
+                }
+
                 main.getMatchManager().removePlayerFromMatch(playerRef);
 
                 Vector3d spawnLobby = MapListeners.getLobby();
 
-                Transform spawnPoint = new Transform(spawnLobby.x, spawnLobby.y, spawnLobby.z);
-                Teleport teleport = Teleport.createForPlayer(mainWorld, spawnPoint);
+                Teleport teleport = Teleport.createForPlayer(mainWorld, spawnLobby, Rotation3f.ZERO);
                 store.addComponent(ref, Teleport.getComponentType(), teleport);
 
                 CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS).execute(() -> {
@@ -91,6 +98,18 @@ public class BackToLobbyCommand extends AbstractPlayerCommand {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void clearMatchHud(PlayerRef playerRef, Player player) {
+        String hudId = playerRef.getUuid().toString();
+        CustomUIHud customHUD = player.getHudManager().getCustomHud(hudId);
+        if (customHUD == null) return;
+
+        if (customHUD instanceof GameHUD gameHUD) gameHUD.clearHUD();
+        else if (customHUD instanceof ScoreboardPage scoreboardHUD) scoreboardHUD.clearHUD();
+        else if (customHUD instanceof ScoreboardPageFVF scoreboardHUD) scoreboardHUD.clearHUD();
+
+        player.getHudManager().removeCustomHud(playerRef, hudId);
     }
 
     @Override

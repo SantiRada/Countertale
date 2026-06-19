@@ -24,7 +24,7 @@ public class ScoreboardPage extends CustomUIHud {
 
     public ScheduledFuture<?> timerTask;
 
-    public ScoreboardPage(PlayerRef playerRef) { super(playerRef); this.playerRef = playerRef; }
+    public ScoreboardPage(PlayerRef playerRef) { super(playerRef, playerRef.getUuid().toString()); this.playerRef = playerRef; }
 
     @Override
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {

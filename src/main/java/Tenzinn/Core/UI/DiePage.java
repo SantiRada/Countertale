@@ -9,7 +9,7 @@ import Tenzinn.Core.Tools.RefactorTool;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.codec.KeyedCodec;
-import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
 import org.joml.Vector3d;
@@ -135,7 +135,7 @@ public class DiePage extends InteractiveCustomUIPage<DiePage.DiePageEventData> {
             currentWorld.execute(() -> {
                 try {
                     Store<EntityStore> storeWorld = currentWorld.getEntityStore().getStore();
-                    Teleport teleport = Teleport.createForPlayer(newWorld, new Transform(spawn.x, spawn.y, spawn.z));
+                    Teleport teleport = Teleport.createForPlayer(newWorld, spawn, Rotation3f.ZERO);
                     storeWorld.addComponent(ref2, Teleport.getComponentType(), teleport);
                 } catch (Exception e) { e.printStackTrace(); }
             });

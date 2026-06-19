@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class InstancePool {
 
@@ -57,19 +58,27 @@ public class InstancePool {
     public void setCounter(MatchManagerInstanceCounter counter) { this.counter = counter; }
     public MapPopularityTracker getPopularity() { return popularity; }
     public synchronized InstanceManager take(String mapId, Runnable whenReady) {
+        return take(mapId, instance -> {
+            if (whenReady != null) whenReady.run();
+        });
+    }
+    public synchronized InstanceManager take(String mapId, Consumer<InstanceManager> whenReady) {
         Deque<InstanceManager> mapPool = pool.get(mapId);
         InstanceManager instance = (mapPool != null) ? mapPool.pollFirst() : null;
 
         if (instance != null) {
             main.getLogger().at(Level.INFO).log("[Pool] Instancia entregada [" + mapId + "]. Restantes: " + poolSize(mapId));
             enqueueCreation(mapId);
-            if (whenReady != null) whenReady.run();
+            if (whenReady != null) whenReady.accept(instance);
             return instance;
         } else {
             main.getLogger().at(Level.WARNING).log("[Pool] FALLBACK en mapa '" + mapId + "': creando instancia en caliente.");
             popularity.recordFallback(mapId);
             instance = new InstanceManager(main, mapId);
-            instance.preloadMap(whenReady);
+            InstanceManager pendingInstance = instance;
+            instance.preloadMap(() -> {
+                if (whenReady != null) whenReady.accept(pendingInstance);
+            });
         }
 
         enqueueCreation(mapId);

@@ -1,0 +1,200 @@
+
+$C = "../../Common.ui";
+
+Group {
+    FlexWeight: 1;
+    LayoutMode: CenterMiddle;
+    Background: (Color: #000000(0.50));
+
+    Group {
+        Anchor: (Width: 1100, Height: 622);
+        Background: PatchStyle(TexturePath: "../../Common/ContainerFullPatch.png", Border: 20);
+        LayoutMode: Top;
+
+        // ── Header ──────────────────────────────────────────────────────────────
+        Group {
+            Anchor: (Height: 42);
+            LayoutMode: Left;
+            Background: PatchStyle(TexturePath: "../../Common/ContainerHeaderNoRunes.png", HorizontalBorder: 35, VerticalBorder: 0);
+            Padding: (Horizontal: 18, Vertical: 10);
+
+            Button #Back {
+                Anchor: (Width: 32, Height: 32);
+                Style: (
+                    Default: (Background: (TexturePath: "../../Common/Back.png")),
+                    Hovered: (Background: (TexturePath: "../../Common/Back.png")),
+                    Pressed: (Background: (TexturePath: "../../Common/Back.png"))
+                );
+            }
+
+            Group { Anchor: (Width: 12, Height: 42); }
+
+            Group {
+                LayoutMode: CenterMiddle;
+                Anchor: (Width: 180, Height: 30);
+                Background: PatchStyle(TexturePath: "../../Common/ContainerPanelPatch.png", Border: 4);
+                Padding: (Horizontal: 10);
+                Label #Username {
+                    Style: (FontSize: 14, RenderBold: true, TextColor: #96a9be, VerticalAlignment: Center);
+                    Text: "PLAYER";
+                }
+            }
+
+            Group { FlexWeight: 1; LayoutMode: CenterMiddle;
+                Label #WeaponTitle {
+                    Style: (FontSize: 18, RenderBold: true, TextColor: #b4c8c9, HorizontalAlignment: Center, VerticalAlignment: Center);
+                    Text: "WEAPON";
+                }
+            }
+
+            Button #Close {
+                Anchor: (Width: 32, Height: 32);
+                Style: (
+                    Default: (Background: (TexturePath: "../../Common/ContainerCloseButton.png")),
+                    Hovered: (Background: (TexturePath: "../../Common/ContainerCloseButtonHovered.png")),
+                    Pressed: (Background: (TexturePath: "../../Common/ContainerCloseButtonPressed.png"))
+                );
+            }
+        }
+
+        // ── Content (fills space between header and carousel) ───────────────────
+        Group {
+            FlexWeight: 1;
+            LayoutMode: Top;
+            Background: PatchStyle(TexturePath: "../../Common/ContainerPatch.png", Border: 23);
+            Padding: (Left: 24, Right: 24, Top: 16, Bottom: 16);
+
+            // Big skin preview — FlexWeight: 1 so it fills remaining space, image centered inside
+            Group {
+                FlexWeight: 1;
+                LayoutMode: CenterMiddle;
+                Group #BigSkinImage { Anchor: (Width: 420, Height: 248); }
+            }
+
+            // Skin name + rarity badge + select button (same row)
+            Group {
+                Anchor: (Height: 44);
+                LayoutMode: Left;
+
+                Label #SelectedSkinName {
+                    FlexWeight: 1;
+                    Style: (FontSize: 17, RenderBold: true, TextColor: #ffffff, VerticalAlignment: Center);
+                    Text: "—";
+                }
+
+                Group #RarityBadge {
+                    Anchor: (Width: 130, Height: 28);
+                    LayoutMode: CenterMiddle;
+                    Padding: (Horizontal: 10, Vertical: 4);
+
+                    Group #RarityBgMilSpec    { Anchor: (Height: 28); Background: (Color: #2BB0B5(0.20)); Visible: false; }
+                    Group #RarityBgRestricted { Anchor: (Height: 28); Background: (Color: #5D00FF(0.20)); Visible: false; }
+                    Group #RarityBgClassified { Anchor: (Height: 28); Background: (Color: #FF00D9(0.20)); Visible: false; }
+                    Group #RarityBgCovert     { Anchor: (Height: 28); Background: (Color: #FF0000(0.20)); Visible: false; }
+                    Group #RarityBgSpecial    { Anchor: (Height: 28); Background: (Color: #FFE100(0.20)); Visible: false; }
+
+                    Label #SelectedSkinRarity {
+                        Style: (FontSize: 11, RenderBold: true, TextColor: #888888, HorizontalAlignment: Center, VerticalAlignment: Center);
+                        Text: "";
+                    }
+                }
+
+                Group { Anchor: (Width: 10, Height: 44); }
+
+                TextButton #SelectBtn {
+                    Anchor: (Width: 180, Height: 44);
+                    Padding: (Horizontal: 24);
+                    Style: (
+                        Default:  (Background: PatchStyle(TexturePath: "../../Common/Buttons/Primary.png",         VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
+                        Hovered:  (Background: PatchStyle(TexturePath: "../../Common/Buttons/Primary_Hovered.png",  VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
+                        Pressed:  (Background: PatchStyle(TexturePath: "../../Common/Buttons/Primary_Pressed.png",  VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
+                        Disabled: (Background: PatchStyle(TexturePath: "../../Common/Buttons/Disabled.png",         VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #797b7c, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12))
+                    );
+                    Text: "Select Skin";
+                }
+            }
+        }
+
+        // ── Carousel (pegado al fondo, con padding interno) ─────────────────────
+        Group {
+            Anchor: (Height: 130);
+            LayoutMode: CenterMiddle;
+            Background: PatchStyle(TexturePath: "../../Common/ContainerPatch.png", Border: 23);
+            Padding: (Full: 12);
+
+            Group {
+                LayoutMode: Left;
+
+                Button #CarouselSlot1 {
+                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg1 { Anchor: (Width: 100, Height: 60); } }
+                    Group { Anchor: (Height: 16); LayoutMode: Right;
+                        Group #CarouselLock1 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    }
+                }
+
+                Button #CarouselSlot2 {
+                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg2 { Anchor: (Width: 100, Height: 60); } }
+                    Group { Anchor: (Height: 16); LayoutMode: Right;
+                        Group #CarouselLock2 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    }
+                }
+
+                Button #CarouselSlot3 {
+                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg3 { Anchor: (Width: 100, Height: 60); } }
+                    Group { Anchor: (Height: 16); LayoutMode: Right;
+                        Group #CarouselLock3 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    }
+                }
+
+                Button #CarouselSlot4 {
+                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg4 { Anchor: (Width: 100, Height: 60); } }
+                    Group { Anchor: (Height: 16); LayoutMode: Right;
+                        Group #CarouselLock4 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    }
+                }
+
+                Button #CarouselSlot5 {
+                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg5 { Anchor: (Width: 100, Height: 60); } }
+                    Group { Anchor: (Height: 16); LayoutMode: Right;
+                        Group #CarouselLock5 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    }
+                }
+
+                Button #CarouselSlot6 {
+                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg6 { Anchor: (Width: 100, Height: 60); } }
+                    Group { Anchor: (Height: 16); LayoutMode: Right;
+                        Group #CarouselLock6 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    }
+                }
+
+                Button #CarouselSlot7 {
+                    LayoutMode: Top; Anchor: (Width: 134, Height: 106);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg7 { Anchor: (Width: 100, Height: 60); } }
+                    Group { Anchor: (Height: 16); LayoutMode: Right;
+                        Group #CarouselLock7 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    }
+                }
+            }
+        }
+    }
+}

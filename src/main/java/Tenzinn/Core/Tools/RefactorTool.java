@@ -198,14 +198,13 @@ public class RefactorTool {
                     Ref<EntityStore> ref = playerRef.getReference();
                     Store<EntityStore> store = ref.getStore();
 
-                    Rotation3f rotation = new Rotation3f(0f, 0f, 0f);
-                    Teleport teleport = new Teleport(finalSpawnPos, rotation);
+                    Teleport teleport = Teleport.createForPlayer(finalSpawnPos, Rotation3f.ZERO);
                     store.putComponent(ref, Teleport.getComponentType(), teleport);
                 } catch (Exception e) { e.printStackTrace(); }
             });
         }, 150, TimeUnit.MILLISECONDS);
 
-        CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud();
+        CustomUIHud customHUD = RefactorTool.getPlayer(playerRef).getHudManager().getCustomHud(playerRef.getUuid().toString());
         boolean isInGame = false;
         if (customHUD instanceof GameHUD hud) {
             isInGame = true;
@@ -247,9 +246,9 @@ public class RefactorTool {
         ArrayList<PlayerStats> playersList = new ArrayList<>(getPlayerList(match));
 
         for (PlayerStats playerStats : playersList) {
-            if(playerStats.getPlayer().getHudManager().getCustomHud() == null) continue;
+            if(playerStats.getPlayer().getHudManager().getCustomHud(playerStats.getPlayerRef().getUuid().toString()) == null) continue;
 
-            Object testHud = playerStats.getPlayer().getHudManager().getCustomHud();
+            Object testHud = playerStats.getPlayer().getHudManager().getCustomHud(playerStats.getPlayerRef().getUuid().toString());
 
             if(testHud instanceof GameHUD gameHUD) { gameHUD.setData(); }
             else if(testHud instanceof ScoreboardPage scoreboard) { scoreboard.setData(); }
@@ -260,7 +259,7 @@ public class RefactorTool {
         Player player = getPlayer(playerRef);
         if(player == null) return;
 
-        Object testHud = player.getHudManager().getCustomHud();
+        Object testHud = player.getHudManager().getCustomHud(playerRef.getUuid().toString());
 
         if(testHud == null) return;
 
@@ -300,9 +299,11 @@ public class RefactorTool {
 
             // Roll for a case drop before opening the end screen
             PlayerStats stats = getPlayerStats(playerRef);
-            if (stats != null && Tenzinn.Core.Cases.CaseManager.rollForCase()) {
-                Tenzinn.Core.Cases.CaseManager.addCase(playerRef.getUuid());
-                stats.hasPendingCase = true;
+            if (stats != null) {
+                stats.hasPendingCase = Tenzinn.Core.Cases.CaseManager.rollForCase();
+                if (stats.hasPendingCase) {
+                    Tenzinn.Core.Cases.CaseManager.addCase(playerRef.getUuid());
+                }
             }
 
             if (getModeForPlayer(playerRef) == SpawnMode.DM) {

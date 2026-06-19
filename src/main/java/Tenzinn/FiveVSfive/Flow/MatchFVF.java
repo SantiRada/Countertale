@@ -16,7 +16,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import org.joml.Vector3d;
-import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
@@ -233,6 +233,7 @@ public class MatchFVF {
     /** Called when the round timer reaches 0. Determines winner by alive-player rules and closes the round. */
     public static void onTimeExpired() {
         inEndRound = true;
+        stopTimer();
 
         boolean team1HasAlive = false;
         boolean team2HasAlive = false;
@@ -292,7 +293,7 @@ public class MatchFVF {
             // Team 1 → spawns [0..4], Team 2 → spawns [5..9]
             int spawnIndex = (team == 1) ? team1Count++ : 5 + team2Count++;
             Vector3d spawnPos = spawns.get(spawnIndex % spawns.size());
-            Transform spawnPoint = new Transform(spawnPos.x + 0.5f, spawnPos.y, spawnPos.z + 0.5f);
+            Vector3d spawnPoint = new Vector3d(spawnPos.x + 0.5f, spawnPos.y, spawnPos.z + 0.5f);
 
             try {
                 UUID playerUUID = playerRef.getUuid();
@@ -311,7 +312,7 @@ public class MatchFVF {
                 currentWorld.execute(() -> {
                     try {
                         Store<EntityStore> store = currentWorld.getEntityStore().getStore();
-                        Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
+                        Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint, Rotation3f.ZERO);
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
                     } catch (Exception e) { e.printStackTrace(); }
                 });
@@ -340,6 +341,26 @@ public class MatchFVF {
     // ================================================== //
     public static int getTimer() { return remainingSeconds; }
     public static void stopTimer() { if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false); }
+
+    public static boolean forceEndMatchIn(int seconds) {
+        if (myMatch == null) return false;
+
+        getNumberRound(1);
+        numRoundsPerTeam.set(0, numRoundsPerWinner - 1);
+        numRoundsPerTeam.set(1, numRoundsPerWinner - 1);
+
+        if (myMatch.getState() != MatchState.IN_PROGRESS || timerTask == null || timerTask.isDone()) {
+            myMatch.setState(MatchState.IN_PROGRESS);
+            stopTimer();
+            timerTask = null;
+            startTimerMatch(myMatch);
+        }
+
+        inEndRound = false;
+        remainingSeconds = Math.max(0, seconds);
+        return true;
+    }
+
     public static void clearRuntimeState() {
         stopTimer();
         timerTask = null;
@@ -403,10 +424,13 @@ public class MatchFVF {
 
         List<PlayerRef> players = myMatch.getPlayers();
         for (int i = 0; i < players.size(); i++) {
-            Player player = RefactorTool.getPlayer(players.get(i));
-            GameHUD customHUD = (GameHUD) player.getHudManager().getCustomHud();
-            assert customHUD != null;
-            customHUD.setRounds(numRoundsPerTeam.getFirst(), numRoundsPerTeam.getLast());
+            PlayerRef playerRef = players.get(i);
+            Player player = RefactorTool.getPlayer(playerRef);
+            if (player == null) continue;
+
+            if (player.getHudManager().getCustomHud(playerRef.getUuid().toString()) instanceof GameHUD customHUD) {
+                customHUD.setRounds(numRoundsPerTeam.getFirst(), numRoundsPerTeam.getLast());
+            }
 
             if (matchOver) {
                 assert player.getReference() != null;

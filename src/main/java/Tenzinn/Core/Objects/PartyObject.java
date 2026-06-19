@@ -51,11 +51,11 @@ public class PartyObject {
             Player player = RefactorTool.getPlayer(playerRef);
             if (player == null) continue;
 
-            CustomUIHud customHUD = player.getHudManager().getCustomHud();
+            CustomUIHud customHUD = player.getHudManager().getCustomHud(playerRef.getUuid().toString());
             if (customHUD instanceof QueueHud queueHUD) {
                 queueHUD.setDataParty(this);
             } else {
-                player.getHudManager().setCustomHud(playerRef, new PartyHUD(playerRef, this));
+                player.getHudManager().addCustomHud(playerRef, new PartyHUD(playerRef, this));
             }
         }
     }
@@ -69,9 +69,9 @@ public class PartyObject {
         assert world != null;
         world.execute(() -> {
             Player player = RefactorTool.getPlayer(playerRef);
-            CustomUIHud customHud = player.getHudManager().getCustomHud();
+            CustomUIHud customHud = player.getHudManager().getCustomHud(playerRef.getUuid().toString());
             if (customHud instanceof QueueHud queueHUD) queueHUD.setDeleteParty();
-            if (customHud instanceof PartyHUD) player.getHudManager().setCustomHud(playerRef, null);
+            if (customHud instanceof PartyHUD) player.getHudManager().removeCustomHud(playerRef, playerRef.getUuid().toString());
         });
     }
 

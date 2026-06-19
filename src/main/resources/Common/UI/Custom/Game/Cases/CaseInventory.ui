@@ -1,8 +1,11 @@
 
-@Background = PatchStyle(TexturePath: "../../Common/Background.png");
 @BtnDefault = PatchStyle(TexturePath: "../images/mvp/btn-default.png");
 @BtnHover   = PatchStyle(TexturePath: "../images/mvp/btn-hover.png");
 @BtnPressed = PatchStyle(TexturePath: "../images/mvp/btn-pressed.png");
+@Window     = PatchStyle(TexturePath: "../../Common/ContainerFullPatch.png", Border: 20);
+@Panel      = PatchStyle(TexturePath: "../../Common/ContainerPatch.png", Border: 23);
+@Header     = PatchStyle(TexturePath: "../../Common/ContainerHeaderNoRunes.png", HorizontalBorder: 35, VerticalBorder: 0);
+@NamePanel  = PatchStyle(TexturePath: "../../Common/ContainerPanelPatch.png", Border: 4);
 
 @FilterBase = (
     Default: (Background: @BtnDefault),
@@ -12,47 +15,64 @@
 
 Group {
     FlexWeight: 1;
-    LayoutMode: Middle;
-    Background: (Color: #000000(0.78));
+    LayoutMode: CenterMiddle;
+    Background: (Color: #000000(0.50));
 
     Group {
-        Anchor: (Width: 860, Height: 740);
-        Background: @Background;
+        Anchor: (Width: 1100, Height: 622);
+        Background: @Window;
         LayoutMode: Top;
         ContentHeight: 1520;
         ScrollbarStyle: (Size: 8);
-        Padding: (Left: 40, Right: 32, Top: 40, Bottom: 40);
+        Padding: (Full: 14);
 
         Group {
             LayoutMode: Left;
-            Anchor: (Height: 48, Bottom: 12);
+            Anchor: (Height: 42, Bottom: 10);
+            Background: @Header;
+            Padding: (Horizontal: 18, Vertical: 10);
 
-            Label {
+            Group {
+                LayoutMode: CenterMiddle;
+                Anchor: (Width: 180, Height: 30);
+                Background: @NamePanel;
+                Padding: (Horizontal: 10);
+                Label #Username {
+                    Style: (FontSize: 14, RenderBold: true, TextColor: #96a9be, VerticalAlignment: Center);
+                    Text: "PLAYER";
+                }
+            }
+
+            Group {
                 FlexWeight: 1;
-                Style: (FontSize: 22, RenderBold: true, TextColor: #FFFFFF(0.90), VerticalAlignment: Center);
-                Text: "CASE INVENTORY";
+                LayoutMode: CenterMiddle;
+                Label {
+                    Style: (FontSize: 20, RenderBold: true, TextColor: #b4c8c9, HorizontalAlignment: Center, VerticalAlignment: Center);
+                    Text: "INVENTORY";
+                }
             }
             Label #InventoryCount {
-                Anchor: (Width: 150, Height: 48);
-                Style: (FontSize: 13, TextColor: #888888, Alignment: End, VerticalAlignment: Center);
-                Text: "0 skins · 0 cases";
+                Anchor: (Width: 150, Height: 42);
+                Style: (FontSize: 12, TextColor: #96a9be, Alignment: End, VerticalAlignment: Center);
+                Text: "0 skins - 0 cases";
             }
 
-            Group { Anchor: (Width: 12, Height: 48); }
+            Group { Anchor: (Width: 12, Height: 42); }
 
             Button #HeaderClose {
-                Anchor: (Width: 38, Height: 38);
-                Background: (Color: #2A0000);
-                OutlineColor: #FF4444;
-                OutlineSize: 1;
+                Anchor: (Width: 32, Height: 32);
                 Style: (
-                    Default: (Background: (Color: #2A0000)),
-                    Hovered: (Background: (Color: #3D0000)),
-                    Pressed: (Background: (Color: #1A0000))
+                    Default: (Background: (TexturePath: "../../Common/ContainerCloseButton.png")),
+                    Hovered: (Background: (TexturePath: "../../Common/ContainerCloseButtonHovered.png")),
+                    Pressed: (Background: (TexturePath: "../../Common/ContainerCloseButtonPressed.png"))
                 );
-                Label { Style: (FontSize: 20, RenderBold: true, Alignment: Center, VerticalAlignment: Center, TextColor: #FF4444); Text: "×"; }
             }
         }
+
+        Group {
+            Background: @Panel;
+            LayoutMode: Top;
+            Padding: (Full: 22);
 
         Group {
             LayoutMode: Left;
@@ -680,5 +700,9 @@ Group {
         }
 
         Group { Anchor: (Height: 16); }
+        }
     }
 }
+
+
+

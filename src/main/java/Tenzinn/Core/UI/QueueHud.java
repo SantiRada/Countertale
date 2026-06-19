@@ -34,7 +34,7 @@ public class QueueHud extends CustomUIHud {
     private PartyObject myParty;
 
     public QueueHud(@NonNullDecl PlayerRef playerRef) {
-        super(playerRef);
+        super(playerRef, playerRef.getUuid().toString());
         this.playerRef = playerRef;
         this.startTime = System.currentTimeMillis();
     }

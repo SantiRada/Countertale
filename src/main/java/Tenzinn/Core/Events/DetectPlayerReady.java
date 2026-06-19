@@ -1,6 +1,8 @@
 package Tenzinn.Core.Events;
 
+import Tenzinn.Core.Cases.CaseManager;
 import Tenzinn.Core.GameMatch;
+import Tenzinn.Core.Storage.DatabaseManager;
 import Tenzinn.Core.UI.GameHUD;
 import Tenzinn.Core.LootManager;
 import Tenzinn.Core.Shop.ShopData;
@@ -20,6 +22,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.Objects;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class DetectPlayerReady {
 
@@ -44,6 +47,12 @@ public class DetectPlayerReady {
             player.getHudManager().showHudComponents(playerRef, HudComponent.Reticle);
             player.getHudManager().showHudComponents(playerRef, HudComponent.InputBindings);
 
+            UUID uuid = playerRef.getUuid();
+            DatabaseManager.registerPlayer(uuid, playerRef.getUsername()).thenRun(() -> {
+                CaseManager.loadInventoryFromDb(uuid);
+                CaseManager.loadSelectedSkinsFromDb(uuid);
+            });
+
             LootManager.getLobbyLoot(player);
         }
         else {
@@ -66,7 +75,7 @@ public class DetectPlayerReady {
         }
 
         GameHUD newHud = new GameHUD(playerRef);
-        player.getHudManager().setCustomHud(playerRef, newHud);
+        player.getHudManager().addCustomHud(playerRef, newHud);
 
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
 

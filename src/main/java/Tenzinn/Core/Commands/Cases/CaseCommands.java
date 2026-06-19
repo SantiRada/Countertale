@@ -17,7 +17,7 @@ public class CaseCommands extends AbstractCommandCollection {
     }
 
     @Override
-    public String getPermission() { return "countertale.cases"; }
+    public String getPermission() { return "countertale.case"; }
 
     @Override
     public String getName() { return "case"; }

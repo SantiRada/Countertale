@@ -8,7 +8,7 @@
 @Icon01 = PatchStyle(TexturePath: "../images/mvp/Icon-1.png");
 @Icon03 = PatchStyle(TexturePath: "../images/mvp/Icon-2.png");
 @Icon02 = PatchStyle(TexturePath: "../images/mvp/Icon-3.png");
-@ComingSoon = PatchStyle(TexturePath: "../images/shop/coming-soon.png");
+@CaseBox = PatchStyle(TexturePath: "../images/icons/box.png");
 
 @BtnDefault = PatchStyle(TexturePath: "../images/mvp/btn-default.png");
 @BtnHover = PatchStyle(TexturePath: "../images/mvp/btn-hover.png");
@@ -133,14 +133,21 @@ Group {
                     Anchor: (Width: 275, Bottom: 14);
                     Background: @BackGeneral;
 
-                    Group #ComingSoonIcon {
-                        Anchor: (Width: 150, Height: 85, Bottom: 16);
-                        Background: @ComingSoon;
+                    Group #CaseRewardIcon {
+                        Anchor: (Width: 86, Height: 86, Bottom: 14);
+                        Background: @CaseBox;
                     }
 
-                    Label {
-                        Style: (FontSize: 24, TextColor: #FFFFFF(0.25), Alignment: Center, RenderBold: true);
-                        Text: "Coming Soon";
+                    Label #CaseRewardTitle {
+                        Anchor: (Bottom: 8);
+                        Style: (FontSize: 24, TextColor: #FFFFFF(0.85), Alignment: Center, RenderBold: true);
+                        Text: "";
+                    }
+
+                    Label #CaseRewardDescription {
+                        Anchor: (Width: 220);
+                        Style: (FontSize: 14, TextColor: #FFFFFF(0.45), Alignment: Center);
+                        Text: "";
                     }
                 }
                 Group #B2 {

@@ -11,7 +11,7 @@
     }
   ],
   "Website": "https://santiagorada.com/hytale/plugins/countertale",
-  "ServerVersion": "0.5.0-pre.8",
+  "ServerVersion": "^0.5.4",
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,

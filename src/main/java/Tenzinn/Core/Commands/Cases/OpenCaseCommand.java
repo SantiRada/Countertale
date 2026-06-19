@@ -39,6 +39,11 @@ public class OpenCaseCommand extends CommandBase {
         CaseSkin skin;
 
         if (skinId != null && !skinId.isBlank()) {
+            if (!playerRef.hasPermission("countertale.cases.admin")) {
+                playerRef.sendMessage(Message.raw("[Cases] This option is only available to admins.").color(Color.RED));
+                return;
+            }
+
             // Debug path — bypass case requirement, use the specified skin
             skin = CaseManager.getSkinById(skinId);
             if (skin == null) {
@@ -83,4 +88,7 @@ public class OpenCaseCommand extends CommandBase {
             playerRef.sendMessage(Message.raw("  - " + s.id + " (" + s.rarity.label + ")").color(Color.YELLOW));
         }
     }
+
+    @Override
+    public String getPermission() { return "countertale.case"; }
 }

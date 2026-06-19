@@ -27,4 +27,7 @@ public class ClearCasesCommand extends CommandBase {
 
         playerRef.sendMessage(Message.raw("[Cases] Inventory cleared (" + count + " item(s) removed).").color(Color.GREEN));
     }
+
+    @Override
+    public String getPermission() { return "countertale.cases.admin"; }
 }

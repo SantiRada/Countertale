@@ -46,4 +46,7 @@ public class GiveSkinCommand extends CommandBase {
                 "[Cases] Added to inventory: " + skin.displayName + " [" + skin.rarity.label + "]"
         ).color(Color.GREEN));
     }
+
+    @Override
+    public String getPermission() { return "countertale.cases.admin"; }
 }

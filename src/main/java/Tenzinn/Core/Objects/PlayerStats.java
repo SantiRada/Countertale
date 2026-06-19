@@ -14,6 +14,9 @@ public class PlayerStats {
     public int deaths = 0;
     public int kills = 0;
     public int score = 0;
+    private float damageCaused = 0;
+    private float damageReceived = 0;
+    private float meleeDamage = 0;
 
     public float maxHealth = -1;
 
@@ -73,6 +76,15 @@ public class PlayerStats {
 
         RefactorTool.setChangesInUI(Objects.requireNonNull(RefactorTool.getPlayerStats(playerRef)).getCurrentMatch());
     }
+    public void addDamageCaused(float value, boolean melee) {
+        if (value <= 0) return;
+        damageCaused += value;
+        if (melee) meleeDamage += value;
+    }
+    public void addDamageReceived(float value) {
+        if (value <= 0) return;
+        damageReceived += value;
+    }
     public void setHealth(int value) { maxHealth = value; }
     public void setMoney(int value) { money -= value; }
     public void giveMoney(int value) { money += value; }
@@ -86,6 +98,9 @@ public class PlayerStats {
     public int getKills() { return kills; }
     public int getDeaths() { return deaths; }
     public int getScore() { return score; }
+    public int getDamageCaused() { return Math.round(damageCaused); }
+    public int getDamageReceived() { return Math.round(damageReceived); }
+    public int getMeleeDamage() { return Math.round(meleeDamage); }
     public int getMoney() { return money; }
     public ArrayList<WeaponStats> getLoot() {
         ArrayList<WeaponStats> list = new ArrayList<>();

@@ -60,6 +60,20 @@ public class MatchDeathmatch {
         if (timerTask != null && !timerTask.isDone()) timerTask.cancel(false);
     }
 
+    public static boolean forceEndMatchIn(int seconds) {
+        if (myMatch == null) return false;
+
+        if (myMatch.getState() != GameMatch.MatchState.IN_PROGRESS || timerTask == null || timerTask.isDone()) {
+            myMatch.setState(GameMatch.MatchState.IN_PROGRESS);
+            stopTimer();
+            timerTask = null;
+            startTimerMatch(myMatch);
+        }
+
+        remainingSeconds = Math.max(0, seconds);
+        return true;
+    }
+
     public static void clearRuntimeState() {
         stopTimer();
         timerTask = null;

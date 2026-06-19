@@ -42,4 +42,7 @@ public class SetCaseChanceCommand extends CommandBase {
                 "[Cases] Drop chance set to " + String.format("%.0f%%", CaseManager.getDropChance() * 100)
         ).color(Color.GREEN));
     }
+
+    @Override
+    public String getPermission() { return "countertale.cases.admin"; }
 }

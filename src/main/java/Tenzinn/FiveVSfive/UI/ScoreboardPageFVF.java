@@ -26,7 +26,7 @@ public class ScoreboardPageFVF extends CustomUIHud {
 
     public ScheduledFuture<?> timerTask;
 
-    public ScoreboardPageFVF(PlayerRef playerRef) { super(playerRef); this.playerRef = playerRef; }
+    public ScoreboardPageFVF(PlayerRef playerRef) { super(playerRef, playerRef.getUuid().toString()); this.playerRef = playerRef; }
 
     @Override
     protected void build(@NonNullDecl UICommandBuilder uiCommandBuilder) {

@@ -1,5 +1,7 @@
 package Tenzinn.Core.Cases;
 
+import Tenzinn.Core.Storage.DatabaseManager;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,6 +12,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -29,7 +32,9 @@ public class CaseManager {
 
     private static final Map<UUID, Integer> playerCases = new ConcurrentHashMap<>();
 
-    private static final Map<UUID, List<CaseSkin>> playerInventory = new ConcurrentHashMap<>();
+    private static final Map<UUID, List<CaseSkin>> playerInventory   = new ConcurrentHashMap<>();
+    /** weaponId → skinId selection per player */
+    private static final Map<UUID, Map<String, String>> selectedSkins = new ConcurrentHashMap<>();
 
     static {
         SKINS = loadSkins();
@@ -140,6 +145,22 @@ public class CaseManager {
 
     public static void addToInventory(UUID uuid, CaseSkin skin) {
         playerInventory.computeIfAbsent(uuid, k -> new ArrayList<>()).add(skin);
+        DatabaseManager.addSkinToInventory(uuid, skin.id);
+    }
+
+    /**
+     * Loads this player's skins from the database into the in-memory map.
+     * Called once when the player enters the lobby.
+     */
+    public static void loadInventoryFromDb(UUID uuid) {
+        DatabaseManager.loadSkinIds(uuid).thenAccept(ids -> {
+            List<CaseSkin> skins = new ArrayList<>();
+            for (String id : ids) {
+                CaseSkin skin = getSkinById(id);
+                if (skin != null) skins.add(skin);
+            }
+            playerInventory.put(uuid, skins);
+        });
     }
 
     public static List<CaseSkin> getInventory(UUID uuid) {
@@ -156,5 +177,32 @@ public class CaseManager {
     public static CaseSkin getSkinById(String id) {
         for (CaseSkin s : SKINS) if (s.id.equalsIgnoreCase(id)) return s;
         return null;
+    }
+
+    public static List<CaseSkin> getSkinsByWeapon(String weaponId) {
+        return SKINS.stream()
+                .filter(s -> s.weapon.equalsIgnoreCase(weaponId))
+                .collect(Collectors.toList());
+    }
+
+    // ── Selected skins ────────────────────────────────────────────────────────
+
+    public static void setSelectedSkin(UUID uuid, String weaponId, String skinId) {
+        selectedSkins.computeIfAbsent(uuid, k -> new ConcurrentHashMap<>()).put(weaponId, skinId);
+        DatabaseManager.setSelectedSkin(uuid, weaponId, skinId);
+    }
+
+    public static String getSelectedSkin(UUID uuid, String weaponId) {
+        Map<String, String> map = selectedSkins.get(uuid);
+        return map != null ? map.get(weaponId) : null;
+    }
+
+    public static Map<String, String> getSelectedSkins(UUID uuid) {
+        return selectedSkins.getOrDefault(uuid, Collections.emptyMap());
+    }
+
+    public static void loadSelectedSkinsFromDb(UUID uuid) {
+        DatabaseManager.loadSelectedSkins(uuid).thenAccept(map ->
+                selectedSkins.put(uuid, new ConcurrentHashMap<>(map)));
     }
 }

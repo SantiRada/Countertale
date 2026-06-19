@@ -129,7 +129,7 @@ public class LootManager {
             if (statMap != null)
                 statMap.maximizeStatValue(DefaultEntityStatTypes.getHealth());
 
-            CustomUIHud customHUD = player.getHudManager().getCustomHud();
+            CustomUIHud customHUD = player.getHudManager().getCustomHud(playerRef.getUuid().toString());
             if (customHUD instanceof GameHUD newHud) {
                 int activeSlot = hotbar != null ? hotbar.getActiveSlot() : 0;
                 newHud.setWeapons(activeSlot + 1);

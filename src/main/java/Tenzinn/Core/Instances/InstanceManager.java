@@ -9,7 +9,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import org.joml.Vector3i;
 import org.joml.Vector3d;
-import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.prefab.PrefabStore;
@@ -136,7 +136,6 @@ public class InstanceManager {
 
         for (int i = 0; i < playerRefs.size(); i++) {
             Vector3d spawnPos = spawns.get(i % spawns.size());
-            Transform spawnPoint = new Transform(spawnPos.x, spawnPos.y, spawnPos.z);
             PlayerRef playerRef  = playerRefs.get(i);
 
             try {
@@ -156,7 +155,7 @@ public class InstanceManager {
                 currentWorld.execute(() -> {
                     try {
                         Store<EntityStore> store = currentWorld.getEntityStore().getStore();
-                        Teleport teleport = Teleport.createForPlayer(newWorld, spawnPoint);
+                        Teleport teleport = Teleport.createForPlayer(newWorld, spawnPos, Rotation3f.ZERO);
                         store.addComponent(ref, Teleport.getComponentType(), teleport);
                         main.getLogger().at(Level.INFO).log("[Instance] ✓ Jugador teletransportado: " + playerUUID);
                     } catch (Exception e) {

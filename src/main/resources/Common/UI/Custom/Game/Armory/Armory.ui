@@ -1,0 +1,299 @@
+
+$C = "../../Common.ui";
+
+Group {
+    FlexWeight: 1;
+    LayoutMode: CenterMiddle;
+    Background: (Color: #000000(0.50));
+
+    Group {
+        Anchor: (Width: 1100, Height: 622);
+        Background: PatchStyle(TexturePath: "../../Common/ContainerFullPatch.png", Border: 20);
+        LayoutMode: Top;
+        Padding: (Full: 14);
+
+        // ── Header ──────────────────────────────────────────────────────────────
+        Group {
+            Anchor: (Height: 42, Bottom: 10);
+            LayoutMode: Left;
+            Background: PatchStyle(TexturePath: "../../Common/ContainerHeaderNoRunes.png", HorizontalBorder: 35, VerticalBorder: 0);
+            Padding: (Horizontal: 18, Vertical: 10);
+
+            Group {
+                LayoutMode: CenterMiddle;
+                Anchor: (Width: 180, Height: 30);
+                Background: PatchStyle(TexturePath: "../../Common/ContainerPanelPatch.png", Border: 4);
+                Padding: (Horizontal: 10);
+                Label #Username {
+                    Style: (FontSize: 14, RenderBold: true, TextColor: #96a9be, VerticalAlignment: Center);
+                    Text: "PLAYER";
+                }
+            }
+
+            Group { FlexWeight: 1; LayoutMode: CenterMiddle;
+                Label {
+                    Style: (FontSize: 20, RenderBold: true, TextColor: #b4c8c9, HorizontalAlignment: Center, VerticalAlignment: Center);
+                    Text: "ARMERÍA";
+                }
+            }
+
+            Button #Close {
+                Anchor: (Width: 32, Height: 32);
+                Style: (
+                    Default: (Background: (TexturePath: "../../Common/ContainerCloseButton.png")),
+                    Hovered: (Background: (TexturePath: "../../Common/ContainerCloseButtonHovered.png")),
+                    Pressed: (Background: (TexturePath: "../../Common/ContainerCloseButtonPressed.png"))
+                );
+            }
+        }
+
+
+        // ── Columns ─────────────────────────────────────────────────────────────
+        Group {
+            LayoutMode: Left;
+            Background: PatchStyle(TexturePath: "../../Common/ContainerPatch.png", Border: 23);
+            Padding: (Full: 16);
+
+            // ─── KNIFE ──────────────────────────────────────────────────────────
+            Group {
+                FlexWeight: 1;
+                LayoutMode: Top;
+                Padding: (Right: 8);
+
+                Label {
+                    Anchor: (Height: 26, Bottom: 8);
+                    Style: (FontSize: 11, RenderBold: true, RenderUppercase: true, TextColor: #96a9be, HorizontalAlignment: Center);
+                    Text: "Knife";
+                }
+
+                Button #WKnife {
+                    LayoutMode: Top; Anchor: (Height: 88);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 8);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WKnifeIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "Knife"; } }
+                }
+            }
+
+            // ─── PISTOLS ────────────────────────────────────────────────────────
+            Group {
+                FlexWeight: 1;
+                LayoutMode: Top;
+                Padding: (Right: 8);
+
+                Label {
+                    Anchor: (Height: 26, Bottom: 8);
+                    Style: (FontSize: 11, RenderBold: true, RenderUppercase: true, TextColor: #96a9be, HorizontalAlignment: Center);
+                    Text: "Pistols";
+                }
+
+                Button #WUsp {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WUspIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "USP-S"; } }
+                }
+
+                Button #WDesertEagle {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WDesertEagleIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "Deagle"; } }
+                }
+
+                Button #WFiveSeven {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WFiveSevenIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "Five-7"; } }
+                }
+
+                Button #WP250 {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WP250Icon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "P250"; } }
+                }
+
+                Button #WDualBerettas {
+                    LayoutMode: Top; Anchor: (Height: 88);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WDualBerettasIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "Dual BB"; } }
+                }
+            }
+
+            // ─── MID-TIER ───────────────────────────────────────────────────────
+            Group {
+                FlexWeight: 1;
+                LayoutMode: Top;
+                Padding: (Right: 8);
+
+                Label {
+                    Anchor: (Height: 26, Bottom: 8);
+                    Style: (FontSize: 11, RenderBold: true, RenderUppercase: true, TextColor: #96a9be, HorizontalAlignment: Center);
+                    Text: "Mid-Tier";
+                }
+
+                Button #WMac10 {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WMac10Icon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "MAC-10"; } }
+                }
+
+                Button #WMp9 {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WMp9Icon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "MP9"; } }
+                }
+
+                Button #WMag7 {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WMag7Icon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "MAG-7"; } }
+                }
+
+                Button #WSawedOff {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WSawedOffIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "Sawed-Off"; } }
+                }
+
+                Group {
+                    Anchor: (Height: 88);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+            }
+
+            // ─── RIFLES ─────────────────────────────────────────────────────────
+            Group {
+                FlexWeight: 1;
+                LayoutMode: Top;
+                Padding: (Right: 8);
+
+                Label {
+                    Anchor: (Height: 26, Bottom: 8);
+                    Style: (FontSize: 11, RenderBold: true, RenderUppercase: true, TextColor: #96a9be, HorizontalAlignment: Center);
+                    Text: "Rifles";
+                }
+
+                Button #WAk47 {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WAk47Icon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "AK-47"; } }
+                }
+
+                Button #WM4a1s {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WM4a1sIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "M4A1-S"; } }
+                }
+
+                Button #WAwp {
+                    LayoutMode: Top; Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
+                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
+                    Group { FlexWeight: 3; LayoutMode: Middle; Group #WAwpIcon { Anchor: (Width: 80, Height: 50); } }
+                    Group { FlexWeight: 1; LayoutMode: Middle; Label { Style: (FontSize: 10, RenderBold: true, HorizontalAlignment: Center, TextColor: #bfcdd5); Text: "AWP"; } }
+                }
+
+                Group {
+                    Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+
+                Group {
+                    Anchor: (Height: 88);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+            }
+
+            // ─── GRENADES ───────────────────────────────────────────────────────
+            Group {
+                FlexWeight: 1;
+                LayoutMode: Top;
+
+                Label {
+                    Anchor: (Height: 26, Bottom: 8);
+                    Style: (FontSize: 11, RenderBold: true, RenderUppercase: true, TextColor: #96a9be, HorizontalAlignment: Center);
+                    Text: "Grenades";
+                }
+
+                Group {
+                    Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+                Group {
+                    Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+                Group {
+                    Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+                Group {
+                    Anchor: (Height: 88, Bottom: 4);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+                Group {
+                    Anchor: (Height: 88);
+                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1;
+                    LayoutMode: CenterMiddle;
+                    Label { Style: (FontSize: 10, TextColor: #3d5a85, HorizontalAlignment: Center); Text: "Coming Soon"; }
+                }
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 38, Top: 10);
+
+            Button #ShowInventory {
+                Anchor: (Width: 170, Height: 34);
+                Background: PatchStyle(TexturePath: "../images/mvp/btn-default.png");
+                Style: (
+                    Default: (Background: (TexturePath: "../images/mvp/btn-default.png")),
+                    Hovered: (Background: (TexturePath: "../images/mvp/btn-hover.png")),
+                    Pressed: (Background: (TexturePath: "../images/mvp/btn-pressed.png"))
+                );
+                Label {
+                    Style: (FontSize: 13, RenderBold: true, Alignment: Center, VerticalAlignment: Center, TextColor: #FFFFFF);
+                    Text: "Show Inventory";
+                }
+            }
+
+            Group { FlexWeight: 1; }
+        }
+    }
+}
+

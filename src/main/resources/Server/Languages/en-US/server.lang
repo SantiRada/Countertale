@@ -1,6 +1,10 @@
 # === items ===
 items.action_book.name = Actions Book
 items.action_book.description = Right-click to enter the queue for Deathmatch mode
+items.Armory.name = Armory
+items.Armory.description = Placeable armory bench for skins and cases
+server.items.Armory.name = Armory
+server.items.Armory.description = Placeable armory bench for skins and cases
 
 # === Countertale chat ===
 server.countertale.chat.when-buying = Purchased {weapon}
@@ -38,6 +42,8 @@ server.countertale.ui.title-queue = Queue
 server.countertale.ui.desc-queue = Join a match queue.
 server.countertale.ui.title-shop = Shop
 server.countertale.ui.desc-shop = Open the equipment shop.
+server.countertale.ui.title-armory = Armory
+server.countertale.ui.desc-armory = Show Inventory
 server.countertale.ui.queue.maps = Maps: {maps}
 server.countertale.ui.queue.players-full = 10/10 Players
 server.countertale.ui.queue.loading-map = Loading map...
@@ -49,6 +55,10 @@ server.countertale.ui.round.number = Round {round}
 server.countertale.ui.map.label = MAP - {map}
 server.countertale.ui.scoreboard.casual-map = Casual | {map}
 server.countertale.ui.scoreboard.competitive-map = Competitive | {map}
+server.countertale.ui.case.reward-title = CASE DROP
+server.countertale.ui.case.reward-description = You received a case after this match.
+server.countertale.ui.case.no-reward-title = Better luck next match
+server.countertale.ui.case.no-reward-description = No case dropped this time.
 
 # === Countertale party ===
 server.countertale.party.only-leader-queue = Only the party leader can join the queue. Use /party order to ask them.
@@ -89,6 +99,9 @@ server.countertale.admin.statue.assigned = [{type}] assigned at ({x}, {y}, {z}).
 server.countertale.admin.statue.deleted-holograms = Removed {count} holograms.
 server.countertale.admin.forcestart.not-in-queue = You are not in any queue.
 server.countertale.admin.forcestart.already-started = The match is already running (state: {state}).
+server.countertale.admin.endgame.not-in-match = You are not in an active match.
+server.countertale.admin.endgame.started = Match timer set to 00:0{seconds}.
+server.countertale.admin.endgame.no-active-timer = There is no active match timer to update.
 server.countertale.match.fvf.timer-loading = Loading 5v5 timer.
 server.countertale.hud.shield-not-found = Shield not found for this player.
 server.countertale.hud.slots-not-loaded = Slots were not loaded.

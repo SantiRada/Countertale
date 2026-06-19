@@ -7,7 +7,8 @@ public class SetStatueCollectionCommand extends AbstractCommandCollection {
     public SetStatueCollectionCommand(String name, String description) {
         super(name, description);
 
-        addSubCommand(new SetStatueTypeCommand("queue", "Set the queue statue block."));
-        addSubCommand(new SetStatueTypeCommand("shop",  "Set the shop statue block."));
+        addSubCommand(new SetStatueTypeCommand("queue",  "Set the queue statue block."));
+        addSubCommand(new SetStatueTypeCommand("shop",   "Set the shop statue block."));
+        addSubCommand(new SetStatueTypeCommand("armory", "Set the armory statue block."));
     }
 }

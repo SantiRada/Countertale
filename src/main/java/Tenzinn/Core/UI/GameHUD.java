@@ -42,7 +42,7 @@ public class GameHUD extends CustomUIHud {
     private final HudTimer invulnerabilityTimer = new HudTimer();
 
     public GameHUD(@NonNullDecl PlayerRef playerRef) {
-        super(playerRef);
+        super(playerRef, playerRef.getUuid().toString());
         this.playerRef = playerRef;
 
         playerStats = RefactorTool.getPlayerStats(playerRef);

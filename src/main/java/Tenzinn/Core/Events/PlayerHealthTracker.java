@@ -66,7 +66,9 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
 
-        CustomUIHud customHUD = player.getHudManager().getCustomHud();
+        PlayerRef playerRef = Universe.get().getPlayer(uuid);
+
+        CustomUIHud customHUD = player.getHudManager().getCustomHud(playerRef.getUuid().toString());
         if (!(customHUD instanceof GameHUD newHud)) return;
 
         newHud.setHealth((int)current, (int)max);
@@ -74,8 +76,6 @@ public class PlayerHealthTracker extends DelayedEntitySystem<EntityStore> {
         if (player.getWorld() == null) return;
         World world = Universe.get().getWorld(player.getWorld().getWorldConfig().getUuid());
         if (world == Universe.get().getDefaultWorld()) return;
-
-        PlayerRef playerRef = Universe.get().getPlayer(uuid);
         PlayerStats playerStats = RefactorTool.getPlayerStats(playerRef);
         if (playerStats != null) playerStats.setHealth((int) current);
     }

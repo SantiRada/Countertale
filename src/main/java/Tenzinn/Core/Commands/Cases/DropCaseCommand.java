@@ -38,4 +38,7 @@ public class DropCaseCommand extends CommandBase {
                 "[Cases] Added " + amount + " case" + (amount == 1 ? "" : "s") + ". Total: " + total
         ).color(Color.GREEN));
     }
+
+    @Override
+    public String getPermission() { return "countertale.cases.admin"; }
 }

@@ -28,7 +28,7 @@ public class ClearHUDCommand extends CommandBase {
         Player player = store.getComponent(ref, Player.getComponentType());
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
 
-        CustomUIHud customHUD = player.getHudManager().getCustomHud();
+        CustomUIHud customHUD = player.getHudManager().getCustomHud(playerRef.getUuid().toString());
 
         if (customHUD != null) {
             if (customHUD instanceof GameHUD gameHUD) {

@@ -14,11 +14,16 @@ import javax.annotation.Nullable;
 
 public class BlockPlaceSystem extends EntityEventSystem<EntityStore, PlaceBlockEvent> {
 
+    private static boolean blockingEnabled = true;
+
+    public static void setBlocking(boolean enabled) { blockingEnabled = enabled; }
+    public static boolean isBlocking() { return blockingEnabled; }
+
     public BlockPlaceSystem() { super(PlaceBlockEvent.class); }
 
     @Override
     public void handle(int i, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer, @Nonnull PlaceBlockEvent event) {
-        event.setCancelled(true);
+        if (blockingEnabled) event.setCancelled(true);
     }
 
     @Nullable @Override

@@ -42,6 +42,7 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder commandBuilder,
                       @Nonnull UIEventBuilder eventBuilder, @Nonnull Store<EntityStore> store) {
         commandBuilder.append("Game/Cases/CaseInventory.ui");
+        commandBuilder.set("#Username.TextSpans", Message.raw(playerRef.getUsername()));
 
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#HeaderClose",
                 EventData.of("Action", "close"));
@@ -143,7 +144,7 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
 
         b.set("#InventoryCount.TextSpans",
                 Message.raw(skinsTotal + " skin" + (skinsTotal == 1 ? "" : "s")
-                        + " · " + casesTotal + " case" + (casesTotal == 1 ? "" : "s")));
+                        + " - " + casesTotal + " case" + (casesTotal == 1 ? "" : "s")));
 
         b.set("#EmptyLabel.Visible", shown == 0);
         b.set("#SkinsLabel.Visible", skinsTotal > 0 || !filterRarity.equals("ALL") || !filterWeapon.equals("ALL"));
