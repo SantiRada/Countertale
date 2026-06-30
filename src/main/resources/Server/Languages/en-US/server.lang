@@ -1,6 +1,10 @@
 # === items ===
 items.action_book.name = Actions Book
 items.action_book.description = Right-click to enter the queue for Deathmatch mode
+items.inventory_book.name = Inventory Book
+items.inventory_book.description = Opens your skins and cases inventory
+server.items.inventory_book.name = Inventory Book
+server.items.inventory_book.description = Opens your skins and cases inventory
 items.Armory.name = Armory
 items.Armory.description = Placeable armory bench for skins and cases
 server.items.Armory.name = Armory

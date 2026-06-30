@@ -35,6 +35,7 @@ import Tenzinn.Core.Admin.Commands.Game.GameCommands;
 import Tenzinn.Core.Admin.Commands.ForceStartCommand;
 import Tenzinn.Core.Admin.Commands.Statue.StatueCommand;
 import Tenzinn.Core.Interactions.UseActionBookInteraction;
+import Tenzinn.Core.Interactions.UseInventoryBookInteraction;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -84,6 +85,7 @@ public class Countertale extends JavaPlugin {
 
         // Interactions
         this.getCodecRegistry(Interaction.CODEC).register("use_actionbook", UseActionBookInteraction.class, UseActionBookInteraction.CODEC);
+        this.getCodecRegistry(Interaction.CODEC).register("use_inventorybook", UseInventoryBookInteraction.class, UseInventoryBookInteraction.CODEC);
         matchManager = new MatchManager(this);
 
         // Admin Commands

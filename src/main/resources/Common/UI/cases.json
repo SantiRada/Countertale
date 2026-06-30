@@ -1,31 +1,5 @@
 {
   "skins": [
-    { "id": "ak47_redline",     "displayName": "AK-47 | Redline",              "weapon": "Ak47",        "rarity": "CLASSIFIED" },
-    { "id": "ak47_safari",      "displayName": "AK-47 | Safari Mesh",          "weapon": "Ak47",        "rarity": "MIL_SPEC"   },
-    { "id": "ak47_cartel",      "displayName": "AK-47 | Cartel",               "weapon": "Ak47",        "rarity": "MIL_SPEC"   },
-    { "id": "awp_asiimov",      "displayName": "AWP | Asiimov",                "weapon": "Awp",         "rarity": "COVERT"     },
-    { "id": "awp_safari",       "displayName": "AWP | Safari Mesh",            "weapon": "Awp",         "rarity": "MIL_SPEC"   },
-    { "id": "awp_graphite",     "displayName": "AWP | Graphite",               "weapon": "Awp",         "rarity": "MIL_SPEC"   },
-    { "id": "deagle_hypnotic",  "displayName": "Desert Eagle | Hypnotic",      "weapon": "DesertEagle", "rarity": "RESTRICTED" },
-    { "id": "deagle_ocean",     "displayName": "Desert Eagle | Ocean Drive",   "weapon": "DesertEagle", "rarity": "CLASSIFIED" },
-    { "id": "deagle_cobalt",    "displayName": "Desert Eagle | Cobalt",        "weapon": "DesertEagle", "rarity": "MIL_SPEC"   },
-    { "id": "m4a1s_hyper",      "displayName": "M4A1-S | Hyper Beast",         "weapon": "M4a1s",       "rarity": "COVERT"     },
-    { "id": "m4a1s_dark",       "displayName": "M4A1-S | Dark Water",          "weapon": "M4a1s",       "rarity": "MIL_SPEC"   },
-    { "id": "usp_kill",         "displayName": "USP-S | Kill Confirmed",       "weapon": "Usp",         "rarity": "COVERT"     },
-    { "id": "usp_torque",       "displayName": "USP-S | Torque",               "weapon": "Usp",         "rarity": "RESTRICTED" },
-    { "id": "mp9_pandora",      "displayName": "MP9 | Pandora's Box",          "weapon": "Mp9",         "rarity": "CLASSIFIED" },
-    { "id": "mp9_ruby",         "displayName": "MP9 | Ruby Poison Dart",       "weapon": "Mp9",         "rarity": "MIL_SPEC"   },
-    { "id": "mac10_neon",       "displayName": "MAC-10 | Neon Rider",          "weapon": "Mac10",       "rarity": "CLASSIFIED" },
-    { "id": "mac10_allure",     "displayName": "MAC-10 | Allure",              "weapon": "Mac10",       "rarity": "MIL_SPEC"   },
-    { "id": "fiveseven_fowl",   "displayName": "Five-SeveN | Fowl Play",       "weapon": "FiveSeven",   "rarity": "RESTRICTED" },
-    { "id": "fiveseven_hyper",  "displayName": "Five-SeveN | Hyper Beast",     "weapon": "FiveSeven",   "rarity": "MIL_SPEC"   },
-    { "id": "p250_asiimov",     "displayName": "P250 | Asiimov",               "weapon": "P250",        "rarity": "CLASSIFIED" },
-    { "id": "p250_sand",        "displayName": "P250 | Sand Dune",             "weapon": "P250",        "rarity": "MIL_SPEC"   },
-    { "id": "mag7_cobalt",      "displayName": "MAG-7 | Cobalt Core",          "weapon": "Mag7",        "rarity": "RESTRICTED" },
-    { "id": "mag7_memento",     "displayName": "MAG-7 | Memento",              "weapon": "Mag7",        "rarity": "MIL_SPEC"   },
-    { "id": "sawedoff_rust",    "displayName": "Sawed-Off | Rust Coat",        "weapon": "SawedOff",    "rarity": "MIL_SPEC"   },
-    { "id": "dual_cobalt",      "displayName": "Dual Berettas | Cobalt",       "weapon": "DualBerettas","rarity": "MIL_SPEC"   },
-    { "id": "knife_fade",       "displayName": "★ Knife | Fade",          "weapon": "Knife",       "rarity": "SPECIAL"    },
-    { "id": "knife_doppler",    "displayName": "★ Knife | Doppler",       "weapon": "Knife",       "rarity": "SPECIAL"    }
+    { "id": "deagle_gold", "displayName": "Desert Eagle | Gold", "weapon": "DesertEagle", "rarity": "RESTRICTED" }
   ]
 }

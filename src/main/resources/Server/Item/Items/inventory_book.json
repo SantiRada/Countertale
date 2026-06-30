@@ -1,0 +1,34 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.inventory_book.name",
+    "Description": "server.items.inventory_book.description"
+  },
+  "Categories": [ "Items" ],
+  "Model": "Items/Action_Book.blockymodel",
+  "Texture": "Items/Inventory_Book.png",
+  "Icon": "Icons/ItemsGenerated/Inventory_Book.png",
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 1,
+    "Translation": [
+      0,
+      -3
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Tags": { "Type": [ "Ingredient" ] },
+  "ItemEntity": { "ParticleSystemId": null  },
+  "ItemSoundSetId": "ISS_Items_Ingots",
+  "DropOnDeath": false,
+  "Scale": 1,
+  "InteractionHint": "server.interactionHints.open",
+  "Interactions": {
+    "Primary": { "Interactions": [ { "Type": "use_inventorybook" } ] },
+    "Secondary": { "Interactions": [ { "Type": "use_inventorybook" } ] }
+  },
+  "State": { "Definitions": { "Open": { "InteractionHint": "" } } }
+}

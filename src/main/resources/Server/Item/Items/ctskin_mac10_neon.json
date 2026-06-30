@@ -1,0 +1,181 @@
+{
+    "Icon":  "ArmorySkins/Mac10/mac10_neon/icon.png",
+    "Model":  "Items/Weapons/Mac10/Mac10.blockymodel",
+    "Texture":  "Items/Weapons/Mac10/Mac10.png",
+    "TranslationProperties":  {
+                                  "Name":  "MAC-10 | Neon Rider"
+                              },
+    "MaxStack":  1,
+    "Scale":  1.2,
+    "Reticle":  "Static",
+    "IconProperties":  {
+                           "Scale":  0.5,
+                           "Rotation":  [
+                                            315,
+                                            71,
+                                            0
+                                        ],
+                           "Translation":  [
+                                               14,
+                                               -12
+                                           ]
+                       },
+    "Quality":  "Uncommon",
+    "Utility":  {
+                    "Compatible":  true
+                },
+    "Interactions":  {
+                         "Primary":  {
+                                         "Cooldown":  {
+                                                          "Cooldown":  0.075
+                                                      },
+                                         "RequireNewClick":  false,
+                                         "Interactions":  [
+                                                              {
+                                                                  "Type":  "CountertaleGuns_Shoot",
+                                                                  "CountertaleGuns_Damage":  29,
+                                                                  "CountertaleGuns_NumProjectiles":  1,
+                                                                  "CountertaleGuns_Spread":  0.0055,
+                                                                  "CountertaleGuns_MaxAmmo":  30,
+                                                                  "CountertaleGuns_ProjectileConfigId":  "CountertaleGuns_Projectile_Config_Bullet",
+                                                                  "Next":  {
+                                                                               "Type":  "CountertaleGuns_UpdateHud"
+                                                                           },
+                                                                  "Effects":  {
+                                                                                  "WorldSoundEventId":  "World_Mac10_Fire",
+                                                                                  "LocalSoundEventId":  "Local_Mac10_Fire",
+                                                                                  "ItemAnimationId":  "Shoot",
+                                                                                  "FirstPersonParticles":  [
+                                                                                                               {
+                                                                                                                   "SystemId":  "RifleShooting",
+                                                                                                                   "PositionOffset":  {
+                                                                                                                                          "X":  -0.1,
+                                                                                                                                          "Z":  0.7,
+                                                                                                                                          "Y":  0
+                                                                                                                                      },
+                                                                                                                   "RotationOffset":  {
+                                                                                                                                          "Yaw":  0,
+                                                                                                                                          "Pitch":  90
+                                                                                                                                      }
+                                                                                                               }
+                                                                                                           ],
+                                                                                  "Particles":  [
+                                                                                                    {
+                                                                                                        "SystemId":  "RifleShooting",
+                                                                                                        "RotationOffset":  {
+                                                                                                                               "Pitch":  90
+                                                                                                                           },
+                                                                                                        "PositionOffset":  {
+                                                                                                                               "Z":  0.2
+                                                                                                                           }
+                                                                                                    }
+                                                                                                ],
+                                                                                  "CameraEffect":  "Handgun_Shoot"
+                                                                              },
+                                                                  "Failed":  "Gun_Shoot_Fail",
+                                                                  "CountertaleGuns_Range":  120.0,
+                                                                  "CountertaleGuns_RangeModifier":  0.82,
+                                                                  "CountertaleGuns_RangeModifierDistance":  45.0,
+                                                                  "CountertaleGuns_InaccuracyBase":  0.0065,
+                                                                  "CountertaleGuns_InaccuracyShotPenalty":  0.0032,
+                                                                  "CountertaleGuns_InaccuracyDecayPerSecond":  3.1,
+                                                                  "CountertaleGuns_RecoilUpPerShot":  0.0019,
+                                                                  "CountertaleGuns_RecoilSidePerShot":  0.0014,
+                                                                  "CountertaleGuns_RecoilResetTime":  0.35,
+                                                                  "CountertaleGuns_RecoilDecayPerSecond":  7.0,
+                                                                  "CountertaleGuns_MoveInaccuracyScale":  0.07,
+                                                                  "CountertaleGuns_CrouchInaccuracyScale":  0.55,
+                                                                  "CountertaleGuns_AirInaccuracy":  0.22,
+                                                                  "CountertaleGuns_HeadshotMultiplier":  4.0,
+                                                                  "CountertaleGuns_StomachMultiplier":  1.25,
+                                                                  "CountertaleGuns_LegMultiplier":  0.75,
+                                                                  "CountertaleGuns_UseClientAim":  true,
+                                                                  "CountertaleGuns_SpawnTracer":  false,
+                                                                  "CountertaleGuns_MaxPenetrations":  1,
+                                                                  "CountertaleGuns_PenetrationPower":  1.1,
+                                                                  "CountertaleGuns_PenetrationDamageFactor":  0.6,
+                                                                  "CountertaleGuns_WallbangBlocks":  [
+
+                                                                                                     ],
+                                                                  "CountertaleGuns_RecoilPattern":  [
+                                                                                                        "0.186,0.062",
+                                                                                                        "0.119,-0.135",
+                                                                                                        "0.142,0.007",
+                                                                                                        "0.805,-0.059",
+                                                                                                        "1.138,-0.665",
+                                                                                                        "1.135,-0.553",
+                                                                                                        "1.082,-0.366",
+                                                                                                        "0.663,0.246",
+                                                                                                        "0.548,-0.416",
+                                                                                                        "0.836,-0.316",
+                                                                                                        "0.425,-0.129",
+                                                                                                        "0.303,0.129",
+                                                                                                        "0.185,0.120",
+                                                                                                        "0.244,0.423",
+                                                                                                        "0.000,1.409",
+                                                                                                        "-0.490,1.150",
+                                                                                                        "0.057,0.250",
+                                                                                                        "-0.176,0.427",
+                                                                                                        "0.050,-0.296",
+                                                                                                        "0.126,0.481",
+                                                                                                        "-0.116,0.670",
+                                                                                                        "-0.064,0.245",
+                                                                                                        "0.110,-0.773",
+                                                                                                        "0.194,-1.424",
+                                                                                                        "-0.242,-1.219",
+                                                                                                        "0.120,0.183",
+                                                                                                        "0.002,0.791",
+                                                                                                        "-0.144,0.072",
+                                                                                                        "0.000,0.000",
+                                                                                                        "0.000,0.000"
+                                                                                                    ],
+                                                                  "CountertaleGuns_RecoilPatternScale":  1,
+                                                                  "CountertaleGuns_InaccuracyMax":  0.045,
+                                                                  "CountertaleGuns_WalkInaccuracyMultiplier":  0.45,
+                                                                  "CountertaleGuns_RunInaccuracyMultiplier":  1.0,
+                                                                  "CountertaleGuns_SprintInaccuracyMultiplier":  1.35,
+                                                                  "CountertaleGuns_TapShotsMax":  2,
+                                                                  "CountertaleGuns_RecoilDecayTapPerSecond":  11.0,
+                                                                  "CountertaleGuns_InaccuracyDecayTapPerSecond":  5.0,
+                                                                  "CountertaleGuns_TapRecoveryDelay":  0.05,
+                                                                  "CountertaleGuns_SprayRecoveryDelay":  0.16,
+                                                                  "CountertaleGuns_BurstResetTime":  0.2
+                                                              }
+                                                          ]
+                                     },
+                         "Ability3":  {
+                                          "Interactions":  [
+                                                               {
+                                                                   "Type":  "CountertaleGuns_Reload",
+                                                                   "CountertaleGuns_ReloadAmountPerInteraction":  30,
+                                                                   "CountertaleGuns_MaxAmmo":  30,
+                                                                   "CountertaleGuns_AmmoItemType":  "Bullet",
+                                                                   "CountertaleGuns_ReloadTime":  3.2,
+                                                                   "Next":  {
+                                                                                "Type":  "CountertaleGuns_UpdateHud"
+                                                                            },
+                                                                   "Effects":  {
+                                                                                   "ItemAnimationId":  "Interact",
+                                                                                   "LocalSoundEventId":  "Mac10_Reload",
+                                                                                   "WorldSoundEventId":  "Mac10_Reload"
+                                                                               }
+                                                               }
+                                                           ]
+                                      },
+                         "SwapTo":  {
+                                        "Interactions":  [
+                                                             {
+                                                                 "Type":  "Simple",
+                                                                 "Effects":  {
+                                                                                 "WorldSoundEventId":  "Mac10_Equip",
+                                                                                 "LocalSoundEventId":  "Mac10_Equip"
+                                                                             }
+                                                             },
+                                                             {
+                                                                 "Type":  "CountertaleGuns_UpdateHud"
+                                                             }
+                                                         ]
+                                    }
+                     },
+    "PlayerAnimationsId":  "Rifle"
+}

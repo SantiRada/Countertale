@@ -1,5 +1,8 @@
 package Tenzinn.Core.UI;
 
+import Tenzinn.Core.Armory.ArmoryDetailPage;
+import Tenzinn.Core.Armory.ArmoryPage;
+import Tenzinn.Core.Cases.ArmorySkinAssets;
 import Tenzinn.Core.Cases.CaseManager;
 import Tenzinn.Core.Cases.CaseSkin;
 
@@ -27,15 +30,20 @@ import java.util.stream.Collectors;
 
 public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage.CaseInventoryEventData> {
 
-    private static final String WEAPONS_UI_REF = "Game/images/weapons/Weapons.ui";
-    private static final int MAX_SKIN_SLOTS  = 15;
+    private static final int MAX_SKIN_SLOTS  = 30;
     private static final int MAX_CASE_SLOTS  = 6;
 
     private String filterRarity = "ALL";
     private String filterWeapon = "ALL";
+    private final boolean returnToArmory;
 
     public CaseInventoryPage(PlayerRef playerRef) {
-        super(playerRef, CustomPageLifetime.CantClose, CaseInventoryEventData.CODEC);
+        this(playerRef, false);
+    }
+
+    public CaseInventoryPage(PlayerRef playerRef, boolean returnToArmory) {
+        super(playerRef, CustomPageLifetime.CanDismiss, CaseInventoryEventData.CODEC);
+        this.returnToArmory = returnToArmory;
     }
 
     @Override
@@ -52,6 +60,10 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
         for (int i = 1; i <= MAX_CASE_SLOTS; i++) {
             eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CaseSlot" + i,
                     EventData.of("Action", "open_case"));
+        }
+        for (int i = 1; i <= MAX_SKIN_SLOTS; i++) {
+            eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#GridItem" + i,
+                    EventData.of("Action", "skin:" + i));
         }
 
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#FrAll",
@@ -84,7 +96,13 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
 
         if (action.equals("close")) {
             Player player = store.getComponent(ref, Player.getComponentType());
-            if (player != null) player.getPageManager().setPage(ref, store, Page.None);
+            if (player != null) {
+                if (returnToArmory) {
+                    player.getPageManager().openCustomPage(ref, store, new ArmoryPage(playerRef));
+                } else {
+                    player.getPageManager().setPage(ref, store, Page.None);
+                }
+            }
             return;
         }
 
@@ -94,6 +112,20 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player != null) {
                 player.getPageManager().openCustomPage(ref, store, new CaseOpenPage(playerRef, winner));
+            }
+            return;
+        }
+
+        if (action.startsWith("skin:")) {
+            int slot = Integer.parseInt(action.substring("skin:".length())) - 1;
+            List<CaseSkin> filtered = getFilteredSkins();
+            if (slot >= 0 && slot < filtered.size()) {
+                CaseSkin skin = filtered.get(slot);
+                Player player = store.getComponent(ref, Player.getComponentType());
+                if (player != null) {
+                    player.getPageManager().openCustomPage(ref, store,
+                            new ArmoryDetailPage(playerRef, skin.weapon, skin.id));
+                }
             }
             return;
         }
@@ -141,6 +173,7 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
         int skinsTotal = CaseManager.getInventory(playerRef.getUuid()).size();
         int casesTotal = CaseManager.getCaseCount(playerRef.getUuid());
         int shown = Math.min(filtered.size(), MAX_SKIN_SLOTS);
+        int visibleRows = (shown + 4) / 5;
 
         b.set("#InventoryCount.TextSpans",
                 Message.raw(skinsTotal + " skin" + (skinsTotal == 1 ? "" : "s")
@@ -148,6 +181,14 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
 
         b.set("#EmptyLabel.Visible", shown == 0);
         b.set("#SkinsLabel.Visible", skinsTotal > 0 || !filterRarity.equals("ALL") || !filterWeapon.equals("ALL"));
+        for (int row = 1; row <= 6; row++) {
+            b.set("#SkinRow" + row + ".Visible", row <= visibleRows);
+        }
+        int contentHeight = 230
+                + (casesTotal > 0 ? 180 : 0)
+                + (shown > 0 ? 28 + (visibleRows * 136) : 42)
+                + 90;
+        b.set("#ScrollContent.ContentHeight", Math.max(500, contentHeight));
 
         for (int i = 1; i <= MAX_SKIN_SLOTS; i++) {
             if (i <= shown) {
@@ -155,7 +196,7 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
                 b.set("#GridItem"  + i + ".Visible",          true);
                 b.set("#GridItem"  + i + ".OutlineColor",     skin.rarity.color);
                 b.set("#GridIcon"  + i + ".Background",
-                        Value.ref(WEAPONS_UI_REF, skin.weapon + "on"));
+                        Value.ref(ArmorySkinAssets.skinIconUiRef(), skin.iconUiKey));
                 b.set("#GridName"  + i + ".TextSpans",        Message.raw(skin.displayName));
                 b.set("#GridName"  + i + ".Style.TextColor",  skin.rarity.color);
                 b.set("#GridRarity"+ i + ".TextSpans",        Message.raw(skin.rarity.label));
@@ -194,7 +235,6 @@ public class CaseInventoryPage extends InteractiveCustomUIPage<CaseInventoryPage
         return CaseManager.getInventory(playerRef.getUuid()).stream()
                 .filter(s -> filterRarity.equals("ALL") || s.rarity.name().equals(filterRarity))
                 .filter(s -> filterWeapon.equals("ALL") || s.weapon.equals(filterWeapon))
-                .limit(MAX_SKIN_SLOTS)
                 .collect(Collectors.toList());
     }
 

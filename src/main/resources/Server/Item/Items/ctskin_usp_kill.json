@@ -1,0 +1,171 @@
+{
+    "Icon":  "ArmorySkins/Usp/usp_kill/icon.png",
+    "Model":  "Items/Weapons/Glock18/Glock18.blockymodel",
+    "Texture":  "Items/Weapons/Glock18/Glock18.png",
+    "TranslationProperties":  {
+                                  "Name":  "USP-S | Kill Confirmed"
+                              },
+    "PlayerAnimationsId":  "Handgun",
+    "Reticle":  "Static",
+    "MaxStack":  1,
+    "Scale":  1.4,
+    "IconProperties":  {
+                           "Scale":  0.9,
+                           "Rotation":  [
+                                            315,
+                                            90,
+                                            0
+                                        ],
+                           "Translation":  [
+                                               5,
+                                               -14
+                                           ]
+                       },
+    "Quality":  "Uncommon",
+    "Utility":  {
+                    "Compatible":  true
+                },
+    "Interactions":  {
+                         "Primary":  {
+                                         "Cooldown":  {
+                                                          "Cooldown":  0.15
+                                                      },
+                                         "RequireNewClick":  true,
+                                         "Interactions":  [
+                                                              {
+                                                                  "Type":  "CountertaleGuns_Shoot",
+                                                                  "CountertaleGuns_Damage":  30,
+                                                                  "CountertaleGuns_NumProjectiles":  1,
+                                                                  "CountertaleGuns_Spread":  0.001,
+                                                                  "CountertaleGuns_MaxAmmo":  20,
+                                                                  "CountertaleGuns_ProjectileConfigId":  "CountertaleGuns_Projectile_Config_Bullet",
+                                                                  "Next":  {
+                                                                               "Type":  "CountertaleGuns_UpdateHud"
+                                                                           },
+                                                                  "Effects":  {
+                                                                                  "WorldSoundEventId":  "World_Glock18_Fire",
+                                                                                  "LocalSoundEventId":  "Local_Glock18_Fire",
+                                                                                  "ItemAnimationId":  "Shoot",
+                                                                                  "FirstPersonParticles":  [
+                                                                                                               {
+                                                                                                                   "SystemId":  "RifleShooting",
+                                                                                                                   "PositionOffset":  {
+                                                                                                                                          "Z":  0.3,
+                                                                                                                                          "Y":  0
+                                                                                                                                      },
+                                                                                                                   "RotationOffset":  {
+                                                                                                                                          "Yaw":  0,
+                                                                                                                                          "Pitch":  90
+                                                                                                                                      }
+                                                                                                               }
+                                                                                                           ],
+                                                                                  "Particles":  [
+                                                                                                    {
+                                                                                                        "SystemId":  "RifleShooting",
+                                                                                                        "RotationOffset":  {
+                                                                                                                               "Pitch":  90
+                                                                                                                           },
+                                                                                                        "PositionOffset":  {
+                                                                                                                               "Z":  0.1,
+                                                                                                                               "Y":  0.1
+                                                                                                                           }
+                                                                                                    }
+                                                                                                ],
+                                                                                  "CameraEffect":  "Handgun_Shoot"
+                                                                              },
+                                                                  "Failed":  "Gun_Shoot_Fail",
+                                                                  "CountertaleGuns_Range":  100.0,
+                                                                  "CountertaleGuns_RangeModifier":  0.75,
+                                                                  "CountertaleGuns_RangeModifierDistance":  40.0,
+                                                                  "CountertaleGuns_InaccuracyBase":  0.008,
+                                                                  "CountertaleGuns_InaccuracyShotPenalty":  0.0045,
+                                                                  "CountertaleGuns_InaccuracyDecayPerSecond":  3.6,
+                                                                  "CountertaleGuns_RecoilUpPerShot":  0.0016,
+                                                                  "CountertaleGuns_RecoilSidePerShot":  0.0009,
+                                                                  "CountertaleGuns_RecoilResetTime":  0.28,
+                                                                  "CountertaleGuns_RecoilDecayPerSecond":  10.0,
+                                                                  "CountertaleGuns_MoveInaccuracyScale":  0.055,
+                                                                  "CountertaleGuns_CrouchInaccuracyScale":  0.55,
+                                                                  "CountertaleGuns_AirInaccuracy":  0.2,
+                                                                  "CountertaleGuns_HeadshotMultiplier":  4.0,
+                                                                  "CountertaleGuns_StomachMultiplier":  1.25,
+                                                                  "CountertaleGuns_LegMultiplier":  0.75,
+                                                                  "CountertaleGuns_UseClientAim":  true,
+                                                                  "CountertaleGuns_SpawnTracer":  false,
+                                                                  "CountertaleGuns_MaxPenetrations":  1,
+                                                                  "CountertaleGuns_PenetrationPower":  0.8,
+                                                                  "CountertaleGuns_PenetrationDamageFactor":  0.55,
+                                                                  "CountertaleGuns_WallbangBlocks":  [
+
+                                                                                                     ],
+                                                                  "CountertaleGuns_RecoilPattern":  [
+                                                                                                        "0.120,0.010",
+                                                                                                        "0.120,-0.012",
+                                                                                                        "0.120,0.008",
+                                                                                                        "0.120,-0.010",
+                                                                                                        "0.120,0.006",
+                                                                                                        "0.120,-0.008",
+                                                                                                        "0.120,0.005",
+                                                                                                        "0.120,-0.006",
+                                                                                                        "0.120,0.004",
+                                                                                                        "0.120,-0.005",
+                                                                                                        "0.120,0.010",
+                                                                                                        "0.120,-0.012",
+                                                                                                        "0.120,0.008",
+                                                                                                        "0.120,-0.010",
+                                                                                                        "0.120,0.006",
+                                                                                                        "0.120,-0.008",
+                                                                                                        "0.120,0.005",
+                                                                                                        "0.120,-0.006",
+                                                                                                        "0.120,0.004",
+                                                                                                        "0.120,-0.005"
+                                                                                                    ],
+                                                                  "CountertaleGuns_RecoilPatternScale":  1,
+                                                                  "CountertaleGuns_InaccuracyMax":  0.09,
+                                                                  "CountertaleGuns_WalkInaccuracyMultiplier":  0.35,
+                                                                  "CountertaleGuns_RunInaccuracyMultiplier":  1.0,
+                                                                  "CountertaleGuns_SprintInaccuracyMultiplier":  1.25,
+                                                                  "CountertaleGuns_TapShotsMax":  2,
+                                                                  "CountertaleGuns_RecoilDecayTapPerSecond":  14.0,
+                                                                  "CountertaleGuns_InaccuracyDecayTapPerSecond":  6.0,
+                                                                  "CountertaleGuns_TapRecoveryDelay":  0.04,
+                                                                  "CountertaleGuns_SprayRecoveryDelay":  0.11,
+                                                                  "CountertaleGuns_BurstResetTime":  0.18
+                                                              }
+                                                          ]
+                                     },
+                         "Ability3":  {
+                                          "Interactions":  [
+                                                               {
+                                                                   "Type":  "CountertaleGuns_Reload",
+                                                                   "CountertaleGuns_ReloadAmountPerInteraction":  20,
+                                                                   "CountertaleGuns_MaxAmmo":  20,
+                                                                   "CountertaleGuns_AmmoItemType":  "Bullet",
+                                                                   "CountertaleGuns_ReloadTime":  2.2,
+                                                                   "Next":  {
+                                                                                "Type":  "CountertaleGuns_UpdateHud"
+                                                                            },
+                                                                   "Effects":  {
+                                                                                   "ItemAnimationId":  "Interact",
+                                                                                   "LocalSoundEventId":  "Glock18_Reload",
+                                                                                   "WorldSoundEventId":  "Glock18_Reload"
+                                                                               }
+                                                               }
+                                                           ]
+                                      },
+                         "SwapTo":  {
+                                        "Interactions":  [
+                                                             {
+                                                                 "Type":  "Simple",
+                                                                 "Effects":  {
+                                                                                 "WorldSoundEventId":  "Glock18_Equip",
+                                                                                 "LocalSoundEventId":  "Glock18_Equip"
+                                                                             }
+                                                             },
+                                                             {
+                                                                 "Type":  "CountertaleGuns_UpdateHud"
+                                                             }
+                                                         ]
+                                    }
+                     }
+}

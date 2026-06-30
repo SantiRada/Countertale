@@ -1,6 +1,6 @@
 package Tenzinn.Core.Listeners;
 
-import Tenzinn.Core.UI.CaseInventoryPage;
+import Tenzinn.Core.Armory.ArmoryPage;
 
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
@@ -32,7 +32,7 @@ public class ArmoryBenchListener extends EntityEventSystem<EntityStore, UseBlock
         PlayerRef playerRef  = store.getComponent(ref, PlayerRef.getComponentType());
         if (player == null || playerRef == null) return;
 
-        player.getPageManager().openCustomPage(ref, store, new CaseInventoryPage(playerRef));
+        player.getPageManager().openCustomPage(ref, store, new ArmoryPage(playerRef));
     }
 
     @Nullable @Override

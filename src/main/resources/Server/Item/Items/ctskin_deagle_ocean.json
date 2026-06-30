@@ -1,0 +1,152 @@
+{
+    "Icon":  "ArmorySkins/DesertEagle/deagle_ocean/icon.png",
+    "Model":  "Items/Weapons/DesertEagle/DesertEagle.blockymodel",
+    "Texture":  "Items/Weapons/DesertEagle/DesertEagle.png",
+    "TranslationProperties":  {
+                                  "Name":  "Desert Eagle | Ocean Drive"
+                              },
+    "PlayerAnimationsId":  "Handgun",
+    "Reticle":  "Static",
+    "MaxStack":  1,
+    "Scale":  1.4,
+    "IconProperties":  {
+                           "Scale":  0.5,
+                           "Rotation":  [
+                                            315,
+                                            71,
+                                            0
+                                        ],
+                           "Translation":  [
+                                               14,
+                                               -12
+                                           ]
+                       },
+    "Quality":  "Rare",
+    "Utility":  {
+                    "Compatible":  true
+                },
+    "Interactions":  {
+                         "Primary":  {
+                                         "Cooldown":  {
+                                                          "Cooldown":  0.225
+                                                      },
+                                         "RequireNewClick":  true,
+                                         "Interactions":  [
+                                                              {
+                                                                  "Type":  "CountertaleGuns_Shoot",
+                                                                  "CountertaleGuns_Damage":  53,
+                                                                  "CountertaleGuns_NumProjectiles":  1,
+                                                                  "CountertaleGuns_Spread":  0.001,
+                                                                  "CountertaleGuns_MaxAmmo":  7,
+                                                                  "CountertaleGuns_ProjectileConfigId":  "CountertaleGuns_Projectile_Config_Bullet",
+                                                                  "Next":  {
+                                                                               "Type":  "CountertaleGuns_UpdateHud"
+                                                                           },
+                                                                  "Effects":  {
+                                                                                  "WorldSoundEventId":  "World_DesertEagle_Fire",
+                                                                                  "LocalSoundEventId":  "Local_DesertEagle_Fire",
+                                                                                  "ItemAnimationId":  "Shoot",
+                                                                                  "FirstPersonParticles":  [
+                                                                                                               {
+                                                                                                                   "SystemId":  "RifleShooting",
+                                                                                                                   "PositionOffset":  {
+                                                                                                                                          "X":  -0.1,
+                                                                                                                                          "Z":  0.7,
+                                                                                                                                          "Y":  0
+                                                                                                                                      },
+                                                                                                                   "RotationOffset":  {
+                                                                                                                                          "Yaw":  0,
+                                                                                                                                          "Pitch":  90
+                                                                                                                                      }
+                                                                                                               }
+                                                                                                           ],
+                                                                                  "Particles":  [
+                                                                                                    {
+                                                                                                        "SystemId":  "RifleShooting",
+                                                                                                        "RotationOffset":  {
+                                                                                                                               "Pitch":  90
+                                                                                                                           },
+                                                                                                        "PositionOffset":  {
+                                                                                                                               "Z":  0.4
+                                                                                                                           }
+                                                                                                    }
+                                                                                                ],
+                                                                                  "CameraEffect":  "Handgun_Shoot"
+                                                                              },
+                                                                  "Failed":  "Gun_Shoot_Fail",
+                                                                  "CountertaleGuns_Range":  120.0,
+                                                                  "CountertaleGuns_RangeModifier":  0.81,
+                                                                  "CountertaleGuns_RangeModifierDistance":  50.0,
+                                                                  "CountertaleGuns_InaccuracyBase":  0.004,
+                                                                  "CountertaleGuns_InaccuracyShotPenalty":  0.006,
+                                                                  "CountertaleGuns_InaccuracyDecayPerSecond":  3.0,
+                                                                  "CountertaleGuns_RecoilUpPerShot":  0.004,
+                                                                  "CountertaleGuns_RecoilSidePerShot":  0.0022,
+                                                                  "CountertaleGuns_RecoilResetTime":  0.45,
+                                                                  "CountertaleGuns_RecoilDecayPerSecond":  6.0,
+                                                                  "CountertaleGuns_MoveInaccuracyScale":  0.06,
+                                                                  "CountertaleGuns_CrouchInaccuracyScale":  0.55,
+                                                                  "CountertaleGuns_AirInaccuracy":  0.28,
+                                                                  "CountertaleGuns_HeadshotMultiplier":  4.0,
+                                                                  "CountertaleGuns_StomachMultiplier":  1.25,
+                                                                  "CountertaleGuns_LegMultiplier":  0.75,
+                                                                  "CountertaleGuns_UseClientAim":  true,
+                                                                  "CountertaleGuns_SpawnTracer":  false,
+                                                                  "CountertaleGuns_MaxPenetrations":  1,
+                                                                  "CountertaleGuns_PenetrationPower":  1.0,
+                                                                  "CountertaleGuns_PenetrationDamageFactor":  0.55,
+                                                                  "CountertaleGuns_WallbangBlocks":  [
+
+                                                                                                     ],
+                                                                  "CountertaleGuns_RecoilPattern":  [
+                                                                                                        "1.000,0.150"
+                                                                                                    ],
+                                                                  "CountertaleGuns_RecoilPatternScale":  1,
+                                                                  "CountertaleGuns_InaccuracyMax":  0.1,
+                                                                  "CountertaleGuns_WalkInaccuracyMultiplier":  0.3,
+                                                                  "CountertaleGuns_RunInaccuracyMultiplier":  1.0,
+                                                                  "CountertaleGuns_SprintInaccuracyMultiplier":  1.2,
+                                                                  "CountertaleGuns_TapShotsMax":  1,
+                                                                  "CountertaleGuns_RecoilDecayTapPerSecond":  16.0,
+                                                                  "CountertaleGuns_InaccuracyDecayTapPerSecond":  7.0,
+                                                                  "CountertaleGuns_TapRecoveryDelay":  0.06,
+                                                                  "CountertaleGuns_SprayRecoveryDelay":  0.12,
+                                                                  "CountertaleGuns_BurstResetTime":  0.22
+                                                              }
+                                                          ]
+                                     },
+                         "Ability3":  {
+                                          "Interactions":  [
+                                                               {
+                                                                   "Type":  "CountertaleGuns_Reload",
+                                                                   "CountertaleGuns_ReloadAmountPerInteraction":  7,
+                                                                   "CountertaleGuns_MaxAmmo":  7,
+                                                                   "CountertaleGuns_AmmoItemType":  "Bullet",
+                                                                   "CountertaleGuns_ReloadTime":  2.2,
+                                                                   "Next":  {
+                                                                                "Type":  "CountertaleGuns_UpdateHud"
+                                                                            },
+                                                                   "Effects":  {
+                                                                                   "ItemAnimationId":  "Interact",
+                                                                                   "LocalSoundEventId":  "DesertEagle_Reload",
+                                                                                   "WorldSoundEventId":  "DesertEagle_Reload"
+                                                                               }
+                                                               }
+                                                           ]
+                                      },
+                         "SwapTo":  {
+                                        "Interactions":  [
+                                                             {
+                                                                 "Type":  "Simple",
+                                                                 "Effects":  {
+                                                                                 "WorldSoundEventId":  "DesertEagle_Equip",
+                                                                                 "LocalSoundEventId":  "DesertEagle_Equip"
+                                                                             }
+                                                             },
+                                                             {
+                                                                 "Type":  "CountertaleGuns_UpdateHud"
+                                                             }
+                                                         ]
+                                    }
+                     }
+}

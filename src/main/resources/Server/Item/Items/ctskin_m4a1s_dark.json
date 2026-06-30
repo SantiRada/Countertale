@@ -1,0 +1,178 @@
+{
+    "Icon":  "ArmorySkins/M4a1s/m4a1s_dark/icon.png",
+    "Model":  "Items/Weapons/M4A1s/M4A1s.blockymodel",
+    "Texture":  "Items/Weapons/M4A1s/M4A1s.png",
+    "TranslationProperties":  {
+                                  "Name":  "M4A1-S | Dark Water"
+                              },
+    "PlayerAnimationsId":  "Rifle",
+    "MaxStack":  1,
+    "Scale":  1.2,
+    "Reticle":  "Static",
+    "IconProperties":  {
+                           "Scale":  0.3,
+                           "Rotation":  [
+                                            315,
+                                            71,
+                                            0
+                                        ],
+                           "Translation":  [
+                                               -5,
+                                               -36
+                                           ]
+                       },
+    "Quality":  "Epic",
+    "Utility":  {
+                    "Compatible":  true
+                },
+    "Interactions":  {
+                         "Primary":  {
+                                         "Cooldown":  {
+                                                          "Cooldown":  0.1
+                                                      },
+                                         "RequireNewClick":  false,
+                                         "Interactions":  [
+                                                              {
+                                                                  "Type":  "CountertaleGuns_Shoot",
+                                                                  "CountertaleGuns_Damage":  38,
+                                                                  "CountertaleGuns_NumProjectiles":  1,
+                                                                  "CountertaleGuns_Spread":  0.0035,
+                                                                  "CountertaleGuns_MaxAmmo":  20,
+                                                                  "CountertaleGuns_ProjectileConfigId":  "CountertaleGuns_Projectile_Config_Bullet",
+                                                                  "Next":  {
+                                                                               "Type":  "CountertaleGuns_UpdateHud"
+                                                                           },
+                                                                  "Effects":  {
+                                                                                  "WorldSoundEventId":  "World_M4A1s_Fire",
+                                                                                  "LocalSoundEventId":  "Local_M4A1s_Fire",
+                                                                                  "ItemAnimationId":  "Shoot",
+                                                                                  "FirstPersonParticles":  [
+                                                                                                               {
+                                                                                                                   "SystemId":  "RifleShooting",
+                                                                                                                   "PositionOffset":  {
+                                                                                                                                          "X":  -0.1,
+                                                                                                                                          "Z":  1.5,
+                                                                                                                                          "Y":  0
+                                                                                                                                      },
+                                                                                                                   "RotationOffset":  {
+                                                                                                                                          "Yaw":  0,
+                                                                                                                                          "Pitch":  90
+                                                                                                                                      }
+                                                                                                               }
+                                                                                                           ],
+                                                                                  "Particles":  [
+                                                                                                    {
+                                                                                                        "SystemId":  "RifleShooting",
+                                                                                                        "RotationOffset":  {
+                                                                                                                               "Pitch":  90
+                                                                                                                           },
+                                                                                                        "PositionOffset":  {
+                                                                                                                               "X":  -0.1,
+                                                                                                                               "Z":  1.2,
+                                                                                                                               "Y":  0
+                                                                                                                           }
+                                                                                                    }
+                                                                                                ],
+                                                                                  "CameraEffect":  "Handgun_Shoot"
+                                                                              },
+                                                                  "Failed":  "Gun_Shoot_Fail",
+                                                                  "CountertaleGuns_Range":  200.0,
+                                                                  "CountertaleGuns_RangeModifier":  0.99,
+                                                                  "CountertaleGuns_RangeModifierDistance":  50.0,
+                                                                  "CountertaleGuns_InaccuracyBase":  0.0038,
+                                                                  "CountertaleGuns_InaccuracyShotPenalty":  0.0019,
+                                                                  "CountertaleGuns_InaccuracyDecayPerSecond":  3.2,
+                                                                  "CountertaleGuns_RecoilUpPerShot":  0.003,
+                                                                  "CountertaleGuns_RecoilSidePerShot":  0.0015,
+                                                                  "CountertaleGuns_RecoilResetTime":  0.35,
+                                                                  "CountertaleGuns_RecoilDecayPerSecond":  7.0,
+                                                                  "CountertaleGuns_MoveInaccuracyScale":  0.075,
+                                                                  "CountertaleGuns_CrouchInaccuracyScale":  0.5,
+                                                                  "CountertaleGuns_AirInaccuracy":  0.26,
+                                                                  "CountertaleGuns_HeadshotMultiplier":  4.0,
+                                                                  "CountertaleGuns_StomachMultiplier":  1.25,
+                                                                  "CountertaleGuns_LegMultiplier":  0.75,
+                                                                  "CountertaleGuns_UseClientAim":  true,
+                                                                  "CountertaleGuns_SpawnTracer":  false,
+                                                                  "CountertaleGuns_MaxPenetrations":  2,
+                                                                  "CountertaleGuns_PenetrationPower":  2.0,
+                                                                  "CountertaleGuns_PenetrationDamageFactor":  0.7,
+                                                                  "CountertaleGuns_WallbangBlocks":  [
+
+                                                                                                     ],
+                                                                  "CountertaleGuns_RecoilPattern":  [
+                                                                                                        "0.223,-0.002",
+                                                                                                        "-0.112,0.003",
+                                                                                                        "0.417,0.107",
+                                                                                                        "0.384,-0.165",
+                                                                                                        "0.917,0.400",
+                                                                                                        "-0.445,-0.117",
+                                                                                                        "1.000,-0.631",
+                                                                                                        "0.052,-0.224",
+                                                                                                        "0.170,-0.515",
+                                                                                                        "-0.109,-0.348",
+                                                                                                        "0.248,1.084",
+                                                                                                        "0.028,1.089",
+                                                                                                        "-0.110,0.911",
+                                                                                                        "-0.028,0.692",
+                                                                                                        "0.125,0.171",
+                                                                                                        "0.012,-0.520",
+                                                                                                        "-0.109,0.977",
+                                                                                                        "0.082,-0.177",
+                                                                                                        "0.000,-1.482",
+                                                                                                        "0.084,-0.290",
+                                                                                                        "0.055,-0.967",
+                                                                                                        "0.221,-0.405",
+                                                                                                        "2.844,3.534",
+                                                                                                        "0.000,0.000",
+                                                                                                        "0.000,0.000"
+                                                                                                    ],
+                                                                  "CountertaleGuns_RecoilPatternScale":  1,
+                                                                  "CountertaleGuns_InaccuracyMax":  0.028,
+                                                                  "CountertaleGuns_WalkInaccuracyMultiplier":  0.25,
+                                                                  "CountertaleGuns_RunInaccuracyMultiplier":  1.0,
+                                                                  "CountertaleGuns_SprintInaccuracyMultiplier":  1.5,
+                                                                  "CountertaleGuns_TapShotsMax":  2,
+                                                                  "CountertaleGuns_RecoilDecayTapPerSecond":  11.0,
+                                                                  "CountertaleGuns_InaccuracyDecayTapPerSecond":  4.8,
+                                                                  "CountertaleGuns_TapRecoveryDelay":  0.07,
+                                                                  "CountertaleGuns_SprayRecoveryDelay":  0.2,
+                                                                  "CountertaleGuns_BurstResetTime":  0.23
+                                                              }
+                                                          ]
+                                     },
+                         "Ability3":  {
+                                          "Interactions":  [
+                                                               {
+                                                                   "Type":  "CountertaleGuns_Reload",
+                                                                   "CountertaleGuns_ReloadAmountPerInteraction":  20,
+                                                                   "CountertaleGuns_MaxAmmo":  20,
+                                                                   "CountertaleGuns_AmmoItemType":  "Bullet",
+                                                                   "CountertaleGuns_ReloadTime":  3.1,
+                                                                   "Next":  {
+                                                                                "Type":  "CountertaleGuns_UpdateHud"
+                                                                            },
+                                                                   "Effects":  {
+                                                                                   "ItemAnimationId":  "Interact",
+                                                                                   "LocalSoundEventId":  "M4A1s_Reload",
+                                                                                   "WorldSoundEventId":  "M4A1s_Reload"
+                                                                               }
+                                                               }
+                                                           ]
+                                      },
+                         "SwapTo":  {
+                                        "Interactions":  [
+                                                             {
+                                                                 "Type":  "Simple",
+                                                                 "Effects":  {
+                                                                                 "WorldSoundEventId":  "M4A1s_Equip",
+                                                                                 "LocalSoundEventId":  "M4A1s_Equip"
+                                                                             }
+                                                             },
+                                                             {
+                                                                 "Type":  "CountertaleGuns_UpdateHud"
+                                                             }
+                                                         ]
+                                    }
+                     }
+}

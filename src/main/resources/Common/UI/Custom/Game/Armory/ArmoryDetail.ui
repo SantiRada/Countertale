@@ -8,15 +8,16 @@ Group {
 
     Group {
         Anchor: (Width: 1100, Height: 622);
-        Background: PatchStyle(TexturePath: "../../Common/ContainerFullPatch.png", Border: 20);
+        Background: PatchStyle(TexturePath: "../../Common/ContainerFullPatch.png", Border: 16);
         LayoutMode: Top;
+        Padding: (Full: 6);
 
-        // ── Header ──────────────────────────────────────────────────────────────
+        Group { Anchor: (Height: 20); }
+
+        // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ Header ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
         Group {
-            Anchor: (Height: 42);
             LayoutMode: Left;
-            Background: PatchStyle(TexturePath: "../../Common/ContainerHeaderNoRunes.png", HorizontalBorder: 35, VerticalBorder: 0);
-            Padding: (Horizontal: 18, Vertical: 10);
+            Padding: (Horizontal: 18, Vertical: 4);
 
             Button #Back {
                 Anchor: (Width: 32, Height: 32);
@@ -57,14 +58,13 @@ Group {
             }
         }
 
-        // ── Content (fills space between header and carousel) ───────────────────
+        // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ Content (fills space between header and carousel) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
         Group {
             FlexWeight: 1;
             LayoutMode: Top;
-            Background: PatchStyle(TexturePath: "../../Common/ContainerPatch.png", Border: 23);
             Padding: (Left: 24, Right: 24, Top: 16, Bottom: 16);
 
-            // Big skin preview — FlexWeight: 1 so it fills remaining space, image centered inside
+            // Big skin preview ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â FlexWeight: 1 so it fills remaining space, image centered inside
             Group {
                 FlexWeight: 1;
                 LayoutMode: CenterMiddle;
@@ -79,7 +79,7 @@ Group {
                 Label #SelectedSkinName {
                     FlexWeight: 1;
                     Style: (FontSize: 17, RenderBold: true, TextColor: #ffffff, VerticalAlignment: Center);
-                    Text: "—";
+                    Text: "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â";
                 }
 
                 Group #RarityBadge {
@@ -105,93 +105,595 @@ Group {
                     Anchor: (Width: 180, Height: 44);
                     Padding: (Horizontal: 24);
                     Style: (
-                        Default:  (Background: PatchStyle(TexturePath: "../../Common/Buttons/Primary.png",         VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
-                        Hovered:  (Background: PatchStyle(TexturePath: "../../Common/Buttons/Primary_Hovered.png",  VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
-                        Pressed:  (Background: PatchStyle(TexturePath: "../../Common/Buttons/Primary_Pressed.png",  VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
-                        Disabled: (Background: PatchStyle(TexturePath: "../../Common/Buttons/Disabled.png",         VerticalBorder: 12, HorizontalBorder: 80), LabelStyle: (FontSize: 15, TextColor: #797b7c, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12))
+                        Default:  (Background: (TexturePath: "../images/mvp/btn-default.png"), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
+                        Hovered:  (Background: (TexturePath: "../images/mvp/btn-hover.png"), LabelStyle: (FontSize: 15, TextColor: #ffffff, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
+                        Pressed:  (Background: (TexturePath: "../images/mvp/btn-pressed.png"), LabelStyle: (FontSize: 15, TextColor: #bfcdd5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12)),
+                        Disabled: (Background: (Color: #111418(0.60)), LabelStyle: (FontSize: 15, TextColor: #797b7c, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 12))
                     );
                     Text: "Select Skin";
                 }
             }
         }
 
-        // ── Carousel (pegado al fondo, con padding interno) ─────────────────────
+        // Carousel
         Group {
-            Anchor: (Height: 130);
+            Anchor: (Height: 136);
             LayoutMode: CenterMiddle;
-            Background: PatchStyle(TexturePath: "../../Common/ContainerPatch.png", Border: 23);
             Padding: (Full: 12);
 
-            Group {
+            Group #CarouselScroll {
                 LayoutMode: Left;
+                Anchor: (Height: 112);
+                ContentWidth: 980;
+                ScrollbarStyle: (Size: 8);
 
                 Button #CarouselSlot1 {
-                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
-                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
-                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
-                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg1 { Anchor: (Width: 100, Height: 60); } }
-                    Group { Anchor: (Height: 16); LayoutMode: Right;
-                        Group #CarouselLock1 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame1 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg1 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName1 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock1 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
                     }
                 }
 
                 Button #CarouselSlot2 {
-                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
-                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
-                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
-                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg2 { Anchor: (Width: 100, Height: 60); } }
-                    Group { Anchor: (Height: 16); LayoutMode: Right;
-                        Group #CarouselLock2 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame2 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg2 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName2 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock2 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
                     }
                 }
 
                 Button #CarouselSlot3 {
-                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
-                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
-                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
-                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg3 { Anchor: (Width: 100, Height: 60); } }
-                    Group { Anchor: (Height: 16); LayoutMode: Right;
-                        Group #CarouselLock3 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame3 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg3 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName3 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock3 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
                     }
                 }
 
                 Button #CarouselSlot4 {
-                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
-                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
-                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
-                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg4 { Anchor: (Width: 100, Height: 60); } }
-                    Group { Anchor: (Height: 16); LayoutMode: Right;
-                        Group #CarouselLock4 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame4 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg4 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName4 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock4 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
                     }
                 }
 
                 Button #CarouselSlot5 {
-                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
-                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
-                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
-                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg5 { Anchor: (Width: 100, Height: 60); } }
-                    Group { Anchor: (Height: 16); LayoutMode: Right;
-                        Group #CarouselLock5 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame5 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg5 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName5 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock5 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
                     }
                 }
 
                 Button #CarouselSlot6 {
-                    LayoutMode: Top; Anchor: (Width: 134, Height: 106, Right: 6);
-                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
-                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
-                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg6 { Anchor: (Width: 100, Height: 60); } }
-                    Group { Anchor: (Height: 16); LayoutMode: Right;
-                        Group #CarouselLock6 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame6 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg6 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName6 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock6 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
                     }
                 }
 
                 Button #CarouselSlot7 {
-                    LayoutMode: Top; Anchor: (Width: 134, Height: 106);
-                    Background: (Color: #111418); OutlineColor: #2b3542; OutlineSize: 1; Padding: (Full: 6);
-                    Style: (Default: (Background: (Color: #111418)), Hovered: (Background: (Color: #1a2030)), Pressed: (Background: (Color: #0a0e12)));
-                    Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg7 { Anchor: (Width: 100, Height: 60); } }
-                    Group { Anchor: (Height: 16); LayoutMode: Right;
-                        Group #CarouselLock7 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame7 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg7 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName7 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock7 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot8 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame8 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg8 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName8 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock8 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot9 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame9 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg9 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName9 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock9 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot10 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame10 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg10 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName10 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock10 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot11 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame11 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg11 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName11 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock11 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot12 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame12 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg12 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName12 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock12 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot13 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame13 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg13 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName13 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock13 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot14 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame14 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg14 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName14 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock14 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot15 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame15 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg15 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName15 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock15 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot16 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame16 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg16 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName16 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock16 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot17 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame17 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg17 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName17 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock17 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot18 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame18 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg18 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName18 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock18 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot19 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame19 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg19 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName19 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock19 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot20 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame20 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg20 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName20 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock20 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot21 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame21 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg21 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName21 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock21 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot22 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame22 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg22 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName22 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock22 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot23 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame23 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg23 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName23 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock23 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot24 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame24 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg24 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName24 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock24 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot25 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame25 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg25 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName25 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock25 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot26 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame26 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg26 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName26 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock26 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot27 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame27 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg27 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName27 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock27 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot28 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame28 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg28 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName28 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock28 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot29 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106, Right: 6);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame29 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg29 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName29 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock29 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
+                    }
+                }
+
+                Button #CarouselSlot30 {
+                    LayoutMode: CenterMiddle; Anchor: (Width: 134, Height: 106);
+                    Padding: (Full: 0);
+                    Style: (Default: (Background: (Color: #000000(0))), Hovered: (Background: (Color: #000000(0))), Pressed: (Background: (Color: #000000(0))));
+                    Group #CarouselFrame30 {
+                        Anchor: (Width: 134, Height: 106);
+                        LayoutMode: Top;
+                        Background: (Color: #111418);
+                        OutlineColor: #2b3542;
+                        OutlineSize: 1;
+                        Padding: (Full: 6);
+                        Group { FlexWeight: 1; LayoutMode: Middle; Group #CarouselImg30 { Anchor: (Width: 96, Height: 54); } }
+                        Group { Anchor: (Height: 22); LayoutMode: Left;
+                            Label #CarouselName30 { FlexWeight: 1; Style: (FontSize: 9, RenderBold: true, Alignment: Center, TextColor: #96a9be, ShrinkTextToFit: true, MinShrinkTextToFitFontSize: 7); Text: ""; }
+                            Group #CarouselLock30 { Anchor: (Width: 14, Height: 14); Background: (TexturePath: "../../Common/Lock.png"); }
+                        }
                     }
                 }
             }

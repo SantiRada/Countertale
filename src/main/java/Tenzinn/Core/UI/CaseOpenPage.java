@@ -2,6 +2,7 @@ package Tenzinn.Core.UI;
 
 import Tenzinn.Core.Cases.CaseManager;
 import Tenzinn.Core.Cases.CaseSkin;
+import Tenzinn.Core.Cases.ArmorySkinAssets;
 import Tenzinn.Core.Tools.RefactorTool;
 
 import com.hypixel.hytale.codec.Codec;
@@ -42,8 +43,6 @@ public class CaseOpenPage extends InteractiveCustomUIPage<CaseOpenPage.CaseOpenE
             150, 150, 200,
             300, 500, 800, 1200
     };
-
-    private static final String WEAPONS_UI_REF = "Game/images/weapons/Weapons.ui";
 
     private final CaseSkin winner;
     private List<CaseSkin> rouletteStrip;
@@ -127,7 +126,7 @@ public class CaseOpenPage extends InteractiveCustomUIPage<CaseOpenPage.CaseOpenE
             int slot = i + 1;
 
             builder.set("#Slot" + slot + "Icon.Background",
-                    Value.ref(WEAPONS_UI_REF, skin.weapon + "on"));
+                    Value.ref(ArmorySkinAssets.skinIconUiRef(), skin.iconUiKey));
             builder.set("#Slot" + slot + "Name.TextSpans",
                     Message.raw(skin.displayName));
             builder.set("#Slot" + slot + ".Background", slotBgColor(skin.rarity));
@@ -145,7 +144,7 @@ public class CaseOpenPage extends InteractiveCustomUIPage<CaseOpenPage.CaseOpenE
 
     private void revealWinner(UICommandBuilder builder) {
         builder.set("#WinnerIcon.Background",
-                Value.ref(WEAPONS_UI_REF, winner.weapon + "on"));
+                Value.ref(ArmorySkinAssets.skinIconUiRef(), winner.iconUiKey));
         builder.set("#WinnerIconContainer.OutlineColor", winner.rarity.color);
         builder.set("#WinnerIconContainer.OutlineSize",  3);
         builder.set("#WinnerIconContainer.Background",   slotBgColor(winner.rarity));

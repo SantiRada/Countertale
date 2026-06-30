@@ -1,6 +1,7 @@
 package Tenzinn.Core;
 
 import Tenzinn.Core.UI.GameHUD;
+import Tenzinn.Core.Cases.ArmorySkinAssets;
 import Tenzinn.Core.Tools.RefactorTool;
 import Tenzinn.Core.Objects.WeaponStats;
 
@@ -110,11 +111,11 @@ public class LootManager {
 
             if (primary != null)
                 for (String itemId : primary.giveItems)
-                    if (hotbarItems != null) hotbarItems.addItemStack(new ItemStack(itemId, 1));
+                    if (hotbarItems != null) hotbarItems.addItemStack(new ItemStack(resolveSkinnedItemId(playerRef, primary, itemId), 1));
 
             if (secondary != null)
                 for (String itemId : secondary.giveItems)
-                    if (hotbarItems != null) hotbarItems.setItemStackForSlot((short) 1, new ItemStack(itemId, 1));
+                    if (hotbarItems != null) hotbarItems.setItemStackForSlot((short) 1, new ItemStack(resolveSkinnedItemId(playerRef, secondary, itemId), 1));
 
             if (shield != null)
                 for (String itemId : shield.giveItems)
@@ -154,9 +155,8 @@ public class LootManager {
         if (storage != null) storage.getInventory().clear();
         if (armor != null) armor.getInventory().clear();
 
-        ItemStack actionBook = new ItemStack("actions_book", 1);
-
-        hotbarItems.addItemStack(actionBook);
+        hotbarItems.setItemStackForSlot((short) 0, new ItemStack("actions_book", 1));
+        hotbarItems.setItemStackForSlot((short) 1, new ItemStack("inventory_book", 1));
     }
 
     private static WeaponStats cloneWeapon(WeaponStats weapon) {
@@ -170,6 +170,11 @@ public class LootManager {
                 weapon.pos,
                 weapon.pricing
         );
+    }
+
+    private static String resolveSkinnedItemId(PlayerRef playerRef, WeaponStats weapon, String baseItemId) {
+        String weaponId = ArmorySkinAssets.weaponIdFromBaseItem(baseItemId, weapon.image);
+        return ArmorySkinAssets.resolveItemId(playerRef.getUuid(), baseItemId, weaponId);
     }
 
     private static PlayerRef getPlayerRef(Player player) {

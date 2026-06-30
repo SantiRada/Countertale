@@ -14,6 +14,7 @@ public class CaseCommands extends AbstractCommandCollection {
         addSubCommand(new ListCasesCommand     ("inventory", "List all skins in your in-memory inventory"));
         addSubCommand(new ClearCasesCommand    ("clear",     "Clear your in-memory skin inventory"));
         addSubCommand(new SetCaseChanceCommand ("chance",    "Set the case drop chance (0-100)"));
+        addSubCommand(new DbStatusCommand      ("dbstatus",  "Check SQL connection and saved case/skin counts"));
     }
 
     @Override

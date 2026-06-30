@@ -30,11 +30,28 @@ public class CaseSkin {
     /** Folder name inside Shop/ (e.g. "Ak47"). Used to build the Weapons.ui image ref. */
     public final String weapon;
     public final Rarity rarity;
+    /** Folder name inside Common/ArmorySkins/<weapon>/. Defaults to id. */
+    public final String folder;
+    /** Generated item id used when this skin is equipped in-game. */
+    public final String itemId;
+    /** PatchStyle key generated in Game/images/skins/SkinIcons.ui. */
+    public final String iconUiKey;
 
     public CaseSkin(String id, String displayName, String weapon, Rarity rarity) {
+        this(id, displayName, weapon, rarity, id);
+    }
+
+    public CaseSkin(String id, String displayName, String weapon, Rarity rarity, String folder) {
         this.id          = id;
         this.displayName = displayName;
         this.weapon      = weapon;
         this.rarity      = rarity;
+        this.folder      = folder;
+        this.itemId      = "ctskin_" + sanitizeId(id);
+        this.iconUiKey   = "S_" + sanitizeId(id);
+    }
+
+    private static String sanitizeId(String value) {
+        return value.replaceAll("[^A-Za-z0-9_]", "_");
     }
 }

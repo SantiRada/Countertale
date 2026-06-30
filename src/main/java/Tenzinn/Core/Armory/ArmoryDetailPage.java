@@ -2,6 +2,7 @@ package Tenzinn.Core.Armory;
 
 import Tenzinn.Core.Cases.CaseManager;
 import Tenzinn.Core.Cases.CaseSkin;
+import Tenzinn.Core.Cases.ArmorySkinAssets;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -30,7 +31,8 @@ import java.util.stream.Collectors;
 public class ArmoryDetailPage extends InteractiveCustomUIPage<ArmoryDetailPage.ArmoryDetailEventData> {
 
     private static final String WEAPONS_UI = "Game/images/weapons/Weapons.ui";
-    private static final int    MAX_SLOTS  = 7;
+    private static final int    MAX_SLOTS  = 30;
+    private static final String SELECTED_OUTLINE = "#F0B847";
 
     private static final java.util.Map<String, String> WEAPON_NAMES = new java.util.LinkedHashMap<>();
     static {
@@ -57,21 +59,26 @@ public class ArmoryDetailPage extends InteractiveCustomUIPage<ArmoryDetailPage.A
     private final List<CaseSkin> weaponSkins;
     private final Set<String>    ownedIds;
 
-    /** 0-based index of the slot currently highlighted in the carousel */
+    /** 0 = no skin; 1+ = weaponSkins index + 1 */
     private int selectedSlot = 0;
 
     public ArmoryDetailPage(PlayerRef playerRef, String weaponId) {
-        super(playerRef, CustomPageLifetime.CantClose, ArmoryDetailEventData.CODEC);
+        this(playerRef, weaponId, null);
+    }
+
+    public ArmoryDetailPage(PlayerRef playerRef, String weaponId, String selectedSkinId) {
+        super(playerRef, CustomPageLifetime.CanDismiss, ArmoryDetailEventData.CODEC);
         this.weaponId   = weaponId;
         this.weaponSkins = CaseManager.getSkinsByWeapon(weaponId);
         this.ownedIds   = CaseManager.getInventory(playerRef.getUuid())
                 .stream().map(s -> s.id).collect(Collectors.toSet());
 
-        // Pre-select the skin the player already has active (if any)
-        String active = CaseManager.getSelectedSkin(playerRef.getUuid(), weaponId);
+        String active = selectedSkinId != null
+                ? selectedSkinId
+                : CaseManager.getSelectedSkin(playerRef.getUuid(), weaponId);
         if (active != null) {
             for (int i = 0; i < weaponSkins.size(); i++) {
-                if (weaponSkins.get(i).id.equals(active)) { selectedSlot = i; break; }
+                if (weaponSkins.get(i).id.equals(active)) { selectedSlot = i + 1; break; }
             }
         }
     }
@@ -118,7 +125,7 @@ public class ArmoryDetailPage extends InteractiveCustomUIPage<ArmoryDetailPage.A
             default -> {
                 if (action.startsWith("slot:")) {
                     int slot = Integer.parseInt(action.substring(5)) - 1; // to 0-based
-                    if (slot >= 0 && slot < weaponSkins.size()) {
+                    if (slot >= 0 && slot <= weaponSkins.size()) {
                         selectedSlot = slot;
                         UICommandBuilder b = new UICommandBuilder();
                         populate(b);
@@ -132,8 +139,20 @@ public class ArmoryDetailPage extends InteractiveCustomUIPage<ArmoryDetailPage.A
     // ── Select logic ─────────────────────────────────────────────────────────
 
     private void handleSelect() {
-        if (selectedSlot >= weaponSkins.size()) return;
-        CaseSkin skin = weaponSkins.get(selectedSlot);
+        if (selectedSlot == 0) {
+            CaseManager.clearSelectedSkin(playerRef.getUuid(), weaponId);
+            playerRef.sendMessage(Message.raw("[Armería] Sin skin seleccionada para " + weaponId + ".")
+                    .color(new java.awt.Color(0, 204, 85)));
+
+            UICommandBuilder b = new UICommandBuilder();
+            populate(b);
+            sendUpdate(b, false);
+            return;
+        }
+
+        int skinIndex = selectedSlot - 1;
+        if (skinIndex >= weaponSkins.size()) return;
+        CaseSkin skin = weaponSkins.get(skinIndex);
 
         // Anti-cheat: server-side ownership check
         if (!ownedIds.contains(skin.id)) {
@@ -155,36 +174,64 @@ public class ArmoryDetailPage extends InteractiveCustomUIPage<ArmoryDetailPage.A
     // ── Populate ─────────────────────────────────────────────────────────────
 
     private void populate(UICommandBuilder b) {
-        int total = weaponSkins.size();
+        int total = weaponSkins.size() + 1;
+        b.set("#CarouselScroll.ContentWidth", Math.max(980, total * 140));
 
         for (int i = 0; i < MAX_SLOTS; i++) {
             int slotNum = i + 1; // 1-based id in .ui
             if (i < total) {
-                CaseSkin skin  = weaponSkins.get(i);
-                boolean  owned = ownedIds.contains(skin.id);
-                boolean  sel   = (i == selectedSlot);
+                boolean sel = (i == selectedSlot);
 
                 b.set("#CarouselSlot" + slotNum + ".Visible",      true);
-                b.set("#CarouselImg"  + slotNum + ".Background",
-                        Value.ref(WEAPONS_UI, skin.weapon + "on"));
-                b.set("#CarouselSlot" + slotNum + ".OutlineColor",
-                        sel ? skin.rarity.color : (owned ? "#444444" : "#222222"));
-                b.set("#CarouselSlot" + slotNum + ".OutlineSize",  sel ? 2 : 1);
-                b.set("#CarouselLock" + slotNum + ".Visible",      !owned);
+                b.set("#CarouselImg"  + slotNum + ".Background", Value.ref(WEAPONS_UI, weaponId + "on"));
 
-                // Gray-out image for unowned skins via opacity
-                // (Hytale UI doesn't support opacity on images directly, so we rely on the lock icon)
+                if (i == 0) {
+                    b.set("#CarouselName" + slotNum + ".TextSpans", Message.raw("SIN SKIN"));
+                    b.set("#CarouselName" + slotNum + ".Style.TextColor", "#bfcdd5");
+                    b.set("#CarouselFrame" + slotNum + ".Background", sel ? "#1f2730" : "#111418");
+                    b.set("#CarouselFrame" + slotNum + ".OutlineColor", sel ? SELECTED_OUTLINE : "#445160");
+                    b.set("#CarouselFrame" + slotNum + ".OutlineSize", sel ? 4 : 1);
+                    b.set("#CarouselLock" + slotNum + ".Visible", false);
+                } else {
+                    CaseSkin skin = weaponSkins.get(i - 1);
+                    boolean owned = ownedIds.contains(skin.id);
+
+                    b.set("#CarouselImg"  + slotNum + ".Background",
+                            Value.ref(ArmorySkinAssets.skinIconUiRef(), skin.iconUiKey));
+                    b.set("#CarouselName" + slotNum + ".TextSpans", Message.raw(skin.displayName));
+                    b.set("#CarouselName" + slotNum + ".Style.TextColor", owned ? skin.rarity.color : "#657486");
+                    b.set("#CarouselFrame" + slotNum + ".Background", sel ? "#1f2730" : "#111418");
+                    b.set("#CarouselFrame" + slotNum + ".OutlineColor",
+                            sel ? SELECTED_OUTLINE : (owned ? "#2b3542" : "#222222"));
+                    b.set("#CarouselFrame" + slotNum + ".OutlineSize", sel ? 4 : 1);
+                    b.set("#CarouselLock" + slotNum + ".Visible", !owned);
+                }
             } else {
                 b.set("#CarouselSlot" + slotNum + ".Visible", false);
             }
         }
 
         // Big preview + name + rarity + select button
-        if (!weaponSkins.isEmpty() && selectedSlot < total) {
-            CaseSkin sel   = weaponSkins.get(selectedSlot);
+        if (selectedSlot == 0) {
+            b.set("#BigSkinImage.Background", Value.ref(WEAPONS_UI, weaponId + "on"));
+            b.set("#SelectedSkinName.TextSpans", Message.raw("SIN SKIN"));
+            b.set("#SelectedSkinName.Style.TextColor", "#FFFFFF");
+            b.set("#SelectedSkinRarity.TextSpans", Message.raw("DEFAULT"));
+            b.set("#SelectedSkinRarity.Style.TextColor", "#bfcdd5");
+            b.set("#RarityBadge.OutlineColor", "#445160");
+            b.set("#RarityBadge.OutlineSize", 1);
+            b.set("#RarityBgMilSpec.Visible", false);
+            b.set("#RarityBgRestricted.Visible", false);
+            b.set("#RarityBgClassified.Visible", false);
+            b.set("#RarityBgCovert.Visible", false);
+            b.set("#RarityBgSpecial.Visible", false);
+            b.set("#SelectBtn.Disabled", false);
+        } else if (selectedSlot < total) {
+            CaseSkin sel   = weaponSkins.get(selectedSlot - 1);
             boolean  owned = ownedIds.contains(sel.id);
 
-            b.set("#BigSkinImage.Background",  Value.ref(WEAPONS_UI, sel.weapon + "on"));
+            b.set("#BigSkinImage.Background",
+                    Value.ref(ArmorySkinAssets.skinIconUiRef(), sel.iconUiKey));
 
             // Skin name: white if owned, readable gray if not
             b.set("#SelectedSkinName.TextSpans",       Message.raw(sel.displayName));

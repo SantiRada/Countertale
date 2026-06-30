@@ -49,7 +49,7 @@ public class ArmoryPage extends InteractiveCustomUIPage<ArmoryPage.ArmoryEventDa
     }
 
     public ArmoryPage(PlayerRef playerRef) {
-        super(playerRef, CustomPageLifetime.CantClose, ArmoryEventData.CODEC);
+        super(playerRef, CustomPageLifetime.CanDismiss, ArmoryEventData.CODEC);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ArmoryPage extends InteractiveCustomUIPage<ArmoryPage.ArmoryEventDa
 
         if ("inventory".equals(action)) {
             Player player = store.getComponent(ref, Player.getComponentType());
-            if (player != null) player.getPageManager().openCustomPage(ref, store, new CaseInventoryPage(playerRef));
+            if (player != null) player.getPageManager().openCustomPage(ref, store, new CaseInventoryPage(playerRef, true));
             return;
         }
 

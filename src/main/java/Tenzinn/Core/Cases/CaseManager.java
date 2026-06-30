@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -56,12 +57,15 @@ public class CaseManager {
             List<CaseSkin> list = new ArrayList<>();
             for (JsonElement el : arr) {
                 JsonObject s = el.getAsJsonObject();
-                list.add(new CaseSkin(
+                String folder = s.has("folder") ? s.get("folder").getAsString() : s.get("id").getAsString();
+                CaseSkin skin = new CaseSkin(
                         s.get("id").getAsString(),
                         s.get("displayName").getAsString(),
                         s.get("weapon").getAsString(),
-                        CaseSkin.Rarity.valueOf(s.get("rarity").getAsString())
-                ));
+                        CaseSkin.Rarity.valueOf(s.get("rarity").getAsString()),
+                        folder
+                );
+                if (ArmorySkinAssets.hasRequiredIcon(skin)) list.add(skin);
             }
             System.out.println("[CaseManager] Loaded " + list.size() + " skins.");
             return list;
@@ -128,6 +132,7 @@ public class CaseManager {
 
     public static void addCase(UUID uuid) {
         playerCases.merge(uuid, 1, Integer::sum);
+        DatabaseManager.addCases(uuid, 1);
     }
 
     public static int getCaseCount(UUID uuid) {
@@ -135,12 +140,20 @@ public class CaseManager {
     }
 
     public static boolean useCase(UUID uuid) {
-        return playerCases.computeIfPresent(uuid, (k, v) -> v > 1 ? v - 1 : null) != null
-                || playerCases.remove(uuid, 1);
+        AtomicBoolean used = new AtomicBoolean(false);
+        playerCases.compute(uuid, (k, v) -> {
+            if (v == null || v <= 0) return null;
+            used.set(true);
+            int next = v - 1;
+            return next > 0 ? next : null;
+        });
+        if (used.get()) DatabaseManager.decrementCase(uuid);
+        return used.get();
     }
 
     public static void clearCases(UUID uuid) {
         playerCases.remove(uuid);
+        DatabaseManager.clearCases(uuid);
     }
 
     public static void addToInventory(UUID uuid, CaseSkin skin) {
@@ -163,12 +176,20 @@ public class CaseManager {
         });
     }
 
+    public static void loadCasesFromDb(UUID uuid) {
+        DatabaseManager.loadCaseCount(uuid).thenAccept(count -> {
+            if (count > 0) playerCases.put(uuid, count);
+            else playerCases.remove(uuid);
+        });
+    }
+
     public static List<CaseSkin> getInventory(UUID uuid) {
         return playerInventory.getOrDefault(uuid, Collections.emptyList());
     }
 
     public static void clearInventory(UUID uuid) {
         playerInventory.remove(uuid);
+        DatabaseManager.clearSkinInventory(uuid);
     }
 
     public static void setDropChance(float chance) { currentDropChance = Math.max(0f, Math.min(1f, chance)); }
@@ -190,6 +211,15 @@ public class CaseManager {
     public static void setSelectedSkin(UUID uuid, String weaponId, String skinId) {
         selectedSkins.computeIfAbsent(uuid, k -> new ConcurrentHashMap<>()).put(weaponId, skinId);
         DatabaseManager.setSelectedSkin(uuid, weaponId, skinId);
+    }
+
+    public static void clearSelectedSkin(UUID uuid, String weaponId) {
+        Map<String, String> map = selectedSkins.get(uuid);
+        if (map != null) {
+            map.remove(weaponId);
+            if (map.isEmpty()) selectedSkins.remove(uuid);
+        }
+        DatabaseManager.clearSelectedSkin(uuid, weaponId);
     }
 
     public static String getSelectedSkin(UUID uuid, String weaponId) {

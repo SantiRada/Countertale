@@ -8,16 +8,17 @@ Group {
 
     Group {
         Anchor: (Width: 1100, Height: 622);
-        Background: PatchStyle(TexturePath: "../../Common/ContainerFullPatch.png", Border: 20);
+        Background: PatchStyle(TexturePath: "../../Common/ContainerFullPatch.png", Border: 16);
         LayoutMode: Top;
-        Padding: (Full: 14);
+        Padding: (Full: 6);
+
+        Group { Anchor: (Height: 20); }
 
         // ── Header ──────────────────────────────────────────────────────────────
         Group {
-            Anchor: (Height: 42, Bottom: 10);
+            Anchor: (Bottom: 6);
             LayoutMode: Left;
-            Background: PatchStyle(TexturePath: "../../Common/ContainerHeaderNoRunes.png", HorizontalBorder: 35, VerticalBorder: 0);
-            Padding: (Horizontal: 18, Vertical: 10);
+            Padding: (Horizontal: 18, Vertical: 4);
 
             Group {
                 LayoutMode: CenterMiddle;
@@ -51,7 +52,6 @@ Group {
         // ── Columns ─────────────────────────────────────────────────────────────
         Group {
             LayoutMode: Left;
-            Background: PatchStyle(TexturePath: "../../Common/ContainerPatch.png", Border: 23);
             Padding: (Full: 16);
 
             // ─── KNIFE ──────────────────────────────────────────────────────────
@@ -276,7 +276,7 @@ Group {
         }
         Group {
             LayoutMode: Left;
-            Anchor: (Height: 38, Top: 10);
+            Anchor: (Height: 38, Top: 6);
 
             Button #ShowInventory {
                 Anchor: (Width: 170, Height: 34);

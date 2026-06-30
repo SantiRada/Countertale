@@ -23,6 +23,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.Objects;
 import java.util.ArrayList;
 import java.util.UUID;
+import Tenzinn.Core.Cases.ArmorySkinAssets;
 
 public class DetectPlayerReady {
 
@@ -50,9 +51,11 @@ public class DetectPlayerReady {
             UUID uuid = playerRef.getUuid();
             DatabaseManager.registerPlayer(uuid, playerRef.getUsername()).thenRun(() -> {
                 CaseManager.loadInventoryFromDb(uuid);
+                CaseManager.loadCasesFromDb(uuid);
                 CaseManager.loadSelectedSkinsFromDb(uuid);
             });
 
+            ArmorySkinAssets.announceMissingIconWarnings(playerRef);
             LootManager.getLobbyLoot(player);
         }
         else {
